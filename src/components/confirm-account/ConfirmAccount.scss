@@ -1,0 +1,73 @@
+.confirm-account-container {
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  text-align: center;
+
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .code-inputs {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+
+    input {
+      width: 40px;
+      height: 50px;
+      text-align: center;
+      font-size: 1.5rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      transition: border-color 0.3s ease;
+
+      &:focus {
+        outline: none;
+        border-color: #00aaff;
+      }
+    }
+  }
+
+  .confirm-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #00aaff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #008ecc;
+    }
+
+    &:disabled {
+      background-color: #b0dff3;
+      cursor: not-allowed;
+    }
+  }
+
+  .resend-link {
+    display: inline-block;
+    margin-top: 1rem;
+    color: #00aaff;
+    cursor: pointer;
+    font-size: 0.95rem;
+    text-decoration: underline;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: #0077aa;
+    }
+  }
+}

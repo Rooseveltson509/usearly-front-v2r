@@ -1,0 +1,63 @@
+.reaction-selector {
+  position: relative;
+  display: inline-block;
+}
+
+.reaction-selector .main-reaction {
+  background: transparent;
+  border: none;
+  font-size: 1.3rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 20px;
+  transition: background 0.2s;
+}
+
+.reaction-selector .main-reaction:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.reaction-popup {
+  position: absolute;
+  bottom: 120%;
+  left: 0;
+  display: flex;
+  gap: 8px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.12);
+  padding: 6px 10px;
+  z-index: 10;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.emoji-button {
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  position: relative;
+}
+
+.emoji-button .count {
+  font-size: 0.8rem;
+  position: absolute;
+  top: -10px;
+  right: -8px;
+  color: #666;
+}
+
+.emoji-button:hover {
+  transform: scale(1.2);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

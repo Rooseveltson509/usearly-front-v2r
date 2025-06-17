@@ -1,0 +1,78 @@
+.feedback-list {
+  min-height: 100vh; // 👈 force l’espace pour pouvoir scroller
+}
+.category-block {
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  overflow: hidden; // ✅ évite les débordements internes
+
+  .category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.2rem;
+
+    h2 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    span {
+      font-size: 0.9rem;
+      color: #777;
+    }
+  }
+
+.report-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; // ✅ espacement entre les cartes
+  align-items: center; // ✅ pour centrer les cartes si elles ont un max-width
+}
+
+
+  // Si tes cartes ont du margin ou padding externe, remets-les à zéro ici
+  .feedback-card {
+    margin: 0;           // ✅ évite débordement
+    border-radius: 12px; // ✅ arrondi visuel cohérent
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+}
+
+
+
+/* .feedback-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.feedback-card {
+  background-color: #fff;
+  border-radius: 1rem;
+  padding: 1rem 1.2rem;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  }
+
+  .feedback-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 0.4rem;
+  }
+
+  .feedback-description {
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.5;
+  }
+}
+ */

@@ -1,0 +1,112 @@
+.user-profile-page {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f8f8f8;
+}
+
+// ===== Bandeau violet haut =====
+.purple-banner {
+  position: relative;
+  background-color: #1e0e3e;
+  padding: 4rem 2rem;
+
+  .banner-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .user-header {
+    position: absolute;
+    bottom: -50px; // ajuste pour faire dépasser
+    left: 3rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 4px solid #fff;
+      overflow: hidden;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      h2 {
+        color: #fff;
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin: 0;
+      }
+
+      .user-level {
+        color: #ccc;
+        font-size: 0.9rem;
+      }
+    }
+  }
+}
+
+// ===== Contenu principal (3 colonnes) =====
+.user-main-content {
+  display: grid;
+  grid-template-columns: 260px 1fr 260px;
+  gap: 2rem;
+  padding: 3rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+// Colonne gauche
+.left-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+// Colonne droite
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+// Zone centrale
+.feedback-list-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 550px;
+}
+
+// ===== Responsive =====
+@media (max-width: 992px) {
+  .user-main-content {
+    grid-template-columns: 1fr;
+  }
+
+  .left-panel,
+  .right-panel {
+    order: 2;
+  }
+
+  .feedback-list-wrapper {
+    order: 1;
+  }
+}

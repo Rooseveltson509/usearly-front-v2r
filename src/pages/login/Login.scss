@@ -1,0 +1,70 @@
+@use "@styles/base/variables" as *;
+@use "@styles/utils/mixins" as *;
+
+.login-container {
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 40px 20px;
+  text-align: center;
+
+  h2 {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  p {
+    margin-bottom: 30px;
+    color: $gray-600;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    input[type="email"],
+    input[type="password"] {
+      padding: 14px;
+      font-size: 16px;
+      border: 1px solid $gray-300;
+      border-radius: $border-radius-md;
+    }
+
+    .login-options {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      align-items: center;
+
+      .forgot-link {
+        cursor: pointer;
+        color: $primary;
+        text-decoration: underline;
+      }
+    }
+
+    button {
+      background-color: black;
+      color: white;
+      padding: 14px;
+      font-size: 16px;
+      border-radius: $border-radius-md;
+      border: none;
+      cursor: pointer;
+
+      &:disabled {
+        background-color: $gray-400;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .login-footer-logo {
+    margin-top: 80px;
+    font-size: 100px;
+    color: #f2f2f2;
+    font-weight: bold;
+    opacity: 0.3;
+  }
+}

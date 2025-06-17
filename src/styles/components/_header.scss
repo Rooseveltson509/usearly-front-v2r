@@ -1,0 +1,72 @@
+@use "../base/variables" as *;
+
+.usearly-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: $header-height;
+  background-color: white;
+  border-bottom: 1px solid $gray-200;
+  z-index: 1000;
+}
+
+.header-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  img {
+    height: 28px;
+  }
+
+  span {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: $dark;
+  }
+}
+
+.header-nav {
+  display: flex;
+  gap: 2rem;
+
+  a {
+    font-weight: 500;
+    color: $gray-900;
+
+    &.active {
+      color: $primary;
+    }
+
+    &:hover {
+      color: $primary;
+    }
+  }
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  i {
+    font-size: 1rem;
+    color: $gray-900;
+  }
+
+  .header-user {
+    font-size: 0.95rem;
+    color: $gray-900;
+  }
+}

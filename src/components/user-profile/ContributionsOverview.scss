@@ -1,0 +1,34 @@
+.contributions-overview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: center;
+  color: #fff;
+
+  .contribution-bubble {
+    background-color: #4e8cff;
+    color: #fff;
+    font-size: 2rem;
+    font-weight: bold;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .contribution-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-top: 0.4rem;
+  }
+
+  .contribution-summary {
+    font-size: 0.95rem;
+    color: #ccc;
+    max-width: 300px;
+  }
+}
