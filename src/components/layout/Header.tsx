@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import "./header.scss";
+import "./Header.scss";
 import Logo from "@src/assets/logo.svg";
 import { useAuth } from "@src/services/AuthContext";
 
