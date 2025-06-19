@@ -1,0 +1,62 @@
+.emoji-tooltip-wrapper {
+  position: relative;
+  display: inline-block;
+
+  .emoji-button {
+    position: relative;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    border-radius: 50%;
+    padding: 0.6rem;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    .custom-tooltip {
+      position: absolute;
+      bottom: 120%;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #222;
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+      z-index: 10;
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 5px;
+        border-style: solid;
+        border-color: #222 transparent transparent transparent;
+      }
+
+      opacity: 0;
+      transform: translateX(-50%) translateY(5px);
+      transition: opacity 0.2s ease,
+      transform 0.2s ease;
+
+      &:hover .custom-tooltip {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+
+    }
+
+    &:hover .custom-tooltip {
+      opacity: 1;
+    }
+  }
+}

@@ -18,6 +18,7 @@ interface Comment {
 interface Props {
     descriptionId: string;
     userId: string;
+    type: "report" | "suggestion" | "coupdecoeur";
 }
 
 const getFullAvatarUrl = (path: string | null) => {
@@ -25,17 +26,23 @@ const getFullAvatarUrl = (path: string | null) => {
     return `${import.meta.env.VITE_API_BASE_URL}/${path}`;
 };
 
-const DescriptionCommentSection: React.FC<Props> = ({ descriptionId, userId }) => {
+const DescriptionCommentSection: React.FC<Props> = ({ descriptionId, userId, type }) => {
     const [comments, setComments] = useState<Comment[]>([]);
     const [newComment, setNewComment] = useState("");
     const [loading, setLoading] = useState(true);
     const { userProfile } = useAuth();
-    //const [comments, setComments] = useState<CommentType[]>([]);
+
+    const buildCommentEndpoint = () => {
+        if (type === "report") return `/descriptions/${descriptionId}/comments`;
+        if (type === "suggestion") return `/suggestions/${descriptionId}/comments`;
+        return `/coupdecoeurs/${descriptionId}/comments`;
+    };
 
     useEffect(() => {
         const fetchComments = async () => {
             try {
-                const res = await apiService.get(`/descriptions/${descriptionId}/comments`);
+                const url = buildCommentEndpoint();
+                const res = await apiService.get(url);
                 setComments(res.data.comments || []);
             } catch (err) {
                 console.error("Erreur lors du chargement des commentaires :", err);
@@ -45,25 +52,33 @@ const DescriptionCommentSection: React.FC<Props> = ({ descriptionId, userId }) =
         };
 
         fetchComments();
-    }, [descriptionId]);
+    }, [descriptionId, type]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!newComment.trim()) return;
 
         try {
-            const res = await apiService.post(`/descriptions/${descriptionId}/comments`, {
-                content: newComment,
-            });
+            const url = buildCommentEndpoint();
+            const res = await apiService.post(url, { content: newComment });
 
             if (res.data.comment) {
-                setComments((prev) => [...prev, res.data.comment]);
+                const newCommentWithUserId = {
+                    ...res.data.comment,
+                    user: {
+                        ...res.data.comment.user,
+                        id: userProfile?.id, // 🔑 on force l'id de l'utilisateur actuel ici
+                    },
+                };
+
+                setComments((prev) => [...prev, newCommentWithUserId]);
                 setNewComment("");
             }
         } catch (err) {
             console.error("Erreur lors de l’envoi du commentaire :", err);
         }
     };
+
 
     const handleDeleteComment = async (commentId: string) => {
         const result = await Swal.fire({

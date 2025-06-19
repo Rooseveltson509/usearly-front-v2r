@@ -4,7 +4,6 @@ import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 import type { GroupedReport, FeedbackDescription } from "@src/types/Reports";
 import { useAuth } from "@src/services/AuthContext";
-import ReactionSelector from "@src/utils/ReactionSelector";
 import { getCategoryIconPathFromSubcategory } from "@src/utils/IconsUtils";
 import DescriptionReactionSelector from "@src/utils/DescriptionReactionSelector";
 import DescriptionCommentSection from "../report-desc-comment/DescriptionCommentSection";
@@ -88,11 +87,12 @@ const ReportCard: React.FC<ReportCardProps> = ({ report, isOpen, onToggle }) => 
                                 </div>
                                 {isAuthorCurrentUser && <span className="badge-me">Moi</span>}
                                 <span className="time">
-                                    {formatDistanceToNow(new Date(current.createdAt), {
-                                        locale: fr,
-                                        addSuffix: true,
-                                    })}
+                                    {current?.createdAt
+                                        ? formatDistanceToNow(new Date(current.createdAt), { locale: fr, addSuffix: true })
+                                        : "Date inconnue"}
                                 </span>
+
+
                             </div>
                         </div>
 
@@ -116,6 +116,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report, isOpen, onToggle }) => 
                             <DescriptionReactionSelector
                                 userId={userProfile.id}
                                 descriptionId={current.id}
+                                type={"report"}
                             />
                         </div>
                     )}
@@ -123,7 +124,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report, isOpen, onToggle }) => 
                         <DescriptionCommentSection
                             userId={userProfile.id}
                             descriptionId={current.id}
-                        />
+                            type={"report"} />
                     )}
 
 

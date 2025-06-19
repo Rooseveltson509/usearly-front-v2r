@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { apiService } from "@src/services/apiService";
 
 interface UserProfile {
-  id?:string;
+  id?: string;
   avatar: string;
   type: "user" | "brand";
   pseudo?: string;
@@ -42,15 +42,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       sessionStorage.setItem("accessToken", accessToken);
     }
 
-    // 🔄 On récupère le vrai profil (avec pseudo, avatar, etc.)
-    await fetchUserProfile();
+    try {
+      const res = await apiService.get("/user/me");
+      const fullProfile = { ...res.data, type: res.data.role || "user" };
+      setUserProfile(fullProfile);
+      setIsAuthenticated(true);
 
-    setIsAuthenticated(true);
-
-    if (profile.type === "user") {
-      navigate("/home");
-    } else {
-      navigate("/dashboard-brand");
+      if (fullProfile.type === "user") {
+        navigate("/home");
+      } else {
+        navigate("/dashboard-brand");
+      }
+    } catch (err) {
+      console.error("❌ Erreur de récupération du profil après login", err);
     }
   };
 
@@ -67,7 +71,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const fetchUserProfile = async () => {
     try {
       const res = await apiService.get("/user/me");
-      setUserProfile({ ...res.data, type: res.data.role || "user" });
+     setUserProfile({ ...res.data, type: res.data.role === "brand" ? "brand" : "user" });
     } catch (err) {
       console.error("Erreur profil", err);
     }
@@ -79,11 +83,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     if (token && type) {
       apiService.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      setIsAuthenticated(true);
-      setUserProfile({ avatar: "", type: type as "user" | "brand" });
-
-      // 🔁 Important : fetch infos complètes
-      fetchUserProfile();
+      fetchUserProfile().then(() => {
+        setIsAuthenticated(true);
+      });
     }
   }, []);
 

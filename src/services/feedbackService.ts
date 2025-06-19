@@ -89,3 +89,32 @@ export const getUserStatsSummary = async (): Promise<UserStatsSummary> => {
   const res = await apiService.get("/user/stats-summary");
   return res.data;
 };
+
+export const getGroupedReportsPublic = async (page: number, limit: number) => {
+  const response = await apiService.get(`/reportings/public-grouped-by-category`, {
+    params: { page, limit },
+  });
+  return response.data;
+};
+
+
+export const getPublicCoupsDeCoeur = async (page: number, limit: number) => {
+  const res = await apiService.get(`/public/user/coupsdecoeurs?page=${page}&limit=${limit}`);
+  return res.data;
+};
+
+export const getPublicSuggestions = async (page: number, limit: number) => {
+  const res = await apiService.get(`/public/user/suggestions?page=${page}&limit=${limit}`);
+  return res.data;
+};
+export const getFilteredReportDescriptions = async (
+  brand: string,
+  category: string,
+  page = 1,
+  limit = 10
+) => {
+  const response = await apiService.get("/descriptions/filtery", {
+    params: { brand, category, page, limit },
+  });
+  return response.data;
+};

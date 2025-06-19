@@ -14,7 +14,7 @@ const UserProfilePage: React.FC = () => {
             {/* Bandeau violet haut */}
             <div className="purple-banner">
                 <div className="banner-content">
-                    <ContributionsOverview />
+                    <ContributionsOverview activeTab={activeTab} />
                     <FeedbackTabs activeTab={activeTab} onTabChange={setActiveTab} />
                 </div>
             </div>
@@ -24,7 +24,6 @@ const UserProfilePage: React.FC = () => {
                 <aside className="left-panel">
                     <UserStatsCard />
                 </aside>
-
                 <div className="feedback-list-wrapper">
                    <FeedbackList activeTab={activeTab} />
                 </div>

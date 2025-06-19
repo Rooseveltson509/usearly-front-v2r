@@ -87,6 +87,7 @@ export interface ApiResponse {
 
 export interface FeedbackDescription {
   id: string;
+  reportingId: string;
   description: string;
   emoji: string;
   createdAt: string;
@@ -96,11 +97,14 @@ export interface FeedbackDescription {
     avatar: string | null;
   };
   capture: string | null;
+  marque: string;
+  brand?: string;
 }
 
 export interface GroupedReport {
   id: string;
   reportingId: string;
+  status?: string;
   category: string;
   marque: string;
   totalCount: number;
@@ -109,7 +113,7 @@ export interface GroupedReport {
     count: number;
     descriptions: FeedbackDescription[];
   }[];
-  reactions: UserReaction[]; 
+  reactions: UserReaction[];
 }
 
 export interface GroupedReportResponse {
@@ -134,4 +138,11 @@ export interface UserStatsSummary {
   totalChecks: number;
   totalCollaborations: number;
   usearPower: number;
+}
+export interface ExplodedGroupedReport extends GroupedReport {
+  subCategory: {
+    subCategory: string;
+    count: number;
+    descriptions: FeedbackDescription[];
+  };
 }

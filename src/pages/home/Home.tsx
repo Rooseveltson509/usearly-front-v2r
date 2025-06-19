@@ -1,42 +1,34 @@
-// src/pages/Home.tsx
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Autoplay } from "swiper/modules";
-// @ts-ignore
-import "swiper/css/bundle";
-
-
+import React, { useState } from "react";
 import "./Home.scss";
+import ContributionsOverview from "@src/components/user-profile/ContributionsOverview";
+import FeedbackList from "@src/components/user-profile/FeedbackList";
+import FeedbackTabs, { type FeedbackType } from "@src/components/user-profile/FeedbackTabs";
+import UserStatsCard from "@src/components/user-profile/UserStatsCard";
 
-const slides = [
-  { id: 1, title: "Bienvenue sur Usearly", description: "Partagez vos retours simplement." },
-  { id: 2, title: "Signalez un bug", description: "Capturez et envoyez facilement." },
-  { id: 3, title: "Vos idées comptent", description: "Exprimez vos suggestions." },
-];
+const Home: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<FeedbackType>("report");
 
-const Home = () => {
   return (
     <div className="home-page">
-      <h1 className="home-title">Accueil</h1>
+      {/* Bandeau violet haut */}
+      <div className="purple-banner">
+        <div className="banner-content">
+          <ContributionsOverview />
+          <FeedbackTabs activeTab={activeTab} onTabChange={setActiveTab} />
+        </div>
+      </div>
 
-      <Swiper
-        className="home-swiper"
-        modules={[Navigation, Pagination, Autoplay]}
-        spaceBetween={30}
-        slidesPerView={1}
-        navigation
-        pagination={{ clickable: true }}
-        autoplay={{ delay: 4000 }}
-        loop
-      >
-        {slides.map((slide) => (
-          <SwiperSlide key={slide.id}>
-            <div className="slide-content">
-              <h2>{slide.title}</h2>
-              <p>{slide.description}</p>
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+      {/* Contenu principal */}
+      <main className="user-main-content">
+        <aside className="left-panel">
+          <UserStatsCard />
+        </aside>
+
+        <div className="feedback-list-wrapper">
+          <FeedbackList activeTab={activeTab} isPublic={true} />
+        </div>
+
+      </main>
     </div>
   );
 };

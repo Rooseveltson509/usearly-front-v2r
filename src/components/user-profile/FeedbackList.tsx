@@ -1,186 +1,238 @@
-import { useEffect, useState, useRef, useCallback } from "react";
-import "./FeedbackList.scss";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@src/services/AuthContext";
-import type { CoupDeCoeur, GroupedReport, Suggestion } from "@src/types/Reports";
 import type { FeedbackType } from "./FeedbackTabs";
 import {
   getGroupedReportsByUser,
+  getGroupedReportsPublic,
+  getPublicCoupsDeCoeur,
+  getPublicSuggestions,
   getUserCoupsDeCoeur,
   getUserSuggestions,
+  getFilteredReportDescriptions,
 } from "@src/services/feedbackService";
 import ReportCard from "./ReportCard";
-import InteractiveFeedbackCard from "./InteractiveFeedbackCard";
+import "./FeedbackList.scss";
+import FeedbackListHeader from "../report-grouped/feedback-list-header/FeedbackListHeader";
+import LoaderBlock from "../report-grouped/LoaderBlock";
+import type { ExplodedGroupedReport, FeedbackDescription } from "@src/types/Reports";
+import { apiService } from "@src/services/apiService";
+import { mapDescriptionToGroupedReport } from "@src/utils/mapDescriptionToReport";
+import FeedbackView from "../feedbacks/FeedbackView";
+import FilterForm from "../feedbacks/FilterForm";
 
 const limit = 10;
 
 interface Props {
   activeTab: FeedbackType;
+  isPublic?: boolean;
 }
 
-const FeedbackList = ({ activeTab }: Props) => {
-  const { isAuthenticated } = useAuth();
-  const [data, setData] = useState<any[]>([]);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [openId, setOpenId] = useState<string | null>(null);
-  const observer = useRef<IntersectionObserver | null>(null);
-  const loaderRef = useRef<HTMLDivElement | null>(null);
-  const [isReady, setIsReady] = useState(false);
-  const [shouldReset, setShouldReset] = useState(true);
+interface FeedbackState {
+  data: any[];
+  page: number;
+  hasMore: boolean;
+  loading: boolean;
+  error: string | null;
+}
 
-  // 🔁 Reset total quand l'onglet change
+const FeedbackList = ({ activeTab, isPublic = false }: Props) => {
+  const { isAuthenticated } = useAuth();
+  const loaderRef = useRef<HTMLDivElement | null>(null);
+  const observer = useRef<IntersectionObserver | null>(null);
+  const [openId, setOpenId] = useState<string | null>(null);
+  const [groupOpen, setGroupOpen] = useState<Record<string, boolean>>({});
+  const [viewMode, setViewMode] = useState<"grouped" | "flat" | "chrono" | "filtered">("grouped");
+  const [feedbackStates, setFeedbackStates] = useState<Record<FeedbackType, FeedbackState>>({
+    report: { data: [], page: 1, hasMore: true, loading: false, error: null },
+    coupdecoeur: { data: [], page: 1, hasMore: true, loading: false, error: null },
+    suggestion: { data: [], page: 1, hasMore: true, loading: false, error: null },
+  });
+  const [selectedBrand, setSelectedBrand] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [availableCategories, setAvailableCategories] = useState<string[]>([]);
+  const [brandInput, setBrandInput] = useState("");
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [availableBrands, setAvailableBrands] = useState<string[]>([]);
+  const hasInitializedViewMode = useRef(false);
+  const currentState = feedbackStates[activeTab];
+
+  const updateState = (updates: Partial<FeedbackState>) => {
+    setFeedbackStates((prev) => ({
+      ...prev,
+      [activeTab]: { ...prev[activeTab], ...updates },
+    }));
+  };
+
   useEffect(() => {
-    setData([]);
-    setPage(1);
-    setHasMore(true);
-    setShouldReset(true);
+    if (!hasInitializedViewMode.current) {
+      if (activeTab === "report") {
+        setViewMode("grouped");
+      } else {
+        setViewMode("flat");
+      }
+      hasInitializedViewMode.current = true;
+    }
   }, [activeTab]);
 
-  const fetchData = useCallback(async () => {
-    if (!isAuthenticated || loading || !hasMore) return;
+  useEffect(() => {
+    if (!isAuthenticated || activeTab !== "report" || viewMode !== "grouped") return;
 
-    setLoading(true);
-    setError(null);
-
-    try {
-      let newData: any[] = [];
-
-      if (activeTab === "report") {
-        const res = await getGroupedReportsByUser(page, limit);
-        newData = res.results;
-      } else if (activeTab === "coupdecoeur") {
-        const res = await getUserCoupsDeCoeur(page, limit);
-        newData = res.coupdeCoeurs;
-      } else if (activeTab === "suggestion") {
-        const res = await getUserSuggestions(page, limit);
-        newData = res.suggestions;
+    const fetchMultiplePages = async () => {
+      let allData: ExplodedGroupedReport[] = [];
+      for (let p = 1; p <= 3; p++) {
+        try {
+          const res = isPublic
+            ? await getGroupedReportsPublic(p, limit)
+            : await getGroupedReportsByUser(p, limit);
+          allData = [...allData, ...res.results];
+          if (res.results.length < limit) break;
+        } catch (e) {
+          console.warn("Erreur préchargement page", p);
+          break;
+        }
       }
 
-      setHasMore(newData.length >= limit);
-      setData((prev) => {
-        if (page === 1 || shouldReset) return newData;
-        return [...prev, ...newData];
-      });
-    } catch (err: any) {
-      setError(err.message || "Erreur de chargement");
-    } finally {
-      setLoading(false);
-    }
-  }, [activeTab, page, isAuthenticated, hasMore, loading, shouldReset]);
+      setFeedbackStates((prev) => ({
+        ...prev,
+        report: {
+          ...prev.report,
+          data: allData,
+          page: allData.length === 0 ? 1 : Math.ceil(allData.length / limit),
+          hasMore: allData.length >= limit * 3,
+          loading: false,
+          error: null,
+        },
+      }));
+    };
+
+    fetchMultiplePages();
+  }, [isAuthenticated, activeTab, viewMode, isPublic]);
 
   useEffect(() => {
-    if (shouldReset) {
-      fetchData();
-      setShouldReset(false);
-    }
-  }, [shouldReset, fetchData]);
+    if (!selectedBrand) return;
+    const fetchCategories = async () => {
+      try {
+        const res = await apiService.get("/reportings/categories-by-brand", {
+          params: { brand: selectedBrand },
+        });
+        setAvailableCategories(res.data.categories || []);
+      } catch (err) {
+        console.error("Erreur récupération catégories :", err);
+        setAvailableCategories([]);
+      }
+    };
+    fetchCategories();
+  }, [selectedBrand]);
 
   useEffect(() => {
-    if (page === 1 && !shouldReset) {
-      fetchData().then(() => setIsReady(true));
-    }
-  }, [page, shouldReset]);
+    const fetchBrands = async () => {
+      const res = await apiService.get("/reportings/brands");
+      setAvailableBrands(res.data.brands || []);
+    };
+    fetchBrands();
+  }, []);
 
   useEffect(() => {
-    if (!loaderRef.current || !hasMore || !isReady || loading) return;
+    const filtered = availableBrands.filter(b =>
+      b.toLowerCase().includes(brandInput.toLowerCase())
+    );
+    setSuggestions(filtered);
+  }, [brandInput, availableBrands]);
+
+  const handleSelectSuggestion = (brand: string) => {
+    setSelectedBrand(brand);
+    setBrandInput(brand);
+    setSuggestions([]);
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!isAuthenticated || currentState.loading || !currentState.hasMore) return;
+      updateState({ loading: true, error: null });
+      try {
+        let newData: any[] = [];
+        if (activeTab === "report") {
+          if (viewMode === "chrono") {
+            const res = await getFilteredReportDescriptions("all", "all", currentState.page, limit);
+            const validDescriptions = res.data.filter((desc: FeedbackDescription) => !!desc.createdAt && desc.createdAt !== "");
+            newData = validDescriptions.map(mapDescriptionToGroupedReport);
+          } else {
+            const res = isPublic ? await getGroupedReportsPublic(currentState.page, limit) : await getGroupedReportsByUser(currentState.page, limit);
+            newData = res.results;
+          }
+        } else if (activeTab === "coupdecoeur") {
+          const res = isPublic ? await getPublicCoupsDeCoeur(currentState.page, limit) : await getUserCoupsDeCoeur(currentState.page, limit);
+          newData = res.coupdeCoeurs;
+        } else if (activeTab === "suggestion") {
+          const res = isPublic ? await getPublicSuggestions(currentState.page, limit) : await getUserSuggestions(currentState.page, limit);
+          newData = res.suggestions;
+        }
+        updateState({ data: [...currentState.data, ...newData], hasMore: newData.length === limit, loading: false });
+      } catch (err: any) {
+        updateState({ error: err.message || "Erreur de chargement", loading: false });
+      }
+    };
+    fetchData();
+  }, [currentState.page, activeTab, viewMode]);
+
+  useEffect(() => {
+    if (!loaderRef.current || !currentState.hasMore || currentState.loading) return;
     if (observer.current) observer.current.disconnect();
-
     observer.current = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && !loading && isReady) {
-        setPage((prev) => prev + 1);
+      if (entries[0].isIntersecting && !currentState.loading && currentState.hasMore) {
+        updateState({ page: currentState.page + 1 });
       }
     });
-
-    observer.current.observe(loaderRef.current!);
-  }, [hasMore, isReady, loading]);
+    observer.current.observe(loaderRef.current);
+    return () => observer.current?.disconnect();
+  }, [currentState.data.length, currentState.loading, currentState.hasMore]);
 
   const handleToggle = (id: string) => {
     setOpenId((prev) => (prev === id ? null : id));
   };
 
-  // 🔁 Séparation des signalements par sous-catégorie
-  const explodedGroupedReports =
-    activeTab === "report"
-      ? data.flatMap((report: GroupedReport) =>
-        Array.isArray(report.subCategories)
-          ? report.subCategories.map((subCategory) => ({
-            ...report,
-            subCategory,
-          }))
-          : [] // protection si subCategories est undefined
-      )
-      : [];
-
-
-  // 🧠 Regroupement par catégorie + marque
-  const groupedByCategoryAndBrand = Array.isArray(explodedGroupedReports)
-    ? explodedGroupedReports.reduce((acc, item) => {
-      const key = `${item.category || "Autre"}|${item.marque}`;
-      if (!acc[key]) acc[key] = [];
-      acc[key].push(item);
-      return acc;
-    }, {} as Record<string, GroupedReport[]>)
-    : {};
-
-  const renderCard = (item: any, index: number) => {
-    if (activeTab === "report") {
-      const cardId = `${item.reportingId}_${item.subCategory?.subCategory || "unknown"}`;
-      return (
-        <ReportCard
-          key={cardId}
-          report={{
-            ...item,
-            subCategories: [item.subCategory],
-          }}
-          isOpen={openId === cardId}
-          onToggle={() => handleToggle(cardId)}
-        />
-      );
-    } else {
-      return (
-        <InteractiveFeedbackCard
-          key={item.id || `feedback-${index}`}
-          item={item as CoupDeCoeur | Suggestion}
-          initialReactions={(item as any).reactions || []}
-        />
-      );
-    }
-  };
-
   return (
     <div className="feedback-list">
-      {data.length === 0 && !loading && !error && (
-        <div>Aucun contenu trouvé.</div>
+      <FeedbackListHeader viewMode={viewMode} onChange={setViewMode} />
+      {activeTab === "report" && viewMode === "filtered" && (
+        <FilterForm
+          brandInput={brandInput}
+          setBrandInput={setBrandInput}
+          suggestions={suggestions}
+          handleSelectSuggestion={handleSelectSuggestion}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          availableCategories={availableCategories}
+        />
       )}
-
-      {activeTab === "report" ? (
-        Object.entries(groupedByCategoryAndBrand).map(([key, reports]) => {
-          const [category, marque] = key.split("|");
+      <FeedbackView
+        activeTab={activeTab}
+        viewMode={viewMode}
+        currentState={currentState}
+        openId={openId}
+        setOpenId={setOpenId}
+        groupOpen={groupOpen}
+        setGroupOpen={setGroupOpen}
+        selectedBrand={selectedBrand}
+        selectedCategory={selectedCategory}
+        renderCard={(item: ExplodedGroupedReport) => {
+          const cardId = `${item.reportingId}_${item.subCategory?.descriptions?.[0]?.id || "0"}`;
           return (
-            <div key={key} className="category-block">
-              <div className="category-header">
-                <h2>La catégorie: {category}</h2>
-                <span>{Array.isArray(reports) ? reports.length : 0} problème(s) sur {marque}</span>
-              </div>
-
-              <div className="report-list">
-                {Array.isArray(reports) &&
-                  reports.map((item, index) => renderCard(item, index))}
-              </div>
-            </div>
+            <ReportCard
+              key={cardId}
+              report={{ ...item, subCategories: [item.subCategory] }}
+              isOpen={openId === cardId}
+              onToggle={() => handleToggle(cardId)}
+            />
           );
-        })
-      ) : (
-        data.map((item, index) => renderCard(item, index))
-      )}
-
-      <div ref={loaderRef} className="loader">
-        {loading && <div>Chargement...</div>}
-        {!hasMore && !loading && <div>Fin des résultats</div>}
-        {error && <div className="erreur">{error}</div>}
-      </div>
+        }}
+      />
+      <LoaderBlock
+        loaderRef={loaderRef}
+        loading={currentState.loading}
+        hasMore={currentState.hasMore}
+        error={currentState.error}
+      />
     </div>
   );
 };

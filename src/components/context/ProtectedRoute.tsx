@@ -3,22 +3,26 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 
 interface ProtectedRouteProps {
-  children: React.ReactNode;
-  allowedTypes?: ("user" | "brand")[];
+    children: React.ReactNode;
+    allowedTypes?: ("user" | "brand")[];
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedTypes }) => {
-  const { isAuthenticated, userProfile } = useAuth();
+    const { isAuthenticated, userProfile } = useAuth();
 
-  if (!isAuthenticated || !userProfile) {
-    return <Navigate to="/login" replace />;
-  }
+    if (!userProfile) {
+        return <div>Chargement…</div>;
+    }
 
-  if (allowedTypes && !allowedTypes.includes(userProfile.type)) {
-    return <Navigate to="/" replace />;
-  }
+    if (!isAuthenticated) {
+        return <Navigate to="/login" replace />;
+    }
 
-  return <>{children}</>;
+    if (allowedTypes && !allowedTypes.includes(userProfile.type)) {
+        return <Navigate to="/" replace />;
+    }
+
+    return <>{children}</>;
 };
 
 export default ProtectedRoute;
