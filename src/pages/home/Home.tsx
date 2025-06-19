@@ -13,7 +13,7 @@ const Home: React.FC = () => {
       {/* Bandeau violet haut */}
       <div className="purple-banner">
         <div className="banner-content">
-          <ContributionsOverview />
+          <ContributionsOverview activeTab={activeTab} />
           <FeedbackTabs activeTab={activeTab} onTabChange={setActiveTab} />
         </div>
       </div>

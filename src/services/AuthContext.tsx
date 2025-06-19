@@ -71,11 +71,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const fetchUserProfile = async () => {
     try {
       const res = await apiService.get("/user/me");
-     setUserProfile({ ...res.data, type: res.data.role === "brand" ? "brand" : "user" });
+      setUserProfile({ ...res.data, type: res.data.role === "brand" ? "brand" : "user" });
     } catch (err) {
       console.error("Erreur profil", err);
+      throw err; // 🔁 permet à useEffect de détecter l’échec
     }
   };
+
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken") || sessionStorage.getItem("accessToken");
@@ -83,11 +85,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     if (token && type) {
       apiService.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      fetchUserProfile().then(() => {
-        setIsAuthenticated(true);
-      });
+      fetchUserProfile()
+        .then(() => setIsAuthenticated(true))
+        .catch(() => {
+          logout(); // si token invalide ou expiré → on nettoie tout
+        });
     }
   }, []);
+
 
   return (
     <AuthContext.Provider

@@ -3,26 +3,29 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 
 interface ProtectedRouteProps {
-    children: React.ReactNode;
-    allowedTypes?: ("user" | "brand")[];
+  children: React.ReactNode;
+  allowedTypes?: ("user" | "brand")[];
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedTypes }) => {
-    const { isAuthenticated, userProfile } = useAuth();
+  const { isAuthenticated, userProfile } = useAuth();
 
-    if (!userProfile) {
-        return <div>Chargement…</div>;
-    }
+  // 🔐 Si non authentifié → redirection immédiate
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
 
-    if (!isAuthenticated) {
-        return <Navigate to="/login" replace />;
-    }
+  // 🔁 Si authentifié mais profil non encore chargé → chargement
+  if (isAuthenticated && !userProfile) {
+    return <div>Chargement…</div>;
+  }
 
-    if (allowedTypes && !allowedTypes.includes(userProfile.type)) {
-        return <Navigate to="/" replace />;
-    }
+  // 🚫 Si le type d'utilisateur est non autorisé
+  if (allowedTypes && userProfile && !allowedTypes.includes(userProfile.type)) {
+    return <Navigate to="/" replace />;
+  }
 
-    return <>{children}</>;
+  return <>{children}</>;
 };
 
 export default ProtectedRoute;

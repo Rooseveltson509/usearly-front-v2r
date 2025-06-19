@@ -36,8 +36,6 @@ function App() {
             />
             <Route path="/profile" element={<UserProfilePage />} />
             <Route path="/account" element={<UserAccount />} />
-            {/* <Route path="/confirm" element={<ConfirmAccount />} /> */}
-
             <Route
               path="/home"
               element={

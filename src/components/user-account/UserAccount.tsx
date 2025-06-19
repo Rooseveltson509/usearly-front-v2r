@@ -11,7 +11,7 @@ const getFullAvatarUrl = (path: string | null) => {
 };
 
 const UserAccount = () => {
-    const { userProfile, fetchUserProfile } = useAuth();
+    const { userProfile, fetchUserProfile, logout } = useAuth();
     const [avatarPreview, setAvatarPreview] = useState<string | null>(userProfile?.avatar || null);
     const [avatarFile, setAvatarFile] = useState<File | null>(null);
     const [pseudo, setPseudo] = useState("");
@@ -80,7 +80,8 @@ const UserAccount = () => {
         if (confirm("Êtes-vous sûr de vouloir supprimer votre compte ?")) {
             try {
                 await deleteUserProfile();
-                window.location.href = "/";
+                logout();
+                window.location.href = "/login";
             } catch (err: any) {
                 setMessage(err.message);
             }

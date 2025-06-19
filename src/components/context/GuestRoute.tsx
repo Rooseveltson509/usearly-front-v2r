@@ -9,11 +9,18 @@ interface GuestRouteProps {
 const GuestRoute: React.FC<GuestRouteProps> = ({ children }) => {
   const { isAuthenticated, userProfile } = useAuth();
 
-  if (isAuthenticated) {
-    const redirectPath = userProfile?.type === "brand" ? "/dashboard-brand" : "/home";
+  // 🔁 En cours de chargement (profil pas encore prêt)
+  if (isAuthenticated && !userProfile) {
+    return <div>Chargement…</div>;
+  }
+
+  // 🔐 Rediriger les utilisateurs connectés
+  if (isAuthenticated && userProfile) {
+    const redirectPath = userProfile.type === "brand" ? "/dashboard-brand" : "/home";
     return <Navigate to={redirectPath} replace />;
   }
 
+  // 👤 Utilisateur non connecté → autorisé
   return children;
 };
 
