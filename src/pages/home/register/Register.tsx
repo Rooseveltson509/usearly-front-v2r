@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { registerUser } from "@src/services/apiService";
 import type { RegisterData } from "@src/types/RegisterData";
 import { useNavigate } from "react-router-dom";
-import "./register.scss";
+import "./Register.scss";
 import { showToast } from "@src/utils/toastUtils";
 
 const passwordRules = {
