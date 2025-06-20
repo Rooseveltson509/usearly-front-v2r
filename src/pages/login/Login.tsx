@@ -26,7 +26,7 @@ const Login = () => {
       }
 
       // Appel au AuthContext pour stocker les infos
-      login(response.accessToken, response.user, rememberMe);
+      await login(response.accessToken, response.user, rememberMe);
       showToast("✅ Connexion réussie !");
     } catch (error: any) {
       showToast(error.message || "Erreur de connexion", "error");

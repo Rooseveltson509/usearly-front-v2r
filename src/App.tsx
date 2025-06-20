@@ -11,6 +11,7 @@ import ProtectedRoute from "./components/context/ProtectedRoute";
 import { Home } from "./pages/home";
 import RequestResetPassword from "./pages/forgot-and-reset-pwd/RequestResetPassword";
 import ResetPassword from "./pages/forgot-and-reset-pwd/ResetPassword";
+import NavigateToHome from "./pages/NavigateToHome";
 
 function App() {
   return (
@@ -24,6 +25,15 @@ function App() {
               </GuestRoute>
             }
             />
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute allowedTypes={["user", "brand"]}>
+                  <NavigateToHome />
+                </ProtectedRoute>
+              }
+            />
+
             <Route path="/login" element={
               <GuestRoute>
                 <Login />
