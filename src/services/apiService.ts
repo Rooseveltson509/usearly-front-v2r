@@ -94,7 +94,28 @@ export const resendConfirmationCode = async (email: string) => {
   const response = await apiService.post("/user/resend-confirmation", { email });
   return response.data;
 };
+export const requestResetPassword = async (email: string) => {
+  const res = await apiService.post("/user/request-reset", { email });
+  return res.data;
+};
 
+export const resetPassword = async ({
+  token,
+  newPassword,
+  confirmPassword,
+}: {
+  token: string;
+  newPassword: string;
+  confirmPassword: string;
+}) => {
+  const res = await apiService.post("/user/reset-password", {
+    token,
+    newPassword,
+    confirmPassword,
+  });
+
+  return res.data;
+};
 
 export const updateUserProfile = async (formData: FormData) => {
   try {

@@ -28,8 +28,7 @@ const Register = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
-
-
+  const allowedSpecialChars = "@$!%*?&";
 
   const [validations, setValidations] = useState({
     length: false,
@@ -40,14 +39,16 @@ const Register = () => {
   });
 
   useEffect(() => {
+    const invalidSpecialChar = /[^A-Za-z0-9@$!%*?&]/.test(password); // ❌ char non autorisé
     setValidations({
       length: passwordRules.length(password),
       lowercase: passwordRules.lowercase(password),
       uppercase: passwordRules.uppercase(password),
       number: passwordRules.number(password),
-      special: passwordRules.special(password),
+      special: passwordRules.special(password) && !invalidSpecialChar,
     });
   }, [password]);
+
 
   const onSubmit = async (data: RegisterData) => {
     const formattedDate = formatDateToFR(data.born);
@@ -116,6 +117,11 @@ const Register = () => {
             Au moins un caractère spécial.
           </li>
         </ul>
+        {/[^\w@$!%*?&]/.test(password) && (
+          <p className="invalid-special">
+            ❌ Caractère non autorisé détecté. Seuls <strong>@ $ ! % * ? &</strong> sont permis.
+          </p>
+        )}
 
         <input
           type="password"

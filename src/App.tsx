@@ -9,6 +9,8 @@ import UserProfilePage from "./components/user-profile/UserProfilePage";
 import UserAccount from "./components/user-account/UserAccount";
 import ProtectedRoute from "./components/context/ProtectedRoute";
 import { Home } from "./pages/home";
+import RequestResetPassword from "./pages/forgot-and-reset-pwd/RequestResetPassword";
+import ResetPassword from "./pages/forgot-and-reset-pwd/ResetPassword";
 
 function App() {
   return (
@@ -34,8 +36,24 @@ function App() {
               </GuestRoute>
             }
             />
-            <Route path="/profile" element={<UserProfilePage />} />
-            <Route path="/account" element={<UserAccount />} />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute allowedTypes={["user"]}>
+                  <UserProfilePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/account"
+              element={
+                <ProtectedRoute allowedTypes={["user"]}>
+                  <UserAccount />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/forgot-password" element={<GuestRoute><RequestResetPassword /></GuestRoute>} />
+            <Route path="/reset-password" element={<GuestRoute><ResetPassword /></GuestRoute>} />
             <Route
               path="/home"
               element={

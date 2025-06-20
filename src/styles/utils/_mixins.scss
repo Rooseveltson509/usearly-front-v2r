@@ -1,5 +1,41 @@
-@mixin flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+@use "@styles/base/variables" as *;
+
+@mixin heading {
+  font-family: $font-family;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: $gray-900;
+  margin-bottom: 1.2rem;
+}
+
+@mixin input {
+  font-family: $font-family;
+  font-size: 1rem;
+  padding: 0.75rem;
+  border: 1px solid $gray-300;
+  border-radius: $border-radius-md;
+  background: #fff;
+  width: 100%;
+  box-sizing: border-box;
+
+  &:focus {
+    border-color: $primary;
+    outline: none;
+  }
+}
+
+@mixin button {
+  font-family: $font-family;
+  padding: 0.75rem 1.25rem;
+  background-color: $primary;
+  color: white;
+  border: none;
+  border-radius: $border-radius-md;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: darken($primary, 10%);
+  }
 }

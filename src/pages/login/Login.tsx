@@ -3,6 +3,7 @@ import { loginUser, loginBrand } from "@src/services/apiService";
 import { showToast } from "@src/utils/toastUtils";
 import { useAuth } from "@src/services/AuthContext";
 import "./Login.scss";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const { login } = useAuth();
@@ -65,9 +66,8 @@ const Login = () => {
             />
             Se souvenir de moi.
           </label>
-          <span className="forgot-link">Mot de passe oublié ?</span>
+          <Link to="/forgot-password" className="forgot-link">Mot de passe oublié ?</Link>
         </div>
-
         <button type="submit" disabled={loading}>
           {loading ? "Connexion..." : "Se connecter"}
         </button>

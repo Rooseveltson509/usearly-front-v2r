@@ -193,7 +193,7 @@ const FeedbackList = ({ activeTab, isPublic = false }: Props) => {
 
   return (
     <div className="feedback-list">
-      <FeedbackListHeader viewMode={viewMode} onChange={setViewMode} />
+      <FeedbackListHeader viewMode={viewMode} onChange={setViewMode} activeTab={activeTab}/>
       {activeTab === "report" && viewMode === "filtered" && (
         <FilterForm
           brandInput={brandInput}
