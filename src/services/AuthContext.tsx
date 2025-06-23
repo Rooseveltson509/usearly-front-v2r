@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { apiService } from "@src/services/apiService";
+import { apiService, logoutUser } from "@src/services/apiService";
 
 interface UserProfile {
   id?: string;
@@ -14,6 +14,7 @@ interface UserProfile {
 
 interface AuthContextProps {
   isAuthenticated: boolean;
+  isLoading: boolean;
   userProfile: UserProfile | null;
   login: (accessToken: string, profile: UserProfile, rememberMe?: boolean) => Promise<void>;
   logout: () => void;
@@ -26,6 +27,7 @@ const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
   const login = async (
@@ -59,6 +61,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const logout = () => {
+    logoutUser(); // 👉 vide le cookie côté back
+
     setIsAuthenticated(false);
     setUserProfile(null);
     delete apiService.defaults.headers.common["Authorization"];
@@ -68,16 +72,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     navigate("/");
   };
 
+
   const fetchUserProfile = async () => {
     try {
       const res = await apiService.get("/user/me");
       setUserProfile({ ...res.data, type: res.data.role === "brand" ? "brand" : "user" });
     } catch (err) {
       console.error("Erreur profil", err);
-      throw err; // 🔁 permet à useEffect de détecter l’échec
+      throw err;
     }
   };
-
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken") || sessionStorage.getItem("accessToken");
@@ -87,16 +91,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       apiService.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       fetchUserProfile()
         .then(() => setIsAuthenticated(true))
-        .catch(() => {
-          logout(); // si token invalide ou expiré → on nettoie tout
-        });
+        .catch(() => logout())
+        .finally(() => setIsLoading(false));
+    } else {
+      setIsLoading(false);
     }
   }, []);
 
-
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, userProfile, login, logout, setUserProfile, fetchUserProfile }}
+      value={{ isAuthenticated, isLoading, userProfile, login, logout, setUserProfile, fetchUserProfile }}
     >
       {children}
     </AuthContext.Provider>

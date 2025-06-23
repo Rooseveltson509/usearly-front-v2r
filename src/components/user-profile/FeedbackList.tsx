@@ -19,6 +19,7 @@ import { apiService } from "@src/services/apiService";
 import { mapDescriptionToGroupedReport } from "@src/utils/mapDescriptionToReport";
 import FeedbackView from "../feedbacks/FeedbackView";
 import FilterForm from "../feedbacks/FilterForm";
+import { explodeGroupedReports, groupByDate } from "@src/utils/feedbackListUtils";
 
 const limit = 10;
 
@@ -42,6 +43,7 @@ const FeedbackList = ({ activeTab, isPublic = false }: Props) => {
   const [openId, setOpenId] = useState<string | null>(null);
   const [groupOpen, setGroupOpen] = useState<Record<string, boolean>>({});
   const [viewMode, setViewMode] = useState<"grouped" | "flat" | "chrono" | "filtered">("grouped");
+  const [displayMode, setDisplayMode] = useState<"flat" | "chrono" | "filtered">("flat");
   const [feedbackStates, setFeedbackStates] = useState<Record<FeedbackType, FeedbackState>>({
     report: { data: [], page: 1, hasMore: true, loading: false, error: null },
     coupdecoeur: { data: [], page: 1, hasMore: true, loading: false, error: null },
@@ -67,6 +69,7 @@ const FeedbackList = ({ activeTab, isPublic = false }: Props) => {
     if (!hasInitializedViewMode.current) {
       if (activeTab === "report") {
         setViewMode("grouped");
+        setDisplayMode("flat");
       } else {
         setViewMode("flat");
       }
@@ -109,6 +112,21 @@ const FeedbackList = ({ activeTab, isPublic = false }: Props) => {
   }, [isAuthenticated, activeTab, viewMode, isPublic]);
 
   useEffect(() => {
+    const fetchBrands = async () => {
+      const res = await apiService.get("/reportings/brands");
+      setAvailableBrands(res.data.brands || []);
+    };
+    fetchBrands();
+  }, []);
+
+  useEffect(() => {
+    const filtered = availableBrands.filter((b) =>
+      b.toLowerCase().includes(brandInput.toLowerCase())
+    );
+    setSuggestions(filtered);
+  }, [brandInput, availableBrands]);
+
+  useEffect(() => {
     if (!selectedBrand) return;
     const fetchCategories = async () => {
       try {
@@ -125,39 +143,23 @@ const FeedbackList = ({ activeTab, isPublic = false }: Props) => {
   }, [selectedBrand]);
 
   useEffect(() => {
-    const fetchBrands = async () => {
-      const res = await apiService.get("/reportings/brands");
-      setAvailableBrands(res.data.brands || []);
-    };
-    fetchBrands();
-  }, []);
-
-  useEffect(() => {
-    const filtered = availableBrands.filter(b =>
-      b.toLowerCase().includes(brandInput.toLowerCase())
-    );
-    setSuggestions(filtered);
-  }, [brandInput, availableBrands]);
-
-  const handleSelectSuggestion = (brand: string) => {
-    setSelectedBrand(brand);
-    setBrandInput(brand);
-    setSuggestions([]);
-  };
-
-  useEffect(() => {
     const fetchData = async () => {
       if (!isAuthenticated || currentState.loading || !currentState.hasMore) return;
       updateState({ loading: true, error: null });
       try {
         let newData: any[] = [];
         if (activeTab === "report") {
-          if (viewMode === "chrono") {
+          // seulement si mode filtré (cas particulier)
+          if (displayMode === "filtered") {
             const res = await getFilteredReportDescriptions("all", "all", currentState.page, limit);
-            const validDescriptions = res.data.filter((desc: FeedbackDescription) => !!desc.createdAt && desc.createdAt !== "");
+            const validDescriptions = res.data.filter(
+              (desc: FeedbackDescription) => !!desc.createdAt && desc.createdAt !== ""
+            );
             newData = validDescriptions.map(mapDescriptionToGroupedReport);
           } else {
-            const res = isPublic ? await getGroupedReportsPublic(currentState.page, limit) : await getGroupedReportsByUser(currentState.page, limit);
+            const res = isPublic
+              ? await getGroupedReportsPublic(currentState.page, limit)
+              : await getGroupedReportsByUser(currentState.page, limit);
             newData = res.results;
           }
         } else if (activeTab === "coupdecoeur") {
@@ -173,7 +175,7 @@ const FeedbackList = ({ activeTab, isPublic = false }: Props) => {
       }
     };
     fetchData();
-  }, [currentState.page, activeTab, viewMode]);
+  }, [currentState.page, activeTab, displayMode]);
 
   useEffect(() => {
     if (!loaderRef.current || !currentState.hasMore || currentState.loading) return;
@@ -187,14 +189,43 @@ const FeedbackList = ({ activeTab, isPublic = false }: Props) => {
     return () => observer.current?.disconnect();
   }, [currentState.data.length, currentState.loading, currentState.hasMore]);
 
+  const getDisplayData = (): any[] => {
+    if (activeTab === "report") {
+      // Pour "filtered", on garde les descriptions individuelles (déjà mapées dans fetchData)
+      if (displayMode === "filtered") {
+        return currentState.data;
+      }
+
+      // Pour "flat" et "chrono", on ne touche pas aux données groupées
+      return currentState.data;
+    }
+
+    // Pour coup de cœur / suggestion
+    return currentState.data;
+  };
+
+
   const handleToggle = (id: string) => {
     setOpenId((prev) => (prev === id ? null : id));
   };
 
+  const handleSelectSuggestion = (brand: string) => {
+    setSelectedBrand(brand);
+    setBrandInput(brand);
+    setSuggestions([]);
+  };
+
+
   return (
     <div className="feedback-list">
-      <FeedbackListHeader viewMode={viewMode} onChange={setViewMode} activeTab={activeTab}/>
-      {activeTab === "report" && viewMode === "filtered" && (
+      <FeedbackListHeader
+        viewMode={displayMode}
+        onChange={setDisplayMode}
+        activeTab={activeTab}
+      />
+
+
+      {activeTab === "report" && displayMode === "filtered" && (
         <FilterForm
           brandInput={brandInput}
           setBrandInput={setBrandInput}
@@ -205,10 +236,11 @@ const FeedbackList = ({ activeTab, isPublic = false }: Props) => {
           availableCategories={availableCategories}
         />
       )}
+
       <FeedbackView
         activeTab={activeTab}
-        viewMode={viewMode}
-        currentState={currentState}
+        viewMode={displayMode}
+        currentState={{ ...currentState, data: getDisplayData() }}
         openId={openId}
         setOpenId={setOpenId}
         groupOpen={groupOpen}
@@ -227,6 +259,7 @@ const FeedbackList = ({ activeTab, isPublic = false }: Props) => {
           );
         }}
       />
+
       <LoaderBlock
         loaderRef={loaderRef}
         loading={currentState.loading}

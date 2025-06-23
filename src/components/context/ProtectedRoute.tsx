@@ -8,19 +8,16 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedTypes }) => {
-  const { isAuthenticated, userProfile } = useAuth();
+  const { isAuthenticated, isLoading, userProfile } = useAuth();
 
-  // 🔐 Si non authentifié → redirection immédiate
+  if (isLoading) {
+    return <div>Chargement…</div>;
+  }
+
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 
-  // 🔁 Si authentifié mais profil non encore chargé → chargement
-  if (isAuthenticated && !userProfile) {
-    return <div>Chargement…</div>;
-  }
-
-  // 🚫 Si le type d'utilisateur est non autorisé
   if (allowedTypes && userProfile && !allowedTypes.includes(userProfile.type)) {
     return <Navigate to="/" replace />;
   }

@@ -9,6 +9,7 @@ export const apiService = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
 
 interface RegisterResponse {
@@ -151,6 +152,14 @@ export const updatePassword = async ({
     const msg =
       error.response?.data?.error || "Erreur lors de la mise à jour du mot de passe.";
     throw new Error(msg);
+  }
+};
+
+export const logoutUser = async () => {
+  try {
+    await apiService.post("/user/logout");
+  } catch (error) {
+    console.error("Erreur lors du logout côté serveur", error);
   }
 };
 
