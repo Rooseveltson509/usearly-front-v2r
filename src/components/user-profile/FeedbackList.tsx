@@ -143,13 +143,28 @@ const FeedbackList = ({ activeTab, isPublic = false }: Props) => {
   }, [selectedBrand]);
 
   useEffect(() => {
+    setFeedbackStates((prev) => ({
+      ...prev,
+      [activeTab]: {
+        page: 1,
+        data: [],
+        hasMore: true,
+        loading: false,
+        error: null,
+      }
+    }));
+  }, [activeTab]);
+
+
+  useEffect(() => {
     const fetchData = async () => {
       if (!isAuthenticated || currentState.loading || !currentState.hasMore) return;
       updateState({ loading: true, error: null });
+
       try {
         let newData: any[] = [];
+
         if (activeTab === "report") {
-          // seulement si mode filtré (cas particulier)
           if (displayMode === "filtered") {
             const res = await getFilteredReportDescriptions("all", "all", currentState.page, limit);
             const validDescriptions = res.data.filter(
@@ -163,19 +178,30 @@ const FeedbackList = ({ activeTab, isPublic = false }: Props) => {
             newData = res.results;
           }
         } else if (activeTab === "coupdecoeur") {
-          const res = isPublic ? await getPublicCoupsDeCoeur(currentState.page, limit) : await getUserCoupsDeCoeur(currentState.page, limit);
+          const res = isPublic
+            ? await getPublicCoupsDeCoeur(currentState.page, limit)
+            : await getUserCoupsDeCoeur(currentState.page, limit);
           newData = res.coupdeCoeurs;
         } else if (activeTab === "suggestion") {
-          const res = isPublic ? await getPublicSuggestions(currentState.page, limit) : await getUserSuggestions(currentState.page, limit);
+          const res = isPublic
+            ? await getPublicSuggestions(currentState.page, limit)
+            : await getUserSuggestions(currentState.page, limit);
           newData = res.suggestions;
         }
-        updateState({ data: [...currentState.data, ...newData], hasMore: newData.length === limit, loading: false });
+
+        updateState({
+          data: [...currentState.data, ...newData],
+          hasMore: newData.length === limit,
+          loading: false
+        });
       } catch (err: any) {
         updateState({ error: err.message || "Erreur de chargement", loading: false });
       }
     };
+
     fetchData();
-  }, [currentState.page, activeTab, displayMode]);
+  }, [currentState.page, currentState.loading, currentState.hasMore, activeTab, displayMode]);
+
 
   useEffect(() => {
     if (!loaderRef.current || !currentState.hasMore || currentState.loading) return;

@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiService, logoutUser } from "@src/services/apiService";
+import { refreshToken } from "@src/services/refreshToken";
+import { getAccessToken, isTokenExpired, storeTokenInCurrentStorage } from "@src/services/tokenStorage";
 
 interface UserProfile {
   id?: string;
@@ -72,7 +74,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     navigate("/");
   };
 
-
   const fetchUserProfile = async () => {
     try {
       const res = await apiService.get("/user/me");
@@ -84,19 +85,54 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken") || sessionStorage.getItem("accessToken");
-    const type = localStorage.getItem("userType");
+    const tryRestoreSession = async () => {
+      let token = getAccessToken();
 
-    if (token && type) {
-      apiService.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      fetchUserProfile()
-        .then(() => setIsAuthenticated(true))
-        .catch(() => logout())
-        .finally(() => setIsLoading(false));
-    } else {
-      setIsLoading(false);
-    }
+      if (!token || isTokenExpired(token)) {
+        console.log("🔄 Aucun token valide, tentative de refresh...");
+        try {
+          token = await refreshToken();
+          if (token) {
+            storeTokenInCurrentStorage(token);
+          } else {
+            setIsAuthenticated(false);
+            setIsLoading(false);
+            return;
+          }
+        } catch (error) {
+          console.error("❌ Erreur lors du refresh token :", error);
+          setIsAuthenticated(false);
+          setIsLoading(false);
+          return;
+        }
+      }
+
+      // 👇 Ensuite : profil utilisateur
+      try {
+        const type = localStorage.getItem("userType") || sessionStorage.getItem("userType");
+
+        if (!type || (type !== "user" && type !== "brand")) {
+          console.warn("❌ Type utilisateur invalide ou manquant");
+          setIsAuthenticated(false);
+          setIsLoading(false);
+          return;
+        }
+
+        const res = await apiService.get("/user/me");
+        const profile = { ...res.data, type: res.data.role || "user" };
+        setUserProfile(profile);
+        setIsAuthenticated(true);
+      } catch (err) {
+        console.error("❌ Erreur lors de la récupération du profil :", err);
+        logout(); // ou handleLogout()
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    tryRestoreSession();
   }, []);
+
 
   return (
     <AuthContext.Provider

@@ -103,6 +103,19 @@ export const useFeedbackData = ({
     fetchSuggestions();
   }, [brandInput]);
 
+useEffect(() => {
+  setFeedbackStates((prev) => ({
+    ...prev,
+    [activeTab]: {
+      page: 1,
+      data: [],
+      hasMore: true,
+      loading: false,
+      error: null,
+    }
+  }));
+}, [activeTab]);
+
   // Charger les feedbacks
   useEffect(() => {
     const fetchData = async () => {

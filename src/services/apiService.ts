@@ -1,5 +1,7 @@
 import axios from "axios";
 import type { RegisterData } from "@src/types/RegisterData";
+import { refreshToken } from "./refreshToken";
+import { getAccessToken, isTokenExpired, storeTokenInCurrentStorage } from "./tokenStorage";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
 const API_VERSION = import.meta.env.VITE_API_VERSION || "api/v1";
@@ -85,6 +87,46 @@ export const registerUser = async (
     throw new Error(errorMessage);
   }
 };
+
+// ✅ Intercepteur de requête – juste pour attacher le token
+apiService.interceptors.request.use(
+  (config) => {
+    const token = getAccessToken();
+
+    if (token) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
+
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+// ✅ Intercepteur de réponse – gère les 401 et rafraîchit si besoin
+apiService.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      try {
+        const newAccessToken = await refreshToken();
+        storeTokenInCurrentStorage(newAccessToken);
+        originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+        return apiService(originalRequest);
+      } catch (refreshError) {
+        console.error("❌ Échec du refresh token :", refreshError);
+        localStorage.removeItem("accessToken");
+        sessionStorage.removeItem("accessToken");
+        return Promise.reject(refreshError);
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
 
 export const confirmEmailRequest = async (data: { userId: string; token: string }) => {
   const response = await apiService.post("/user/confirm", data);
