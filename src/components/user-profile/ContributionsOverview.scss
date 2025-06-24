@@ -2,51 +2,39 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-  text-align: center;
+  margin-top: 40px;
   color: #fff;
+  gap: 8px;
+  font-family: Onest;
 
-  .contribution-bubble {
-    background-color: #4e8cff;
-    color: #fff;
-    font-size: 2rem;
-    font-weight: bold;
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
+  // -- Bloc pour l’affichage des contributions (compteur + label)
+  .contributions-count {
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
-  }
+    gap: 8px;
+    position: relative;
 
-  .contribution-title {
-    font-size: 1.3rem;
-    font-weight: 600;
-    margin-top: 0.4rem;
-  }
+    .count {
+      position: absolute;
+      top: 43%;
+      left: 14%;
+      transform: translate(-50%, -50%);
+      font-size: 40px;
+      font-weight: 500;
+      color: #fff;
+    }
 
-  .contribution-summary {
-    font-size: 0.95rem;
-    color: #ccc;
-    max-width: 300px;
-  }
-}
-@keyframes pop {
-  0% {
-    transform: scale(1);
-  }
-  40% {
-    transform: scale(1.3);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
+    .contributions-label {
+      font-size: 13px;
+      font-weight: 300;
+      display: flex;
+      flex-direction: column;
 
-.contribution-bubble {
-  animation: pop 0.3s ease;
-}
-.contribution-bubble.pop {
-  animation: pop 0.3s ease;
+      .title {
+        font-size: 36px;
+        font-weight: 200;
+      }
+    }
+  }
 }

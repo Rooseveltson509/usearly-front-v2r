@@ -1,3 +1,5 @@
+@use "@src/styles/base/variables" as *;
+
 .feedback-tabs {
   display: flex;
   gap: 1rem;
@@ -8,22 +10,26 @@
   .tab-btn {
     padding: 0.6rem 1.2rem;
     border-radius: 2rem;
-    border: 1px solid transparent;
-    background-color: #f0f2f5;
+    border: 2px solid transparent;
+    background-color: $white;
     color: #333;
-    font-size: 0.95rem;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
+    font-family: Inter;
 
     &:hover {
-      background-color: #e1e5e9;
+      border: 2px solid $blue;
     }
 
     &.active {
-      background-color: #4e8cff;
-      color: #fff;
-      border-color: #4e8cff;
+      background-color: $blue;
+      color: $white;
+      border-color: $blue;
+      &:hover {
+        border: 2px solid $white;
+      }
     }
   }
 }

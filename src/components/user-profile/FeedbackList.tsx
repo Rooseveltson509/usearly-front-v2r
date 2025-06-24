@@ -14,12 +14,18 @@ import ReportCard from "./ReportCard";
 import "./FeedbackList.scss";
 import FeedbackListHeader from "../report-grouped/feedback-list-header/FeedbackListHeader";
 import LoaderBlock from "../report-grouped/LoaderBlock";
-import type { ExplodedGroupedReport, FeedbackDescription } from "@src/types/Reports";
+import type {
+  ExplodedGroupedReport,
+  FeedbackDescription,
+} from "@src/types/Reports";
 import { apiService } from "@src/services/apiService";
 import { mapDescriptionToGroupedReport } from "@src/utils/mapDescriptionToReport";
 import FeedbackView from "../feedbacks/FeedbackView";
 import FilterForm from "../feedbacks/FilterForm";
-import { explodeGroupedReports, groupByDate } from "@src/utils/feedbackListUtils";
+import {
+  explodeGroupedReports,
+  groupByDate,
+} from "@src/utils/feedbackListUtils";
 
 const limit = 10;
 
@@ -42,12 +48,30 @@ const FeedbackList = ({ activeTab, isPublic = false }: Props) => {
   const observer = useRef<IntersectionObserver | null>(null);
   const [openId, setOpenId] = useState<string | null>(null);
   const [groupOpen, setGroupOpen] = useState<Record<string, boolean>>({});
-  const [viewMode, setViewMode] = useState<"grouped" | "flat" | "chrono" | "filtered">("grouped");
-  const [displayMode, setDisplayMode] = useState<"flat" | "chrono" | "filtered">("flat");
-  const [feedbackStates, setFeedbackStates] = useState<Record<FeedbackType, FeedbackState>>({
+  const [viewMode, setViewMode] = useState<
+    "grouped" | "flat" | "chrono" | "filtered"
+  >("grouped");
+  const [displayMode, setDisplayMode] = useState<
+    "flat" | "chrono" | "filtered"
+  >("flat");
+  const [feedbackStates, setFeedbackStates] = useState<
+    Record<FeedbackType, FeedbackState>
+  >({
     report: { data: [], page: 1, hasMore: true, loading: false, error: null },
-    coupdecoeur: { data: [], page: 1, hasMore: true, loading: false, error: null },
-    suggestion: { data: [], page: 1, hasMore: true, loading: false, error: null },
+    coupdecoeur: {
+      data: [],
+      page: 1,
+      hasMore: true,
+      loading: false,
+      error: null,
+    },
+    suggestion: {
+      data: [],
+      page: 1,
+      hasMore: true,
+      loading: false,
+      error: null,
+    },
   });
   const [selectedBrand, setSelectedBrand] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -78,7 +102,8 @@ const FeedbackList = ({ activeTab, isPublic = false }: Props) => {
   }, [activeTab]);
 
   useEffect(() => {
-    if (!isAuthenticated || activeTab !== "report" || viewMode !== "grouped") return;
+    if (!isAuthenticated || activeTab !== "report" || viewMode !== "grouped")
+      return;
 
     const fetchMultiplePages = async () => {
       let allData: ExplodedGroupedReport[] = [];
@@ -151,14 +176,14 @@ const FeedbackList = ({ activeTab, isPublic = false }: Props) => {
         hasMore: true,
         loading: false,
         error: null,
-      }
+      },
     }));
   }, [activeTab]);
 
-
   useEffect(() => {
     const fetchData = async () => {
-      if (!isAuthenticated || currentState.loading || !currentState.hasMore) return;
+      if (!isAuthenticated || currentState.loading || !currentState.hasMore)
+        return;
       updateState({ loading: true, error: null });
 
       try {
@@ -166,9 +191,15 @@ const FeedbackList = ({ activeTab, isPublic = false }: Props) => {
 
         if (activeTab === "report") {
           if (displayMode === "filtered") {
-            const res = await getFilteredReportDescriptions("all", "all", currentState.page, limit);
+            const res = await getFilteredReportDescriptions(
+              "all",
+              "all",
+              currentState.page,
+              limit
+            );
             const validDescriptions = res.data.filter(
-              (desc: FeedbackDescription) => !!desc.createdAt && desc.createdAt !== ""
+              (desc: FeedbackDescription) =>
+                !!desc.createdAt && desc.createdAt !== ""
             );
             newData = validDescriptions.map(mapDescriptionToGroupedReport);
           } else {
@@ -192,22 +223,35 @@ const FeedbackList = ({ activeTab, isPublic = false }: Props) => {
         updateState({
           data: [...currentState.data, ...newData],
           hasMore: newData.length === limit,
-          loading: false
+          loading: false,
         });
       } catch (err: any) {
-        updateState({ error: err.message || "Erreur de chargement", loading: false });
+        updateState({
+          error: err.message || "Erreur de chargement",
+          loading: false,
+        });
       }
     };
 
     fetchData();
-  }, [currentState.page, currentState.loading, currentState.hasMore, activeTab, displayMode]);
-
+  }, [
+    currentState.page,
+    currentState.loading,
+    currentState.hasMore,
+    activeTab,
+    displayMode,
+  ]);
 
   useEffect(() => {
-    if (!loaderRef.current || !currentState.hasMore || currentState.loading) return;
+    if (!loaderRef.current || !currentState.hasMore || currentState.loading)
+      return;
     if (observer.current) observer.current.disconnect();
     observer.current = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && !currentState.loading && currentState.hasMore) {
+      if (
+        entries[0].isIntersecting &&
+        !currentState.loading &&
+        currentState.hasMore
+      ) {
         updateState({ page: currentState.page + 1 });
       }
     });
@@ -230,7 +274,6 @@ const FeedbackList = ({ activeTab, isPublic = false }: Props) => {
     return currentState.data;
   };
 
-
   const handleToggle = (id: string) => {
     setOpenId((prev) => (prev === id ? null : id));
   };
@@ -241,7 +284,6 @@ const FeedbackList = ({ activeTab, isPublic = false }: Props) => {
     setSuggestions([]);
   };
 
-
   return (
     <div className="feedback-list">
       <FeedbackListHeader
@@ -249,7 +291,6 @@ const FeedbackList = ({ activeTab, isPublic = false }: Props) => {
         onChange={setDisplayMode}
         activeTab={activeTab}
       />
-
 
       {activeTab === "report" && displayMode === "filtered" && (
         <FilterForm
@@ -274,7 +315,9 @@ const FeedbackList = ({ activeTab, isPublic = false }: Props) => {
         selectedBrand={selectedBrand}
         selectedCategory={selectedCategory}
         renderCard={(item: ExplodedGroupedReport) => {
-          const cardId = `${item.reportingId}_${item.subCategory?.descriptions?.[0]?.id || "0"}`;
+          const cardId = `${item.reportingId}_${
+            item.subCategory?.descriptions?.[0]?.id || "0"
+          }`;
           return (
             <ReportCard
               key={cardId}

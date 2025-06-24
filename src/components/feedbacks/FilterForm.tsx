@@ -37,7 +37,10 @@ const FilterForm: React.FC<Props> = ({
         </ul>
       )}
 
-      <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
+      <select
+        value={selectedCategory}
+        onChange={(e) => setSelectedCategory(e.target.value)}
+      >
         <option value="">-- Sélectionner une catégorie --</option>
         {availableCategories.map((cat) => (
           <option key={cat} value={cat}>

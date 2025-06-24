@@ -5,7 +5,7 @@ export type FeedbackType = "report" | "coupdecoeur" | "suggestion";
 const tabs: { key: FeedbackType; label: string }[] = [
   { key: "report", label: "Signalements" },
   { key: "coupdecoeur", label: "Coups de cœur" },
-  { key: "suggestion", label: "Suggestions" }
+  { key: "suggestion", label: "Suggestions" },
 ];
 
 interface FeedbackTabsProps {

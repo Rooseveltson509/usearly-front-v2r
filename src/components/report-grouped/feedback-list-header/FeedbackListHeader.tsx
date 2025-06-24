@@ -22,7 +22,9 @@ const FeedbackListHeader = ({ viewMode, onChange, activeTab }: Props) => {
       <div className="dropdown-container">
         <button
           onClick={() => setShowDropdown(!showDropdown)}
-          className={`dropdown-toggle ${["flat", "chrono"].includes(viewMode) ? "active" : ""}`}
+          className={`dropdown-toggle ${
+            ["flat", "chrono"].includes(viewMode) ? "active" : ""
+          }`}
         >
           {viewMode === "chrono" ? "Tri par date" : "Vue simple"}
         </button>
