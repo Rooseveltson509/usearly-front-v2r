@@ -1,231 +1,255 @@
 @use "@src/styles/base/variables" as *;
 @use "@src/styles/utils/mixins" as *;
 
-        .brand-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
+.brand-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
 
 .feedback-card {
-    width: 100%; // ✅ occupe toute la largeur du parent
-    max-width: 740px;
-    margin-bottom: 0; // ✅ retiré, on utilise `gap` dans le parent maintenant
-    background-color: $gray-50;
-    border-radius: $border-radius-md;
-    overflow: hidden;
-    transition: box-shadow 0.3s ease;
-    border: 1px solid rgba(0, 0, 0, 0.04); // pour donner un léger contour
+  width: 100%; // ✅ occupe toute la largeur du parent
+  max-width: 740px;
+  margin-bottom: 0; // ✅ retiré, on utilise `gap` dans le parent maintenant
+  background-color: #fff;
+  border-radius: $border-radius-md;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.04); // pour donner un léger contour
 
-    &.open {
-        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
-    }
-
+  &.open {
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
     .card-header {
+      background: #fff;
+    }
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    background-color: #f3f7ff;
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+
+      .category-icon {
+        font-size: 1.25rem;
+      }
+
+      .info {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 1rem;
-        background-color: $gray-100;
+        flex-direction: column;
 
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-
-            .category-icon {
-                font-size: 1.25rem;
-            }
-
-            .info {
-                display: flex;
-                flex-direction: column;
-
-                h3 {
-                    margin: 0;
-                    font-size: 1rem;
-                    font-weight: 600;
-                }
-
-                .brand-name {
-                    font-size: 0.875rem;
-                    color: $gray-600;
-                }
-            }
-
-            .count-badge {
-                background-color: $primary;
-                color: $white;
-                font-size: 0.75rem;
-                font-weight: 600;
-                padding: 0.2rem 0.6rem;
-                border-radius: $border-radius-sm;
-                margin-left: 0.5rem;
-                height: fit-content;
-            }
+        h3 {
+          margin: 0;
+          font-size: 15px;
+          font-weight: 800;
+          font-family: Raleway;
         }
 
-        .brand-avatar {
-            width: 40px;
-            height: 40px;
+        .brand-name {
+          font-size: 0.875rem;
+          color: $gray-600;
+        }
+      }
+
+      .count-badge {
+        color: $primary;
+        border: 1px solid $primary;
+        font-size: 15px;
+        font-weight: 600;
+        padding: 0px 8px;
+        border-radius: 25px;
+        height: fit-content;
+        font-family: Inter;
+      }
+    }
+
+    .brand-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+  }
+
+  .card-body {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    .description-p {
+      padding-left: 50px;
+      margin: -20px 0 20px 0;
+      font-family: Inter;
+      font-size: 14px;
+      font-weight: 300;
+    }
+    .main-description {
+      font-size: 0.95rem;
+      margin-bottom: 0.75rem;
+      color: $gray-900;
+    }
+
+    .description-slide-container {
+      background-color: #faf7ff;
+      border-radius: 12px;
+      padding: 1rem;
+      position: relative;
+
+      .slide-content {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+        opacity: 0;
+        transform: translateY(5px);
+        animation: fadeInSlide 0.3s ease forwards;
+
+        .emoji-avatar {
+          position: relative;
+          .emoji {
+            position: absolute;
+            bottom: -10px;
+            left: -10px;
+            font-size: 24px;
+            border-radius: 50%;
+            width: fit-content;
+            height: fit-content;
+            z-index: 1;
+          }
+
+          img {
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             object-fit: cover;
-        }
-    }
-
-    .card-body {
-        padding: 1rem;
-
-        .main-description {
-            font-size: 0.95rem;
-            margin-bottom: 0.75rem;
-            color: $gray-900;
+            display: block;
+          }
         }
 
-        .description-slide-container {
-            background-color: $gray-50;
-            border-radius: $border-radius-sm;
-            padding: 1rem;
-            position: relative;
-
-            .slide-content {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 1rem;
-                opacity: 0;
-                transform: translateY(5px);
-                animation: fadeInSlide 0.3s ease forwards;
-
-                .emoji {
-                    font-size: 1.8rem;
-                }
-
-                .text {
-                    flex: 1;
-                    font-size: 0.95rem;
-                    font-style: italic;
-                    color: $gray-800;
-                }
-
-                .user {
-                    display: flex;
-                    align-items: center;
-                    gap: 0.5rem;
-
-                    img {
-                        width: 32px;
-                        height: 32px;
-                        border-radius: 50%;
-                        object-fit: cover;
-                    }
-
-                    .user-meta {
-                        display: flex;
-                        flex-direction: column;
-                        line-height: 1;
-
-                        .pseudo {
-                            font-size: 0.8rem;
-                            color: $gray-800;
-                            font-weight: 600;
-                        }
-
-                        .brand {
-                            font-size: 0.7rem;
-                            color: $gray-500;
-                        }
-                    }
-
-                    .badge-me {
-                        background-color: $success;
-                        color: white;
-                        font-size: 0.65rem;
-                        padding: 0.1rem 0.4rem;
-                        border-radius: 8px;
-                        font-weight: bold;
-                    }
-
-                    .time {
-                        font-size: 0.7rem;
-                        color: $gray-500;
-                    }
-                }
-            }
-
-            .navigation {
-                display: flex;
-                justify-content: center;
-                margin-top: 0.5rem;
-                gap: 1rem;
-
-                button {
-                    background: none;
-                    border: none;
-                    font-size: 1.25rem;
-                    cursor: pointer;
-                    color: $primary;
-
-                    &:disabled {
-                        color: $gray-400;
-                        cursor: not-allowed;
-                    }
-                }
-            }
-        }
-
-        .feedback-actions {
+        .description-text {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          .user-meta {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-top: 1rem;
-
-            .reaction {
-                background: transparent;
-                border: none;
-                font-size: 1.2rem;
-                cursor: pointer;
-                transition: transform 0.2s ease;
-
-                &.active {
-                    color: $primary;
-                    font-weight: bold;
-                    transform: scale(1.2);
-                }
-
-                &:hover {
-                    transform: scale(1.1);
-                }
-
+            font-size: 12px;
+            font-family: Inter;
+            .pseudo {
+              font-weight: 400;
             }
 
-            .comments {
-                font-size: 0.85rem;
-                color: $gray-700;
-                display: flex;
-                align-items: center;
-                gap: 0.3rem;
+            .brand {
+              font-weight: 700;
             }
-
-            .shake-button {
-                background-color: $primary;
-                color: white;
-                border: none;
-                padding: 0.4rem 1rem;
-                border-radius: $border-radius-sm;
-                font-size: 0.85rem;
-                cursor: pointer;
-                font-weight: 600;
-                transition: background 0.3s ease;
-
-                &:hover {
-                    //background-color: darken($primary, 5%);
-                }
+            .time {
+              font-family: Urbanist;
+              font-weight: 600;
+              color: grey;
             }
+          }
+          .text {
+            font-size: 14px;
+            font-family: Inter;
+            font-weight: 300;
+          }
         }
+
+        .description-chevrons {
+          margin-right: -4px;
+          .navigation {
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+
+            button {
+              background: none;
+              border: 1px solid #424b5a;
+              border-radius: 50%;
+              cursor: pointer;
+              color: #424b5a;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              .chevron-icon {
+                width: 22px;
+                height: 22px;
+                stroke-width: 1;
+              }
+
+              &:disabled {
+                border-color: $gray-400;
+                color: $gray-400;
+                cursor: not-allowed;
+              }
+            }
+          }
+        }
+
+        .user {
+          display: flex;
+          .badge-me {
+            background-color: $success;
+            color: white;
+            font-size: 0.65rem;
+            padding: 0.1rem 0.4rem;
+            border-radius: 8px;
+            font-weight: bold;
+          }
+        }
+      }
     }
+
+    .feedback-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1rem;
+
+      .reaction {
+        background: transparent;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+
+        &.active {
+          color: $primary;
+          font-weight: bold;
+          transform: scale(1.2);
+        }
+
+        &:hover {
+          transform: scale(1.1);
+        }
+      }
+
+      .comments {
+        font-size: 0.85rem;
+        color: $gray-700;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+      }
+
+      .shake-button {
+        background-color: $primary;
+        color: white;
+        border: none;
+        padding: 0.4rem 1rem;
+        border-radius: $border-radius-sm;
+        font-size: 0.85rem;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background 0.3s ease;
+      }
+    }
+  }
 }
 // quand ouvert, on pivote la flèche
 .category-block.open .category-header .chevron {
@@ -233,41 +257,34 @@
 }
 
 .feedback-capture {
-    width: 100%;
-    max-height: 220px;
-    object-fit: cover;
-    border-radius: 10px;
-    margin-bottom: 12px;
+  width: 100%;
+  max-height: 220px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 12px;
 }
 
 .category-icon {
-    width: 30px;
-    height: 30px;
-    margin-right: 0.5rem;
+  width: 30px;
+  height: 30px;
+  margin-right: 0.5rem;
 
-    img {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
-    }
+  img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
 }
 
 .empty-capture {
-    height: 220px;
-    margin-bottom: 12px;
-    background-color: transparent; // ou rgba(0, 0, 0, 0.03);
-}
-
-.user.highlight-self {
-    border: 1px solid $primary;
-    background-color: rgba($primary, 0.05);
-    padding: 0.4rem 0.6rem;
-    border-radius: $border-radius-sm;
+  height: 220px;
+  margin-bottom: 12px;
+  background-color: transparent; // ou rgba(0, 0, 0, 0.03);
 }
 
 @keyframes fadeInSlide {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

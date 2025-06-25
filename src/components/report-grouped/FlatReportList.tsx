@@ -14,21 +14,27 @@ interface Props {
 
 // 🔹 Fonction pour récupérer la dernière date
 const getLatestDateLabel = (reports: GroupedReport[]) => {
-    const allDates = reports
-        .flatMap((r) =>
-            r.subCategories?.flatMap((sub) =>
-                sub.descriptions?.map((d) => d.createdAt) || []
-            ) || []
-        )
-        .filter(Boolean)
-        .map((date) => parseISO(date as string));
+  const allDates = reports
+    .flatMap(
+      (r) =>
+        r.subCategories?.flatMap(
+          (sub) => sub.descriptions?.map((d) => d.createdAt) || []
+        ) || []
+    )
+    .filter(Boolean)
+    .map((date) => parseISO(date as string));
 
-    if (allDates.length === 0) return null;
-    const latest = allDates.reduce((a, b) => (a > b ? a : b));
-    return formatDistanceToNow(latest, { locale: fr, addSuffix: true });
+  if (allDates.length === 0) return null;
+  const latest = allDates.reduce((a, b) => (a > b ? a : b));
+  return formatDistanceToNow(latest, { locale: fr, addSuffix: true });
 };
 
-const FlatReportList = ({ grouped, groupOpen, setGroupOpen, renderCard }: Props): JSX.Element => {
+const FlatReportList = ({
+  grouped,
+  groupOpen,
+  setGroupOpen,
+  renderCard,
+}: Props): JSX.Element => {
   const [logos, setLogos] = useState<Record<string, string>>({});
 
   useEffect(() => {
@@ -55,21 +61,27 @@ const FlatReportList = ({ grouped, groupOpen, setGroupOpen, renderCard }: Props)
           <div key={brand} className="report-group">
             <div
               className={`report-group-header ${isOpen ? "open" : ""}`}
-              onClick={() => setGroupOpen(prev => ({ ...prev, [brand]: !prev[brand] }))}
+              onClick={() =>
+                setGroupOpen((prev) => ({ ...prev, [brand]: !prev[brand] }))
+              }
             >
-              <div className="report-header-left">
-                <div className="report-main-info">
-                  <span className="report-count">{total}</span>
-                  <span className="report-label">
-                    signalement{total > 1 ? "s" : ""} sur <strong>{brand}</strong>
-                  </span>
-                </div>
-                {latestDate && <span className="report-date">{latestDate}</span>}
+              <div className="report-main-info">
+                <span className="report-count">{total}</span>
+                <span className="report-label">
+                  signalement{total > 1 ? "s" : ""} sur <strong>{brand}</strong>
+                </span>
               </div>
-              <img className="brand-logo" src={logos[brand] || ""} alt={brand} />
+              {latestDate && <span className="report-date">{latestDate}</span>}
+              <img
+                className="brand-logo"
+                src={logos[brand] || ""}
+                alt={brand}
+              />
             </div>
 
-            {isOpen && <div className="report-list">{reports.map(renderCard)}</div>}
+            {isOpen && (
+              <div className="report-list">{reports.map(renderCard)}</div>
+            )}
           </div>
         );
       })}
@@ -78,9 +90,6 @@ const FlatReportList = ({ grouped, groupOpen, setGroupOpen, renderCard }: Props)
 };
 
 export default FlatReportList;
-
-
-
 
 /* import React, { useEffect, useState, type JSX } from "react";
 import type { GroupedReport } from "@src/types/Reports";

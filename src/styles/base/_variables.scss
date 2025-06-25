@@ -11,18 +11,22 @@ $gray-900: #212529;
 
 // Couleurs principales
 $primary: #4f46e5;
-$secondary: #6b7280;
+$secondary: #8e8e8e;
+$tertiary: #1b1839;
+$blue: #4e8cff;
+$white: #ffffff;
 $danger: #dc2626;
 $success: #16a34a;
 
 // Font
-$font-family: 'Raleway', sans-serif;
+$font-family: "Raleway", sans-serif;
 $font-size-base: 1rem;
 
 // Radius
 $border-radius-sm: 4px;
 $border-radius-md: 8px;
 $border-radius-lg: 12px;
+$border-color: #e4e4e4;
 
 // Spacings
 $spacing-xs: 4px;
@@ -30,7 +34,6 @@ $spacing-sm: 8px;
 $spacing-md: 16px;
 $spacing-lg: 24px;
 $spacing-xl: 32px;
-
 
 // 🎨 Couleurs principales
 $primary: #007aff;
@@ -46,9 +49,8 @@ $gray-700: #4a5568;
 $gray-800: #2d3748;
 $gray-900: #1a202c;
 
-
 // 🧱 Typographie
-$font-main: 'Raleway', sans-serif;
+$font-main: "Raleway", sans-serif;
 $white: #f5f6fa;
 $black: #000;
 $danger: #7d0b0b;
@@ -73,4 +75,3 @@ $dark-bg: #121212;
 $dark-border: #2c2c2c;
 $dark-input-bg: #1e1e1e;
 $dark-disabled: #555;
-

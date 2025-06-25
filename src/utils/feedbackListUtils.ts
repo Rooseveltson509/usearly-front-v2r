@@ -68,5 +68,3 @@ export function groupByDate(reports: ExplodedGroupedReport[]) {
     return acc;
   }, {} as Record<string, ExplodedGroupedReport[]>);
 }
-
-
