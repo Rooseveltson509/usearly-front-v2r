@@ -22,10 +22,6 @@ import { apiService } from "@src/services/apiService";
 import { mapDescriptionToGroupedReport } from "@src/utils/mapDescriptionToReport";
 import FeedbackView from "../feedbacks/FeedbackView";
 import FilterForm from "../feedbacks/FilterForm";
-import {
-  explodeGroupedReports,
-  groupByDate,
-} from "@src/utils/feedbackListUtils";
 
 const limit = 10;
 
@@ -202,6 +198,7 @@ const FeedbackList = ({ activeTab, isPublic = false }: Props) => {
                 !!desc.createdAt && desc.createdAt !== ""
             );
             newData = validDescriptions.map(mapDescriptionToGroupedReport);
+            
           } else {
             const res = isPublic
               ? await getGroupedReportsPublic(currentState.page, limit)
