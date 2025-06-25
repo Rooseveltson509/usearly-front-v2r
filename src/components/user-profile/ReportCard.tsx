@@ -131,22 +131,25 @@ const ReportCard: React.FC<ReportCardProps> = ({
             </div>
           </div>
 
-          {userProfile?.id && current?.id && (
-            <div className="feedback-actions">
-              <DescriptionReactionSelector
-                userId={userProfile.id}
-                descriptionId={current.id}
-                type={"report"}
-              />
-            </div>
-          )}
-          {userProfile?.id && (
-            <DescriptionCommentSection
-              userId={userProfile.id}
-              descriptionId={current.id}
-              type={"report"}
-            />
-          )}
+          <div className="feedback-footer">
+            {userProfile?.id && current?.id && (
+              <div className="feedback-interactions">
+                <div className="interactions-row">
+                  <DescriptionReactionSelector
+                    userId={userProfile.id}
+                    descriptionId={current.id}
+                    type={"report"}
+                  />
+                  <DescriptionCommentSection
+                    userId={userProfile.id}
+                    descriptionId={current.id}
+                    type={"report"}
+                  />
+                </div>
+                <div></div>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>

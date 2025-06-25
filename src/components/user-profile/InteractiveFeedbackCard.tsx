@@ -113,7 +113,7 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item }) => {
       </div>
 
       {isOpen && (
-        <>
+        <div className="feeback-footer">
           <div className="feedback-actions">
             <DescriptionReactionSelector
               userId={userProfile.id}
@@ -126,7 +126,7 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item }) => {
             descriptionId={item.id}
             type={item.type}
           />
-        </>
+        </div>
       )}
     </div>
   );
