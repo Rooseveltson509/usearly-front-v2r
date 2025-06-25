@@ -204,49 +204,22 @@
         }
       }
     }
-
-    .feedback-actions {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    .feedback-footer {
       margin-top: 1rem;
+      overflow: visible; /* 🎯 Permet au contenu de déborder */
 
-      .reaction {
-        background: transparent;
-        border: none;
-        font-size: 1.2rem;
-        cursor: pointer;
-        transition: transform 0.2s ease;
-
-        &.active {
-          color: $primary;
-          font-weight: bold;
-          transform: scale(1.2);
-        }
-
-        &:hover {
-          transform: scale(1.1);
-        }
-      }
-
-      .comments {
-        font-size: 0.85rem;
-        color: $gray-700;
+      .feedback-interactions {
         display: flex;
-        align-items: center;
-        gap: 0.3rem;
-      }
+        flex-direction: column;
+        gap: 0;
+        overflow: visible; /* 🎯 Permet au contenu de déborder */
 
-      .shake-button {
-        background-color: $primary;
-        color: white;
-        border: none;
-        padding: 0.4rem 1rem;
-        border-radius: $border-radius-sm;
-        font-size: 0.85rem;
-        cursor: pointer;
-        font-weight: 600;
-        transition: background 0.3s ease;
+        .interactions-row {
+          display: flex;
+          align-items: flex-start;
+          gap: 16px;
+          
+        }
       }
     }
   }

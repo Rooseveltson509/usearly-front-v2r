@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import "./DescriptionReactionSelector.scss";
 import { useReactionsForDescription } from "@src/hooks/useReactionsForDescription";
 import { useReactionsForItem } from "@src/hooks/useReactionsForItem";
-import { emojiLabelMap, emojiMapByType } from "@src/components/constants/emojiMapByType";
+import { getEmojisForType } from "@src/components/constants/emojiMapByType";
 import EmojiWithTooltip from "@src/components/constants/EmojiWithTooltip";
 
 interface Props {
@@ -11,22 +11,24 @@ interface Props {
   type: "report" | "suggestion" | "coupdecoeur";
 }
 
-const DescriptionReactionSelector: React.FC<Props> = ({ userId, descriptionId, type }) => {
+const DescriptionReactionSelector: React.FC<Props> = ({
+  userId,
+  descriptionId,
+  type,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const popupTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const emojiOptions = emojiMapByType[type];
 
-  const {
-    getCount,
-    hasReactedWith,
-    handleReact,
-  } = type === "suggestion" || type === "coupdecoeur"
+  // Récupérer les emojis pour le type actuel
+  const emojiOptions = getEmojisForType(type);
+
+  const { getCount, hasReactedWith, handleReact } =
+    type === "suggestion" || type === "coupdecoeur"
       ? useReactionsForItem(userId, descriptionId, type)
       : useReactionsForDescription(userId, descriptionId);
 
-
   const activeReactions = emojiOptions
-    .map((emoji) => ({ emoji, count: getCount(emoji) }))
+    .map((item) => ({ emoji: item.emoji, count: getCount(item.emoji) }))
     .filter((r) => r.count > 0);
 
   const total = activeReactions.reduce((acc, r) => acc + r.count, 0);
@@ -49,32 +51,35 @@ const DescriptionReactionSelector: React.FC<Props> = ({ userId, descriptionId, t
       onMouseLeave={handleMouseLeave}
     >
       <button className="main-reaction">
-        {activeReactions.length > 0
-          ? (
-            <>
-              {activeReactions.map((r) => (
-                <span className="emoji" key={r.emoji}>{r.emoji}</span>
-              ))}
-              <span className="total">{total}</span>
-            </>
-          ) : "😊"}
+        {activeReactions.length > 0 ? (
+          <>
+            {activeReactions.map((r) => (
+              <span className="emoji" key={r.emoji}>
+                {r.emoji}
+              </span>
+            ))}
+            <span className="total">{total}</span>
+          </>
+        ) : (
+          "😊"
+        )}
       </button>
 
       {isOpen && (
         <div className="reaction-popup">
-          {emojiOptions.map((emoji) => {
-            const count = getCount(emoji);
-            const isSelected = hasReactedWith(emoji);
+          {emojiOptions.map((item) => {
+            const count = getCount(item.emoji);
+            const isSelected = hasReactedWith(item.emoji);
 
             return (
               <EmojiWithTooltip
-                key={emoji}
-                emoji={emoji}
-                label={emojiLabelMap[emoji]}
+                key={item.emoji}
+                emoji={item.emoji}
+                label={item.label}
                 count={count}
                 isSelected={isSelected}
                 onClick={async () => {
-                  await handleReact(emoji);
+                  await handleReact(item.emoji);
                   setIsOpen(false);
                 }}
               />

@@ -4,7 +4,7 @@ import type { FeedbackDescription } from "@src/types/Reports";
 import { useAuth } from "@src/services/AuthContext";
 import DescriptionReactionSelector from "@src/utils/DescriptionReactionSelector";
 import DescriptionCommentSection from "@src/components/report-desc-comment/DescriptionCommentSection";
-import "./FilteredDescriptionCard.scss"
+import "./FilteredDescriptionCard.scss";
 
 const getFullAvatarUrl = (path: string | null) => {
   if (!path) return "/default-avatar.png";
@@ -54,24 +54,25 @@ const FilteredDescriptionCard = ({ description }: Props) => {
             })}
           </span>
         </div>
+        <div className="feedback-footer">
+          {userProfile?.id && description.id && (
+            <>
+              <div className="feedback-actions">
+                <DescriptionReactionSelector
+                  userId={userProfile.id}
+                  descriptionId={description.id}
+                  type={"report"}
+                />
+              </div>
 
-        {userProfile?.id && description.id && (
-          <>
-            <div className="feedback-actions">
-              <DescriptionReactionSelector
+              <DescriptionCommentSection
                 userId={userProfile.id}
                 descriptionId={description.id}
                 type={"report"}
               />
-            </div>
-
-            <DescriptionCommentSection
-              userId={userProfile.id}
-              descriptionId={description.id}
-              type={"report"}
-            />
-          </>
-        )}
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
