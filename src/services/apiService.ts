@@ -108,11 +108,26 @@ apiService.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    const token = getAccessToken();
+    const userType =
+      localStorage.getItem("userType") || sessionStorage.getItem("userType");
+
+    // Sécurité : ne tente PAS de refresh si aucun token ou aucun userType
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
+      token &&
+      userType &&
+      (userType === "user" || userType === "brand")
+    ) {
       originalRequest._retry = true;
 
       try {
         const newAccessToken = await refreshToken();
+        if (!newAccessToken) {
+          throw new Error("No access token after refresh");
+        }
+
         storeTokenInCurrentStorage(newAccessToken);
         originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
         return apiService(originalRequest);

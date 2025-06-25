@@ -2,7 +2,11 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiService, logoutUser } from "@src/services/apiService";
 import { refreshToken } from "@src/services/refreshToken";
-import { getAccessToken, isTokenExpired, storeTokenInCurrentStorage } from "@src/services/tokenStorage";
+import {
+  getAccessToken,
+  isTokenExpired,
+  storeTokenInCurrentStorage,
+} from "@src/services/tokenStorage";
 
 interface UserProfile {
   id?: string;
@@ -18,7 +22,11 @@ interface AuthContextProps {
   isAuthenticated: boolean;
   isLoading: boolean;
   userProfile: UserProfile | null;
-  login: (accessToken: string, profile: UserProfile, rememberMe?: boolean) => Promise<void>;
+  login: (
+    accessToken: string,
+    profile: UserProfile,
+    rememberMe?: boolean
+  ) => Promise<void>;
   logout: () => void;
   setUserProfile: (profile: UserProfile | null) => void;
   fetchUserProfile: () => Promise<void>;
@@ -77,7 +85,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const fetchUserProfile = async () => {
     try {
       const res = await apiService.get("/user/me");
-      setUserProfile({ ...res.data, type: res.data.role === "brand" ? "brand" : "user" });
+      setUserProfile({
+        ...res.data,
+        type: res.data.role === "brand" ? "brand" : "user",
+      });
     } catch (err) {
       console.error("Erreur profil", err);
       throw err;
@@ -86,7 +97,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const tryRestoreSession = async () => {
-      let token = getAccessToken();
+      const storedUserType =
+        localStorage.getItem("userType") || sessionStorage.getItem("userType");
+      const accessToken = getAccessToken();
+
+      // 🛡️ Empêche la boucle infinie si rien n’est stocké côté front
+      if (!storedUserType && !accessToken) {
+        console.warn("🚫 Aucun userType ni accessToken. Session ignorée.");
+        setIsLoading(false);
+        return;
+      }
+
+      let token = accessToken;
 
       if (!token || isTokenExpired(token)) {
         console.log("🔄 Aucun token valide, tentative de refresh...");
@@ -95,31 +117,24 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           if (token) {
             storeTokenInCurrentStorage(token);
           } else {
-            setIsAuthenticated(false);
-            setIsLoading(false);
+            console.warn("🚫 Aucun token reçu après refresh. Déconnexion...");
+            logout(); // ✅ stoppe tout
             return;
           }
         } catch (error) {
           console.error("❌ Erreur lors du refresh token :", error);
-          setIsAuthenticated(false);
-          setIsLoading(false);
+          logout(); // ✅ évite la boucle
           return;
         }
       }
 
       // 👇 Ensuite : profil utilisateur
       try {
-        const type = localStorage.getItem("userType") || sessionStorage.getItem("userType");
-
-        if (!type || (type !== "user" && type !== "brand")) {
-          console.warn("❌ Type utilisateur invalide ou manquant");
-          setIsAuthenticated(false);
-          setIsLoading(false);
-          return;
-        }
-
         const res = await apiService.get("/user/me");
-        const profile = { ...res.data, type: res.data.role || "user" };
+        const profile = {
+          ...res.data,
+          type: res.data.role || "user",
+        };
         setUserProfile(profile);
         setIsAuthenticated(true);
       } catch (err) {
@@ -133,10 +148,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     tryRestoreSession();
   }, []);
 
-
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, isLoading, userProfile, login, logout, setUserProfile, fetchUserProfile }}
+      value={{
+        isAuthenticated,
+        isLoading,
+        userProfile,
+        login,
+        logout,
+        setUserProfile,
+        fetchUserProfile,
+      }}
     >
       {children}
     </AuthContext.Provider>
@@ -145,6 +167,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth must be used within AuthProvider");
+  if (!context)
+    throw new Error("useAuth must be used within AuthProvider");
   return context;
 };
