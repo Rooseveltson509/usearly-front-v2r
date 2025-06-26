@@ -71,12 +71,16 @@ const FlatReportList = ({
                   signalement{total > 1 ? "s" : ""} sur <strong>{brand}</strong>
                 </span>
               </div>
-              {latestDate && <span className="report-date">{latestDate}</span>}
-              <img
-                className="brand-logo"
-                src={logos[brand] || ""}
-                alt={brand}
-              />
+              <div className="report-extra-info">
+                {latestDate && (
+                  <span className="report-date">{latestDate}</span>
+                )}
+                <img
+                  className="brand-logo"
+                  src={logos[brand] || ""}
+                  alt={brand}
+                />
+              </div>
             </div>
 
             {isOpen && (

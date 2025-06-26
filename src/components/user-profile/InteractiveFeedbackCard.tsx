@@ -43,7 +43,7 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item }) => {
       className={`interactive-feedback-card ${isOpen ? "open" : ""}`}
       onClick={(e) => {
         const isReactionOrComment =
-          (e.target as HTMLElement).closest(".feedback-actions") ||
+          (e.target as HTMLElement).closest(".feedback-footer") ||
           (e.target as HTMLElement).closest(".description-comment-section");
 
         if (!isReactionOrComment) toggle();
@@ -53,6 +53,21 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item }) => {
         <div className="emoji">{item.emoji || "💬"}</div>
         <div className="title-section">
           <h3 className="title">{title}</h3>
+        </div>
+        <div className="card-footer">
+          {isValidDate(item.createdAt) && (
+            <span className="time">
+              {formatDistanceToNow(new Date(item.createdAt), {
+                locale: fr,
+                addSuffix: true,
+              })}
+            </span>
+          )}
+        </div>
+      </div>
+
+      {isOpen && (
+        <div>
           <div className="feedback-desc">
             <p>
               {showFullText || description.length <= 120
@@ -71,61 +86,35 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item }) => {
               )}
             </p>
           </div>
-        </div>
-        <div className="user-info">
-          <img
-            className="avatar"
-            src={getFullUrl(item.author?.avatar || null)}
-            alt="avatar"
-          />
-          <div className="meta">
-            <span className="pseudo">{item.author?.pseudo}</span>
-            <span className="brand">x {item.marque}</span>
+          {item.capture && (
+            <div className="capture-wrapper">
+              <img
+                src={item.capture ?? undefined}
+                alt="capture"
+                className="capture"
+              />
+            </div>
+          )}
+
+          {/* 🎯 Même structure feedback-footer que ReportCard */}
+          <div className="feedback-footer">
+            {userProfile?.id && item?.id && (
+              <div className="feedback-interactions">
+                <div className="interactions-row">
+                  {/* <DescriptionReactionSelector
+                    userId={userProfile.id}
+                    descriptionId={item.id}
+                    type={item.type}
+                  /> */}
+                  <DescriptionCommentSection
+                    userId={userProfile.id}
+                    descriptionId={item.id}
+                    type={item.type}
+                  />
+                </div>
+              </div>
+            )}
           </div>
-          <img
-            className="brand-logo"
-            src={`/${item.marque}-logo.png`}
-            alt={`${item.marque} logo`}
-            onError={(e) => (e.currentTarget.style.display = "none")}
-          />
-        </div>
-      </div>
-
-      {isOpen && item.capture && (
-        <div className="capture-wrapper">
-          <img
-            src={item.capture ?? undefined}
-            alt="capture"
-            className="capture"
-          />
-        </div>
-      )}
-
-      <div className="card-footer">
-        {isValidDate(item.createdAt) && (
-          <span className="time">
-            {formatDistanceToNow(new Date(item.createdAt), {
-              locale: fr,
-              addSuffix: true,
-            })}
-          </span>
-        )}
-      </div>
-
-      {isOpen && (
-        <div className="feeback-footer">
-          <div className="feedback-actions">
-            <DescriptionReactionSelector
-              userId={userProfile.id}
-              descriptionId={item.id}
-              type={item.type}
-            />
-          </div>
-          <DescriptionCommentSection
-            userId={userProfile.id}
-            descriptionId={item.id}
-            type={item.type}
-          />
         </div>
       )}
     </div>

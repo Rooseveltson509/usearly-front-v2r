@@ -5,7 +5,6 @@ import { fr } from "date-fns/locale";
 import type { GroupedReport, FeedbackDescription } from "@src/types/Reports";
 import { useAuth } from "@src/services/AuthContext";
 import { getCategoryIconPathFromSubcategory } from "@src/utils/IconsUtils";
-import DescriptionReactionSelector from "@src/utils/DescriptionReactionSelector";
 import DescriptionCommentSection from "../report-desc-comment/DescriptionCommentSection";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -64,17 +63,11 @@ const ReportCard: React.FC<ReportCardProps> = ({
           </span>
           <div className="info">
             <h3>{firstSubCategory}</h3>
-            {/* <span className="brand-name">{report.marque}</span> */}
           </div>
           <div className="count-badge">
             {report.subCategories[0]?.descriptions.length || 0}
           </div>
         </div>
-        {/* <img
-          src={getFullAvatarUrl(initialDescription?.user?.avatar || "")}
-          alt="avatar"
-          className="brand-avatar"
-        /> */}
       </div>
 
       {isOpen && current && (
@@ -131,25 +124,14 @@ const ReportCard: React.FC<ReportCardProps> = ({
             </div>
           </div>
 
-          <div className="feedback-footer">
-            {userProfile?.id && current?.id && (
-              <div className="feedback-interactions">
-                <div className="interactions-row">
-                  <DescriptionReactionSelector
-                    userId={userProfile.id}
-                    descriptionId={current.id}
-                    type={"report"}
-                  />
-                  <DescriptionCommentSection
-                    userId={userProfile.id}
-                    descriptionId={current.id}
-                    type={"report"}
-                  />
-                </div>
-                <div></div>
-              </div>
-            )}
-          </div>
+          {/* ----- Footer ----- */}
+          {userProfile?.id && current?.id && (
+            <DescriptionCommentSection
+              userId={userProfile.id}
+              descriptionId={current.id}
+              type="report"
+            />
+          )}
         </div>
       )}
     </div>

@@ -2,7 +2,9 @@
   background: white;
   padding: 1rem 2rem;
   border-bottom: 1px solid #eee;
-
+  position: fixed;
+  z-index: 1000;
+  width: 100%;
   .header-container {
     display: flex;
     align-items: center;
@@ -118,5 +120,4 @@
       }
     }
   }
-
 }

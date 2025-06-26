@@ -17,6 +17,7 @@
   padding: 1rem 3rem 1rem 1rem;
   height: 260px;
   background: $tertiary;
+  margin-top: 74px;
 
   .banner-content {
     position: absolute; // Permet de centrer par rapport à la page
@@ -80,7 +81,6 @@
     }
   }
 
-
   .user-header {
     position: absolute;
     bottom: -50px; // ajuste pour faire dépasser
@@ -129,7 +129,6 @@
   grid-template-columns: 260px 1fr 260px;
   gap: 2rem;
   padding: 3rem 2rem;
-  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -166,4 +165,3 @@
     order: 1;
   }
 }
-

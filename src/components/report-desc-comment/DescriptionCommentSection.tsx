@@ -4,6 +4,7 @@ import { useAuth } from "@src/services/AuthContext";
 import { apiService } from "@src/services/apiService";
 import Swal from "sweetalert2";
 import Comment from "../../assets/icons/comment.svg";
+import DescriptionReactionSelector from "@src/utils/DescriptionReactionSelector";
 
 interface Comment {
   id: string;
@@ -61,6 +62,21 @@ const DescriptionCommentSection: React.FC<Props> = ({
       fetchComments();
     }
   }, [descriptionId, type, showComments]);
+  // Charger le nombre de commentaires
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const url = buildCommentEndpoint();
+        const res = await apiService.get(url);
+        setComments(res.data.comments || []);
+      } catch (err) {
+        console.error("Erreur lors du chargement des commentaires :", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchComments();
+  }, [descriptionId, type]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -93,7 +109,7 @@ const DescriptionCommentSection: React.FC<Props> = ({
       text: "Cette action est irréversible.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#d9534f",
+      confirmButtonColor: "#4e8cff",
       cancelButtonColor: "#6c757d",
       confirmButtonText: "Oui, supprimer",
       cancelButtonText: "Annuler",
@@ -117,20 +133,26 @@ const DescriptionCommentSection: React.FC<Props> = ({
 
   return (
     <div className="description-comment-section">
-      {/* Bouton toggle pour afficher/masquer les commentaires */}
-      <div className="flex-row">
-        <button
-          className="comment-toggle-btn"
-          onClick={toggleComments}
-          title={
-            showComments
-              ? "Masquer les commentaires"
-              : "Afficher les commentaires"
-          }
-        >
-          <img src={Comment} alt="Comment" />
-          {comments.length > 0 && ` ${comments.length}`}
-        </button>
+      <div className="feedback-footer">
+        <div className="flex-row">
+          <DescriptionReactionSelector
+            userId={userId}
+            descriptionId={descriptionId}
+            type={type}
+          />
+          <button
+            className="comment-toggle-btn"
+            onClick={toggleComments}
+            title={
+              showComments
+                ? "Masquer les commentaires"
+                : "Afficher les commentaires"
+            }
+          >
+            <img src={Comment} alt="Comment" />
+            {comments.length > 0 && ` ${comments.length}`}
+          </button>
+        </div>
         <div className="shake-btn">Shake</div>
       </div>
       {/* Affichage conditionnel des commentaires EN DESSOUS */}
