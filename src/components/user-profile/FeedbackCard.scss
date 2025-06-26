@@ -204,24 +204,6 @@
         }
       }
     }
-    .feedback-footer {
-      margin-top: 1rem;
-      overflow: visible; /* 🎯 Permet au contenu de déborder */
-
-      .feedback-interactions {
-        display: flex;
-        flex-direction: column;
-        gap: 0;
-        overflow: visible; /* 🎯 Permet au contenu de déborder */
-
-        .interactions-row {
-          display: flex;
-          align-items: flex-start;
-          gap: 16px;
-          
-        }
-      }
-    }
   }
 }
 // quand ouvert, on pivote la flèche

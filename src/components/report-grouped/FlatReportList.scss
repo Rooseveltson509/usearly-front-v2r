@@ -37,6 +37,12 @@
       }
     }
 
+    .report-extra-info {
+      display: flex;
+      align-items: center;
+      gap: 64px;
+    }
+
     .report-date {
       font-size: 13px;
       font-weight: 500;
