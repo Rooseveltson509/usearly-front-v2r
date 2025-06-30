@@ -1,6 +1,6 @@
 .header {
   background: white;
-  padding: 1rem 2rem;
+  padding: 1rem;
   border-bottom: 1px solid #eee;
   position: fixed;
   z-index: 1000;
@@ -8,7 +8,7 @@
   .header-container {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-evenly;
   }
 
   .logo {

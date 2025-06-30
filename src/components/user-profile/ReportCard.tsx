@@ -1,12 +1,19 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import "./FeedbackCard.scss";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 import type { GroupedReport, FeedbackDescription } from "@src/types/Reports";
 import { useAuth } from "@src/services/AuthContext";
 import { getCategoryIconPathFromSubcategory } from "@src/utils/IconsUtils";
+import { fetchValidBrandLogo } from "@src/utils/brandLogos";
 import DescriptionCommentSection from "../report-desc-comment/DescriptionCommentSection";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
+import { createPortal } from "react-dom";
 
 interface ReportCardProps {
   report: GroupedReport;
@@ -25,7 +32,21 @@ const ReportCard: React.FC<ReportCardProps> = ({
   onToggle,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [showOtherReports, setShowOtherReports] = useState(false);
+  const [logos, setLogos] = useState<Record<string, string>>({});
   const { userProfile } = useAuth();
+  const [isImageOpen, setIsImageOpen] = useState(false);
+
+  useEffect(() => {
+    const loadBrandLogo = async () => {
+      if (report.marque) {
+        const logoUrl = await fetchValidBrandLogo(report.marque);
+        setLogos({ [report.marque]: logoUrl });
+      }
+    };
+
+    loadBrandLogo();
+  }, [report.marque]);
 
   const allDescriptions: FeedbackDescription[] = Array.isArray(
     report.subCategories
@@ -50,7 +71,12 @@ const ReportCard: React.FC<ReportCardProps> = ({
     if (currentIndex > 0) setCurrentIndex((i) => i - 1);
   };
 
+  const toggleOtherReports = () => {
+    setShowOtherReports(!showOtherReports);
+  };
+
   const firstSubCategory = report.subCategories?.[0]?.subCategory || "Autre";
+
   return (
     <div className={`feedback-card ${isOpen ? "open" : ""}`}>
       <div className="card-header" onClick={onToggle}>
@@ -64,67 +90,143 @@ const ReportCard: React.FC<ReportCardProps> = ({
           <div className="info">
             <h3>{firstSubCategory}</h3>
           </div>
-          <div className="count-badge">
-            {report.subCategories[0]?.descriptions.length || 0}
-          </div>
+        </div>
+        <div className={`header-right ${isOpen ? "open" : ""}`}>
+          {isOpen ? (
+            <div className="report-meta open">
+              <img
+                src={getFullAvatarUrl(initialDescription?.user?.avatar || "")}
+                alt={initialDescription?.user?.pseudo}
+                className="user-avatar"
+              />
+              <img
+                src={logos[report.marque] || ""}
+                alt={report.marque}
+                className="brand-logo"
+              />
+            </div>
+          ) : (
+            <div className="report-meta">
+              <div className="count-badge">
+                {report.subCategories[0]?.descriptions.length || 0}
+              </div>
+              <span className="report-date">
+                {initialDescription?.createdAt
+                  ? formatDistanceToNow(
+                      new Date(initialDescription.createdAt),
+                      {
+                        locale: fr,
+                        addSuffix: true,
+                      }
+                    )
+                  : "Date inconnue"}
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
-      {isOpen && current && (
+      {isOpen && (
         <div className="card-body">
           <p className="description-p">{initialDescription?.description}</p>
-          <div className="description-slide-container">
-            <div className="slide-content slide">
-              <div className="emoji-avatar">
-                <div className="emoji">{current.emoji}</div>
+          {initialDescription?.capture && (
+            <>
+              <div
+                className="capture-wrapper"
+                onClick={() => setIsImageOpen(true)}
+              >
                 <img
-                  src={getFullAvatarUrl(current.user?.avatar || "")}
-                  alt={current.user?.pseudo}
+                  src={initialDescription.capture}
+                  alt="capture"
+                  className="capture"
                 />
               </div>
-              <div className="description-text">
-                <div className="user-meta">
-                  <span className="pseudo">{current.user?.pseudo}&nbsp;</span>x
-                  <span className="brand">&nbsp;{report.marque}</span>
-                  &nbsp;
-                  <span className="time">
-                    ⸱ &nbsp;
-                    {current?.createdAt
-                      ? formatDistanceToNow(new Date(current.createdAt), {
-                          locale: fr,
-                          addSuffix: true,
-                        })
-                      : "Date inconnue"}
-                  </span>
-                </div>
-                <div className="text">{current.description}</div>
-              </div>
-              <div
-                className={`user ${
-                  isAuthorCurrentUser ? "highlight-self" : ""
-                }`}
-              >
-                {isAuthorCurrentUser && <span className="badge-me">Moi</span>}
-              </div>
-              <div className="description-chevrons">
-                {allDescriptions.length > 1 && (
-                  <div className="navigation">
-                    <button onClick={handlePrev} disabled={currentIndex === 0}>
-                      <ChevronLeft className="chevron-icon" />
-                    </button>
-                    <button
-                      onClick={handleNext}
-                      disabled={currentIndex === allDescriptions.length - 1}
-                    >
-                      <ChevronRight className="chevron-icon" />
-                    </button>
-                  </div>
+
+              {/* ⬇️ 2) Fullscreen via portail */}
+              {isImageOpen &&
+                createPortal(
+                  <div
+                    className="image-overlay"
+                    onClick={() => setIsImageOpen(false)}
+                  >
+                    <img
+                      src={initialDescription.capture}
+                      alt="capture fullscreen"
+                      className="fullscreen-image"
+                    />
+                  </div>,
+                  document.body
                 )}
+            </>
+          )}
+
+          {allDescriptions.length > 1 && (
+            <div className="other-reports-toggle" onClick={toggleOtherReports}>
+              <span>Signalements pertinents</span>
+              {showOtherReports ? (
+                <ChevronUp className="chevron-toggle" />
+              ) : (
+                <ChevronDown className="chevron-toggle" />
+              )}
+            </div>
+          )}
+
+          {showOtherReports && current && (
+            <div className="description-slide-container">
+              <div className="slide-content slide">
+                <div className="emoji-avatar">
+                  <div className="emoji">{current.emoji}</div>
+                  <img
+                    src={getFullAvatarUrl(current.user?.avatar || "")}
+                    alt={current.user?.pseudo}
+                  />
+                </div>
+                <div className="description-text">
+                  <div className="user-meta">
+                    <span className="pseudo">{current.user?.pseudo}&nbsp;</span>
+                    x<span className="brand">&nbsp;{report.marque}</span>
+                    &nbsp;
+                    <span className="time">
+                      ⸱ &nbsp;
+                      {current?.createdAt
+                        ? formatDistanceToNow(new Date(current.createdAt), {
+                            locale: fr,
+                            addSuffix: true,
+                          })
+                        : "Date inconnue"}
+                    </span>
+                  </div>
+                  <div className="text">{current.description}</div>
+                </div>
+                <div
+                  className={`user ${
+                    isAuthorCurrentUser ? "highlight-self" : ""
+                  }`}
+                >
+                  {isAuthorCurrentUser && <span className="badge-me">Moi</span>}
+                </div>
+                <div className="description-chevrons">
+                  {allDescriptions.length > 1 && (
+                    <div className="navigation">
+                      <button
+                        onClick={handlePrev}
+                        disabled={currentIndex === 0}
+                      >
+                        <ChevronLeft className="chevron-icon" />
+                      </button>
+                      <button
+                        onClick={handleNext}
+                        disabled={currentIndex === allDescriptions.length - 1}
+                      >
+                        <ChevronRight className="chevron-icon" />
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
-          {/* ----- Footer ----- */}
           {userProfile?.id && current?.id && (
             <DescriptionCommentSection
               userId={userProfile.id}
