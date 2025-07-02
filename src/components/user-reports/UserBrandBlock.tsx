@@ -9,13 +9,14 @@ import type { UserGroupedReport, User } from "@src/types/Reports";
 
 interface Props {
     brand: string;
+    siteUrl: string;
     reports: UserGroupedReport[];
     userProfile: { id?: string } | null;
     isOpen: boolean;
     onToggle: () => void;
 }
 
-const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, onToggle }) => {
+const UserBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports, userProfile, isOpen, onToggle }) => {
     const [expandedSub, setExpandedSub] = useState<string | null>(null);
     const [currentIndexes, setCurrentIndexes] = useState<Record<string, number>>({});
     const getFullAvatarUrl = (path: string | null | undefined) => {
@@ -45,7 +46,7 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                 <span className="brand-date">
                     {lastDate ? formatDistanceToNow(new Date(lastDate), { locale: fr, addSuffix: true }) : ""}
                 </span>
-                <img src={getBrandLogo(brand)} alt={brand} className="brand-logo" />
+                <img src={getBrandLogo(brand, siteUrl)} alt={brand} className="brand-logo" />
             </div>
 
             {isOpen && (
@@ -85,7 +86,7 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                                                     className="user-avatar-overlay"
                                                 />
                                                 <img
-                                                    src={getBrandLogo(brand)}
+                                                    src={getBrandLogo(brand, siteUrl)}
                                                     alt={brand}
                                                     className="brand-avatar-circle"
                                                 />

@@ -114,6 +114,7 @@ const UserGroupedReportsList: React.FC = () => {
                                 <UserBrandBlock
                                     key={brand}
                                     brand={brand}
+                                    siteUrl={reports[0]?.siteUrl || ""}
                                     reports={reports}
                                     userProfile={userProfile}
                                     isOpen={expandedBrand === brand}

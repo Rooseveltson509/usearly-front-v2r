@@ -182,6 +182,7 @@ export interface UserGroupedReportResponse {
 }
 
 export interface UserGroupedReport {
+  siteUrl: string;
   marque: string;
   category: string;
   subCategory: string;
