@@ -1,9 +1,9 @@
 import "./UserSidebarStats.scss";
 import { useUserStatsSummary } from "@src/hooks/useUserStatsSummary";
-import FeedIcon from "../../assets/icons/feed-icon.svg";
-import IdeeIcon from "../../assets/icons/idee-icon.svg";
-import SolutionIcon from "../../assets/icons/solution-icon.svg";
-import CheckIcon from "../../assets/icons/check-icon.svg";
+import FeedIcon from "../../assets/icons/feedback.png";
+import IdeeIcon from "../../assets/icons/idea.png";
+import SolutionIcon from "../../assets/icons/solution.png";
+import CheckIcon from "../../assets/icons/shake.png";
 
 const UserSidebarStats = () => {
   const { stats, loading } = useUserStatsSummary();
@@ -49,13 +49,6 @@ const UserSidebarStats = () => {
           <span className="label">Checks</span>
           <span className="value">{loading ? "…" : stats?.totalChecks}</span>
         </li>
-        {/* <li>
-          <span className="icon">👥</span>
-          <span className="label">Collaborations</span>
-          <span className="value">
-            {loading ? "…" : stats?.totalCollaborations}
-          </span>
-        </li> */}
       </ul>
     </div>
   );

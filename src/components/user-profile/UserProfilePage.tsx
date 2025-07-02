@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import UserStatsCard from "./UserStatsCard";
 import ContributionsOverview from "./ContributionsOverview";
 import FeedbackTabs, { type FeedbackType } from "./FeedbackTabs";
-import FeedbackList from "./FeedbackList";
 import UserSidebarStats from "./UserSidebarStats";
 import "./UserProfilePage.scss";
 import big from "../../assets/images/big.svg";
 import medium from "../../assets/images/medium.svg";
 import small from "../../assets/images/small.svg";
 import badge from "../../assets/icons/Little-badge.svg";
+import UserGroupedReportsList from "../profile/UserGroupedReportsList";
+import UserFeedbackView from "../profile/UserFeedbackView";
 
 const UserProfilePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<FeedbackType>("report");
@@ -31,17 +32,19 @@ const UserProfilePage: React.FC = () => {
           </div>
         </div>
       </div>
-      {/* <div className="banner-content">
-        <ContributionsOverview activeTab={activeTab} />
-        <FeedbackTabs activeTab={activeTab} onTabChange={setActiveTab} />
-      </div> */}
+
       {/* Contenu principal */}
       <main className="user-main-content">
         <aside className="left-panel">
           <UserStatsCard />
         </aside>
         <div className="feedback-list-wrapper">
-          <FeedbackList activeTab={activeTab} />
+          {activeTab === "report" ? (
+            <UserGroupedReportsList />
+          ) : (
+            <UserFeedbackView activeTab={activeTab} />
+          )}
+
         </div>
 
         <aside className="right-panel">

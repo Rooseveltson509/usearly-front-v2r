@@ -1,0 +1,151 @@
+.chrono-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    transition: box-shadow 0.2s;
+
+    &:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .chrono-card-header {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+
+        .subcategory-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 0.5rem;
+        }
+
+        h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 0;
+            flex-grow: 1;
+        }
+
+        .count-badge {
+            background: #f0f0f0;
+            color: #333;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            margin-left: auto;
+        }
+
+        .toggle-icon {
+            margin-left: 0.5rem;
+            color: #999;
+        }
+    }
+
+    .chrono-card-body {
+        display: flex;
+        align-items: flex-start;
+        padding-top: 0.75rem;
+
+        .emoji-avatar {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-right: 0.75rem;
+
+            .emoji {
+                font-size: 1.5rem;
+                margin-bottom: 0.25rem;
+            }
+
+            img {
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+        }
+
+        .description-text {
+            flex: 1;
+
+            .user-meta {
+                font-size: 0.85rem;
+                color: #666;
+                display: flex;
+                align-items: center;
+                flex-wrap: wrap;
+
+                .pseudo {
+                    font-weight: 500;
+                    color: #111;
+                }
+
+                .brand {
+                    color: #444;
+                }
+
+                .time {
+                    color: #999;
+                    font-size: 0.8rem;
+                }
+
+                .badge-me {
+                    background: #d1fae5;
+                    color: #065f46;
+                    border-radius: 8px;
+                    font-size: 0.7rem;
+                    padding: 0 0.4rem;
+                    margin-left: 0.5rem;
+                }
+            }
+
+            .text {
+                margin-top: 0.25rem;
+                font-size: 0.95rem;
+                color: #333;
+            }
+        }
+    }
+
+    .comments-section {
+        margin-top: 0.5rem;
+    }
+}
+
+// Light/Dark adaptable avec :host(.dark) si intégré shadow DOM
+:host(.dark) .chrono-card {
+    background: #1f1f1f;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+
+    .chrono-card-header {
+        h4, .count-badge {
+            color: #e0e0e0;
+        }
+    }
+
+    .chrono-card-body {
+        .description-text {
+            .user-meta {
+                color: #bbb;
+
+                .pseudo {
+                    color: #fff;
+                }
+
+                .brand {
+                    color: #ccc;
+                }
+
+                .time {
+                    color: #999;
+                }
+            }
+
+            .text {
+                color: #ddd;
+            }
+        }
+    }
+}

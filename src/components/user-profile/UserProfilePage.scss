@@ -14,7 +14,7 @@
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 1rem 3rem 1rem 1rem;
+  padding: 1rem 0;
   height: 260px;
   background: $tertiary;
   margin-top: 74px;
@@ -127,7 +127,7 @@
 .user-main-content {
   display: grid;
   grid-template-columns: 260px 1fr 260px;
-  gap: 2rem;
+  gap: 60px;
   padding: 3rem 2rem;
   margin: 0 auto;
 }

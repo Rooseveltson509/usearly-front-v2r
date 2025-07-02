@@ -153,7 +153,12 @@ const DescriptionCommentSection: React.FC<Props> = ({
             {comments.length > 0 && ` ${comments.length}`}
           </button>
         </div>
-        <div className="shake-btn">Shake</div>
+        {type === "report" && (
+          <div className="shake-btn">
+            <div className="check">✔</div>
+            <div>En cours de correction</div>
+          </div>
+        )}
       </div>
       {/* Affichage conditionnel des commentaires EN DESSOUS */}
       {showComments && (

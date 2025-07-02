@@ -1,5 +1,5 @@
 import { apiService } from "./apiService";
-import type { CoupDeCoeur, GroupedReport, GroupedReportResponse, Suggestion, UserStatsSummary } from "@src/types/Reports";
+import type { CoupDeCoeur, GroupedReport, GroupedReportResponse, Suggestion, UserGroupedReportResponse, UserStatsSummary } from "@src/types/Reports";
 
 const getAuthToken = () =>
   localStorage.getItem("accessToken") || sessionStorage.getItem("accessToken");
@@ -78,6 +78,29 @@ export const getUserSuggestions = async (
   return data;
 };
 
+export const getUserProfileGroupedReports = async (
+  page = 1,
+  limit = 10
+): Promise<UserGroupedReportResponse> => {
+  try {
+    const token = localStorage.getItem("accessToken") || sessionStorage.getItem("accessToken");
+
+    const { data } = await apiService.get<UserGroupedReportResponse>(
+      `/reportings/grouped-by-category?page=${page}&limit=${limit}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return data;
+  } catch (error: any) {
+    const msg =
+      error.response?.data?.message || "Erreur lors du chargement des signalements groupés (profil).";
+    throw new Error(msg);
+  }
+};
 
 // Signalements de l'utilisateur
 export const getUserReports = async (userId: string) => {
@@ -95,6 +118,18 @@ export const getGroupedReportsPublic = async (page: number, limit: number) => {
     params: { page, limit },
   });
   return response.data;
+};
+
+export const getAllPublicGroupedReports = async (page = 1, limit = 10) => {
+  try {
+    const response = await apiService.get(`/reportings/public-grouped-by-category`, {
+      params: { page, limit },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("❌ Erreur lors du chargement des signalements publics groupés :", error);
+    throw error;
+  }
 };
 
 
@@ -117,4 +152,21 @@ export const getFilteredReportDescriptions = async (
     params: { brand, category, page, limit },
   });
   return response.data;
+};
+
+export const getGroupedReportsByDate = async (page = 1, limit = 15) => {
+    const token = localStorage.getItem("accessToken"); // ou récupère via ton AuthContext
+    const response = await apiService.get("/reportings/public-grouped-by-date", {
+        params: { page, limit },
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    return response.data;
+};
+
+
+export const getUserReportsGroupedByDate = async (page: number, limit: number) => {
+    const res = await apiService.get(`/user/grouped-by-date?page=${page}&limit=${limit}`);
+    return res.data;
 };

@@ -1,4 +1,6 @@
 import { useState } from "react";
+import tri from "../../../assets/icons/tri-croissant.png";
+import { ChevronDown } from "lucide-react";
 
 interface Props {
   viewMode: "flat" | "chrono" | "filtered";
@@ -16,17 +18,31 @@ const FeedbackListHeader = ({ viewMode, onChange, activeTab }: Props) => {
     setShowDropdown(false);
   };
 
+  const getCurrentSortLabel = () => {
+    switch (viewMode) {
+      case "chrono":
+        return "Date";
+      case "flat":
+        return "Marques";
+      default:
+        return "Marques";
+    }
+  };
+
   return (
     <div className="view-toggle">
-      {/* Dropdown fusionné */}
+      {/* Dropdown avec icône */}
       <div className="dropdown-container">
         <button
           onClick={() => setShowDropdown(!showDropdown)}
-          className={`dropdown-toggle ${
-            ["flat", "chrono"].includes(viewMode) ? "active" : ""
-          }`}
+          className="dropdown-toggle"
         >
-          {viewMode === "chrono" ? "Tri par date" : "Vue simple"}
+          <img className="sort-icon" src={tri} alt="tri" />
+          <strong>Trier par : </strong>
+          {getCurrentSortLabel()}
+          <span className="chevron">
+            <ChevronDown size={16} />
+          </span>
         </button>
 
         {showDropdown && (
@@ -35,13 +51,13 @@ const FeedbackListHeader = ({ viewMode, onChange, activeTab }: Props) => {
               className={viewMode === "flat" ? "active" : ""}
               onClick={() => handleDisplayChange("flat")}
             >
-              Vue simple
+              Marques
             </button>
             <button
               className={viewMode === "chrono" ? "active" : ""}
               onClick={() => handleDisplayChange("chrono")}
             >
-              Tri par date
+              Date
             </button>
           </div>
         )}

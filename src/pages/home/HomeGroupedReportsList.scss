@@ -1,0 +1,119 @@
+@use "@src/styles/base/variables" as *;
+@use "@src/styles/utils/mixins" as *;
+
+
+.controls {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+
+    select {
+        appearance: none;
+        padding: 0.5rem 1rem;
+        border: 1px solid #ddd;
+        border-radius: 9999px;
+        font-size: 0.9rem;
+        background: #f9f9f9 url("/icons/chevron-down.svg") no-repeat right 0.75rem center;
+        background-size: 1rem;
+        color: #333;
+        cursor: pointer;
+        transition: border-color 0.2s, background-color 0.2s;
+
+        &:focus {
+            border-color: #7b61ff;
+            background-color: #fff;
+            outline: none;
+        }
+
+        &:hover {
+            background-color: #fff;
+        }
+    }
+
+    button {
+        background: #7b61ff;
+        color: #fff;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 9999px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: background 0.2s;
+
+        &:hover {
+            background: #684de0;
+        }
+    }
+}
+
+
+/* .home-grouped-reports-list {
+    .filters {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+
+        input[type="text"],
+        select {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border-color, #ddd);
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+            background: var(--input-bg, #fff);
+            color: var(--text-color, #333);
+            transition: border 0.2s, box-shadow 0.2s;
+
+            &:focus {
+                border-color: var(--primary-color, #4a90e2);
+                box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+                outline: none;
+            }
+        }
+
+        .reset-filters {
+            background: var(--primary-color, #4a90e2);
+            color: #fff;
+            border: none;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+
+            &:hover {
+                //background: #fefefe;
+                //background: darken(var(--primary-color, #4a90e2), 5%);
+            }
+
+            &:active {
+                transform: scale(0.97);
+            }
+        }
+    }
+
+
+
+    .sort-dropdown {
+    margin-bottom: 1rem;
+
+    select {
+        padding: 0.5rem 0.75rem;
+        border: 1px solid var(--border-color, #ddd);
+        border-radius: 0.5rem;
+        font-size: 0.9rem;
+        background: var(--input-bg, #fff);
+        color: var(--text-color, #333);
+        transition: border 0.2s, box-shadow 0.2s;
+
+        &:focus {
+            border-color: var(--primary-color, #4a90e2);
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+            outline: none;
+        }
+    }
+}
+
+} */
