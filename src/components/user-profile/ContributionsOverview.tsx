@@ -2,7 +2,7 @@ import "./ContributionsOverview.scss";
 import { useUserStatsSummary } from "@src/hooks/useUserStatsSummary";
 import type { FeedbackType } from "./FeedbackTabs";
 import { useRef, useEffect, useState } from "react";
-import ChatTop from "../../assets/images/chat-top-bar.svg";
+import ChatTop from "../../assets/images/chat-top-cont.svg";
 
 interface Props {
   activeTab: FeedbackType;
@@ -65,7 +65,7 @@ const ContributionsOverview = ({ activeTab }: Props) => {
     <div className="contributions-overview">
       <div className="contributions-count" ref={bubbleRef}>
         <div>
-          <img src={ChatTop} alt="ChatTop" />
+          <img src={ChatTop} alt="ChatTop" className="ChatTop" />
           <span className="count">{loading ? "..." : count}</span>
         </div>
         <div className="contributions-label">
