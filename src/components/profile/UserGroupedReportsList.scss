@@ -1,0 +1,711 @@
+@use "@src/styles/base/variables" as *;
+@use "@src/styles/utils/mixins" as *;
+
+
+
+.subcategory-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    background: #f8fafc;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    position: relative;
+
+    .subcategory-header-left {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        .subcategory-icon {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+        }
+
+        h4 {
+            font-size: 14px;
+            font-weight: 600;
+            font-family: Raleway, sans-serif;
+            margin: 0;
+        }
+
+        .count-badge {
+            background: #eef1f5;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-weight: 500;
+            color: #333;
+        }
+    }
+
+    .subcategory-user-preview {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.4rem;
+
+        .subcategory-avatar-wrapper {
+            position: relative;
+            width: 48px; // container global
+            height: 48px;
+            margin-left: 25px;
+
+            .user-avatar-overlay {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                right: -30px; // décalage vers la droite
+                object-fit: cover;
+                border: 2px solid #fff;
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                z-index: 1;
+            }
+
+            .brand-avatar-circle {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                object-fit: contain;
+                background-color: #fff;
+                border: 2px solid #fff;
+                position: absolute;
+                right: 30px; // décalage vers la droite
+                top: 5px; // décalage vers le haut
+                z-index: 2;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 4px;
+            }
+        }
+
+        .user-brand-info {
+            text-align: center;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #111;
+
+            .pseudo {
+                font-weight: 600;
+            }
+
+            .brand {
+                font-weight: 600;
+                color: #555;
+            }
+        }
+    }
+
+
+
+
+
+}
+
+    .see-more-button {
+        background: none;
+        border: none;
+        color: #007bff;
+        cursor: pointer;
+        font-size: 0.85rem;
+        padding: 0;
+        margin-left: 4px;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+.user-grouped-reports-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.badge-me {
+    background: #4caf50; // vert
+    color: #fff;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 8px;
+    margin-left: 4px; // espace avec le texte précédent
+}
+
+
+.brand-block {
+    background: #ffffff;
+    border-radius: $border-radius-md;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    transition: box-shadow 0.2s ease, background 0.2s ease;
+    cursor: pointer;
+
+    &.open {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .brand-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 16px;
+        gap: 8px;
+
+        .brand-info {
+            display: flex;
+            flex-direction: column;
+
+            h3 {
+                font-family: Raleway;
+                font-weight: 600;
+                font-size: 14px;
+                margin: 0;
+            }
+        }
+
+        .brand-date {
+            font-family: Urbanist;
+            font-size: 12px;
+            color: $gray-500;
+            flex-shrink: 0;
+        }
+
+        .brand-logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background-color: white;
+            object-fit: contain;
+            padding: 4px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+        }
+    }
+
+    .subcategories-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 8px 0;
+        background: #f9fafb;
+
+        .subcategory-block {
+            background: #ffffff;
+            border-radius: $border-radius-sm;
+            margin: 0 12px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            transition: background 0.2s ease;
+
+            .subcategory-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 1rem;
+                background-color: #f3f7ff;
+
+                h4 {
+                    font-family: Raleway;
+                    font-size: 14px;
+                    font-weight: 600;
+                    margin: 0;
+                    flex-grow: 1;
+                }
+
+                .subcategory-icon {
+                    width: 24px;
+                    height: 24px;
+                    object-fit: contain;
+                }
+
+                .count-badge {
+                    font-size: 12px;
+                    color: $primary;
+                    border: 1px solid $primary;
+                    padding: 2px 8px;
+                    border-radius: 12px;
+                    font-weight: 500;
+                }
+            }
+
+            .descriptions-list {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+                padding: 6px 12px 10px 12px;
+                background: #f6f8fa;
+
+                .description-item {
+                    display: flex;
+                    align-items: flex-start;
+                    background: #ffffff;
+                    border-radius: $border-radius-sm;
+                    padding: 8px;
+                    gap: 8px;
+
+                    .emoji {
+                        font-size: 20px;
+                    }
+
+                    .user-avatar {
+                        width: 32px;
+                        height: 32px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                    }
+
+                    .description-content {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 4px;
+                        flex: 1;
+
+                        .description-header {
+                            display: flex;
+                            align-items: center;
+                            gap: 4px;
+                            font-size: 12px;
+                            font-family: Inter;
+
+                            .pseudo {
+                                font-weight: 500;
+                            }
+
+                            .brand {
+                                font-weight: 600;
+                            }
+
+                            .date {
+                                color: $gray-500;
+                                font-family: Urbanist;
+                            }
+
+                            .badge-me {
+                                background: $success;
+                                color: white;
+                                font-size: 10px;
+                                padding: 2px 6px;
+                                border-radius: 8px;
+                                margin-left: 4px;
+                            }
+                        }
+
+                        .description-text {
+                            font-size: 13px;
+                            font-family: Inter;
+                            color: $gray-800;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.loader,
+.no-reports {
+    text-align: center;
+    padding: 20px;
+    font-family: Inter;
+    font-size: 14px;
+    color: $gray-600;
+}
+
+/* === Patch slide design UserGroupedReportsList === */
+
+/* Container du slide */
+.description-slide-container {
+    background-color: #faf7ff;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-top: 0.5rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* Item dans le slide */
+.description-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+
+    .emoji {
+        font-size: 24px;
+    }
+
+    .user-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .description-content {
+        display: flex;
+        flex-direction: column;
+
+        .description-header {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+            font-size: 13px;
+            font-weight: 500;
+            color: #333;
+
+            .pseudo {
+                font-weight: 600;
+            }
+
+            .brand {
+                font-weight: 700;
+            }
+
+            .date {
+                font-weight: 400;
+                color: #777;
+                font-size: 12px;
+            }
+
+            .badge-me {
+                background: #4caf50;
+                color: #fff;
+                font-size: 10px;
+                padding: 2px 6px;
+                border-radius: 8px;
+                margin-left: 4px;
+            }
+        }
+
+        .description-text {
+            font-size: 14px;
+            font-weight: 400;
+            color: #444;
+            margin-top: 2px;
+        }
+    }
+
+    .description-navigation {
+        margin-left: auto;
+        display: flex;
+        gap: 0.25rem;
+
+        button {
+            background: none;
+            border: 1px solid #424b5a;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px;
+
+            svg {
+                width: 18px;
+                height: 18px;
+                color: #424b5a;
+            }
+
+            &:disabled {
+                border-color: #ccc;
+
+                svg {
+                    color: #ccc;
+                }
+
+                cursor: not-allowed;
+            }
+        }
+    }
+}
+
+/* Footer (réactions, commentaires, Shake) */
+.description-slide-container .description-comment-section .feedback-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.5rem;
+
+    .flex-row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .shake-btn {
+        background: #007bff;
+        color: #fff;
+        font-size: 13px;
+        padding: 4px 10px;
+        border-radius: 20px;
+        cursor: pointer;
+        user-select: none;
+        transition: background 0.2s;
+
+        &:hover {
+            background: #0056b3;
+        }
+    }
+}
+
+
+
+.brand-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.feedback-card {
+    width: 100%; // ✅ occupe toute la largeur du parent
+    max-width: 740px;
+    margin-bottom: 0; // ✅ retiré, on utilise `gap` dans le parent maintenant
+    background-color: #fff;
+    border-radius: $border-radius-md;
+    overflow: hidden;
+    transition: box-shadow 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.04); // pour donner un léger contour
+
+    &.open {
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+
+        .card-header {
+            background: #fff;
+        }
+    }
+
+    .card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem;
+        background-color: #f3f7ff;
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+
+            .category-icon {
+                font-size: 1.25rem;
+            }
+
+            .info {
+                display: flex;
+                flex-direction: column;
+
+                h3 {
+                    margin: 0;
+                    font-size: 15px;
+                    font-weight: 800;
+                    font-family: Raleway;
+                }
+
+                .brand-name {
+                    font-size: 0.875rem;
+                    color: $gray-600;
+                }
+            }
+
+            .count-badge {
+                color: $primary;
+                border: 1px solid $primary;
+                font-size: 15px;
+                font-weight: 600;
+                padding: 0px 8px;
+                border-radius: 25px;
+                height: fit-content;
+                font-family: Inter;
+            }
+        }
+
+        .brand-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    }
+
+    .card-body {
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+
+        .description-p {
+            padding-left: 50px;
+            margin: -20px 0 20px 0;
+            font-family: Inter;
+            font-size: 14px;
+            font-weight: 300;
+        }
+
+        .main-description {
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+            color: $gray-900;
+        }
+
+        .description-slide-container {
+            background-color: #faf7ff;
+            border-radius: 12px;
+            padding: 1rem;
+            position: relative;
+
+            .slide-content {
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
+                gap: 1rem;
+                opacity: 0;
+                transform: translateY(5px);
+                animation: fadeInSlide 0.3s ease forwards;
+
+                .emoji-avatar {
+                    position: relative;
+
+                    .emoji {
+                        position: absolute;
+                        bottom: -10px;
+                        left: -10px;
+                        font-size: 24px;
+                        border-radius: 50%;
+                        width: fit-content;
+                        height: fit-content;
+                        z-index: 1;
+                    }
+
+                    img {
+                        width: 48px;
+                        height: 48px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                        display: block;
+                    }
+                }
+
+                .description-text {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+
+                    .user-meta {
+                        display: flex;
+                        font-size: 12px;
+                        font-family: Inter;
+
+                        .pseudo {
+                            font-weight: 400;
+                        }
+
+                        .brand {
+                            font-weight: 700;
+                        }
+
+                        .time {
+                            font-family: Urbanist;
+                            font-weight: 600;
+                            color: grey;
+                        }
+                    }
+
+                    .text {
+                        font-size: 14px;
+                        font-family: Inter;
+                        font-weight: 300;
+                    }
+                }
+
+                .description-chevrons {
+                    margin-right: -4px;
+
+                    .navigation {
+                        display: flex;
+                        justify-content: center;
+                        gap: 4px;
+
+                        button {
+                            background: none;
+                            border: 1px solid #424b5a;
+                            border-radius: 50%;
+                            cursor: pointer;
+                            color: #424b5a;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+
+                            .chevron-icon {
+                                width: 22px;
+                                height: 22px;
+                                stroke-width: 1;
+                            }
+
+                            &:disabled {
+                                border-color: $gray-400;
+                                color: $gray-400;
+                                cursor: not-allowed;
+                            }
+                        }
+                    }
+                }
+
+                .user {
+                    display: flex;
+
+                    .badge-me {
+                        background-color: $success;
+                        color: white;
+                        font-size: 0.65rem;
+                        padding: 0.1rem 0.4rem;
+                        border-radius: 8px;
+                        font-weight: bold;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// quand ouvert, on pivote la flèche
+.category-block.open .category-header .chevron {
+    transform: rotate(90deg);
+}
+
+.feedback-capture {
+    width: 100%;
+    max-height: 220px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 12px;
+}
+
+.category-icon {
+    width: 30px;
+    height: 30px;
+    margin-right: 0.5rem;
+
+    img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+}
+
+.empty-capture {
+    height: 220px;
+    margin-bottom: 12px;
+    background-color: transparent; // ou rgba(0, 0, 0, 0.03);
+}
+
+@keyframes fadeInSlide {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

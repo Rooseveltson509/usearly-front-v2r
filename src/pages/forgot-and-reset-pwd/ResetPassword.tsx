@@ -35,7 +35,7 @@ const ResetPassword = () => {
       });
 
       login(res.accessToken, res.user, true);
-      navigate("/home");
+      navigate("/profile");
       showToast("Ravi de vous revoir", "success");
     } catch (err: any) {
       showToast("Erreur lors de la mise à jour.", "error");

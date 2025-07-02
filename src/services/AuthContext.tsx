@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setIsAuthenticated(true);
 
       if (fullProfile.type === "user") {
-        navigate("/home");
+        navigate("/profile");
       } else {
         navigate("/dashboard-brand");
       }

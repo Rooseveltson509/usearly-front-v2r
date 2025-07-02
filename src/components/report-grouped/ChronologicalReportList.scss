@@ -1,0 +1,44 @@
+.chronological-report-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 1rem 0;
+
+    .date-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        .date-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+
+            .calendar-icon {
+                width: 20px;
+                height: 20px;
+            }
+
+            .date-title {
+                margin: 0;
+            }
+        }
+
+        .report-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+    }
+}
+
+.chrono-empty {
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}

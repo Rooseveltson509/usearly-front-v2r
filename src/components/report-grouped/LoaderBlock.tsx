@@ -1,4 +1,5 @@
 import React from "react";
+import "./LoaderBlock.scss";
 
 interface Props {
   loading: boolean;

@@ -1,5 +1,7 @@
 import type { UserReaction } from "./reaction";
 
+export type FeedbackType = "report" | "coupdecoeur" | "suggestion";
+
 export interface User {
   id: string;
   pseudo: string;
@@ -11,6 +13,8 @@ export interface Reaction {
   count: number;
   userIds: string[];
 }
+export type LikeFeedbackType = Exclude<FeedbackType, "report">;
+// équivalent à "coupdecoeur" | "suggestion"
 
 export interface CoupDeCoeur {
   id: string;
@@ -99,7 +103,27 @@ export interface FeedbackDescription {
   capture: string | null;
   marque: string;
   brand?: string;
+  reactions: { emoji: string; count: number; userIds: string[] }[]; 
 }
+
+export interface SimplifiedFeedbackDescription {
+    id: string;
+    description: string;
+    emoji: string;
+    createdAt: string;
+    user?: {
+        id: string;
+        pseudo: string;
+        avatar: string | null;
+    };
+    capture: string | null;
+    reactions: {
+        emoji: string;
+        count: number;
+        userIds: string[];
+    }[];
+}
+
 
 export interface GroupedReport {
   id: string;
@@ -146,3 +170,86 @@ export interface ExplodedGroupedReport extends GroupedReport {
     descriptions: FeedbackDescription[];
   };
 }
+
+
+/* profile */
+
+export interface UserGroupedReportResponse {
+  currentPage: number;
+  totalPages: number;
+  totalReports: number;
+  results: UserGroupedReport[];
+}
+
+export interface UserGroupedReport {
+  marque: string;
+  category: string;
+  subCategory: string;
+  count: number;
+  descriptions: UserGroupedReportDescription[];
+}
+
+export interface UserGroupedReportDescription {
+  id: string;
+  description: string;
+  emoji: string | null;
+  createdAt: string;
+  user: {
+    id: string;
+    pseudo: string;
+    avatar: string | null;
+  };
+  capture: string | null;
+  reactions: {
+    emoji: string;
+    count: number;
+    userIds: string[];
+  }[];
+}
+export interface PublicGroupedReport {
+  id: string;
+  reportingId: string;
+  category: string;
+  marque: string;
+  totalCount: number;
+  subCategories: {
+    subCategory: string;
+    count: number;
+    descriptions: {
+      id: string;
+      description: string;
+      emoji: string;
+      createdAt: string;
+      user?: {
+        id: string;
+        pseudo: string;
+        avatar: string | null;
+      };
+      capture: string | null;
+      reactions: {
+        emoji: string;
+        count: number;
+        userIds: string[];
+      }[];
+    }[];
+  }[];
+}
+
+export type GetGroupedReportsByDateResponse = {
+    success: boolean;
+    total: number;
+    page: number;
+    totalPages: number;
+    data: Record<string, PublicGroupedReportFromAPI[]>;
+};
+
+
+export interface PublicGroupedReportFromAPI {
+    reportingId: string;
+    marque: string;
+    category: string;
+    subCategory: string;
+    count: number;
+    descriptions: FeedbackDescription[];
+}
+

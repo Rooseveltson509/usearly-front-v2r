@@ -4,7 +4,7 @@ import ChronologicalReportList from "../report-grouped/ChronologicalReportList";
 import FilteredReportList from "../report-grouped/feedback-list-header/FilteredReportList";
 import { isToday, isYesterday, format } from "date-fns";
 import { fr } from "date-fns/locale";
-import type { ExplodedGroupedReport, GroupedReport } from "@src/types/Reports";
+import type { ExplodedGroupedReport, GroupedReport, CoupDeCoeur, Suggestion } from "@src/types/Reports";
 import type { JSX } from "react";
 import {
   groupByBrandThenCategory,
@@ -45,15 +45,21 @@ const FeedbackView = ({
   const exploded = (currentState.data as GroupedReport[]).flatMap((report) =>
     Array.isArray(report.subCategories)
       ? report.subCategories.map((subCategory) => ({
-          ...report,
-          subCategory,
-        }))
+        ...report,
+        subCategory,
+      }))
       : []
   );
+  console.log("FeedbackView data:", currentState.data);
+  console.log("Loading:", currentState.loading);
+
+  if (currentState.loading) {
+    return null; // Le loader est géré par le parent (Home)
+  }
 
   if (
-    currentState.data.length === 0 &&
     !currentState.loading &&
+    currentState.data.length === 0 &&
     !currentState.error
   ) {
     return <div>Aucun contenu trouvé.</div>;
@@ -94,12 +100,8 @@ const FeedbackView = ({
       const chronoMapped = exploded
         .filter((item) => item.subCategory?.descriptions?.[0]?.createdAt)
         .sort((a, b) => {
-          const aDate = new Date(
-            a.subCategory.descriptions[0].createdAt
-          ).getTime();
-          const bDate = new Date(
-            b.subCategory.descriptions[0].createdAt
-          ).getTime();
+          const aDate = new Date(a.subCategory.descriptions[0].createdAt).getTime();
+          const bDate = new Date(b.subCategory.descriptions[0].createdAt).getTime();
           return bDate - aDate;
         });
 
@@ -111,8 +113,8 @@ const FeedbackView = ({
         const label = isToday(date)
           ? "Aujourd’hui"
           : isYesterday(date)
-          ? "Hier"
-          : format(date, "dd MMMM yyyy", { locale: fr });
+            ? "Hier"
+            : format(date, "dd MMMM yyyy", { locale: fr });
 
         if (!acc[label]) acc[label] = [];
         acc[label].push(item);
@@ -149,10 +151,10 @@ const FeedbackView = ({
   // Coup de cœur & suggestions
   return (
     <>
-      {currentState.data.map((item, index) => (
+      {(currentState.data as (CoupDeCoeur | Suggestion)[]).map((item, index) => (
         <InteractiveFeedbackCard
           key={item.id || `feedback-${index}`}
-          item={{ ...item, type: activeTab }}
+          item={item}
         />
       ))}
     </>
