@@ -12,6 +12,7 @@ import { Home } from "./pages/home";
 import RequestResetPassword from "./pages/forgot-and-reset-pwd/RequestResetPassword";
 import ResetPassword from "./pages/forgot-and-reset-pwd/ResetPassword";
 import NavigateToHome from "./pages/NavigateToHome";
+import NewHome from "./pages/newHome/NewHome";
 
 function App() {
   return (
@@ -19,11 +20,13 @@ function App() {
       <AuthProvider>
         <Layout>
           <Routes>
-            <Route path="/signup" element={
-              <GuestRoute>
-                <Register />
-              </GuestRoute>
-            }
+            <Route
+              path="/signup"
+              element={
+                <GuestRoute>
+                  <Register />
+                </GuestRoute>
+              }
             />
             <Route
               path="/"
@@ -34,17 +37,21 @@ function App() {
               }
             />
 
-            <Route path="/login" element={
-              <GuestRoute>
-                <Login />
-              </GuestRoute>
-            }
+            <Route
+              path="/login"
+              element={
+                <GuestRoute>
+                  <Login />
+                </GuestRoute>
+              }
             />
-            <Route path="/confirm" element={
-              <GuestRoute>
-                <ConfirmAccount />
-              </GuestRoute>
-            }
+            <Route
+              path="/confirm"
+              element={
+                <GuestRoute>
+                  <ConfirmAccount />
+                </GuestRoute>
+              }
             />
             <Route
               path="/profile"
@@ -62,10 +69,25 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route path="/forgot-password" element={<GuestRoute><RequestResetPassword /></GuestRoute>} />
-            <Route path="/reset-password" element={<GuestRoute><ResetPassword /></GuestRoute>} />
             <Route
-              path="/home"
+              path="/forgot-password"
+              element={
+                <GuestRoute>
+                  <RequestResetPassword />
+                </GuestRoute>
+              }
+            />
+            <Route
+              path="/reset-password"
+              element={
+                <GuestRoute>
+                  <ResetPassword />
+                </GuestRoute>
+              }
+            />
+            <Route path="/home" element={<NewHome />} />
+            <Route
+              path="/feedback"
               element={
                 <ProtectedRoute allowedTypes={["user"]}>
                   <Home />

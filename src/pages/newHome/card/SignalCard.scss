@@ -1,0 +1,96 @@
+.signal-card {
+  background: #d4d5ff;
+  border-radius: 16px;
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  flex: 3;
+  .signal-title {
+    font-size: 34px;
+    font-weight: 700;
+    font-family: Onest;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    img {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  .signal-content {
+    display: flex;
+    position: relative;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .signal-main {
+    width: 100%;
+    height: 190px; // Hauteur pour 2 images
+    overflow: hidden;
+    border-radius: 12px;
+    flex: 1;
+  }
+
+  .signal-slider {
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.4s ease;
+  }
+
+  .signal-slide {
+    height: 95px; // 2 images de 95px = 190px
+    padding: 5px 0;
+
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 8px;
+      object-fit: cover;
+      pointer-events: none;
+    }
+  }
+
+  .slider-dots-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    justify-content: center;
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: none;
+      background: #fff;
+      cursor: pointer;
+      transition: background 0.3s ease;
+
+      &.active {
+        border: 1px solid #000;
+      }
+
+      &:hover {
+        background: rgb(0, 0, 0);
+      }
+    }
+  }
+
+  .signal-btn {
+    background: #000;
+    color: #fff;
+    border: none;
+    border-radius: 32px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-family: Inter;
+    font-weight: 600;
+    font-size: 14px;
+    align-self: center;
+  }
+}

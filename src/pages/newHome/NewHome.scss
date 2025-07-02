@@ -1,0 +1,18 @@
+.new-home-page {
+  padding-top: 72px; /* hauteur du header */
+  .new-home-main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 24px;
+    width: 80%;
+    margin: 24px auto;
+    max-width: 1200px;
+    .new-home-main-top {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+  }
+}
