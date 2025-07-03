@@ -10,10 +10,11 @@ import { useAuth } from "@src/services/AuthContext";
 
 interface Props {
     brand: string;
+    siteUrl: string;
     reports: PublicGroupedReport[];
 }
 
-const BrandBlock: React.FC<Props> = ({ brand, reports }) => {
+const BrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
     const { userProfile } = useAuth();
     const [expandedSubCategory, setExpandedSubCategory] = useState<string | null>(null);
     const [expanded, setExpanded] = useState(false);
@@ -58,7 +59,7 @@ const BrandBlock: React.FC<Props> = ({ brand, reports }) => {
                 <span className="brand-date">
                     {lastDate ? formatDistanceToNow(new Date(lastDate), { locale: fr, addSuffix: true }) : ""}
                 </span>
-                <img src={getBrandLogo(brand)} alt={brand} className="brand-logo" />
+                <img src={getBrandLogo(brand, siteUrl)} alt={brand} className="brand-logo" />
             </div>
 
             {expanded && (
