@@ -29,11 +29,6 @@
         color: #898989;
         width: fit-content;
 
-        img {
-          width: 20px;
-          height: 20px;
-        }
-
         &:hover {
           background-color: rgba(0, 0, 0, 0.05);
         }
@@ -44,7 +39,7 @@
       align-items: center;
       gap: 8px;
       color: black;
-      padding: 6px 16px;
+      padding: 12px 16px;
       font-size: 13px;
       font-weight: 400;
       cursor: pointer;
@@ -54,6 +49,7 @@
         border-radius: 50%;
         width: 18px;
         height: 18px;
+        padding: 2px;
         display: flex;
         align-items: center;
         justify-content: center;

@@ -40,8 +40,10 @@ const FlatReportList = ({
   useEffect(() => {
     const loadAllLogos = async () => {
       const entries = await Promise.all(
-        grouped.map(async ([brand]) => {
-          const logoUrl = await fetchValidBrandLogo(brand);
+        grouped.map(async ([brand, reports]) => {
+          // ✅ Récupération du siteUrl depuis le premier report du brand
+          const siteUrl = reports?.[0]?.siteUrl || undefined;
+          const logoUrl = await fetchValidBrandLogo(brand, siteUrl);
           return [brand, logoUrl] as [string, string];
         })
       );
@@ -49,6 +51,7 @@ const FlatReportList = ({
     };
     loadAllLogos();
   }, [grouped]);
+
 
   const handleToggle = (brand: string) => {
     setGroupOpen((prev) => {

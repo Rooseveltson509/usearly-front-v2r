@@ -51,7 +51,7 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item }) => {
   useEffect(() => {
     const loadBrandLogo = async () => {
       if (item.marque) {
-        const logoUrl = await fetchValidBrandLogo(item.marque);
+        const logoUrl = await fetchValidBrandLogo(item.marque, item.siteUrl);
         setLogos({ [item.marque]: logoUrl });
       }
     };
@@ -177,7 +177,7 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item }) => {
                         toggleText();
                       }}
                     >
-                      Voir plus
+                      &nbsp;Voir plus
                     </button>
                   )}
                 </p>

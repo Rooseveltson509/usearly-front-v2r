@@ -131,6 +131,7 @@ export interface GroupedReport {
   status?: string;
   category: string;
   marque: string;
+  siteUrl?: string;
   totalCount: number;
   subCategories: {
     subCategory: string;
@@ -182,6 +183,7 @@ export interface UserGroupedReportResponse {
 }
 
 export interface UserGroupedReport {
+  siteUrl: string;
   marque: string;
   category: string;
   subCategory: string;
@@ -211,6 +213,7 @@ export interface PublicGroupedReport {
   reportingId: string;
   category: string;
   marque: string;
+  siteUrl?: string;
   totalCount: number;
   subCategories: {
     subCategory: string;

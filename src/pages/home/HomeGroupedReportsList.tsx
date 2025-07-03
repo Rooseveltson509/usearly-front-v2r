@@ -86,7 +86,8 @@ const HomeGroupedReportsList: React.FC<Props> = ({ activeTab }) => {
                             return acc;
                         }, {})
                     ).map(([brand, reports]) => (
-                        <BrandBlock key={brand} brand={brand} reports={reports} />
+                        <BrandBlock key={brand} brand={brand} siteUrl={reports[0]?.siteUrl || ""}
+                            reports={reports} />
                     ))
                 )
             )}

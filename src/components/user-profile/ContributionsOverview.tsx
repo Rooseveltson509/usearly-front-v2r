@@ -37,6 +37,22 @@ const ContributionsOverview = ({ activeTab }: Props) => {
     }
   };
 
+  const getTitleByTab = () => {
+    const currentCount = getCountByTab();
+    const isPlural = currentCount > 1;
+
+    switch (activeTab) {
+      case "report":
+        return isPlural ? "Signalements" : "Signalement";
+      case "coupdecoeur":
+        return isPlural ? "Coups de cœur" : "Coup de cœur";
+      case "suggestion":
+        return isPlural ? "Suggestions" : "Suggestion";
+      default:
+        return isPlural ? "Contributions" : "Contribution";
+    }
+  };
+
   // Animation pour faire évoluer la valeur jusqu'à getCountByTab()
   useEffect(() => {
     if (loading) return; // On n’anime pas si c’est en cours de chargement
@@ -66,11 +82,17 @@ const ContributionsOverview = ({ activeTab }: Props) => {
       <div className="contributions-count" ref={bubbleRef}>
         <div>
           <img src={ChatTop} alt="ChatTop" className="ChatTop" />
-          <span className="count">{loading ? "..." : count}</span>
+          <span
+            className={`count ${
+              activeTab === "coupdecoeur" ? "cdc-count" : "count"
+            }`}
+          >
+            {loading ? "..." : count}
+          </span>
         </div>
         <div className="contributions-label">
           <span>4 dernières semaines</span>
-          <span className="title">Contributions</span>
+          <span className="title">{getTitleByTab()}</span>
         </div>
       </div>
     </div>

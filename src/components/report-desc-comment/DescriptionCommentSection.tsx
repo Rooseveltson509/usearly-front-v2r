@@ -5,6 +5,7 @@ import { apiService } from "@src/services/apiService";
 import Swal from "sweetalert2";
 import Comment from "../../assets/icons/comment.svg";
 import DescriptionReactionSelector from "@src/utils/DescriptionReactionSelector";
+import { Check, MessageCircleMore, Share2 } from "lucide-react";
 
 interface Comment {
   id: string;
@@ -149,13 +150,19 @@ const DescriptionCommentSection: React.FC<Props> = ({
                 : "Afficher les commentaires"
             }
           >
-            <img src={Comment} alt="Comment" />
+            <MessageCircleMore size={16} />
+
             {comments.length > 0 && ` ${comments.length}`}
+          </button>
+          <button className="comment-toggle-btn">
+            <Share2 size={16} />
           </button>
         </div>
         {type === "report" && (
           <div className="shake-btn">
-            <div className="check">✔</div>
+            <div className="check">
+              <Check />
+            </div>
             <div>En cours de correction</div>
           </div>
         )}
