@@ -16,14 +16,21 @@ const GroupedReportList = ({ grouped, groupOpen, setGroupOpen, renderCard }: Pro
     const loadBrandLogos = async () => {
       const entries = await Promise.all(
         Object.keys(grouped).map(async (brand) => {
-          const logoUrl = await fetchValidBrandLogo(brand);
+          // ✅ On récupère le siteUrl réel pour ce brand
+          const firstCategoryArray = Object.values(grouped[brand])[0]; // GroupedReport[]
+          const firstReport = firstCategoryArray?.[0]; // GroupedReport
+          const siteUrl = firstReport?.siteUrl || undefined; // ex: "adidas.com"
+
+          const logoUrl = await fetchValidBrandLogo(brand, siteUrl);
           return [brand, logoUrl] as [string, string];
         })
       );
       setLogos(Object.fromEntries(entries));
     };
+
     loadBrandLogos();
   }, [grouped]);
+
 
   return (
     <>
