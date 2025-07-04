@@ -1,119 +1,142 @@
-@use "@src/styles/base/variables" as *;
-@use "@src/styles/utils/mixins" as *;
-
-
 .controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .profile-filters-container {
     display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
+    align-items: center;
+    gap: 12px;
     flex-wrap: wrap;
 
-    select {
-        appearance: none;
-        padding: 0.5rem 1rem;
-        border: 1px solid #ddd;
-        border-radius: 9999px;
-        font-size: 0.9rem;
-        background: #f9f9f9 url("/icons/chevron-down.svg") no-repeat right 0.75rem center;
-        background-size: 1rem;
-        color: #333;
-        cursor: pointer;
-        transition: border-color 0.2s, background-color 0.2s;
+    .profile-filters {
+      display: flex;
+      align-items: center;
+      gap: 12px;
 
-        &:focus {
-            border-color: #7b61ff;
-            background-color: #fff;
-            outline: none;
-        }
-
-        &:hover {
-            background-color: #fff;
-        }
-    }
-
-    button {
-        background: #7b61ff;
-        color: #fff;
-        padding: 0.5rem 1rem;
-        border: none;
-        border-radius: 9999px;
-        cursor: pointer;
-        font-weight: 500;
-        transition: background 0.2s;
-
-        &:hover {
-            background: #684de0;
-        }
-    }
-}
-
-
-/* .home-grouped-reports-list {
-    .filters {
+      .control {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        margin-bottom: 1rem;
-        flex-wrap: wrap;
+        gap: 8px;
 
-        input[type="text"],
         select {
-            padding: 0.5rem 0.75rem;
-            border: 1px solid var(--border-color, #ddd);
-            border-radius: 0.5rem;
-            font-size: 0.9rem;
-            background: var(--input-bg, #fff);
-            color: var(--text-color, #333);
-            transition: border 0.2s, box-shadow 0.2s;
-
-            &:focus {
-                border-color: var(--primary-color, #4a90e2);
-                box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
-                outline: none;
-            }
+          padding: 10px 12px;
+          border: 1px solid #0000001c;
+          border-radius: 10px;
+          font-size: 13px;
+          font-weight: 400;
+          background-color: white;
+          cursor: pointer;
+          color: #575757;
         }
-
-        .reset-filters {
-            background: var(--primary-color, #4a90e2);
-            color: #fff;
-            border: none;
-            padding: 0.5rem 0.75rem;
-            border-radius: 0.5rem;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
-
-            &:hover {
-                //background: #fefefe;
-                //background: darken(var(--primary-color, #4a90e2), 5%);
-            }
-
-            &:active {
-                transform: scale(0.97);
-            }
-        }
+      }
     }
+  }
+  .reset-filters-button {
+    background: none;
+    border: none;
+    margin-top: 4px;
+    cursor: pointer;
+  }
+  .profile-filters {
+    .control {
+      display: flex;
+      gap: 12px;
+      align-items: center;
 
-
-
-    .sort-dropdown {
-    margin-bottom: 1rem;
-
-    select {
-        padding: 0.5rem 0.75rem;
-        border: 1px solid var(--border-color, #ddd);
-        border-radius: 0.5rem;
-        font-size: 0.9rem;
-        background: var(--input-bg, #fff);
-        color: var(--text-color, #333);
-        transition: border 0.2s, box-shadow 0.2s;
+      select {
+        padding: 10px 12px;
+        border: 1px solid #0000001c;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 400;
+        background-color: white;
+        cursor: pointer;
+        color: #575757;
+        appearance: none; // Supprime les chevrons natifs
+        -moz-appearance: none; // Firefox
+        -webkit-appearance: none; // Safari et Chrome
+        position: relative; // Nécessaire pour le chevron personnalisé
 
         &:focus {
-            border-color: var(--primary-color, #4a90e2);
-            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
-            outline: none;
+          outline: none;
         }
+      }
+
+      // Wrapper pour le chevron personnalisé
+      .select-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+
+        select {
+          width: 100%;
+        }
+
+        .chevron-icon {
+          position: absolute;
+          right: 10px;
+          pointer-events: none;
+        }
+      }
     }
+  }
 }
 
-} */
+.sort-dropdown {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px 12px;
+  border: 1px solid #0000001c;
+  border-radius: 10px;
+  background: white;
+  cursor: pointer;
+
+  .dropdown-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 4px;
+    border: 1px solid #ccc;
+    background: white;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    min-width: 100px;
+
+    button {
+      display: block;
+      width: 100%;
+      padding: 8px 12px;
+      background: none;
+      border: none;
+      text-align: left;
+      font-size: 13px;
+      cursor: pointer;
+
+      &.active {
+        font-weight: bold;
+        background-color: #f0f0f0;
+      }
+
+      &:hover {
+        background-color: #f9f9f9;
+      }
+    }
+  }
+}

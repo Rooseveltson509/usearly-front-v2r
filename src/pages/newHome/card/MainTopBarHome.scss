@@ -16,6 +16,10 @@
   }
 
   .text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     color: #fff;
     font-family: Urbanist, sans-serif;
     font-size: 36px;
@@ -23,8 +27,7 @@
     line-height: 130%;
     display: flex;
     align-items: center;
-    margin: 0 auto 0 0;
-    gap: 4px;
+    gap: 8px; // tu peux garder le gap si tu veux un peu d’espace entre les mots
     z-index: 999;
 
     .text__decoration {
@@ -40,11 +43,13 @@
           transform: scale(1.25);
         }
       }
+
       .bulle {
         margin: 0 0 -25px 0px;
       }
     }
   }
+
   .right {
     margin-left: auto; // Maintient la zone de droite complètement à droite
     display: flex;

@@ -177,7 +177,7 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item }) => {
                         toggleText();
                       }}
                     >
-                      Voir plus
+                      &nbsp;Voir plus
                     </button>
                   )}
                 </p>

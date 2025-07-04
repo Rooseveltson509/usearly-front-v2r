@@ -44,7 +44,6 @@ const UserProfilePage: React.FC = () => {
           ) : (
             <UserFeedbackView activeTab={activeTab} />
           )}
-
         </div>
 
         <aside className="right-panel">

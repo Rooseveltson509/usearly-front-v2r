@@ -14,12 +14,21 @@ const UserFeedbackView: React.FC<Props> = ({ activeTab }) => {
 
   if (loading) {
     return (
-      <SqueletonAnime loaderRef={{ current: null }} loading={true} hasMore={false} error={null} />
+      <SqueletonAnime
+        loaderRef={{ current: null }}
+        loading={true}
+        hasMore={false}
+        error={null}
+      />
     );
   }
 
   if (!data.length) {
-    return <div style={{ textAlign: "center", marginTop: "2rem" }}>Aucun contenu trouvé.</div>;
+    return (
+      <div style={{ textAlign: "center", marginTop: "2rem" }}>
+        Aucun contenu trouvé.
+      </div>
+    );
   }
 
   if (activeTab === "coupdecoeur") {
