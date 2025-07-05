@@ -73,10 +73,12 @@ const UserGroupedReportsList: React.FC = () => {
       if (entries[0].isIntersecting && hasMore && !loading) {
         loadMore();
       }
-    });
+    }, { threshold: 0.3 });
+
     observer.observe(loaderRef.current);
     return () => observer.disconnect();
   }, [hasMore, loading, loadMore, viewMode]);
+
 
   useEffect(() => {
     console.log("Reports updated", reports);

@@ -9,21 +9,25 @@ import { useState, useEffect, useCallback, useRef } from "react";
  */
 export const useInfiniteGroupedReports = (limit = 10, resetKey = "") => {
     const [reports, setReports] = useState<UserGroupedReport[]>([]);
-    const [page, setPage] = useState(1);
-    const [hasMore, setHasMore] = useState(true);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [hasMore, setHasMore] = useState(true);
 
     const pageRef = useRef(1);
     const hasMoreRef = useRef(true);
+    const isMounted = useRef(false);
+    const loadingRef = useRef(false); // empêche double loadMore
 
     const loadMore = useCallback(async () => {
-        if (loading || !hasMoreRef.current) return;
+        if (loadingRef.current || !hasMoreRef.current) {
+            return;
+        }
 
-        console.log("loadMore called, page:", pageRef.current);
-
+        loadingRef.current = true;
         setLoading(true);
         setError(null);
+
+        console.log("[loadMore] page:", pageRef.current);
 
         try {
             const data = await getUserProfileGroupedReports(pageRef.current, limit);
@@ -45,35 +49,42 @@ export const useInfiniteGroupedReports = (limit = 10, resetKey = "") => {
                     hasMoreRef.current = false;
                     setHasMore(false);
                 } else {
-                    hasMoreRef.current = data.currentPage < data.totalPages;
-                    setHasMore(data.currentPage < data.totalPages);
+                    const stillHasMore = data.currentPage < data.totalPages;
+                    hasMoreRef.current = stillHasMore;
+                    setHasMore(stillHasMore);
                     pageRef.current += 1;
-                    setPage(pageRef.current);
                 }
 
                 return newUniqueReports;
             });
         } catch (err: any) {
+            console.error("[useInfiniteGroupedReports] Error:", err);
             setError(err.message || "Erreur lors du chargement.");
         } finally {
             setLoading(false);
+            loadingRef.current = false;
         }
-    }, [limit, loading]);
+    }, [limit]);
 
-    // RESET AUTOMATIQUE si resetKey change (ex: tab ou filtre)
+    // Reset automatique lorsque resetKey change
     useEffect(() => {
-        console.log("Reset triggered, resetKey:", resetKey);
-        setReports([]);
-        setPage(1);
-        pageRef.current = 1;
-        setHasMore(true);
-        hasMoreRef.current = true;
-        setLoading(false);
+        console.log("[useInfiniteGroupedReports] Reset triggered, resetKey:", resetKey);
 
-        // Recharger immédiatement
-        loadMore();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [resetKey]);
+        setReports([]);
+        setLoading(false);
+        setError(null);
+        setHasMore(true);
+
+        pageRef.current = 1;
+        hasMoreRef.current = true;
+        loadingRef.current = false;
+
+        if (isMounted.current) {
+            loadMore(); // recharge immédiatement après reset
+        } else {
+            isMounted.current = true;
+        }
+    }, [resetKey, loadMore]);
 
     return { reports, loading, error, hasMore, loadMore };
 };
