@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import UserStatsCard from "./UserStatsCard";
 import ContributionsOverview from "./ContributionsOverview";
 import FeedbackTabs, { type FeedbackType } from "./FeedbackTabs";
@@ -13,6 +13,12 @@ import UserFeedbackView from "../profile/UserFeedbackView";
 
 const UserProfilePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<FeedbackType>("report");
+  const mountCount = useRef(0);
+  
+  useEffect(() => {
+    mountCount.current += 1;
+    console.log("UserProfilePage mounted:", mountCount.current);
+  }, []);
 
   return (
     <div className="user-profile-page">
