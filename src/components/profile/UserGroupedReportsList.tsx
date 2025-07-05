@@ -1,11 +1,10 @@
 import "./UserGroupedReportsList.scss";
 import { useAuth } from "@src/services/AuthContext";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import ChronologicalReportList from "@src/components/report-grouped/ChronologicalReportList";
 import ChronoReportCard from "@src/components/report-grouped/report-by-date/ChronoReportCard";
 import { useUserProfileFilters } from "@src/hooks/useUserProfileFilters";
 import { usePaginatedUserReportsGroupedByDate } from "@src/hooks/usePaginatedUserReportsGroupedByDate";
-import { getUserProfileGroupedReports } from "@src/services/feedbackService";
 import ProfileFilters from "./ProfileFilters";
 import type {
   UserGroupedReport,
@@ -14,6 +13,7 @@ import type {
 import UserBrandBlock from "../user-reports/UserBrandBlock";
 import SqueletonAnime from "../loader/SqueletonAnime";
 import { ArrowDownWideNarrow, ChevronDown, ListRestart } from "lucide-react";
+import { useInfiniteGroupedReports } from "@src/hooks/useInfiniteGroupedReports";
 
 type ViewMode = "brand" | "date";
 
@@ -23,16 +23,20 @@ const UserGroupedReportsList: React.FC = () => {
   /* ────────────────────────────────────────────────────────────
      ÉTATS
      ──────────────────────────────────────────────────────────── */
-  const [data, setData] = useState<UserGroupedReport[]>([]);
-  const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<ViewMode>("brand");
   const [expandedBrand, setExpandedBrand] = useState<string | null>(null);
-
-  /* Nouveaux états pour le dropdown custom */
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
-
   const loaderRef = useRef<HTMLDivElement | null>(null);
+
+  /* Scroll infini pour vue PAR MARQUE */
+  const {
+    reports,
+    loading,
+    error,
+    hasMore,
+    loadMore,
+  } = useInfiniteGroupedReports(10);
 
   /* Filtres (par marque / catégorie) */
   const {
@@ -43,53 +47,51 @@ const UserGroupedReportsList: React.FC = () => {
     availableBrands,
     availableCategories,
     filteredData,
-  } = useUserProfileFilters(data);
+  } = useUserProfileFilters(reports);
 
   /* Pagination pour la vue chrono */
   const {
     data: chronoData,
     loading: loadingChrono,
-    hasMore,
-    loadMore,
+    hasMore: hasMoreChrono,
+    loadMore: loadMoreChrono,
   } = usePaginatedUserReportsGroupedByDate(viewMode === "date");
 
   /* ────────────────────────────────────────────────────────────
-     RÉCUPÉRATION DES DONNÉES (vue par MARQUE)
+     INFINITE SCROLL (vue par MARQUE)
      ──────────────────────────────────────────────────────────── */
   useEffect(() => {
-    if (viewMode === "brand") {
-      const fetchReports = async () => {
-        try {
-          setLoading(true);
-          const res = await getUserProfileGroupedReports(1, 10);
-          setData(res.results);
-        } catch (error) {
-          console.error(error);
-        } finally {
-          setLoading(false);
-        }
-      };
-      fetchReports();
-    }
-  }, [viewMode]);
+    if (!loaderRef.current || viewMode !== "brand") return;
 
-  /* ────────────────────────────────────────────────────────────
-     INFINITE SCROLL (vue par DATE)
-     ──────────────────────────────────────────────────────────── */
-  useEffect(() => {
-    if (!loaderRef.current || viewMode !== "date") return;
     const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && hasMore && !loadingChrono) {
+      if (entries[0].isIntersecting && hasMore && !loading) {
         loadMore();
       }
     });
     observer.observe(loaderRef.current);
     return () => observer.disconnect();
-  }, [hasMore, loadingChrono, loadMore, viewMode]);
+  }, [hasMore, loading, loadMore, viewMode]);
 
-  /* ────────────────────────────────────────────────────────────
-     FERMETURE DU DROPDOWN AU CLIC EXTÉRIEUR
-     ──────────────────────────────────────────────────────────── */
+  useEffect(() => {
+    console.log("Reports updated", reports);
+    console.log("Filtered data updated", filteredData);
+  }, [reports, filteredData]);
+
+
+  /* INFINITE SCROLL (vue par DATE) déjà en place, conservé */
+  useEffect(() => {
+    if (!loaderRef.current || viewMode !== "date") return;
+
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && hasMoreChrono && !loadingChrono) {
+        loadMoreChrono();
+      }
+    });
+    observer.observe(loaderRef.current);
+    return () => observer.disconnect();
+  }, [hasMoreChrono, loadingChrono, loadMoreChrono, viewMode]);
+
+  /* FERMETURE DU DROPDOWN AU CLIC EXTÉRIEUR */
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -103,7 +105,6 @@ const UserGroupedReportsList: React.FC = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  /* Change de mode d’affichage (brand / date) */
   const handleDisplayChange = (mode: ViewMode) => {
     setViewMode(mode);
     setShowDropdown(false);
@@ -172,11 +173,10 @@ const UserGroupedReportsList: React.FC = () => {
       </div>
 
       {/* === RENDU PAR MARQUE === */}
-      {!loading &&
-        viewMode === "brand" &&
-        (filteredData.length === 0 ? (
+      {viewMode === "brand" &&
+        (!loading && filteredData.length === 0 ? (
           <p className="no-reports">
-            Aucun signalement trouvé pour ces filtres.
+            Aucun signalement trouvé pour ces filtres...
           </p>
         ) : (
           Object.entries(
@@ -220,8 +220,8 @@ const UserGroupedReportsList: React.FC = () => {
       <SqueletonAnime
         loaderRef={loaderRef}
         loading={viewMode === "brand" ? loading : loadingChrono}
-        hasMore={viewMode === "brand" ? false : hasMore}
-        error={null}
+        hasMore={viewMode === "brand" ? hasMore : hasMoreChrono}
+        error={error}
       />
     </div>
   );

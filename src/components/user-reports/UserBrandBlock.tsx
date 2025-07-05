@@ -43,12 +43,7 @@ const UserBrandBlock: React.FC<Props> = ({
     .map((d) => new Date(d.createdAt).getTime())
     .sort((a, b) => b - a)[0];
 
-  const totalCount = reports.reduce((sum, r) => {
-    const userDescriptions = r.descriptions.filter(
-      (d) => d.user.id === userProfile?.id
-    );
-    return sum + userDescriptions.length;
-  }, 0);
+  const totalCount = new Set(reports.map(r => r.subCategory)).size;
 
   return (
     <div className={`brand-block ${isOpen ? "open" : "close"}`}>
@@ -85,9 +80,9 @@ const UserBrandBlock: React.FC<Props> = ({
               <span>
                 {lastDate
                   ? formatDistanceToNow(new Date(lastDate), {
-                      locale: fr,
-                      addSuffix: true,
-                    })
+                    locale: fr,
+                    addSuffix: true,
+                  })
                   : ""}
               </span>
               <img
@@ -112,9 +107,8 @@ const UserBrandBlock: React.FC<Props> = ({
             return (
               <div
                 key={sub.subCategory}
-                className={`subcategory-block ${
-                  expandedSub === sub.subCategory ? "open" : ""
-                }`}
+                className={`subcategory-block ${expandedSub === sub.subCategory ? "open" : ""
+                  }`}
               >
                 {/* ----- Sub-category header ----- */}
                 <div
@@ -196,19 +190,19 @@ const UserBrandBlock: React.FC<Props> = ({
                           {/* ----------- BOUTON VOIR PLUS ----------- */}
                           {(initialDescription.description.length > 120 ||
                             initialDescription.capture) && (
-                            <button
-                              className="see-more-button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setExpandedDescriptions((prev) => ({
-                                  ...prev,
-                                  [sub.subCategory]: true,
-                                }));
-                              }}
-                            >
-                              &nbsp;Voir plus
-                            </button>
-                          )}
+                              <button
+                                className="see-more-button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setExpandedDescriptions((prev) => ({
+                                    ...prev,
+                                    [sub.subCategory]: true,
+                                  }));
+                                }}
+                              >
+                                &nbsp;Voir plus
+                              </button>
+                            )}
                         </>
                       ) : (
                         <>
@@ -230,19 +224,19 @@ const UserBrandBlock: React.FC<Props> = ({
                           {/* ----------- BOUTON VOIR MOINS ----------- */}
                           {(initialDescription.description.length > 120 ||
                             initialDescription.capture) && (
-                            <button
-                              className="see-more-button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setExpandedDescriptions((prev) => ({
-                                  ...prev,
-                                  [sub.subCategory]: false,
-                                }));
-                              }}
-                            >
-                              &nbsp;Voir moins
-                            </button>
-                          )}
+                              <button
+                                className="see-more-button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setExpandedDescriptions((prev) => ({
+                                    ...prev,
+                                    [sub.subCategory]: false,
+                                  }));
+                                }}
+                              >
+                                &nbsp;Voir moins
+                              </button>
+                            )}
                         </>
                       )}
                     </div>
@@ -266,8 +260,8 @@ const UserBrandBlock: React.FC<Props> = ({
                                   src={
                                     currentDesc.user.avatar
                                       ? getFullAvatarUrl(
-                                          currentDesc.user.avatar
-                                        )
+                                        currentDesc.user.avatar
+                                      )
                                       : "/default-avatar.png"
                                   }
                                   alt={currentDesc.user.pseudo}

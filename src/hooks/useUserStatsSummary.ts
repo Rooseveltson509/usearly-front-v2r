@@ -2,7 +2,12 @@ import { getUserStatsSummary } from "@src/services/feedbackService";
 import type { UserStatsSummary } from "@src/types/Reports";
 import { useState, useEffect } from "react";
 
-export const useUserStatsSummary = () => {
+// ✅ Ajout explicite du type de retour
+export const useUserStatsSummary = (): {
+    stats: UserStatsSummary | null;
+    loading: boolean;
+    error: string | null;
+} => {
     const [stats, setStats] = useState<UserStatsSummary | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);

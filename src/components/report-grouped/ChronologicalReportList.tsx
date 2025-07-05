@@ -10,13 +10,13 @@ interface Props {
 const ChronologicalReportList: React.FC<Props> = ({ groupedByDay, renderCard }) => {
   const entries = Object.entries(groupedByDay);
 
-  if (entries.length === 0) {
+/*   if (entries.length === 0) {
     return (
       <div className="chrono-empty">
         ⚠️ Aucun élément à afficher
       </div>
     );
-  }
+  } */
 
   return (
     <div className="chronological-report-list">
