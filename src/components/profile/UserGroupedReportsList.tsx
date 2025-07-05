@@ -29,6 +29,12 @@ const UserGroupedReportsList: React.FC = () => {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const loaderRef = useRef<HTMLDivElement | null>(null);
 
+
+  /* 🚩 Utilisation du resetKey pour éviter le blocage */
+  const resetKey = `${viewMode}`;
+  /* ────────────────────────────────────────────────────────────
+     HOOKS
+     ──────────────────────────────────────────────────────────── */
   /* Scroll infini pour vue PAR MARQUE */
   const {
     reports,
@@ -36,7 +42,7 @@ const UserGroupedReportsList: React.FC = () => {
     error,
     hasMore,
     loadMore,
-  } = useInfiniteGroupedReports(10);
+  } = useInfiniteGroupedReports(10, resetKey);
 
   /* Filtres (par marque / catégorie) */
   const {
