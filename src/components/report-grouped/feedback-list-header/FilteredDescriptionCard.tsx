@@ -1,4 +1,4 @@
-import { formatDistanceToNow } from "date-fns";
+/* import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 import type { FeedbackDescription } from "@src/types/Reports";
 import { useAuth } from "@src/services/AuthContext";
@@ -79,3 +79,4 @@ const FilteredDescriptionCard = ({ description }: Props) => {
 };
 
 export default FilteredDescriptionCard;
+ */

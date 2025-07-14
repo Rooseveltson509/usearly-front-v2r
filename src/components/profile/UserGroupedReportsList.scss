@@ -275,7 +275,6 @@
       overflow: hidden;
       &.open {
         box-shadow: inset 0px -4px 10px -2px rgba(0, 0, 0, 0.14);
-        z-index: 9999;
         .subcategory-header {
           border: none;
           padding: 1rem 1rem 0 !important;

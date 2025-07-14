@@ -1,0 +1,230 @@
+/* .subcategory-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  margin-bottom: 0.25rem;
+
+  .subcategory-left {
+    display: flex;
+    align-items: center; // assure l'alignement vertical
+    gap: 0.5rem; // espace entre l'icône et le titre
+  }
+
+  .subcategory-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  h4 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .subcategory-count-badge {
+    background: #e5e7eb;
+    border-radius: 9999px;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #374151;
+  }
+} */
+ 
+
+.main-description {
+  margin-left: 2.5rem; // aligne la description avec le titre et l'icône
+  margin-top: 0.5rem;
+}
+
+.description-text {
+  margin: 0;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.subcategory-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+
+  .subcategory-left {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+
+    .subcategory-icon {
+      width: 18px;
+      height: 18px;
+    }
+
+    h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin: 0;
+    }
+  }
+
+  .subcategory-right {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+
+    .subcategory-count {
+      font-size: 0.75rem;
+      background: #e5e7eb;
+      border-radius: 9999px;
+      padding: 0.15rem 0.5rem;
+      font-weight: 600;
+      color: #374151;
+    }
+  }
+}
+
+.early-card {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
+  gap: 0.75rem;
+
+  .early-left {
+    font-size: 0.9rem;
+    color: #111827;
+    line-height: 1.4;
+    flex: 1;
+
+    .capture-vision {
+      margin-top: 0.5rem;
+      max-width: 100%;
+      border-radius: 0.375rem;
+      cursor: pointer;
+    }
+  }
+}
+
+.see-more-button {
+  color: #2563eb;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.25rem 0;
+  text-align: left;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.see-more-button svg {
+  margin-right: 0.25rem;
+  vertical-align: middle;
+}
+
+.other-descriptions {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #e5e7eb;
+
+  .section-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+  }
+}
+
+
+.feedback-card {
+  display: flex;
+  background: #ffffff;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  gap: 0.75rem;
+  align-items: center; // ✅ Corrigé pour centrage vertical propre
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+
+  .feedback-avatar {
+    .feedback-avatar-wrapper {
+      /* nouveau nom */
+      position: relative;
+      width: 32px;
+      height: 32px;
+      overflow: visible;
+      top: -25px;
+      /* Ajustement pour le positionnement */
+
+      .avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+        display: block;
+      }
+
+      .emoji-overlay {
+        position: absolute;
+        bottom: -4px;
+        right: -4px;
+        font-size: 1rem;
+        background: #fff;
+        border-radius: 50%;
+        padding: 0.05rem 0.15rem;
+        line-height: 1;
+        box-shadow: 0 0 0 1px #e5e7eb;
+        z-index: 1;
+      }
+    }
+  }
+
+
+  .feedback-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+
+    .feedback-meta {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      font-size: 0.75rem;
+      color: #4b5563;
+
+      .pseudo {
+        font-weight: 600;
+        color: #111827;
+      }
+
+      .badge-me {
+        background: #e0f2fe;
+        color: #0369a1;
+        font-size: 0.65rem;
+        font-weight: 600;
+        padding: 0.1rem 0.4rem;
+        border-radius: 9999px;
+      }
+
+      .brand,
+      .time {
+        color: #6b7280;
+      }
+    }
+
+    .feedback-text {
+      font-size: 0.85rem;
+      color: #111827;
+      line-height: 1.4;
+      word-break: break-word;
+    }
+  }
+}

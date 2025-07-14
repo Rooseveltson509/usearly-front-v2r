@@ -36,3 +36,7 @@ export const deleteComment = async (commentId: string) => {
   const response = await apiService.delete(`/comments/${commentId}`);
   return response.data;
 };
+
+export const getCommentsCountForDescription = async (descriptionId: string) => {
+    return apiService.get(`/comments/description/${descriptionId}/comments/count`);
+};

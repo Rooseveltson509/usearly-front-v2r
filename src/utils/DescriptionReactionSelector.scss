@@ -41,7 +41,7 @@
   border-radius: 12px;
   padding: 6px 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  z-index: 100;
+  z-index: 1000;
 }
 
 .emoji-button {
@@ -72,5 +72,46 @@
   &.selected {
     background-color: #d1eaff;
     font-weight: bold;
+  }
+}
+
+.main-reaction.as-text-like {
+  background: none;
+  border: none;
+  color: #65676b; // gris doux LinkedIn
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-weight: 500;
+  line-height: 1.2;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #1f6ae0;
+    text-decoration: underline;
+  }
+  &.reacted {
+    color: #1f6ae0; // ou #4e8cff selon ton design
+    font-weight: 500;
+  }
+
+  .emoji {
+    font-size: 0.95rem; // taille équilibrée
+    line-height: 1;
+    margin-left: 0.15rem;
+  }
+
+  .like-text {
+    font-weight: 500;
+    font-size: 0.85rem;
+  }
+
+  .total {
+    font-size: 0.75rem;
+    color: #65676b;
+    margin-left: 0.1rem;
   }
 }
