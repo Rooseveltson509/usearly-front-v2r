@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import "./DescriptionReactionSelector.scss";
 import { useReactionsForDescription } from "@src/hooks/useReactionsForDescription";
 import { useReactionsForItem } from "@src/hooks/useReactionsForItem";
@@ -9,17 +9,16 @@ interface Props {
   userId: string;
   descriptionId: string;
   type: "report" | "suggestion" | "coupdecoeur";
+  displayAsTextLike?: boolean;
 }
 
-const DescriptionReactionSelector: React.FC<Props> = ({
-  userId,
-  descriptionId,
-  type,
-}) => {
+const DescriptionReactionSelector = forwardRef(function DescriptionReactionSelector(
+  { userId, descriptionId, type, displayAsTextLike }: Props,
+  ref
+) {
   const [isOpen, setIsOpen] = useState(false);
   const popupTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Récupérer les emojis pour le type actuel
   const emojiOptions = getEmojisForType(type);
 
   const { getCount, hasReactedWith, handleReact } =
@@ -44,14 +43,37 @@ const DescriptionReactionSelector: React.FC<Props> = ({
     }, 200);
   };
 
+  // Expose open() to parent
+  useImperativeHandle(ref, () => ({
+    open: () => setIsOpen(true),
+    close: () => setIsOpen(false),
+  }));
+
+  // Check if the user has reacted with any emoji
+  const hasReacted = emojiOptions.some(item => hasReactedWith(item.emoji));
+
   return (
     <div
       className="reaction-selector"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <button className="main-reaction">
-        {activeReactions.length > 0 ? (
+      <button className={`main-reaction ${displayAsTextLike ? "as-text-like" : ""} ${hasReacted ? "reacted" : ""}`}>
+        {displayAsTextLike ? (
+          <>
+            <span className="like-text">J’aime</span>
+            {activeReactions.length > 0 && (
+              <>
+                {activeReactions.map((r) => (
+                  <span className="emoji" key={r.emoji}>
+                    {r.emoji}
+                  </span>
+                ))}
+                <span className="total"> {total}</span>
+              </>
+            )}
+          </>
+        ) : activeReactions.length > 0 ? (
           <>
             {activeReactions.map((r) => (
               <span className="emoji" key={r.emoji}>
@@ -64,6 +86,7 @@ const DescriptionReactionSelector: React.FC<Props> = ({
           "😊"
         )}
       </button>
+
 
       {isOpen && (
         <div className="reaction-popup">
@@ -89,6 +112,7 @@ const DescriptionReactionSelector: React.FC<Props> = ({
       )}
     </div>
   );
-};
+});
 
 export default DescriptionReactionSelector;
+

@@ -1,80 +1,93 @@
 import { useEffect, useState } from "react";
-import DescriptionCommentSection from "../report-desc-comment/DescriptionCommentSection";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import type { PublicGroupedReport } from "@src/types/Reports";
 import { getBrandLogo } from "@src/utils/brandLogos";
 import { getCategoryIconPathFromSubcategory } from "@src/utils/IconsUtils";
+import DescriptionCommentSection from "@src/components/report-desc-comment/DescriptionCommentSection";
+import CommentSection from "@src/components/comments/CommentSection";
+import ReportActionsBarWithReactions from "@src/components/shared/ReportActionsBarWithReactions";
+import { pastelColors } from "@src/components/constants/pastelColors";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
-import { ChevronDown, ChevronUp } from "lucide-react";
-import type { UserGroupedReport } from "@src/types/Reports";
-import { pastelColors } from "../constants/pastelColors";
 import "./UserBrandBlock.scss";
-import ReportActionsBarWithReactions from "../shared/ReportActionsBarWithReactions";
-import CommentInputSection from "../report-desc-comment/CommentInputSection";
 import { getCommentsCountForDescription } from "@src/services/commentService";
-import CommentSection from "../comments/CommentSection";
 
 interface Props {
   brand: string;
   siteUrl: string;
-  reports: UserGroupedReport[];
-  userProfile: { id?: string } | null;
-  isOpen: boolean;
-  onToggle: () => void;
+  reports: PublicGroupedReport[];
 }
 
-const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, onToggle, siteUrl }) => {
+const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
   const [expandedSub, setExpandedSub] = useState<string | null>(null);
   const [expandedOthers, setExpandedOthers] = useState<Record<string, boolean>>({});
   const [showAll, setShowAll] = useState<Record<string, boolean>>({});
-  const [modalImage, setModalImage] = useState<string | null>(null);
   const [showComments, setShowComments] = useState<Record<string, boolean>>({});
   const [showReactions, setShowReactions] = useState<Record<string, boolean>>({});
+  const [modalImage, setModalImage] = useState<string | null>(null);
   const [commentsCounts, setCommentsCounts] = useState<Record<string, number>>({});
   const [localCommentsCounts, setLocalCommentsCounts] = useState<Record<string, number>>({});
   const [refreshCommentsKeys, setRefreshCommentsKeys] = useState<Record<string, number>>({});
+  const [openBrands, setOpenBrands] = useState<Record<string, boolean>>({});
   const [signalementFilters, setSignalementFilters] = useState<Record<string, "pertinent" | "recents" | "anciens">>({});
 
-
-  useEffect(() => {
-    const fetchAllCounts = async () => {
-      const newCounts: Record<string, number> = {};
-      for (const sub of reports) {
-        for (const desc of sub.descriptions) {
-          try {
-            const res = await getCommentsCountForDescription(desc.id);
-            newCounts[desc.id] = res.data.commentsCount ?? 0;
-          } catch (err) {
-            console.error(`Erreur pour descriptionId ${desc.id} :`, err);
-            newCounts[desc.id] = 0;
-          }
-        }
-      }
-      setCommentsCounts(newCounts);
-      setLocalCommentsCounts(newCounts); // initialise local avec la vraie valeur pour incrément/décrément correct
-    };
-    fetchAllCounts();
-  }, [reports]);
 
   const getFullAvatarUrl = (path: string | null | undefined) => {
     if (!path) return "/default-avatar.png";
     return `${import.meta.env.VITE_API_BASE_URL}/${path}`;
   };
 
+  const toggleBrand = (brand: string) => {
+    setOpenBrands((prev) => ({
+      ...prev,
+      [brand]: !prev[brand],
+    }));
+  };
+
+  useEffect(() => {
+    const fetchAllCounts = async () => {
+      const newCounts: Record<string, number> = {};
+
+      for (const report of reports) {
+        for (const sub of report.subCategories) {
+          for (const desc of sub.descriptions) {
+            try {
+              const res = await getCommentsCountForDescription(desc.id);
+              newCounts[desc.id] = res.data.commentsCount ?? 0;
+            } catch {
+              newCounts[desc.id] = 0;
+            }
+          }
+        }
+      }
+
+      setCommentsCounts(newCounts);
+      setLocalCommentsCounts(newCounts);
+    };
+
+    fetchAllCounts();
+  }, [reports]);
+
   return (
-    <div className={`brand-block ${isOpen ? "open" : "close"}`}>
-      <div className="brand-header" onClick={onToggle}>
+    <div className={`brand-block ${openBrands[brand] ? "open" : "close"}`}>
+      <div className="brand-header" onClick={() => toggleBrand(brand)}>
         <img src={getBrandLogo(brand, siteUrl)} alt={brand} className="brand-logo" />
         <h3 className="brand-title">{brand}</h3>
-        <p className="brand-reports-count">{reports.length} signalements sur {brand}</p>
-        <ChevronDown size={18} className="chevron-icon" />
+        <p className="brand-reports-count">
+          {
+            reports.reduce((set, report) => {
+              report.subCategories.forEach(sub => set.add(sub.subCategory));
+              return set;
+            }, new Set<string>()).size
+          } Problèmes sur {brand}
+        </p>
+
       </div>
 
-      {isOpen && (
+      {openBrands[brand] && (
         <div className="subcategories-list">
-          {reports.map((sub, i) => {
+          {reports.flatMap((report, i) => report.subCategories.map((sub, j) => {
             const initialDescription = sub.descriptions[0];
-            const currentCount = localCommentsCounts[initialDescription.id] ?? 0;
-
             const additionalDescriptions = sub.descriptions.slice(1);
             const hasMoreThanTwo = additionalDescriptions.length > 2;
             const sortedDescriptions = [...additionalDescriptions].sort((a, b) => {
@@ -95,7 +108,7 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
               <div
                 key={sub.subCategory}
                 className={`subcategory-block ${expandedSub === sub.subCategory ? "open" : ""}`}
-                style={{ backgroundColor: pastelColors[i % pastelColors.length] }}
+                style={{ backgroundColor: pastelColors[j % pastelColors.length] }}
               >
                 <div
                   className="subcategory-header"
@@ -118,6 +131,7 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                 {expandedSub === sub.subCategory && (
                   <div className="subcategory-content">
                     <div className="main-description">
+
                       <p className="description-text">{initialDescription.description}</p>
                       {initialDescription.capture && (
                         <img
@@ -133,10 +147,10 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                     </div>
 
                     <ReportActionsBarWithReactions
-                      userId={userProfile?.id || ""}
+                      userId=""
                       descriptionId={initialDescription.id}
                       reportsCount={sub.count}
-                      commentsCount={currentCount}
+                      commentsCount={localCommentsCounts[initialDescription.id] ?? 0}
                       onReactClick={() =>
                         setShowReactions(prev => ({ ...prev, [sub.subCategory]: !prev[sub.subCategory] }))
                       }
@@ -154,7 +168,7 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
 
                     />
 
-                    {showComments[sub.subCategory] && userProfile?.id && (
+                    {showComments[sub.subCategory] && (
                       <>
                         <CommentSection
                           descriptionId={initialDescription.id}
@@ -182,18 +196,19 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                         />
 
                         <DescriptionCommentSection
-                          userId={userProfile.id}
+                          userId=""
                           descriptionId={initialDescription.id}
                           type="report"
                           hideFooter={true}
                           refreshKey={refreshCommentsKeys[initialDescription.id] ?? 0}
                         />
+
                       </>
                     )}
 
-                    {showReactions[sub.subCategory] && userProfile?.id && (
+                    {showReactions[sub.subCategory] && (
                       <DescriptionCommentSection
-                        userId={userProfile.id}
+                        userId=""
                         descriptionId={initialDescription.id}
                         type="report"
                         modeCompact
@@ -216,7 +231,6 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                     {expandedOthers[sub.subCategory] && (
                       <>
                         <div className="other-descriptions">
-
                           <div className="signalement-filter">
                             <label htmlFor={`filter-${sub.subCategory}`} className="filter-label">Trier par :</label>
                             <select
@@ -240,8 +254,8 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                               <div className="feedback-avatar">
                                 <div className="feedback-avatar-wrapper">
                                   <img
-                                    src={getFullAvatarUrl(desc.user.avatar)}
-                                    alt={desc.user.pseudo}
+                                    src={getFullAvatarUrl(desc.user?.avatar)}
+                                    alt={desc.user?.pseudo}
                                     className="avatar"
                                   />
                                   {desc.emoji && <div className="emoji-overlay">{desc.emoji}</div>}
@@ -249,21 +263,18 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                               </div>
                               <div className="feedback-content">
                                 <div className="feedback-meta">
-                                  <span className="pseudo">{desc.user.pseudo}</span>
-                                  {userProfile?.id === desc.user.id && <span className="badge-me">Moi</span>}
+                                  <span className="pseudo">{desc.user?.pseudo}</span>
                                   <span className="brand"> · {brand}</span>
                                   <span className="time"> · {formatDistanceToNow(new Date(desc.createdAt), { locale: fr, addSuffix: true })}</span>
                                 </div>
                                 <p className="feedback-text">{desc.description}</p>
-                                {userProfile?.id && desc.id && (
-                                  <DescriptionCommentSection
-                                    userId={userProfile.id}
-                                    descriptionId={desc.id}
-                                    type="report"
-                                    modeCompact
-                                    triggerType="text"
-                                  />
-                                )}
+                                <DescriptionCommentSection
+                                  userId=""
+                                  descriptionId={desc.id}
+                                  type="report"
+                                  modeCompact
+                                  triggerType="text"
+                                />
                               </div>
                             </div>
                           ))}
@@ -285,10 +296,9 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                 )}
               </div>
             );
-          })}
+          }))}
         </div>
       )}
-
       {modalImage && (
         <div className="image-modal-overlay" onClick={() => setModalImage(null)}>
           <img
@@ -303,4 +313,4 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
   );
 };
 
-export default UserBrandBlock;
+export default HomeBrandBlock;

@@ -1,0 +1,51 @@
+.emoji-reaction-picker {
+  position: absolute;
+  bottom: 120%; // ou ajuste selon ton espace
+  left: 100px;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 0.5rem 0.8rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  z-index: 20;
+
+  .emoji-btn {
+    background: none;
+    border: none;
+    font-size: 2rem; // Agrandit la taille
+    cursor: pointer;
+    position: relative;
+    border-radius: 50%;
+    padding: 0.2rem;
+    transition: transform 0.1s ease, background 0.15s ease;
+
+    &:hover {
+      transform: scale(1.25);
+      background: #f0f0f0;
+    }
+
+    &::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 110%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      font-size: 0.75rem;
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s ease;
+    }
+
+    &:hover::after {
+      opacity: 1;
+    }
+  }
+}

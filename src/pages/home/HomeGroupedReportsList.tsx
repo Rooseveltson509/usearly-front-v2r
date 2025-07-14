@@ -2,12 +2,13 @@ import { useState, useRef, useEffect } from "react";
 import type { FeedbackType } from "@src/components/user-profile/FeedbackTabs";
 import { useFetchGroupedReports } from "@src/hooks/useFetchGroupedReports";
 import { usePaginatedGroupedReportsByDate } from "@src/hooks/usePaginatedGroupedReportsByDate";
-import BrandBlock from "@src/components/home-grouped-reports-list/BrandBlock";
 import ChronologicalReportList from "@src/components/report-grouped/ChronologicalReportList";
 import ChronoReportCard from "@src/components/report-grouped/report-by-date/ChronoReportCard";
 import type { ExplodedGroupedReport } from "@src/types/Reports";
 import "./HomeGroupedReportsList.scss";
 import SqueletonAnime from "@src/components/loader/SqueletonAnime";
+import PublicBrandBlock from "@src/components/home-grouped-reports-list/HomeBrandBlock";
+import HomeBrandBlock from "@src/components/home-grouped-reports-list/HomeBrandBlock";
 
 interface Props {
     activeTab: FeedbackType;
@@ -86,10 +87,9 @@ const HomeGroupedReportsList: React.FC<Props> = ({ activeTab }) => {
                             return acc;
                         }, {})
                     ).map(([brand, reports]) => (
-                        <BrandBlock key={brand} brand={brand} siteUrl={reports[0]?.siteUrl || ""}
-                            reports={reports} />
+                        <HomeBrandBlock key={brand} brand={brand} siteUrl={reports[0]?.siteUrl || ""} reports={reports} />
                     ))
-                )
+            )
             )}
 
             {viewMode === "chrono" && chronoData && (

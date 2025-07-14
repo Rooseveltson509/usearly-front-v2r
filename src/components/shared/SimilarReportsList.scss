@@ -1,0 +1,146 @@
+/* .similar-reports-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+
+  .similar-report-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .left {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        .emoji {
+          font-size: 1.2rem;
+        }
+
+        .avatar {
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+
+        .pseudo {
+          font-weight: 500;
+          color: #111827;
+          font-size: 0.9rem;
+        }
+
+        .time {
+          color: #6b7280;
+          font-size: 0.8rem;
+        }
+      }
+
+      .right {
+        .status {
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+          color: #2563eb;
+          font-size: 0.85rem;
+          font-weight: 500;
+
+          .icon {
+            width: 16px;
+            height: 16px;
+            color: #2563eb;
+          }
+        }
+      }
+    }
+
+    .description {
+      font-size: 0.95rem;
+      color: #374151;
+      line-height: 1.4;
+      word-wrap: break-word;
+    }
+
+    .counts-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      color: #6b7280;
+      margin-top: 0.25rem;
+
+      .count-item {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+
+        svg {
+          color: #9ca3af;
+          width: 16px;
+          height: 16px;
+        }
+      }
+    }
+
+    .actions-row {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 1.2rem;
+      margin-top: 0.4rem;
+
+      button {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #6b7280;
+        font-size: 0.85rem;
+        padding: 0;
+        transition: color 0.2s;
+
+        svg {
+          color: #9ca3af;
+          width: 16px;
+          height: 16px;
+        }
+
+        &:hover {
+          color: #111827;
+
+          svg {
+            color: #111827;
+          }
+        }
+      }
+    }
+  }
+}
+
+.show-similar-button {
+  background: none;
+  border: none;
+  color: #2563eb;
+  font-weight: 500;
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0.3rem 0;
+  transition: color 0.2s;
+
+  &:hover {
+    color: #1d4ed8;
+    text-decoration: underline;
+  }
+} */

@@ -196,6 +196,7 @@ export interface UserGroupedReportDescription {
   description: string;
   emoji: string | null;
   createdAt: string;
+  commentsCount?: number; 
   user: {
     id: string;
     pseudo: string;
