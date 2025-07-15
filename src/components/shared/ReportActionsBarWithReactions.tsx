@@ -9,7 +9,7 @@ interface Props {
     userId: string;
     descriptionId: string;
     reportsCount: number;
-    commentsCount: number; // ✅ ajouté
+    commentsCount: number;
     onReactClick: () => void;
     onCommentClick: () => void;
     onToggleSimilarReports?: () => void;
@@ -19,20 +19,23 @@ const ReportActionsBarWithReactions: React.FC<Props> = ({
     userId,
     descriptionId,
     reportsCount,
-    commentsCount, // ✅ récupéré
+    commentsCount,
     onCommentClick,
     onToggleSimilarReports,
 }) => {
     const { getCount, handleReact } = useReactionsForDescription(userId, descriptionId);
     const emojis = getEmojisForType("report");
-    const reactionsCount = emojis.reduce((acc, emoji) => acc + getCount(emoji.emoji), 0);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     let hoverTimeout: NodeJS.Timeout;
 
-    // Trouver l'emoji le plus utilisé
-    const mostUsedEmoji = emojis
+    // ✅ Récupérer toutes les réactions avec leur count
+    const allReactions = emojis
         .map(e => ({ emoji: e.emoji, count: getCount(e.emoji) }))
-        .sort((a, b) => b.count - a.count)[0];
+        .filter(r => r.count > 0)
+        .sort((a, b) => b.count - a.count);
+
+    const topThree = allReactions.slice(0, 3);
+    const totalCount = allReactions.reduce((acc, r) => acc + r.count, 0);
 
     const handleAddReaction = async (emoji: string) => {
         await handleReact(emoji);
@@ -41,20 +44,25 @@ const ReportActionsBarWithReactions: React.FC<Props> = ({
 
     return (
         <div className="report-actions-bar">
-            {/* Ligne des compteurs */}
             <div className="counts-row">
                 <div className="count-left">
-                    {mostUsedEmoji && mostUsedEmoji.count > 0 && (
+                    {topThree.length > 0 && (
                         <>
-                            <span role="img" aria-label="reaction">{mostUsedEmoji.emoji}</span>
-                            <span>{mostUsedEmoji.count}</span>
+                            {topThree.map(r => (
+                                <span key={r.emoji} role="img" aria-label="reaction" className="emoji-icon">
+                                    {r.emoji}
+                                </span>
+                            ))}
+                            <span className="reaction-count">{totalCount}</span>
                         </>
                     )}
                 </div>
 
                 <div className="count-right">
                     <MessageCircle size={16} />
-                    <span>{commentsCount} {commentsCount === 1 ? "commentaire" : "commentaires"}</span>
+                    <span>
+                        {commentsCount} {commentsCount === 1 ? "commentaire" : "commentaires"}
+                    </span>
                     {reportsCount > 1 && (
                         <span className="resignalements-link" onClick={onToggleSimilarReports}>
                             {reportsCount} resignalements
