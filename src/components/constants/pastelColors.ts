@@ -4,6 +4,7 @@ export const pastelColors = [
   "#FEF9C3", // jaune très clair
   "#FDF2F8", // rose très clair
   "#F3F4F6", // gris clair
+  "#ECE3FF", // violet clair
 ];
 export const pastelColorsDark = [
   "#0C4A6E", // bleu foncé
