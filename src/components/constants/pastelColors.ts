@@ -1,10 +1,3 @@
-/*export const pastelColors = [
-  "#F0F8FF", // bleu très clair
-  "#F3FAF2", // vert très clair
-  "#F8F5FF", // rose très clair
-  "#FFF7EB", // jaune très clair
-  "#F4F4F4", // gris clair
-];*/
 export const pastelColors = [
   "rgb(247 247 255)", // bleu très clair
   "rgb(247 247 255)", // vert très clair
