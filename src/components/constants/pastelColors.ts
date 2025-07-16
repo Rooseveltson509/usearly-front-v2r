@@ -1,18 +1,19 @@
 export const pastelColors = [
-  "#F0F9FF", // bleu très clair
-  "#ECFDF5", // vert très clair
-  "#FEF9C3", // jaune très clair
-  "#FDF2F8", // rose très clair
-  "#F3F4F6", // gris clair
-  "#ECE3FF", // violet clair
+  "rgb(247 247 255)", // bleu très clair
+  "rgb(247 247 255)", // vert très clair
+  "rgb(247 247 255)", // rose très clair
+  "rgb(247 247 255)", // jaune très clair
+  "rgb(247 247 255)", // gris clair
 ];
+
 export const pastelColorsDark = [
-  "#0C4A6E", // bleu foncé
+  "#F0F8FF", // bleu foncé
   "#065F46", // vert foncé
   "#B45309", // jaune foncé
   "#9D174D", // rose foncé
   "#374151", // gris foncé
 ];
+
 export const pastelColorsLight = [
   "#E0F2FE", // bleu clair
   "#D1FAE5", // vert clair
@@ -20,6 +21,7 @@ export const pastelColorsLight = [
   "#FDE2E8", // rose clair
   "#F3F4F6", // gris clair
 ];
+
 export const pastelColorsMuted = [
   "#B0C4DE", // bleu pâle
   "#98FB98", // vert pâle

@@ -20,13 +20,13 @@
     font-family: Inter;
 
     &:hover {
-      border: 2px solid $blue;
+      border: 2px solid white;
     }
 
     &.active {
-      background-color: $blue;
+      background-color: #9763ff;
       color: $white;
-      border-color: $blue;
+      border-color: #9763ff;
       &:hover {
         border: 2px solid $white;
       }

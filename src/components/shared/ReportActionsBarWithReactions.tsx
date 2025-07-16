@@ -59,7 +59,7 @@ const ReportActionsBarWithReactions: React.FC<Props> = ({
                 </div>
 
                 <div className="count-right">
-                    <MessageCircle size={16} />
+                    
                     <span>
                         {commentsCount} {commentsCount === 1 ? "commentaire" : "commentaires"}
                     </span>

@@ -5,15 +5,21 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0.5rem 0;
+        padding: 0.5rem 0 0.2rem 0;
         font-size: 0.85rem;
         color: #374151;
 
         .count-left,
         .count-right {
+            font-family:"inter";
+            font-size:13px;
             display: flex;
             align-items: center;
             gap: 0.5rem; // Espace plus large entre icône, commentaires et resignalements
+
+            :hover{
+                text-decoration: underline;
+            }
 
             .emoji-icon {
                 font-size: 16px;
@@ -32,7 +38,7 @@
 
     .separator {
         height: 1px;
-        background: #e5e7eb;
+        background: #9763ff12;
         width: 100%;
         margin: 0.4rem 0;
     }
@@ -42,10 +48,11 @@
         justify-content: space-between;
         align-items: center;
         padding: 0.4rem 0;
+        font-family: "inter";
 
         .actions-left {
             display: flex;
-            gap: 1.2rem;
+            gap: 1.6rem;
 
             button {
                 display: flex;
@@ -55,7 +62,7 @@
                 border: none;
                 cursor: pointer;
                 color: #6b7280;
-                font-size: 0.85rem;
+                font-size: 0.8rem;
                 padding: 0;
                 transition: color 0.2s;
 

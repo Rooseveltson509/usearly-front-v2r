@@ -79,7 +79,7 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
               report.subCategories.forEach(sub => set.add(sub.subCategory));
               return set;
             }, new Set<string>()).size
-          } Problèmes sur {brand}
+          } Problèmes sur <strong>brand</strong>
         </p>
 
       </div>

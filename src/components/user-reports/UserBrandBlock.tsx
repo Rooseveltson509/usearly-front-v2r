@@ -63,9 +63,15 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
   return (
     <div className={`brand-block ${isOpen ? "open" : "close"}`}>
       <div className="brand-header" onClick={onToggle}>
-        <img src={getBrandLogo(brand, siteUrl)} alt={brand} className="brand-logo" />
-        <h3 className="brand-title">{brand}</h3>
-        <p className="brand-reports-count">{reports.length} signalements sur {brand}</p>
+        <p className="brand-reports-count">
+          {reports.length} signalements sur <strong>{brand}</strong>
+        </p>
+        <p className="date-card">Il y a 5 jours</p>
+        <img
+          src={getBrandLogo(brand, siteUrl)}
+          alt={brand}
+          className="brand-logo"
+        />
         <ChevronDown size={18} className="chevron-icon" />
       </div>
 
@@ -73,16 +79,28 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
         <div className="subcategories-list">
           {reports.map((sub, i) => {
             const initialDescription = sub.descriptions[0];
-            const currentCount = localCommentsCounts[initialDescription.id] ?? 0;
+            const currentCount =
+              localCommentsCounts[initialDescription.id] ?? 0;
 
             const additionalDescriptions = sub.descriptions.slice(1);
             const hasMoreThanTwo = additionalDescriptions.length > 2;
-            const sortedDescriptions = [...additionalDescriptions].sort((a, b) => {
-              const filter = signalementFilters[sub.subCategory] || "pertinent";
-              if (filter === "recents") return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-              if (filter === "anciens") return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-              return 0;
-            });
+            const sortedDescriptions = [...additionalDescriptions].sort(
+              (a, b) => {
+                const filter =
+                  signalementFilters[sub.subCategory] || "pertinent";
+                if (filter === "recents")
+                  return (
+                    new Date(b.createdAt).getTime() -
+                    new Date(a.createdAt).getTime()
+                  );
+                if (filter === "anciens")
+                  return (
+                    new Date(a.createdAt).getTime() -
+                    new Date(b.createdAt).getTime()
+                  );
+                return 0;
+              }
+            );
 
             const displayedDescriptions = expandedOthers[sub.subCategory]
               ? showAll[sub.subCategory]
@@ -90,16 +108,23 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                 : sortedDescriptions.slice(0, 2)
               : [];
 
-
             return (
               <div
                 key={sub.subCategory}
-                className={`subcategory-block ${expandedSub === sub.subCategory ? "open" : ""}`}
-                style={{ backgroundColor: pastelColors[i % pastelColors.length] }}
+                className={`subcategory-block ${
+                  expandedSub === sub.subCategory ? "open" : ""
+                }`}
+                style={{
+                  backgroundColor: pastelColors[i % pastelColors.length],
+                }}
               >
                 <div
                   className="subcategory-header"
-                  onClick={() => setExpandedSub(prev => (prev === sub.subCategory ? null : sub.subCategory))}
+                  onClick={() =>
+                    setExpandedSub((prev) =>
+                      prev === sub.subCategory ? null : sub.subCategory
+                    )
+                  }
                 >
                   <div className="subcategory-left">
                     <img
@@ -111,14 +136,20 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                   </div>
                   <div className="subcategory-right">
                     <span className="subcategory-count">{sub.count}</span>
-                    {expandedSub === sub.subCategory ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                    {expandedSub === sub.subCategory ? (
+                      <ChevronUp size={16} />
+                    ) : (
+                      <ChevronDown size={16} />
+                    )}
                   </div>
                 </div>
 
                 {expandedSub === sub.subCategory && (
                   <div className="subcategory-content">
                     <div className="main-description">
-                      <p className="description-text">{initialDescription.description}</p>
+                      <p className="description-text">
+                        {initialDescription.description}
+                      </p>
                       {initialDescription.capture && (
                         <img
                           src={initialDescription.capture}
@@ -138,20 +169,25 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                       reportsCount={sub.count}
                       commentsCount={currentCount}
                       onReactClick={() =>
-                        setShowReactions(prev => ({ ...prev, [sub.subCategory]: !prev[sub.subCategory] }))
+                        setShowReactions((prev) => ({
+                          ...prev,
+                          [sub.subCategory]: !prev[sub.subCategory],
+                        }))
                       }
                       onCommentClick={() => {
-                        setShowComments(prev => {
+                        setShowComments((prev) => {
                           const newState = !prev[sub.subCategory];
                           if (newState) setExpandedOthers({});
                           return { ...prev, [sub.subCategory]: newState };
                         });
                       }}
                       onToggleSimilarReports={() => {
-                        setExpandedOthers(prev => ({ ...prev, [sub.subCategory]: true }));
+                        setExpandedOthers((prev) => ({
+                          ...prev,
+                          [sub.subCategory]: true,
+                        }));
                         setShowComments({});
                       }}
-
                     />
 
                     {showComments[sub.subCategory] && userProfile?.id && (
@@ -160,23 +196,29 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                           descriptionId={initialDescription.id}
                           type="report"
                           onCommentAdded={() => {
-                            setLocalCommentsCounts(prev => ({
+                            setLocalCommentsCounts((prev) => ({
                               ...prev,
-                              [initialDescription.id]: (prev[initialDescription.id] ?? 0) + 1,
+                              [initialDescription.id]:
+                                (prev[initialDescription.id] ?? 0) + 1,
                             }));
-                            setRefreshCommentsKeys(prev => ({
+                            setRefreshCommentsKeys((prev) => ({
                               ...prev,
-                              [initialDescription.id]: (prev[initialDescription.id] ?? 0) + 1,
+                              [initialDescription.id]:
+                                (prev[initialDescription.id] ?? 0) + 1,
                             }));
                           }}
                           onCommentDeleted={() => {
-                            setLocalCommentsCounts(prev => ({
+                            setLocalCommentsCounts((prev) => ({
                               ...prev,
-                              [initialDescription.id]: Math.max((prev[initialDescription.id] ?? 1) - 1, 0),
+                              [initialDescription.id]: Math.max(
+                                (prev[initialDescription.id] ?? 1) - 1,
+                                0
+                              ),
                             }));
-                            setRefreshCommentsKeys(prev => ({
+                            setRefreshCommentsKeys((prev) => ({
                               ...prev,
-                              [initialDescription.id]: (prev[initialDescription.id] ?? 0) + 1,
+                              [initialDescription.id]:
+                                (prev[initialDescription.id] ?? 0) + 1,
                             }));
                           }}
                         />
@@ -186,7 +228,9 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                           descriptionId={initialDescription.id}
                           type="report"
                           hideFooter={true}
-                          refreshKey={refreshCommentsKeys[initialDescription.id] ?? 0}
+                          refreshKey={
+                            refreshCommentsKeys[initialDescription.id] ?? 0
+                          }
                         />
                       </>
                     )}
@@ -200,42 +244,59 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                       />
                     )}
 
-                    {additionalDescriptions.length > 0 && !expandedOthers[sub.subCategory] && (
-                      <button
-                        className="see-more-button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setShowComments({});
-                          setExpandedOthers(prev => ({ ...prev, [sub.subCategory]: true }));
-                        }}
-                      >
-                        <ChevronDown size={14} /> Afficher les signalements similaires ({additionalDescriptions.length})
-                      </button>
-                    )}
+                    {additionalDescriptions.length > 0 &&
+                      !expandedOthers[sub.subCategory] && (
+                        <button
+                          className="see-more-button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setShowComments({});
+                            setExpandedOthers((prev) => ({
+                              ...prev,
+                              [sub.subCategory]: true,
+                            }));
+                          }}
+                        >
+                          <ChevronDown size={14} /> Afficher les signalements
+                          similaires ({additionalDescriptions.length})
+                        </button>
+                      )}
 
                     {expandedOthers[sub.subCategory] && (
                       <>
                         <div className="other-descriptions">
-
                           <div className="signalement-filter">
-                            <label htmlFor={`filter-${sub.subCategory}`} className="filter-label">Trier par :</label>
+                            <label
+                              htmlFor={`filter-${sub.subCategory}`}
+                              className="filter-label"
+                            >
+                              Trier par :
+                            </label>
                             <select
                               id={`filter-${sub.subCategory}`}
-                              value={signalementFilters[sub.subCategory] || "pertinent"}
+                              value={
+                                signalementFilters[sub.subCategory] ||
+                                "pertinent"
+                              }
                               onChange={(e) => {
                                 setSignalementFilters((prev) => ({
                                   ...prev,
-                                  [sub.subCategory]: e.target.value as "pertinent" | "recents" | "anciens",
+                                  [sub.subCategory]: e.target.value as
+                                    | "pertinent"
+                                    | "recents"
+                                    | "anciens",
                                 }));
                               }}
                               className="filter-select"
                             >
-                              <option value="pertinent">Les plus pertinents</option>
+                              <option value="pertinent">
+                                Les plus pertinents
+                              </option>
                               <option value="recents">Les plus récents</option>
                               <option value="anciens">Les plus anciens</option>
                             </select>
                           </div>
-                          {displayedDescriptions.map(desc => (
+                          {displayedDescriptions.map((desc) => (
                             <div className="feedback-card" key={desc.id}>
                               <div className="feedback-avatar">
                                 <div className="feedback-avatar-wrapper">
@@ -244,17 +305,34 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                                     alt={desc.user.pseudo}
                                     className="avatar"
                                   />
-                                  {desc.emoji && <div className="emoji-overlay">{desc.emoji}</div>}
+                                  {desc.emoji && (
+                                    <div className="emoji-overlay">
+                                      {desc.emoji}
+                                    </div>
+                                  )}
                                 </div>
                               </div>
                               <div className="feedback-content">
                                 <div className="feedback-meta">
-                                  <span className="pseudo">{desc.user.pseudo}</span>
-                                  {userProfile?.id === desc.user.id && <span className="badge-me">Moi</span>}
+                                  <span className="pseudo">
+                                    {desc.user.pseudo}
+                                  </span>
+                                  {userProfile?.id === desc.user.id && (
+                                    <span className="badge-me">Moi</span>
+                                  )}
                                   <span className="brand"> · {brand}</span>
-                                  <span className="time"> · {formatDistanceToNow(new Date(desc.createdAt), { locale: fr, addSuffix: true })}</span>
+                                  <span className="time">
+                                    {" "}
+                                    ·{" "}
+                                    {formatDistanceToNow(
+                                      new Date(desc.createdAt),
+                                      { locale: fr, addSuffix: true }
+                                    )}
+                                  </span>
                                 </div>
-                                <p className="feedback-text">{desc.description}</p>
+                                <p className="feedback-text">
+                                  {desc.description}
+                                </p>
                                 {userProfile?.id && desc.id && (
                                   <DescriptionCommentSection
                                     userId={userProfile.id}
@@ -273,10 +351,14 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                             className="see-more-button"
                             onClick={(e) => {
                               e.stopPropagation();
-                              setShowAll(prev => ({ ...prev, [sub.subCategory]: true }));
+                              setShowAll((prev) => ({
+                                ...prev,
+                                [sub.subCategory]: true,
+                              }));
                             }}
                           >
-                            <ChevronDown size={14} /> Afficher plus de signalements
+                            <ChevronDown size={14} /> Afficher plus de
+                            signalements
                           </button>
                         )}
                       </>
@@ -290,7 +372,10 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
       )}
 
       {modalImage && (
-        <div className="image-modal-overlay" onClick={() => setModalImage(null)}>
+        <div
+          className="image-modal-overlay"
+          onClick={() => setModalImage(null)}
+        >
           <img
             src={modalImage}
             alt="capture agrandie"
