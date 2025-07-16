@@ -26,7 +26,8 @@ const ChronologicalReportList: React.FC<Props> = ({ groupedByDay, renderCard }) 
         return (
           <div key={label} className="date-group">
             <div className="date-header">
-              <img src="/icons/calendar.svg" alt="Calendrier" className="calendar-icon" />
+              📆
+              {/* <img src="/icons/calendar.svg" alt="Calendrier" className="calendar-icon" /> */}
               <h3 className="date-title">{label}</h3>
             </div>
             <div className="report-list">
