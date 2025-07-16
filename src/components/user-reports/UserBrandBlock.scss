@@ -32,7 +32,15 @@
     color: #374151;
   }
 } */
- 
+.brand-reports-count {
+  font-size: 15px;
+  font-family: "inter";
+  max-width: 350px; /* à ajuster selon ton besoin */
+  display: inline-block;
+  text-align: left;
+  flex: 1;
+}
+
 
 .main-description {
   margin-left: 2.5rem; // aligne la description avec le titre et l'icône
@@ -40,9 +48,9 @@
 }
 
 .description-text {
-  margin: 0;
-  line-height: 1.6;
-  font-size: 0.95rem;
+  margin-left: 8px;
+  padding-bottom: 8px;
+  font-size: 15px;
 }
 
 .subcategory-header {
@@ -55,7 +63,7 @@
   .subcategory-left {
     display: flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: 1rem;
 
     .subcategory-icon {
       width: 18px;
@@ -72,15 +80,16 @@
   .subcategory-right {
     display: flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: 4rem;
 
     .subcategory-count {
+      font-family: "inter";
       font-size: 0.75rem;
-      background: #e5e7eb;
+      background: #9763ff;
       border-radius: 9999px;
-      padding: 0.15rem 0.5rem;
+      padding: 0.3rem 0.6rem;
       font-weight: 600;
-      color: #374151;
+      color: #ffffff;
     }
   }
 }
@@ -132,7 +141,7 @@
 .other-descriptions {
   margin-top: 0.5rem;
   padding-top: 0.5rem;
-  border-top: 1px solid #e5e7eb;
+
 
   .section-title {
     font-size: 0.85rem;
@@ -141,7 +150,6 @@
     margin-bottom: 0.5rem;
   }
 }
-
 
 .feedback-card {
   display: flex;
@@ -184,7 +192,6 @@
       }
     }
   }
-
 
   .feedback-content {
     flex: 1;
