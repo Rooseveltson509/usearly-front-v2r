@@ -215,19 +215,6 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
                       />
                     )}
 
-                    {additionalDescriptions.length > 0 && !expandedOthers[sub.subCategory] && (
-                      <button
-                        className="see-more-button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setShowComments({});
-                          setExpandedOthers(prev => ({ ...prev, [sub.subCategory]: true }));
-                        }}
-                      >
-                        <ChevronDown size={14} /> Afficher les signalements similaires ({additionalDescriptions.length})
-                      </button>
-                    )}
-
                     {expandedOthers[sub.subCategory] && (
                       <>
                         <div className="other-descriptions">

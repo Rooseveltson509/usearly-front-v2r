@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 import { ChevronDown, ChevronUp } from "lucide-react";
@@ -9,75 +9,97 @@ import { useAuth } from "@src/services/AuthContext";
 import { useCommentsForDescription } from "@src/hooks/useCommentsForDescription";
 import type { ExplodedGroupedReport } from "@src/types/Reports";
 import "./ChronoReportCard.scss";
+import { getBrandLogo } from "@src/utils/brandLogos";
 
 interface Props {
     item: ExplodedGroupedReport;
+    isOpen: boolean;
+    onToggle: () => void;
 }
 
-const ChronoReportCard: React.FC<Props> = ({ item }) => {
+const ChronoReportCard: React.FC<Props> = ({ item, isOpen, onToggle }) => {
     const { userProfile } = useAuth();
-    const [isOpen, setIsOpen] = useState(false);
     const [showComments, setShowComments] = useState(false);
+    const [refreshKey, setRefreshKey] = useState(0);
     const [localCommentsCounts, setLocalCommentsCounts] = useState<Record<string, number>>({});
+
     const firstDescription = item.subCategory.descriptions[0];
     const descriptionId = firstDescription.id;
+
     const userAvatar = firstDescription.user?.avatar
         ? `${import.meta.env.VITE_API_BASE_URL}/${firstDescription.user.avatar}`
         : "/default-avatar.png";
 
-    // 🔄 Gérer l'ouverture/fermeture des commentaires
+    const { comments, loading } = useCommentsForDescription(descriptionId, "report", refreshKey);
+
     const handleCommentClick = () => {
         if (!isOpen) {
-            setIsOpen(true);
+            onToggle();
             setShowComments(true);
         } else {
-            setShowComments((prev) => !prev);
+            setShowComments(prev => !prev);
         }
     };
 
-
-    // 🔁 Commentaires en temps réel (comme UserBrandBlock)
-    const { comments } = useCommentsForDescription(descriptionId, "report");
-    const [refreshKey, setRefreshKey] = useState(0);
-
-
     useEffect(() => {
-        setLocalCommentsCounts(prev => ({
-            ...prev,
-            [descriptionId]: comments.length,
-        }));
-    }, [comments.length, descriptionId]);
+        if (!loading && comments.length > 0) {
+            setLocalCommentsCounts(prev => ({
+                ...prev,
+                [descriptionId]: comments.length,
+            }));
+        }
+    }, [comments.length, descriptionId, loading]);
 
     const currentCount = localCommentsCounts[descriptionId] ?? 0;
 
     return (
         <div className="report-card">
-            <div className="card-header" onClick={() => setIsOpen(!isOpen)}>
+            <div className="card-header" onClick={onToggle}>
                 <div className="left-icon">
-                    <img
-                        src={getCategoryIconPathFromSubcategory(item.subCategory.subCategory)}
-                        alt="icon"
-                    />
+                    <img src={getCategoryIconPathFromSubcategory(item.subCategory.subCategory)} alt="icon" />
                 </div>
 
                 <div className="card-title">
-                    <h4>{item.marque || "Suggestion"}</h4>
-                    <div className="meta-info">
-                        <span className="count">{item.subCategory.count}</span>
-                        <span className="date">
-                            {formatDistanceToNow(new Date(firstDescription.createdAt), {
-                                locale: fr,
-                                addSuffix: true,
-                            })}
-                        </span>
+                    <div className="title-and-meta">
+                        <h4>{item.marque || "Suggestion"}</h4>
+                        <div className="meta-info">
+                            <span className="count">{item.subCategory.count}</span>
+                            <span className="date">
+                                {formatDistanceToNow(new Date(firstDescription.createdAt), {
+                                    locale: fr,
+                                    addSuffix: true,
+                                })}
+                            </span>
+                        </div>
                     </div>
                 </div>
 
-                <div className="user-brand">
-                    <img src={userAvatar} alt="avatar" className="avatar" />
-                    <span className="brand-name">
-                        {firstDescription.user?.pseudo} × {item.marque}
-                    </span>
+
+                <div className="right-section">
+                    {!isOpen ? (
+                        <div className="brand-logo-container">
+                            <img
+                                src={getBrandLogo(item.marque, item.siteUrl)}
+                                alt={item.marque}
+                                className="brand-logo"
+                            />
+                        </div>
+                    ) : (
+                        <div className="user-brand-inline">
+                            <div className="avatars">
+                                <img src={userAvatar} alt="avatar" className="avatar" />
+                                <img
+                                    src={getBrandLogo(item.marque, item.siteUrl)}
+                                    alt="logo"
+                                    className="avatar"
+                                />
+                            </div>
+                            <div className="label">
+                                {userProfile?.pseudo} <span className="x">×</span>{" "}
+                                <strong>{item.marque}</strong>
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 <div className="chevron">
@@ -107,11 +129,11 @@ const ChronoReportCard: React.FC<Props> = ({ item }) => {
                             descriptionId={descriptionId}
                             type="report"
                             forceOpen={true}
-                            hideFooter={true} // 👈 pour retirer la ligne d'icônes
+                            hideFooter={true}
                             onCommentCountChange={(count) =>
-                                setLocalCommentsCounts((prev) => ({ ...prev, [descriptionId]: count }))
+                                setLocalCommentsCounts(prev => ({ ...prev, [descriptionId]: count }))
                             }
-                            onCommentAddedOrDeleted={() => setRefreshKey((prev) => prev + 1)}
+                            onCommentAddedOrDeleted={() => setRefreshKey(prev => prev + 1)}
                         />
                     )}
                 </div>
@@ -121,94 +143,3 @@ const ChronoReportCard: React.FC<Props> = ({ item }) => {
 };
 
 export default ChronoReportCard;
-
-
-
-
-
-
-
-/* import { useState } from "react";
-import { formatDistanceToNow } from "date-fns";
-import { fr } from "date-fns/locale";
-import DescriptionCommentSection from "@src/components/report-desc-comment/DescriptionCommentSection";
-import { getCategoryIconPathFromSubcategory } from "@src/utils/IconsUtils";
-import type { ExplodedGroupedReport } from "@src/types/Reports";
-import { useAuth } from "@src/services/AuthContext";
-import { ChevronDown, ChevronUp } from "lucide-react";
-import "./ChronoReportCard.scss";
-
-interface Props {
-    item: ExplodedGroupedReport;
-}
-
-const ChronoReportCard: React.FC<Props> = ({ item }) => {
-    const { userProfile } = useAuth();
-    const [isOpen, setIsOpen] = useState(false);
-
-    const firstDescription = item.subCategory.descriptions[0];
-
-    return (
-        <div className={`subcategory-block ${isOpen ? "open" : ""}`}>
-            <div className="subcategory-header" onClick={() => setIsOpen(!isOpen)}>
-                <div className="subcategory-left">
-                    <img
-                        src={getCategoryIconPathFromSubcategory(item.subCategory.subCategory)}
-                        alt={item.subCategory.subCategory}
-                        className="subcategory-icon"
-                    />
-                    <h4>{item.subCategory.subCategory}</h4>
-                </div>
-                <div className="subcategory-right">
-                    <span className="subcategory-count">{item.subCategory.count}</span>
-                    {isOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-                </div>
-            </div>
-
-            {isOpen && (
-                <div className="subcategory-content">
-                    <div className="emoji-avatar">
-                        {firstDescription.emoji && <div className="emoji">{firstDescription.emoji}</div>}
-                        <img
-                            src={
-                                firstDescription.user?.avatar
-                                    ? `${import.meta.env.VITE_API_BASE_URL}/${firstDescription.user.avatar}`
-                                    : "/default-avatar.png"
-                            }
-                            alt={firstDescription.user?.pseudo || "Utilisateur"}
-                        />
-                    </div>
-
-                    <div className="description-text">
-                        <div className="user-meta">
-                            <span className="pseudo">{firstDescription.user?.pseudo}</span>
-                            <span className="brand"> &times; {item.marque}</span>
-                            <span className="time">
-                                &nbsp;&middot;&nbsp;
-                                {formatDistanceToNow(new Date(firstDescription.createdAt), {
-                                    locale: fr,
-                                    addSuffix: true,
-                                })}
-                            </span>
-                            {firstDescription.user?.id === userProfile?.id && (
-                                <span className="badge-me">Moi</span>
-                            )}
-                        </div>
-                        <div className="text">{firstDescription.description}</div>
-                    </div>
-
-                    {userProfile?.id && firstDescription.id && (
-                        <DescriptionCommentSection
-                            userId={userProfile.id}
-                            descriptionId={firstDescription.id}
-                            type="report"
-                        />
-                    )}
-                </div>
-            )}
-        </div>
-    );
-};
-
-export default ChronoReportCard;
- */

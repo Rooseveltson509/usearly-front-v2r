@@ -4,7 +4,7 @@ import { getBrandLogo } from "@src/utils/brandLogos";
 import { getCategoryIconPathFromSubcategory } from "@src/utils/IconsUtils";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { Camera, ChevronDown, ChevronUp, FileImage, PictureInPicture, Image } from "lucide-react";
 import type { UserGroupedReport } from "@src/types/Reports";
 import { pastelColors } from "../constants/pastelColors";
 import "./UserBrandBlock.scss";
@@ -12,6 +12,8 @@ import ReportActionsBarWithReactions from "../shared/ReportActionsBarWithReactio
 import CommentInputSection from "../report-desc-comment/CommentInputSection";
 import { getCommentsCountForDescription } from "@src/services/commentService";
 import CommentSection from "../comments/CommentSection";
+import { parseISO, isAfter } from "date-fns";
+
 
 interface Props {
   brand: string;
@@ -50,7 +52,7 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
         }
       }
       setCommentsCounts(newCounts);
-      setLocalCommentsCounts(newCounts); // initialise local avec la vraie valeur pour incrément/décrément correct
+      setLocalCommentsCounts(newCounts);
     };
     fetchAllCounts();
   }, [reports]);
@@ -60,13 +62,36 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
     return `${import.meta.env.VITE_API_BASE_URL}/${path}`;
   };
 
+  const getMostRecentDate = () => {
+    let latest: Date | null = null;
+
+    for (const sub of reports) {
+      for (const desc of sub.descriptions) {
+        const date = parseISO(desc.createdAt);
+        if (!latest || isAfter(date, latest)) {
+          latest = date;
+        }
+      }
+    }
+
+    return latest;
+  };
+
+  const mostRecentDate = getMostRecentDate();
+
   return (
     <div className={`brand-block ${isOpen ? "open" : "close"}`}>
       <div className="brand-header" onClick={onToggle}>
         <p className="brand-reports-count">
-          {reports.length} signalements sur <strong>{brand}</strong>
+          <strong>{reports.length}</strong> signalement{reports.length > 1 ? "s" : ""} sur{" "}
+          <strong>{brand}</strong>
         </p>
-        <p className="date-card">Il y a 5 jours</p>
+        <p className="date-card">
+          {mostRecentDate
+            ? `Il y a ${formatDistanceToNow(mostRecentDate, { locale: fr })}`
+            : "Date inconnue"}
+        </p>
+
         <img
           src={getBrandLogo(brand, siteUrl)}
           alt={brand}
@@ -111,9 +136,8 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
             return (
               <div
                 key={sub.subCategory}
-                className={`subcategory-block ${
-                  expandedSub === sub.subCategory ? "open" : ""
-                }`}
+                className={`subcategory-block ${expandedSub === sub.subCategory ? "open" : ""
+                  }`}
                 style={{
                   backgroundColor: pastelColors[i % pastelColors.length],
                 }}
@@ -134,14 +158,43 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                     />
                     <h4>{sub.subCategory}</h4>
                   </div>
+                  <span className="date">
+                    {formatDistanceToNow(new Date(initialDescription.createdAt), {
+                      locale: fr,
+                      addSuffix: true,
+                    })}
+                  </span>
                   <div className="subcategory-right">
-                    <span className="subcategory-count">{sub.count}</span>
+                    <div className="badge-count">{sub.count}</div>
+                    {sub.subCategory === expandedSub && (
+                      <div className="subcategory-user-brand-info">
+                        <div className="avatars-row">
+                          <img
+                            src={getFullAvatarUrl(initialDescription.user.avatar)}
+                            alt="avatar"
+                            className="avatar user-avatar"
+                          />
+                          <img
+                            src={getBrandLogo(brand, siteUrl)}
+                            alt={brand}
+                            className="avatar brand-logo"
+                          />
+                        </div>
+                        <div className="user-brand-names">
+                          {initialDescription.user.pseudo} <span className="x">×</span>{" "}
+                          <strong>{brand}</strong>
+                        </div>
+                      </div>
+                    )}
+
+
                     {expandedSub === sub.subCategory ? (
                       <ChevronUp size={16} />
                     ) : (
                       <ChevronDown size={16} />
                     )}
                   </div>
+
                 </div>
 
                 {expandedSub === sub.subCategory && (
@@ -151,16 +204,31 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                         {initialDescription.description}
                       </p>
                       {initialDescription.capture && (
-                        <img
-                          src={initialDescription.capture}
-                          alt="capture"
-                          className="description-capture"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setModalImage(initialDescription.capture);
-                          }}
-                        />
+                        <>
+                          <button
+                            className="show-capture-button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setModalImage(initialDescription.capture);
+                            }}
+                          >
+                            <Image size={16} style={{ marginRight: 6 }} />
+                            Voir la capture
+                          </button>
+
+                          {modalImage === initialDescription.capture && (
+                            <div className="capture-modal" onClick={() => setModalImage(null)}>
+                              <img
+                                src={modalImage}
+                                alt="Capture"
+                                className="capture-modal-img"
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                            </div>
+                          )}
+                        </>
                       )}
+
                     </div>
 
                     <ReportActionsBarWithReactions
@@ -184,7 +252,7 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                       onToggleSimilarReports={() => {
                         setExpandedOthers((prev) => ({
                           ...prev,
-                          [sub.subCategory]: true,
+                          [sub.subCategory]: !prev[sub.subCategory],
                         }));
                         setShowComments({});
                       }}
@@ -243,24 +311,6 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                         modeCompact
                       />
                     )}
-
-                    {additionalDescriptions.length > 0 &&
-                      !expandedOthers[sub.subCategory] && (
-                        <button
-                          className="see-more-button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setShowComments({});
-                            setExpandedOthers((prev) => ({
-                              ...prev,
-                              [sub.subCategory]: true,
-                            }));
-                          }}
-                        >
-                          <ChevronDown size={14} /> Afficher les signalements
-                          similaires ({additionalDescriptions.length})
-                        </button>
-                      )}
 
                     {expandedOthers[sub.subCategory] && (
                       <>

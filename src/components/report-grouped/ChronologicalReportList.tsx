@@ -1,6 +1,7 @@
 import { type JSX } from "react";
 import type { ExplodedGroupedReport } from "@src/types/Reports";
 import "./ChronologicalReportList.scss";
+import { CalendarDays } from "lucide-react";
 
 interface Props {
   groupedByDay: Record<string, ExplodedGroupedReport[]>;
@@ -10,14 +11,6 @@ interface Props {
 const ChronologicalReportList: React.FC<Props> = ({ groupedByDay, renderCard }) => {
   const entries = Object.entries(groupedByDay);
 
-/*   if (entries.length === 0) {
-    return (
-      <div className="chrono-empty">
-        ⚠️ Aucun élément à afficher
-      </div>
-    );
-  } */
-
   return (
     <div className="chronological-report-list">
       {entries.map(([label, items]) => {
@@ -26,8 +19,7 @@ const ChronologicalReportList: React.FC<Props> = ({ groupedByDay, renderCard }) 
         return (
           <div key={label} className="date-group">
             <div className="date-header">
-              📆
-              {/* <img src="/icons/calendar.svg" alt="Calendrier" className="calendar-icon" /> */}
+              <CalendarDays size={18} className="calendar-icon" />
               <h3 className="date-title">{label}</h3>
             </div>
             <div className="report-list">

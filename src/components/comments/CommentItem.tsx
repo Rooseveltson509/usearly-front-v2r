@@ -25,11 +25,12 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, avatarUrl, dateLabel
           {isAuthor && <CommentActionsMenu onDelete={onDelete} />}
         </div>
         <p className="comment-text">{comment.content}</p>
-        <div className="comment-actions">
+        {/* A implémenter plus tar */}
+{/*         <div className="comment-actions">
           <button type="button">J’aime</button>
           <span> | </span>
           <button type="button">Répondre</button>
-        </div>
+        </div> */}
       </div>
     </li>
   );

@@ -1,3 +1,5 @@
+@use "@src/styles/base/variables" as *;
+
 .report-card {
   background-color: #f9f9ff;
   border-radius: 16px;
@@ -27,56 +29,114 @@
   }
 
   .card-title {
-    flex: 1;
+    flex: 1; // pour forcer l'élément à prendre de la place
     display: flex;
-    flex-direction: column;
+    align-items: center; // aligner verticalement
+    justify-content: space-between; // espace entre nom et date
 
-    h4 {
-      font-size: 1rem;
-      font-weight: 600;
-      margin: 0;
-    }
-
-    .meta-info {
+    .title-and-meta {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      font-size: 0.85rem;
-      margin-top: 4px;
+      gap: 12px;
 
-      .count {
-        background: #000;
-        color: #fff;
-        border-radius: 12px;
-        padding: 2px 8px;
-        font-weight: 500;
-        font-size: 0.75rem;
+      h4 {
+        font-size: 16px;
+        font-weight: 600;
+        margin: 0;
       }
 
-      .date {
-        color: #666;
-        font-size: 0.8rem;
+      .meta-info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        .count {
+          background: black;
+          color: white;
+          border-radius: 50%;
+          padding: 3px 8px;
+          font-size: 13px;
+          font-weight: bold;
+        }
+
+        .date {
+          font-size: 13px;
+          color: #555;
+        }
       }
     }
   }
 
-  .user-brand {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.85rem;
-    white-space: nowrap;
 
-    .avatar {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      object-fit: cover;
+  .right-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    margin-left: auto;
+
+    .brand-logo-container {
+      .brand-logo {
+        width: 48px;
+        height: 48px;
+        //border-radius: 50%;
+        object-fit: contain;
+      }
     }
 
-    .brand-name {
-      font-weight: 500;
-      color: #444;
+    .user-brand-inline {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+
+      .avatars {
+        position: relative;
+        width: 48px;
+        height: 48px;
+
+        .avatar {
+          border-radius: 50%;
+          object-fit: contain;
+
+          &:first-child {
+            width: 48px;
+            height: 48px;
+            right: 24px;
+            border: 2px solid white;
+            z-index: 1;
+            position: relative;
+          }
+
+          &:last-child {
+            position: absolute;
+            bottom: -4px;
+            right: -10px;
+            width: 48px;
+            height: 48px;
+            background-color: white;
+            border-radius: 50%;
+            border: 2px solid white;
+            z-index: 2;
+          }
+        }
+      }
+
+
+      .label {
+        font-size: 13px;
+        color: $gray-800;
+        text-align: right;
+        margin-top: 4px;
+
+        .x {
+          margin: 0 0.25rem;
+        }
+
+        strong {
+          font-weight: 600;
+        }
+      }
+
     }
   }
 
