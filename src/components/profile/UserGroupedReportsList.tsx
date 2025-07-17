@@ -19,22 +19,15 @@ type ViewMode = "brand" | "date";
 
 const UserGroupedReportsList: React.FC = () => {
   const { userProfile } = useAuth();
-
-  /* ────────────────────────────────────────────────────────────
-     ÉTATS
-     ──────────────────────────────────────────────────────────── */
   const [viewMode, setViewMode] = useState<ViewMode>("brand");
   const [expandedBrand, setExpandedBrand] = useState<string | null>(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const loaderRef = useRef<HTMLDivElement | null>(null);
+  const [activeCardId, setActiveCardId] = useState<string | null>(null);
 
-
-  /* 🚩 Utilisation du resetKey pour éviter le blocage */
   const resetKey = `${viewMode}`;
-  /* ────────────────────────────────────────────────────────────
-     HOOKS
-     ──────────────────────────────────────────────────────────── */
+
   /* Scroll infini pour vue PAR MARQUE */
   const {
     reports,
@@ -212,16 +205,23 @@ const UserGroupedReportsList: React.FC = () => {
       {viewMode === "date" && chronoData && (
         <ChronologicalReportList
           groupedByDay={chronoData as Record<string, ExplodedGroupedReport[]>}
-          renderCard={(item) => (
-            <ChronoReportCard
-              key={
-                item.subCategory.descriptions[0]?.id ||
-                `${item.marque}-${item.subCategory.subCategory}`
-              }
-              item={item}
-            />
-          )}
+          renderCard={(item) => {
+            const id =
+              item.subCategory.descriptions[0]?.id ||
+              `${item.marque}-${item.subCategory.subCategory}`;
+            return (
+              <ChronoReportCard
+                key={id}
+                item={item}
+                isOpen={activeCardId === id}
+                onToggle={() =>
+                  setActiveCardId((prev) => (prev === id ? null : id))
+                }
+              />
+            );
+          }}
         />
+
       )}
 
       {/* === LOADER / SQUELETON === */}

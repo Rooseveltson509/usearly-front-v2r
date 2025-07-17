@@ -4,7 +4,7 @@ import { MessageCircleMore, Share2 } from "lucide-react";
 import { useAuth } from "@src/services/AuthContext";
 import CommentSection from "@src/components/comments/CommentSection";
 import DescriptionReactionSelector from "@src/utils/DescriptionReactionSelector";
-import { useCommentsForDescription } from "@src/hooks/useCommentsForDescription"; // ✅ manquant
+import { useCommentsForDescription } from "@src/hooks/useCommentsForDescription";
 
 interface Props {
   descriptionId: string;
@@ -18,6 +18,9 @@ interface Props {
   autoOpenIfComments?: boolean;
   hideFooter?: boolean;
   refreshKey?: number;
+  forceOpen?: boolean;
+  onCommentCountChange?: (count: number) => void;
+  onCommentAddedOrDeleted?: () => void;
 }
 
 const DescriptionCommentSection: React.FC<Props> = ({
@@ -31,11 +34,22 @@ const DescriptionCommentSection: React.FC<Props> = ({
   onOpen,
   autoOpenIfComments = false,
   hideFooter = false,
+  refreshKey,
+  forceOpen = false,
+  onCommentCountChange,
+  onCommentAddedOrDeleted,
 }) => {
   const { userProfile } = useAuth();
+  const [localRefreshKey, setLocalRefreshKey] = useState(0);
+  // Choix entre prop et état local
+  const effectiveRefreshKey = refreshKey ?? localRefreshKey;
+
+  const { comments } = useCommentsForDescription(descriptionId, type, effectiveRefreshKey);
   const [showComments, setShowComments] = useState(false);
-  const [refreshKey, setRefreshKey] = useState(0);
-  const { comments } = useCommentsForDescription(descriptionId, type, refreshKey);
+
+  useEffect(() => {
+    onCommentCountChange?.(comments.length);
+  }, [comments.length]);
 
   const toggleComments = () => {
     const newState = !showComments;
@@ -45,6 +59,14 @@ const DescriptionCommentSection: React.FC<Props> = ({
       onOpenSimilarReports?.();
     }
   };
+
+  useEffect(() => {
+    if (forceOpen) {
+      setShowComments(true);
+      onOpen?.();
+      onOpenSimilarReports?.();
+    }
+  }, [forceOpen]);
 
   useEffect(() => {
     if (forceClose && showComments) {
@@ -73,9 +95,6 @@ const DescriptionCommentSection: React.FC<Props> = ({
                   </span>
                 )}
               </button>
-            {/*   <button className="comment-toggle-btn">
-                <Share2 size={16} />
-              </button> */}
             </div>
           ) : (
             !modeCompact && (
@@ -102,8 +121,8 @@ const DescriptionCommentSection: React.FC<Props> = ({
         <CommentSection
           descriptionId={descriptionId}
           type={type}
-          onCommentAdded={() => setRefreshKey((k) => k + 1)}
-          onCommentDeleted={() => setRefreshKey((k) => k + 1)}
+          onCommentAdded={() => setLocalRefreshKey((k) => k + 1)}
+          onCommentDeleted={() => setLocalRefreshKey((k) => k + 1)}
         />
       )}
     </div>

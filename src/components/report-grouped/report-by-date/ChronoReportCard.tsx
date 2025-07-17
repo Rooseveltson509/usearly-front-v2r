@@ -1,76 +1,139 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
-import DescriptionCommentSection from "@src/components/report-desc-comment/DescriptionCommentSection";
-import { getCategoryIconPathFromSubcategory } from "@src/utils/IconsUtils";
-import type { ExplodedGroupedReport } from "@src/types/Reports";
-import { useAuth } from "@src/services/AuthContext";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import DescriptionCommentSection from "@src/components/report-desc-comment/DescriptionCommentSection";
+import ReportActionsBarWithReactions from "@src/components/shared/ReportActionsBarWithReactions";
+import { getCategoryIconPathFromSubcategory } from "@src/utils/IconsUtils";
+import { useAuth } from "@src/services/AuthContext";
+import { useCommentsForDescription } from "@src/hooks/useCommentsForDescription";
+import type { ExplodedGroupedReport } from "@src/types/Reports";
 import "./ChronoReportCard.scss";
+import { getBrandLogo } from "@src/utils/brandLogos";
 
 interface Props {
     item: ExplodedGroupedReport;
+    isOpen: boolean;
+    onToggle: () => void;
 }
 
-const ChronoReportCard: React.FC<Props> = ({ item }) => {
+const ChronoReportCard: React.FC<Props> = ({ item, isOpen, onToggle }) => {
     const { userProfile } = useAuth();
-    const [isOpen, setIsOpen] = useState(false);
+    const [showComments, setShowComments] = useState(false);
+    const [refreshKey, setRefreshKey] = useState(0);
+    const [localCommentsCounts, setLocalCommentsCounts] = useState<Record<string, number>>({});
 
-    // Première description pour l'affichage de l'aperçu
     const firstDescription = item.subCategory.descriptions[0];
+    const descriptionId = firstDescription.id;
+
+    const userAvatar = firstDescription.user?.avatar
+        ? `${import.meta.env.VITE_API_BASE_URL}/${firstDescription.user.avatar}`
+        : "/default-avatar.png";
+
+    const { comments, loading } = useCommentsForDescription(descriptionId, "report", refreshKey);
+
+    const handleCommentClick = () => {
+        if (!isOpen) {
+            onToggle();
+            setShowComments(true);
+        } else {
+            setShowComments(prev => !prev);
+        }
+    };
+
+    useEffect(() => {
+        if (!loading && comments.length > 0) {
+            setLocalCommentsCounts(prev => ({
+                ...prev,
+                [descriptionId]: comments.length,
+            }));
+        }
+    }, [comments.length, descriptionId, loading]);
+
+    const currentCount = localCommentsCounts[descriptionId] ?? 0;
 
     return (
-        <div className={`chrono-card ${isOpen ? "open" : ""}`}>
-            {/* Header clickable pour toggle */}
-            <div className="chrono-card-header" onClick={() => setIsOpen(!isOpen)}>
-                <img
-                    src={getCategoryIconPathFromSubcategory(item.subCategory.subCategory)}
-                    alt={item.subCategory.subCategory}
-                    className="subcategory-icon"
-                />
-                <h4>{item.subCategory.subCategory}</h4>
-                <span className="count-badge">{item.subCategory.count}</span>
-                {isOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-            </div>
+        <div className="report-card">
+            <div className="card-header" onClick={onToggle}>
+                <div className="left-icon">
+                    <img src={getCategoryIconPathFromSubcategory(item.subCategory.subCategory)} alt="icon" />
+                </div>
 
-            {isOpen && (
-                <div className="chrono-card-body">
-                    <div className="emoji-avatar">
-                        {firstDescription.emoji && <div className="emoji">{firstDescription.emoji}</div>}
-                        <img
-                            src={
-                                firstDescription.user?.avatar
-                                    ? `${import.meta.env.VITE_API_BASE_URL}/${firstDescription.user.avatar}`
-                                    : "/default-avatar.png"
-                            }
-                            alt={firstDescription.user?.pseudo || "Utilisateur"}
-                        />
-                    </div>
-
-                    <div className="description-text">
-                        <div className="user-meta">
-                            <span className="pseudo">{firstDescription.user?.pseudo}</span>
-                            <span className="brand"> &times; {item.marque}</span>
-                            <span className="time">
-                                &nbsp;&middot;&nbsp;
+                <div className="card-title">
+                    <div className="title-and-meta">
+                        <h4>{item.marque || "Suggestion"}</h4>
+                        <div className="meta-info">
+                            <span className="count">{item.subCategory.count}</span>
+                            <span className="date">
                                 {formatDistanceToNow(new Date(firstDescription.createdAt), {
                                     locale: fr,
                                     addSuffix: true,
                                 })}
                             </span>
-                            {firstDescription.user?.id === userProfile?.id && (
-                                <span className="badge-me">Moi</span>
-                            )}
                         </div>
-                        <div className="text">{firstDescription.description}</div>
+                    </div>
+                </div>
+
+
+                <div className="right-section">
+                    {!isOpen ? (
+                        <div className="brand-logo-container">
+                            <img
+                                src={getBrandLogo(item.marque, item.siteUrl)}
+                                alt={item.marque}
+                                className="brand-logo"
+                            />
+                        </div>
+                    ) : (
+                        <div className="user-brand-inline">
+                            <div className="avatars">
+                                <img src={userAvatar} alt="avatar" className="avatar" />
+                                <img
+                                    src={getBrandLogo(item.marque, item.siteUrl)}
+                                    alt="logo"
+                                    className="avatar"
+                                />
+                            </div>
+                            <div className="label">
+                                {userProfile?.pseudo} <span className="x">×</span>{" "}
+                                <strong>{item.marque}</strong>
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                <div className="chevron">
+                    {isOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                </div>
+            </div>
+
+            {isOpen && (
+                <div className="card-content">
+                    <div className="card-description">
+                        <p>{firstDescription.description}</p>
                     </div>
 
-                    {/* Section de commentaires si connecté */}
-                    {userProfile?.id && firstDescription.id && (
+                    <ReportActionsBarWithReactions
+                        userId={userProfile?.id || ""}
+                        descriptionId={descriptionId}
+                        reportsCount={item.subCategory.count}
+                        commentsCount={currentCount}
+                        onReactClick={() => { }}
+                        onCommentClick={handleCommentClick}
+                        onToggleSimilarReports={() => { }}
+                    />
+
+                    {showComments && userProfile?.id && (
                         <DescriptionCommentSection
                             userId={userProfile.id}
-                            descriptionId={firstDescription.id}
+                            descriptionId={descriptionId}
                             type="report"
+                            forceOpen={true}
+                            hideFooter={true}
+                            onCommentCountChange={(count) =>
+                                setLocalCommentsCounts(prev => ({ ...prev, [descriptionId]: count }))
+                            }
+                            onCommentAddedOrDeleted={() => setRefreshKey(prev => prev + 1)}
                         />
                     )}
                 </div>

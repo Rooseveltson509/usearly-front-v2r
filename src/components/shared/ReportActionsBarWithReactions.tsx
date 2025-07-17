@@ -59,13 +59,17 @@ const ReportActionsBarWithReactions: React.FC<Props> = ({
                 </div>
 
                 <div className="count-right">
-                    
-                    <span>
-                        {commentsCount} {commentsCount === 1 ? "commentaire" : "commentaires"}
-                    </span>
+
+                    {commentsCount >= 0 && (
+                        <span onClick={onCommentClick}>
+                            {commentsCount} {commentsCount === 1 ? "commentaire" : "commentaires"}
+                        </span>
+                    )}
+
+
                     {reportsCount > 1 && (
                         <span className="resignalements-link" onClick={onToggleSimilarReports}>
-                            {reportsCount} resignalements
+                            {reportsCount} {reportsCount === 1 ? "signalement" : "signalements"}
                         </span>
                     )}
                 </div>

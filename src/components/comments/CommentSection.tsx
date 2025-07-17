@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { apiService } from "@src/services/apiService";
 import { useAuth } from "@src/services/AuthContext";
-import "./comment-section.scss";
+//import "./comment-section.scss";
 import CommentForm from "./CommentForm";
 import CommentList from "./CommentList";
 import Swal from "sweetalert2";
