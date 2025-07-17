@@ -18,7 +18,7 @@ const HomeGroupedReportsList: React.FC<Props> = ({ activeTab }) => {
     const [viewMode, setViewMode] = useState<"flat" | "chrono">("flat");
     const [selectedBrand, setSelectedBrand] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("");
-
+    const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
     const { data: flatData, loading: loadingFlat, hasMore: hasMoreFlat, loadMore: loadMoreFlat } = useFetchGroupedReports(activeTab);
     const { data: chronoData, loading: loadingChrono, hasMore: hasMoreChrono, loadMore: loadMoreChrono } = usePaginatedGroupedReportsByDate(viewMode === "chrono");
 
@@ -47,6 +47,13 @@ const HomeGroupedReportsList: React.FC<Props> = ({ activeTab }) => {
         const categoryMatch = selectedCategory ? report.subCategories.some((sc) => sc.subCategory === selectedCategory) : true;
         return brandMatch && categoryMatch;
     });
+
+    const handleToggle = (key: string) => {
+        setExpandedItems((prev) => ({
+            ...prev,
+            [key]: !prev[key],
+        }));
+    };
 
     const availableBrands = Array.from(new Set(flatData.map((d) => d.marque))).sort();
     const availableCategories = Array.from(new Set(flatData.flatMap((d) => d.subCategories.map((sc) => sc.subCategory)))).sort();
@@ -89,18 +96,23 @@ const HomeGroupedReportsList: React.FC<Props> = ({ activeTab }) => {
                     ).map(([brand, reports]) => (
                         <HomeBrandBlock key={brand} brand={brand} siteUrl={reports[0]?.siteUrl || ""} reports={reports} />
                     ))
-            )
+                )
             )}
 
             {viewMode === "chrono" && chronoData && (
                 <ChronologicalReportList
                     groupedByDay={chronoData as Record<string, ExplodedGroupedReport[]>}
-                    renderCard={(item) => (
-                        <ChronoReportCard
-                            key={item.subCategory.descriptions[0]?.id || `${item.marque}-${item.subCategory.subCategory}`}
-                            item={item}
-                        />
-                    )}
+                    renderCard={(item) => {
+                        const key = item.subCategory.descriptions[0]?.id || `${item.marque}-${item.subCategory.subCategory}`;
+                        return (
+                            <ChronoReportCard
+                                key={key}
+                                item={item}
+                                isOpen={!!expandedItems[key]}
+                                onToggle={() => handleToggle(key)}
+                            />
+                        );
+                    }}
                 />
             )}
 
