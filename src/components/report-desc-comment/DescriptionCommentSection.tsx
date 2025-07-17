@@ -91,7 +91,7 @@ const DescriptionCommentSection: React.FC<Props> = ({
                 Répondre
                 {comments.length > 0 && (
                   <span className="comment-count">
-                    · {comments.length} {comments.length === 1 ? "réponse" : "réponses"}
+                    {comments.length} {comments.length === 1 ? "réponse" : "réponses"}
                   </span>
                 )}
               </button>

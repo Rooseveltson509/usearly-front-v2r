@@ -1,120 +1,137 @@
+.point {
+  font-size: 1rem;
+  color: var(--color-text-low-emphasis);
+  font-weight: 700;
+  &:hover {
+    text-decoration: none !important;
+  }
+}
+
+
 .report-actions-bar {
+  width: 100%;
+  padding: 0 8px 8px 8px;
+
+  .counts-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 0 0.2rem 0;
+    font-size: 0.85rem;
+    color: #374151;
+
+    .count-left,
+    .count-right {
+      font-family: "arial";
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem; // Espace plus large entre icône, commentaires et resignalements
+      color: #686c7d;
+      font-weight: normal;
+
+      :hover {
+        text-decoration: underline;
+        text-underline-offset: 2px;  // ajuste la distance
+        color:#111827;
+      }
+
+  
+
+      .emoji-icon {
+        font-size: 20px;
+      }
+
+      .reaction-count {
+        margin-left: 4px;
+        font-weight: 500;
+      }
+
+      svg {
+        color: #6b7280;
+      }
+    }
+  }
+
+  .separator {
+    height: 1px;
+    background: #e8e8e8;
     width: 100%;
+    margin: 0.2rem 0;
+  }
 
-    .counts-row {
+  .actions-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 0;
+    font-family: "inter";
+
+    .actions-left {
+      display: flex;
+      gap: 1.6rem;
+
+      button {
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        padding: 0.5rem 0 0.2rem 0;
-        font-size: 0.85rem;
-        color: #374151;
+        gap: 0.3rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #6b7280;
+        font-size: 0.8rem;
+        padding: 0;
+        transition: color 0.2s;
 
-        .count-left,
-        .count-right {
-            font-family:"inter";
-            font-size:13px;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem; // Espace plus large entre icône, commentaires et resignalements
-
-            :hover{
-                text-decoration: underline;
-            }
-
-            .emoji-icon {
-                font-size: 16px;
-            }
-
-            .reaction-count {
-                margin-left: 4px;
-                font-weight: 500;
-            }
-
-            svg {
-                color: #6b7280;
-            }
-        }
-    }
-
-    .separator {
-        height: 1px;
-        background: #9763ff12;
-        width: 100%;
-        margin: 0.4rem 0;
-    }
-
-    .actions-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.4rem 0;
-        font-family: "inter";
-
-        .actions-left {
-            display: flex;
-            gap: 1.6rem;
-
-            button {
-                display: flex;
-                align-items: center;
-                gap: 0.3rem;
-                background: none;
-                border: none;
-                cursor: pointer;
-                color: #6b7280;
-                font-size: 0.8rem;
-                padding: 0;
-                transition: color 0.2s;
-
-                svg {
-                    color: #9ca3af;
-                }
-
-                &:hover {
-                    color: #111827;
-
-                    svg {
-                        color: #111827;
-                    }
-                }
-            }
+        svg {
+          color: #9ca3af;
         }
 
-        .status-right {
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-            color: #2563eb;
-            font-size: 0.85rem;
-            font-weight: 500;
+        &:hover {
+          color: #111827;
+
+          svg {
+            color: #111827;
+          }
         }
+      }
     }
+
+    .status-right {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      color: #2563eb;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+  }
 }
 
 .emoji-reaction-picker {
-    position: absolute;
-    bottom: 120%;
-    /* affiche au-dessus */
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 0.4rem;
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    padding: 0.4rem 0.6rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-    z-index: 20;
+  position: absolute;
+  bottom: 120%;
+  /* affiche au-dessus */
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.4rem;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 0.4rem 0.6rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  z-index: 20;
 
-    .emoji-btn {
-        background: none;
-        border: none;
-        font-size: 1.5rem;
-        cursor: pointer;
-        transition: transform 0.1s ease;
+  .emoji-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.1s ease;
 
-        &:hover {
-            transform: scale(1.2);
-        }
+    &:hover {
+      transform: scale(1.2);
     }
+  }
 }
