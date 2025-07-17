@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import DescriptionCommentSection from "../report-desc-comment/DescriptionCommentSection";
 import { getBrandLogo } from "@src/utils/brandLogos";
 import { getCategoryIconPathFromSubcategory } from "@src/utils/IconsUtils";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistance, formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Camera, ChevronDown, ChevronUp, FileImage, PictureInPicture, Image } from "lucide-react";
 import type { UserGroupedReport } from "@src/types/Reports";
@@ -88,7 +88,10 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
         </p>
         <p className="date-card">
           {mostRecentDate
-            ? `Il y a ${formatDistanceToNow(mostRecentDate, { locale: fr })}`
+            ? `Il y a ${formatDistance(mostRecentDate, new Date(), {
+              locale: fr,
+              includeSeconds: true,
+            }).replace("environ ", "")}`
             : "Date inconnue"}
         </p>
 
@@ -158,14 +161,17 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                     />
                     <h4>{sub.subCategory}</h4>
                   </div>
-                  <span className="date">
-                    {formatDistanceToNow(new Date(initialDescription.createdAt), {
-                      locale: fr,
-                      addSuffix: true,
-                    })}
-                  </span>
                   <div className="subcategory-right">
                     <div className="badge-count">{sub.count}</div>
+                    {expandedSub !== sub.subCategory && (
+                      <span className="date">
+                        {formatDistanceToNow(new Date(initialDescription.createdAt), {
+                          locale: fr,
+                          addSuffix: true,
+                        }).replace("environ ", "")}
+                      </span>
+                    )}
+
                     {sub.subCategory === expandedSub && (
                       <div className="subcategory-user-brand-info">
                         <div className="avatars-row">
