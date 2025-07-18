@@ -64,7 +64,7 @@ const ChronoReportCard: React.FC<Props> = ({ item, isOpen, onToggle }) => {
                         <h4>{item.marque || "Suggestion"}</h4>
                         <div className="meta-info">
                             <span className="count">{item.subCategory.count}</span>
-                            <span className="date">
+                            <span className="date-card">
                                 {formatDistanceToNow(new Date(firstDescription.createdAt), {
                                     locale: fr,
                                     addSuffix: true,

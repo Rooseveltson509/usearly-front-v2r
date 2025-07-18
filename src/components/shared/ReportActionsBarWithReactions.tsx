@@ -43,84 +43,94 @@ const ReportActionsBarWithReactions: React.FC<Props> = ({
     };
 
     return (
-        <div className="report-actions-bar">
-            <div className="counts-row">
-                <div className="count-left">
-                    {topThree.length > 0 && (
-                        <>
-                            {topThree.map(r => (
-                                <span key={r.emoji} role="img" aria-label="reaction" className="emoji-icon">
-                                    {r.emoji}
-                                </span>
-                            ))}
-                            <span className="reaction-count">{totalCount}</span>
-                        </>
-                    )}
-                </div>
+      <div className="report-actions-bar">
+        <div className="counts-row">
+          <div className="count-left">
+            {topThree.length > 0 && (
+              <>
+                {topThree.map((r) => (
+                  <span
+                    key={r.emoji}
+                    role="img"
+                    aria-label="reaction"
+                    className="emoji-icon"
+                  >
+                    {r.emoji}
+                  </span>
+                ))}
+                <span className="reaction-count">{totalCount}</span>
+              </>
+            )}
+          </div>
 
-                <div className="count-right">
-
-                    {commentsCount >= 0 && (
-                        <span onClick={onCommentClick}>
-                            {commentsCount} {commentsCount === 1 ? "commentaire" : "commentaires"}  
-                        </span>
-                    )}
-                    {reportsCount > 1 && (
-                        <span className="resignalements-link" onClick={onToggleSimilarReports}>
-                            . {reportsCount} {reportsCount === 1 ? "signalement" : "signalements"}
-                        </span>
-                    )}
-                </div>
-            </div>
-
-            <div className="separator" />
-
-            <div className="actions-row">
-                <div className="actions-left">
-                    <div
-                        className="react-hover-area"
-                        onMouseEnter={() => {
-                            if (hoverTimeout) clearTimeout(hoverTimeout);
-                            setShowEmojiPicker(true);
-                        }}
-                        onMouseLeave={() => {
-                            hoverTimeout = setTimeout(() => {
-                                setShowEmojiPicker(false);
-                            }, 250);
-                        }}
-                        style={{ position: "relative" }}
-                    >
-                        <button type="button">
-                            <ThumbsUp size={18} />
-                            <span>Réagir</span>
-                        </button>
-                        {showEmojiPicker && (
-                            <div className="emoji-picker-container">
-                                <EmojiUrlyReactionPicker
-                                    onSelect={handleAddReaction}
-                                    type="report"
-                                    userId={userId}
-                                    descriptionId={descriptionId}
-                                />
-                            </div>
-                        )}
-                    </div>
-
-                    <button onClick={onCommentClick}>
-                        <MessageCircle size={18} />
-                        <span>Commenter</span>
-                    </button>
-                    <button>
-                        <Share2 size={18} />
-                        <span>Partager</span>
-                    </button>
-                </div>
-                <div className="status-right">
-                    <CheckCircle size={16} color="#2563eb" />
-                    <span>En cours de correction</span>
-                </div>
-            </div>
+          <div className="count-right">
+            {commentsCount >= 0 && (
+              <span onClick={onCommentClick}>
+                {commentsCount}{" "}
+                {commentsCount === 1 ? "commentaire" : "commentaires"}{" "}
+              </span>
+            )}
+            <span className="point">•</span>
+            {reportsCount > 1 && (
+              <span
+                className="resignalements-link"
+                onClick={onToggleSimilarReports}
+              >
+                {reportsCount}{" "}
+                {reportsCount === 1 ? "signalement" : "signalements"}
+              </span>
+            )}
+          </div>
         </div>
+
+        <div className="separator" />
+
+        <div className="actions-row">
+          <div className="actions-left">
+            <div
+              className="react-hover-area"
+              onMouseEnter={() => {
+                if (hoverTimeout) clearTimeout(hoverTimeout);
+                setShowEmojiPicker(true);
+              }}
+              onMouseLeave={() => {
+                hoverTimeout = setTimeout(() => {
+                  setShowEmojiPicker(false);
+                }, 250);
+              }}
+              style={{ position: "relative" }}
+            >
+              <button type="button">
+                <ThumbsUp size={18} />
+                <span>Réagir</span>
+              </button>
+              {showEmojiPicker && (
+                <div className="emoji-picker-container">
+                  <EmojiUrlyReactionPicker
+                    onSelect={handleAddReaction}
+                    type="report"
+                    userId={userId}
+                    descriptionId={descriptionId}
+                  />
+                </div>
+              )}
+            </div>
+
+            <button onClick={onCommentClick}>
+              <MessageCircle size={18} />
+              <span>Commenter</span>
+            </button>
+            <button>
+              <Share2 size={18} />
+              <span>Partager</span>
+            </button>
+          </div>
+          <div className="status-right">
+            <CheckCircle size={16} color="#2563eb" />
+            <span>En cours de correction</span>
+          </div>
+        </div>
+      </div>
     );
 };
 

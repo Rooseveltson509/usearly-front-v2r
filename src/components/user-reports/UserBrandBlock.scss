@@ -1,13 +1,14 @@
 .brand-reports-count {
   font-size: 15px;
   font-family: "inter";
-  max-width: 350px;
   /* à ajuster selon ton besoin */
   display: inline-block;
   text-align: left;
   flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-
 
 .main-description {
   margin-left: 2.5rem; // aligne la description avec le titre et l'icône
@@ -15,22 +16,25 @@
 }
 
 .description-text {
-  margin-left: 8px;
-  padding-bottom: 8px;
+  max-width: 400px; // à ajuster selon ton design
+  margin-left: 30px;
+  padding-bottom: 16px;
+  line-height: 20px;
   font-size: 15px;
+  margin-top: -20px;
 }
 
 .subcategory-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   cursor: pointer;
-  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; // répartit bien left et right
 
   .subcategory-left {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.8rem;
+    flex: 1; // prend tout l'espace disponible
 
     .subcategory-icon {
       width: 18px;
@@ -43,23 +47,19 @@
       margin: 0;
     }
   }
-
-
 }
 
 .subcategory-user-brand-info {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 6px;
-  margin-bottom: 4px;
 
   .avatars-row {
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
-    margin-bottom: 2px;
+    top: 10px; /* ajuste en pixels la hauteur souhaitée */
 
     .avatar {
       width: 48px;
@@ -77,18 +77,19 @@
       object-fit: contain;
       background-color: #fff;
       padding: 2px;
-      border: 2px solid #fff;
+      border: 1px solid #ececec;
       margin-left: -10px; // superposition
       z-index: 2; // passe devant
     }
   }
 
-
   .user-brand-names {
-    font-size: 13px;
-    margin-top: 4px;
+    font-size: 12px;
+    top: 16px;
     color: #333;
     text-align: center;
+    font-family: "arial";
+    position: relative;
 
     .x {
       margin: 0 3px;
@@ -139,8 +140,12 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes zoomIn {
@@ -206,7 +211,9 @@
 .other-descriptions {
   margin-top: 0.5rem;
   padding-top: 0.5rem;
-
+  border-radius: 8px;
+  margin-bottom: 4px;
+  padding-bottom: 8px;
 
   .section-title {
     font-size: 0.85rem;
@@ -218,26 +225,24 @@
 
 .feedback-card {
   display: flex;
-  background: #ffffff;
   border-radius: 0.5rem;
-  padding: 0.75rem;
-  gap: 0.75rem;
+  padding: 24px 24px 16px 24px;
+  gap: 0.8rem;
   align-items: center; // ✅ Corrigé pour centrage vertical propre
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 
   .feedback-avatar {
     .feedback-avatar-wrapper {
       /* nouveau nom */
       position: relative;
-      width: 32px;
-      height: 32px;
+      width: 36px;
+      height: 36px;
       overflow: visible;
-      top: -25px;
+      top: -15px;
       /* Ajustement pour le positionnement */
 
       .avatar {
-        width: 32px;
-        height: 32px;
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
         object-fit: cover;
         display: block;
@@ -245,14 +250,11 @@
 
       .emoji-overlay {
         position: absolute;
-        bottom: -4px;
-        right: -4px;
+        bottom: -12px;
+        right: 22px;
         font-size: 1rem;
         background: #fff;
         border-radius: 50%;
-        padding: 0.05rem 0.15rem;
-        line-height: 1;
-        box-shadow: 0 0 0 1px #e5e7eb;
         z-index: 1;
       }
     }
@@ -271,15 +273,19 @@
       gap: 0.3rem;
       font-size: 0.75rem;
       color: #4b5563;
+      font-family: "arial";
+      padding-bottom: 2px;
+  
 
       .pseudo {
         font-weight: 600;
         color: #111827;
+        font-family: "inter";
       }
 
       .badge-me {
-        background: #e0f2fe;
-        color: #0369a1;
+        background: #4e45ff;
+        color: #ffffff;
         font-size: 0.65rem;
         font-weight: 600;
         padding: 0.1rem 0.4rem;
@@ -293,17 +299,39 @@
     }
 
     .feedback-text {
+      display: inline-block;
       font-size: 0.85rem;
       color: #111827;
       line-height: 1.4;
       word-break: break-word;
+      background-color: #f3f4f6;
+      border-radius: 12px;
+      padding: 10px 18px;
+      max-width: 100%;
+      align-self: flex-start;
+      font-family: "arial";
+      font-weight: 400;
+      max-width: 540px;
     }
+
   }
 }
-
-
-
-
+.comment-text {
+  display: inline-block;
+  font-size: 0.85rem;
+  color: #111827;
+  line-height: 1.4;
+  word-break: break-word;
+  background-color: #f3f4f6;
+  border-radius: 12px;
+  padding: 10px 18px;
+  max-width: 100%;
+  align-self: flex-start;
+  font-family: "arial";
+  font-weight: 400;
+  max-width: 540px;
+  
+}
 .subcategory-user-brand-right {
   display: flex;
   align-items: center;
@@ -335,24 +363,14 @@
       font-weight: 600;
     }
   }
-
-  .badge-count {
-    background-color: #8b5cf6;
-    color: white;
-    font-size: 0.75rem;
-    font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 12px;
-  }
 }
-
-
 
 .subcategory-right {
   display: flex;
+  grid-template-columns: 40px 100px 24px; /* badge, date, chevron */
   align-items: center;
-  gap: 8px;
-  margin-left: auto;
+  column-gap: 12px;
+  justify-content: flex-end; /* aligne tout à droite */
 
   .avatars {
     display: flex;
@@ -383,9 +401,16 @@
   .badge-count {
     background-color: #8b5cf6;
     color: white;
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     font-weight: 600;
-    padding: 2px 8px;
+    padding: 2px 16px;
     border-radius: 12px;
+    font-family: "inter";
+    width: 24px; // ou une taille adaptée à ton design
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0; // pour que le badge ne rétrécisse jamais
   }
 }

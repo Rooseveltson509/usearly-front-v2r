@@ -5,6 +5,7 @@
   align-items: center;
   gap: 8px;
   margin: 0.5rem 0;
+  padding-left: 24px;
 
   .filter-label {
     font-weight: 500;
@@ -15,7 +16,8 @@
     border: 1px solid #ccc;
     border-radius: 20px;
     padding: 4px 10px;
-    font-size: 0.9rem;
+    font-size: 13px;
+    font-family:"inter";
     background: #f8f8f8;
     cursor: pointer;
   }

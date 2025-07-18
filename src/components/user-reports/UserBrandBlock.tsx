@@ -139,11 +139,12 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
             return (
               <div
                 key={sub.subCategory}
-                className={`subcategory-block ${expandedSub === sub.subCategory ? "open" : ""
-                  }`}
-                style={{
+                className={`subcategory-block ${
+                  expandedSub === sub.subCategory ? "open" : ""
+                }`}
+                /* style={{
                   backgroundColor: pastelColors[i % pastelColors.length],
-                }}
+                }} */
               >
                 <div
                   className="subcategory-header"
@@ -162,13 +163,19 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                     <h4>{sub.subCategory}</h4>
                   </div>
                   <div className="subcategory-right">
-                    <div className="badge-count">{sub.count}</div>
+                   
                     {expandedSub !== sub.subCategory && (
-                      <span className="date">
-                        {formatDistanceToNow(new Date(initialDescription.createdAt), {
-                          locale: fr,
-                          addSuffix: true,
-                        }).replace("environ ", "")}
+                      <div className="badge-count">{sub.count}</div>
+                    )}
+                    {expandedSub !== sub.subCategory && (
+                      <span className="date-subcategory">
+                        {formatDistanceToNow(
+                          new Date(initialDescription.createdAt),
+                          {
+                            locale: fr,
+                            addSuffix: true,
+                          }
+                        ).replace("environ ", "")}
                       </span>
                     )}
 
@@ -176,7 +183,9 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                       <div className="subcategory-user-brand-info">
                         <div className="avatars-row">
                           <img
-                            src={getFullAvatarUrl(initialDescription.user.avatar)}
+                            src={getFullAvatarUrl(
+                              initialDescription.user.avatar
+                            )}
                             alt="avatar"
                             className="avatar user-avatar"
                           />
@@ -187,12 +196,11 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                           />
                         </div>
                         <div className="user-brand-names">
-                          {initialDescription.user.pseudo} <span className="x">×</span>{" "}
-                          <strong>{brand}</strong>
+                          {initialDescription.user.pseudo}{" "}
+                          <span className="x">×</span> <strong>{brand}</strong>
                         </div>
                       </div>
                     )}
-
 
                     {expandedSub === sub.subCategory ? (
                       <ChevronUp size={16} />
@@ -200,7 +208,6 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                       <ChevronDown size={16} />
                     )}
                   </div>
-
                 </div>
 
                 {expandedSub === sub.subCategory && (
@@ -223,7 +230,10 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                           </button>
 
                           {modalImage === initialDescription.capture && (
-                            <div className="capture-modal" onClick={() => setModalImage(null)}>
+                            <div
+                              className="capture-modal"
+                              onClick={() => setModalImage(null)}
+                            >
                               <img
                                 src={modalImage}
                                 alt="Capture"
@@ -234,7 +244,6 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                           )}
                         </>
                       )}
-
                     </div>
 
                     <ReportActionsBarWithReactions
@@ -326,7 +335,7 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                               htmlFor={`filter-${sub.subCategory}`}
                               className="filter-label"
                             >
-                              Trier par :
+                              Tous les signalements :
                             </label>
                             <select
                               id={`filter-${sub.subCategory}`}
