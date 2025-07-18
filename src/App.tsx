@@ -13,6 +13,7 @@ import RequestResetPassword from "./pages/forgot-and-reset-pwd/RequestResetPassw
 import ResetPassword from "./pages/forgot-and-reset-pwd/ResetPassword";
 import NavigateToHome from "./pages/NavigateToHome";
 import NewHome from "./pages/newHome/NewHome";
+import { MainContent } from "./pages/MainContent";
 
 function App() {
   return (
@@ -86,6 +87,7 @@ function App() {
               }
             />
             <Route path="/home" element={<NewHome />} />
+            <Route path="/impact" element={<MainContent activeTab={"report"} />} />
             <Route
               path="/feedback"
               element={
