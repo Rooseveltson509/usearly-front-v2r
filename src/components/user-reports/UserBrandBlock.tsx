@@ -2,7 +2,7 @@
 import DescriptionCommentSection from "../report-desc-comment/DescriptionCommentSection";
 import { getBrandLogo } from "@src/utils/brandLogos";
 import { getCategoryIconPathFromSubcategory } from "@src/utils/IconsUtils";
-import { formatDistance, formatDistanceToNow } from "date-fns";
+import { formatDistance, formatDistanceToNow, parseISO, isAfter } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Camera, ChevronDown, ChevronUp, FileImage, PictureInPicture, Image } from "lucide-react";
 import type { UserGroupedReport } from "@src/types/Reports";
@@ -12,7 +12,6 @@ import ReportActionsBarWithReactions from "../shared/ReportActionsBarWithReactio
 import CommentInputSection from "../report-desc-comment/CommentInputSection";
 import { getCommentsCountForDescription } from "@src/services/commentService";
 import CommentSection from "../comments/CommentSection";
-import { parseISO, isAfter } from "date-fns";
 
 
 interface Props {

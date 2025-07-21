@@ -61,19 +61,20 @@ const ChronoReportCard: React.FC<Props> = ({ item, isOpen, onToggle }) => {
 
                 <div className="card-title">
                     <div className="title-and-meta">
-                        <h4>{item.marque || "Suggestion"}</h4>
+                        <h4>{item.subCategory.subCategory || "Suggestion"}</h4>
                         <div className="meta-info">
-                            <span className="count">{item.subCategory.count}</span>
-                            <span className="date-card">
-                                {formatDistanceToNow(new Date(firstDescription.createdAt), {
-                                    locale: fr,
-                                    addSuffix: true,
-                                })}
-                            </span>
+                            {!isOpen && (
+                                <span className="date-card">
+                                    {formatDistanceToNow(new Date(firstDescription.createdAt), {
+                                        locale: fr,
+                                        addSuffix: true,
+                                    }).replace("environ ", "")}
+                                </span>
+                            )}
+
                         </div>
                     </div>
                 </div>
-
 
                 <div className="right-section">
                     {!isOpen ? (

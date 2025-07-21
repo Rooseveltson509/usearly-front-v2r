@@ -7,9 +7,9 @@ import DescriptionCommentSection from "@src/components/report-desc-comment/Descr
 import CommentSection from "@src/components/comments/CommentSection";
 import ReportActionsBarWithReactions from "@src/components/shared/ReportActionsBarWithReactions";
 import { pastelColors } from "@src/components/constants/pastelColors";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistance, formatDistanceToNow, parseISO, isAfter } from "date-fns";
 import { fr } from "date-fns/locale";
-import "./UserBrandBlock.scss";
+import "../user-reports/UserBrandBlock.scss";
 import { getCommentsCountForDescription } from "@src/services/commentService";
 
 interface Props {
@@ -90,18 +90,40 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
       return acc;
     }, {} as Record<string, PublicGroupedReport["subCategories"][number]>);
 
-
-
   const uniqueSubCategories = Object.values(uniqueSubCategoriesMap);
 
+  const getMostRecentDate = () => {
+    let latest: Date | null = null;
+
+    for (const sub of reports) {
+      for (const desc of sub.subCategories[0]?.descriptions) {
+        const date = parseISO(desc.createdAt);
+        if (!latest || isAfter(date, latest)) {
+          latest = date;
+        }
+      }
+    }
+
+    return latest;
+  };
+
+  const mostRecentDate = getMostRecentDate();
 
   return (
     <div className={`brand-block ${openBrands[brand] ? "open" : "close"}`}>
       <div className="brand-header" onClick={() => toggleBrand(brand)}>
         <img src={getBrandLogo(brand, siteUrl)} alt={brand} className="brand-logo" />
-        <h3 className="brand-title">{brand}</h3>
         <p className="brand-reports-count">
-          {uniqueSubCategories.length} Problème sur <strong>{brand}</strong>
+          <strong>{uniqueSubCategories.length}</strong> signalement{uniqueSubCategories.length > 1 ? "s" : ""} sur{" "}
+          <strong>{brand}</strong>
+        </p>
+        <p className="date-card">
+          {mostRecentDate
+            ? `Il y a ${formatDistance(mostRecentDate, new Date(), {
+              locale: fr,
+              includeSeconds: true,
+            }).replace("environ ", "")}`
+            : "Date inconnue"}
         </p>
       </div>
 
@@ -144,7 +166,43 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
                     <h4>{sub.subCategory}</h4>
                   </div>
                   <div className="subcategory-right">
-                    <span className="subcategory-count">{sub.descriptions.length}</span>
+                    {expandedSub !== sub.subCategory && (
+                      <div className="badge-count">{sub.descriptions.length}</div>
+                    )}
+                    {expandedSub !== sub.subCategory && (
+                      <span className="date-subcategory">
+                        {formatDistanceToNow(
+                          new Date(initialDescription.createdAt),
+                          {
+                            locale: fr,
+                            addSuffix: true,
+                          }
+                        ).replace("environ ", "")}
+                      </span>
+                    )}
+                    {sub.subCategory === expandedSub && (
+                      <div className="subcategory-user-brand-info">
+                        <div className="avatars-row">
+                          <img
+                            src={getFullAvatarUrl(
+                              initialDescription.user?.avatar
+                            )}
+                            alt="avatar"
+                            className="avatar user-avatar"
+                          />
+                          <img
+                            src={getBrandLogo(brand, siteUrl)}
+                            alt={brand}
+                            className="avatar brand-logo"
+                          />
+                        </div>
+                        <div className="user-brand-names">
+                          {initialDescription.user?.pseudo}{" "}
+                          <span className="x">×</span> <strong>{brand}</strong>
+                        </div>
+                      </div>
+                    )}
+
                     {expandedSub === sub.subCategory ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                   </div>
                 </div>
@@ -165,28 +223,6 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
                         />
                       )}
                     </div>
-
-   {/*                  <ReportActionsBarWithReactions
-                      userId=""
-                      descriptionId={initialDescription.id}
-                      reportsCount={sub.count}
-                      commentsCount={localCommentsCounts[initialDescription.id] ?? 0}
-                      onReactClick={() =>
-                        setShowReactions((prev) => ({ ...prev, [sub.subCategory]: !prev[sub.subCategory] }))
-                      }
-                      onCommentClick={() => {
-                        setShowComments((prev) => {
-                          const newState = !prev[sub.subCategory];
-                          if (newState) setExpandedOthers({});
-                          return { ...prev, [sub.subCategory]: newState };
-                        });
-                      }}
-                      onToggleSimilarReports={() => {
-                        setExpandedOthers((prev) => ({ ...prev, [sub.subCategory]: true }));
-                        setShowComments({});
-                      }}
-                    /> */}
-
                     <ReportActionsBarWithReactions
                       userId={""}
                       descriptionId={initialDescription.id}

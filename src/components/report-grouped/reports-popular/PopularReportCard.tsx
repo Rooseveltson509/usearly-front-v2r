@@ -66,16 +66,15 @@ const PopularReportCard: React.FC<Props> = ({ item, isOpen, onToggle, isHot }) =
                     <div className="title-and-meta">
                         <h4>{item.subCategory || "Suggestion"}</h4>
                         <div className="meta-info">
-                            {!isOpen  &&(
-                                <div className="badge-count">{item.count}</div>
-                            )}
-                            {/* <span className="count">{item.count}</span> */}
+                            {!isOpen && (
                             <span className="date-card">
                                 {formatDistanceToNow(new Date(firstDescription.createdAt), {
                                     locale: fr,
                                     addSuffix: true,
-                                })}
+                                }).replace("environ ", "")}
                             </span>
+                            )}
+
                         </div>
                     </div>
                 </div>

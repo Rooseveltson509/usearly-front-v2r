@@ -12,7 +12,21 @@
     transform: scale(1);
   }
 }
-
+  .badge-count {
+    background-color: #8b5cf6;
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 2px 16px;
+    border-radius: 12px;
+    font-family: "inter";
+    width: 24px; // ou une taille adaptée à ton design
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0; // pour que le badge ne rétrécisse jamais
+  }
 .report-card.hot-effect {
   border: 1px solid #ff5722;
   background-color: rgba(255, 87, 34, 0.02);
