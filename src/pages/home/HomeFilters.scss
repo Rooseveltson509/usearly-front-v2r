@@ -1,0 +1,68 @@
+.home-filters {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: "Raleway", sans-serif;
+  width: 100%;
+  max-width: 340px;
+  margin: 0 auto;
+
+  .filters-header {
+    text-align: center;
+    padding: 2rem 1rem 2rem;
+
+    h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      line-height: 1.3;
+      color: #1f1f1f;
+      margin-bottom: 1.5rem;
+      max-width: 320px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    img {
+      width: 100%;
+      max-width: 240px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+  }
+
+  .filters-list {
+    background: white;
+    width: 340px;
+    max-width: 100%;
+    padding: 2rem 1rem 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+
+    .filter-line {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #111827;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid #e5e7eb;
+
+      .emoji {
+        font-size: 1.2rem;
+      }
+
+      &.active {
+        background: #f3e8ff;
+        border-left: 4px solid #7c3aed;
+        padding-left: 8px;
+        font-weight: 600;
+      }
+    }
+  }
+}

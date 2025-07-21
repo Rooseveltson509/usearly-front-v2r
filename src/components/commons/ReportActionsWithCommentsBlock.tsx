@@ -1,7 +1,7 @@
 import ReportActionsBarWithReactions from "../shared/ReportActionsBarWithReactions";
 import CommentSection from "../comments/CommentSection";
 import DescriptionCommentSection from "../report-desc-comment/DescriptionCommentSection";
-import "./ReportActionsWithCommentsBlock.scss";
+//import "./ReportActionsWithCommentsBlock.scss";
 
 interface Props {
   subCategory: string;

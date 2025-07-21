@@ -31,7 +31,6 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
   const [openBrands, setOpenBrands] = useState<Record<string, boolean>>({});
   const [signalementFilters, setSignalementFilters] = useState<Record<string, "pertinent" | "recents" | "anciens">>({});
 
-
   const getFullAvatarUrl = (path: string | null | undefined) => {
     if (!path) return "/default-avatar.png";
     return `${import.meta.env.VITE_API_BASE_URL}/${path}`;
@@ -68,30 +67,53 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
     fetchAllCounts();
   }, [reports]);
 
+  const uniqueSubCategoriesMap = reports
+    .flatMap((report) => report.subCategories)
+    .reduce((acc, sub) => {
+      if (!acc[sub.subCategory]) {
+        acc[sub.subCategory] = {
+          ...sub,
+          descriptions: [...sub.descriptions],
+          count: sub.descriptions.length, // on force le vrai count
+        };
+      } else {
+        // Ajout des nouvelles descriptions SANS doublons
+        const existingDescriptions = acc[sub.subCategory].descriptions;
+        const newDescriptions = sub.descriptions.filter(
+          (desc) => !existingDescriptions.some((d) => d.id === desc.id)
+        );
+
+        acc[sub.subCategory].descriptions = [...existingDescriptions, ...newDescriptions];
+        acc[sub.subCategory].count = acc[sub.subCategory].descriptions.length; // recalcul réel
+      }
+
+      return acc;
+    }, {} as Record<string, PublicGroupedReport["subCategories"][number]>);
+
+
+
+  const uniqueSubCategories = Object.values(uniqueSubCategoriesMap);
+
+
   return (
     <div className={`brand-block ${openBrands[brand] ? "open" : "close"}`}>
       <div className="brand-header" onClick={() => toggleBrand(brand)}>
         <img src={getBrandLogo(brand, siteUrl)} alt={brand} className="brand-logo" />
         <h3 className="brand-title">{brand}</h3>
         <p className="brand-reports-count">
-          {
-            reports.reduce((set, report) => {
-              report.subCategories.forEach(sub => set.add(sub.subCategory));
-              return set;
-            }, new Set<string>()).size
-          } Problèmes sur <strong>brand</strong>
+          {uniqueSubCategories.length} Problème sur <strong>{brand}</strong>
         </p>
-
       </div>
 
       {openBrands[brand] && (
         <div className="subcategories-list">
-          {reports.flatMap((report, i) => report.subCategories.map((sub, j) => {
+          {uniqueSubCategories.map((sub, j) => {
             const initialDescription = sub.descriptions[0];
             const additionalDescriptions = sub.descriptions.slice(1);
             const hasMoreThanTwo = additionalDescriptions.length > 2;
+            const filter = signalementFilters[sub.subCategory] || "pertinent";
+
             const sortedDescriptions = [...additionalDescriptions].sort((a, b) => {
-              const filter = signalementFilters[sub.subCategory] || "pertinent";
               if (filter === "recents") return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
               if (filter === "anciens") return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
               return 0;
@@ -103,7 +125,6 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
                 : sortedDescriptions.slice(0, 2)
               : [];
 
-
             return (
               <div
                 key={sub.subCategory}
@@ -112,7 +133,7 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
               >
                 <div
                   className="subcategory-header"
-                  onClick={() => setExpandedSub(prev => (prev === sub.subCategory ? null : sub.subCategory))}
+                  onClick={() => setExpandedSub((prev) => (prev === sub.subCategory ? null : sub.subCategory))}
                 >
                   <div className="subcategory-left">
                     <img
@@ -123,7 +144,7 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
                     <h4>{sub.subCategory}</h4>
                   </div>
                   <div className="subcategory-right">
-                    <span className="subcategory-count">{sub.count}</span>
+                    <span className="subcategory-count">{sub.descriptions.length}</span>
                     {expandedSub === sub.subCategory ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                   </div>
                 </div>
@@ -131,7 +152,6 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
                 {expandedSub === sub.subCategory && (
                   <div className="subcategory-content">
                     <div className="main-description">
-
                       <p className="description-text">{initialDescription.description}</p>
                       {initialDescription.capture && (
                         <img
@@ -146,26 +166,52 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
                       )}
                     </div>
 
-                    <ReportActionsBarWithReactions
+   {/*                  <ReportActionsBarWithReactions
                       userId=""
                       descriptionId={initialDescription.id}
                       reportsCount={sub.count}
                       commentsCount={localCommentsCounts[initialDescription.id] ?? 0}
                       onReactClick={() =>
-                        setShowReactions(prev => ({ ...prev, [sub.subCategory]: !prev[sub.subCategory] }))
+                        setShowReactions((prev) => ({ ...prev, [sub.subCategory]: !prev[sub.subCategory] }))
                       }
                       onCommentClick={() => {
-                        setShowComments(prev => {
+                        setShowComments((prev) => {
                           const newState = !prev[sub.subCategory];
                           if (newState) setExpandedOthers({});
                           return { ...prev, [sub.subCategory]: newState };
                         });
                       }}
                       onToggleSimilarReports={() => {
-                        setExpandedOthers(prev => ({ ...prev, [sub.subCategory]: true }));
+                        setExpandedOthers((prev) => ({ ...prev, [sub.subCategory]: true }));
                         setShowComments({});
                       }}
+                    /> */}
 
+                    <ReportActionsBarWithReactions
+                      userId={""}
+                      descriptionId={initialDescription.id}
+                      reportsCount={sub.count}
+                      commentsCount={localCommentsCounts[initialDescription.id] ?? 0}
+                      onReactClick={() =>
+                        setShowReactions((prev) => ({
+                          ...prev,
+                          [sub.subCategory]: !prev[sub.subCategory],
+                        }))
+                      }
+                      onCommentClick={() => {
+                        setShowComments((prev) => {
+                          const newState = !prev[sub.subCategory];
+                          if (newState) setExpandedOthers({});
+                          return { ...prev, [sub.subCategory]: newState };
+                        });
+                      }}
+                      onToggleSimilarReports={() => {
+                        setExpandedOthers((prev) => ({
+                          ...prev,
+                          [sub.subCategory]: !prev[sub.subCategory],
+                        }));
+                        setShowComments({});
+                      }}
                     />
 
                     {showComments[sub.subCategory] && (
@@ -174,21 +220,21 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
                           descriptionId={initialDescription.id}
                           type="report"
                           onCommentAdded={() => {
-                            setLocalCommentsCounts(prev => ({
+                            setLocalCommentsCounts((prev) => ({
                               ...prev,
                               [initialDescription.id]: (prev[initialDescription.id] ?? 0) + 1,
                             }));
-                            setRefreshCommentsKeys(prev => ({
+                            setRefreshCommentsKeys((prev) => ({
                               ...prev,
                               [initialDescription.id]: (prev[initialDescription.id] ?? 0) + 1,
                             }));
                           }}
                           onCommentDeleted={() => {
-                            setLocalCommentsCounts(prev => ({
+                            setLocalCommentsCounts((prev) => ({
                               ...prev,
                               [initialDescription.id]: Math.max((prev[initialDescription.id] ?? 1) - 1, 0),
                             }));
-                            setRefreshCommentsKeys(prev => ({
+                            setRefreshCommentsKeys((prev) => ({
                               ...prev,
                               [initialDescription.id]: (prev[initialDescription.id] ?? 0) + 1,
                             }));
@@ -199,10 +245,9 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
                           userId=""
                           descriptionId={initialDescription.id}
                           type="report"
-                          hideFooter={true}
+                          hideFooter
                           refreshKey={refreshCommentsKeys[initialDescription.id] ?? 0}
                         />
-
                       </>
                     )}
 
@@ -219,16 +264,18 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
                       <>
                         <div className="other-descriptions">
                           <div className="signalement-filter">
-                            <label htmlFor={`filter-${sub.subCategory}`} className="filter-label">Trier par :</label>
+                            <label htmlFor={`filter-${sub.subCategory}`} className="filter-label">
+                              Trier par :
+                            </label>
                             <select
                               id={`filter-${sub.subCategory}`}
-                              value={signalementFilters[sub.subCategory] || "pertinent"}
-                              onChange={(e) => {
+                              value={filter}
+                              onChange={(e) =>
                                 setSignalementFilters((prev) => ({
                                   ...prev,
                                   [sub.subCategory]: e.target.value as "pertinent" | "recents" | "anciens",
-                                }));
-                              }}
+                                }))
+                              }
                               className="filter-select"
                             >
                               <option value="pertinent">Les plus pertinents</option>
@@ -236,7 +283,8 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
                               <option value="anciens">Les plus anciens</option>
                             </select>
                           </div>
-                          {displayedDescriptions.map(desc => (
+
+                          {displayedDescriptions.map((desc) => (
                             <div className="feedback-card" key={desc.id}>
                               <div className="feedback-avatar">
                                 <div className="feedback-avatar-wrapper">
@@ -252,7 +300,13 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
                                 <div className="feedback-meta">
                                   <span className="pseudo">{desc.user?.pseudo}</span>
                                   <span className="brand"> · {brand}</span>
-                                  <span className="time"> · {formatDistanceToNow(new Date(desc.createdAt), { locale: fr, addSuffix: true })}</span>
+                                  <span className="time">
+                                    ·{" "}
+                                    {formatDistanceToNow(new Date(desc.createdAt), {
+                                      locale: fr,
+                                      addSuffix: true,
+                                    })}
+                                  </span>
                                 </div>
                                 <p className="feedback-text">{desc.description}</p>
                                 <DescriptionCommentSection
@@ -266,12 +320,13 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
                             </div>
                           ))}
                         </div>
+
                         {hasMoreThanTwo && !showAll[sub.subCategory] && (
                           <button
                             className="see-more-button"
                             onClick={(e) => {
                               e.stopPropagation();
-                              setShowAll(prev => ({ ...prev, [sub.subCategory]: true }));
+                              setShowAll((prev) => ({ ...prev, [sub.subCategory]: true }));
                             }}
                           >
                             <ChevronDown size={14} /> Afficher plus de signalements
@@ -283,9 +338,10 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
                 )}
               </div>
             );
-          }))}
+          })}
         </div>
       )}
+
       {modalImage && (
         <div className="image-modal-overlay" onClick={() => setModalImage(null)}>
           <img

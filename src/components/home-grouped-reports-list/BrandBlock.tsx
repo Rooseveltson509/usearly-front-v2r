@@ -7,7 +7,7 @@ import { getBrandLogo } from "@src/utils/brandLogos";
 import { getCategoryIconPathFromSubcategory } from "@src/utils/IconsUtils";
 import type { PublicGroupedReport } from "@src/types/Reports";
 import { useAuth } from "@src/services/AuthContext";
-import "./BrandBlock.scss"; // ✅ Assure-toi d'y avoir les styles refactorés
+//import "./BrandBlock.scss"; // ✅ Assure-toi d'y avoir les styles refactorés
 
 interface Props {
   brand: string;

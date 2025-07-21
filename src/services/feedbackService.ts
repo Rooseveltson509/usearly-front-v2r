@@ -155,18 +155,95 @@ export const getFilteredReportDescriptions = async (
 };
 
 export const getGroupedReportsByDate = async (page = 1, limit = 15) => {
-    const token = localStorage.getItem("accessToken"); // ou récupère via ton AuthContext
-    const response = await apiService.get("/reportings/public-grouped-by-date", {
-        params: { page, limit },
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    });
-    return response.data;
+  const token = localStorage.getItem("accessToken"); // ou récupère via ton AuthContext
+  const response = await apiService.get("/reportings/public-grouped-by-date", {
+    params: { page, limit },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
 };
+
+/* export const getGroupedReportsByDate = async (
+  page = 1,
+  limit = 15,
+  filter?: string
+) => {
+  const token = localStorage.getItem("accessToken");
+
+  let endpoint = "/reportings/public-grouped-by-date";
+
+  if (filter === "popular") {
+    endpoint = "/reportings/grouped-by-popular";
+  } else if (filter === "hot") {
+    endpoint = "/reportings/grouped-by-hot";
+  } else if (filter === "rage") {
+    endpoint = "/reportings/grouped-by-rage";
+  } else if (filter === "urgent") {
+    endpoint = "/reportings/grouped-by-urgent";
+  }
+
+  const response = await apiService.get(endpoint, {
+    params: { page, limit },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
+}; */
 
 
 export const getUserReportsGroupedByDate = async (page: number, limit: number) => {
-    const res = await apiService.get(`/user/grouped-by-date?page=${page}&limit=${limit}`);
-    return res.data;
+  const res = await apiService.get(`/user/grouped-by-date?page=${page}&limit=${limit}`);
+  return res.data;
+};
+
+export const getGroupedReportsByHot = async (page = 1, limit = 15, filter?: string) => {
+  const token = localStorage.getItem("accessToken");
+
+  const response = await apiService.get("/reportings/grouped-by-hot", {
+    params: { page, limit, filter },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  console.log("data: ", response.data)
+  return response.data;
+};
+
+
+export const getGroupedReportsByPopularEngagement = async (page = 1, limit = 15) => {
+  const token = localStorage.getItem("accessToken");
+
+  const response = await apiService.get("/reportings/grouped-by-popular-engagement", {
+    params: { page, limit },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
+};
+
+
+
+/* export const getGroupedReportsByRage = async (page = 1, limit = 15) => {
+  const token = localStorage.getItem("accessToken");
+
+  const response = await apiService.get("/reportings/grouped-by-rage", {
+    params: { page, limit },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
+}; */
+
+export const getGroupedReportsByRage = async (page = 1, limit = 15) => {
+  const response = await apiService.get(`/reportings/grouped-by-rage?page=${page}&limit=${limit}`);
+  return response.data;
 };

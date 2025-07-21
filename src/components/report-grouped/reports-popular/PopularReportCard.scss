@@ -1,0 +1,48 @@
+@keyframes flame-pulse {
+  0% {
+    box-shadow: 0 0 4px rgba(255, 87, 34, 0.3);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 16px rgba(255, 87, 34, 0.6);
+    transform: scale(1.01);
+  }
+  100% {
+    box-shadow: 0 0 4px rgba(255, 87, 34, 0.3);
+    transform: scale(1);
+  }
+}
+
+.report-card.hot-effect {
+  border: 1px solid #ff5722;
+  background-color: rgba(255, 87, 34, 0.02);
+  animation: flame-pulse 1.8s ease-in-out infinite;
+  transition: background-color 0.3s, border-color 0.3s;
+
+  .card-header {
+    background: rgba(255, 87, 34, 0.06);
+    border-radius: 8px 8px 0 0;
+  }
+
+  .card-description {
+    position: relative;
+
+    &::after {
+      content: "🔥";
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      font-size: 24px;
+      animation: flame-bounce 1.2s infinite ease-in-out;
+    }
+  }
+}
+
+@keyframes flame-bounce {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-2px) scale(1.1);
+  }
+}

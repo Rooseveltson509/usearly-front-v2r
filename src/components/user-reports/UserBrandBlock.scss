@@ -59,7 +59,8 @@
     align-items: center;
     justify-content: center;
     position: relative;
-    top: 10px; /* ajuste en pixels la hauteur souhaitée */
+    top: 10px;
+    /* ajuste en pixels la hauteur souhaitée */
 
     .avatar {
       width: 48px;
@@ -143,6 +144,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -153,11 +155,13 @@
     transform: scale(0.95);
     opacity: 0.5;
   }
+
   to {
     transform: scale(1);
     opacity: 1;
   }
 }
+
 .show-capture-button svg {
   vertical-align: middle;
   margin-right: 6px;
@@ -226,19 +230,16 @@
 .feedback-card {
   display: flex;
   border-radius: 0.5rem;
+  align-items: flex-start;
   padding: 24px 24px 16px 24px;
   gap: 0.8rem;
-  align-items: center; // ✅ Corrigé pour centrage vertical propre
 
   .feedback-avatar {
     .feedback-avatar-wrapper {
-      /* nouveau nom */
       position: relative;
       width: 36px;
       height: 36px;
       overflow: visible;
-      top: -15px;
-      /* Ajustement pour le positionnement */
 
       .avatar {
         width: 40px;
@@ -257,6 +258,7 @@
         border-radius: 50%;
         z-index: 1;
       }
+
     }
   }
 
@@ -275,7 +277,7 @@
       color: #4b5563;
       font-family: "arial";
       padding-bottom: 2px;
-  
+
 
       .pseudo {
         font-weight: 600;
@@ -316,6 +318,7 @@
 
   }
 }
+
 .comment-text {
   display: inline-block;
   font-size: 0.85rem;
@@ -330,8 +333,9 @@
   font-family: "arial";
   font-weight: 400;
   max-width: 540px;
-  
+
 }
+
 .subcategory-user-brand-right {
   display: flex;
   align-items: center;
@@ -367,10 +371,12 @@
 
 .subcategory-right {
   display: flex;
-  grid-template-columns: 40px 100px 24px; /* badge, date, chevron */
+  grid-template-columns: 40px 100px 24px;
+  /* badge, date, chevron */
   align-items: center;
   column-gap: 12px;
-  justify-content: flex-end; /* aligne tout à droite */
+  justify-content: flex-end;
+  /* aligne tout à droite */
 
   .avatars {
     display: flex;

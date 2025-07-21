@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+ import { useEffect, useState } from "react";
 import DescriptionCommentSection from "../report-desc-comment/DescriptionCommentSection";
 import { getBrandLogo } from "@src/utils/brandLogos";
 import { getCategoryIconPathFromSubcategory } from "@src/utils/IconsUtils";
@@ -142,9 +142,6 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                 className={`subcategory-block ${
                   expandedSub === sub.subCategory ? "open" : ""
                 }`}
-                /* style={{
-                  backgroundColor: pastelColors[i % pastelColors.length],
-                }} */
               >
                 <div
                   className="subcategory-header"

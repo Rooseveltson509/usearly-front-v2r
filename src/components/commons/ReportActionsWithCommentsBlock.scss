@@ -1,15 +1,14 @@
-.brand-reports-count {
+/* .brand-reports-count {
   font-size: 15px;
   font-family: "inter";
   max-width: 350px;
-  /* à ajuster selon ton besoin */
   display: inline-block;
   text-align: left;
   flex: 1;
 }
 
 .main-description {
-  margin-left: 2.5rem; // aligne la description avec le titre et l'icône
+  margin-left: 2.5rem;
   margin-top: 0.5rem;
 }
 
@@ -56,7 +55,7 @@
       height: 54px;
       border-radius: 50%;
       object-fit: cover;
-      z-index: 1; // passe derrière le logo
+      z-index: 1;
       border: 2px solid #fff;
     }
 
@@ -68,8 +67,8 @@
       background-color: #fff;
       padding: 2px;
       border: 2px solid #fff;
-      margin-left: -10px; // superposition
-      z-index: 2; // passe devant
+      margin-left: -10px;
+      z-index: 2; 
     }
   }
 
@@ -198,18 +197,17 @@
     border-radius: 0.5rem;
     padding: 0.75rem;
     gap: 0.75rem;
-    align-items: center; // ✅ Corrigé pour centrage vertical propre
+    align-items: center;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 
     .feedback-avatar {
       .feedback-avatar-wrapper {
-        /* nouveau nom */
         position: relative;
         width: 32px;
         height: 32px;
         overflow: visible;
         top: -25px;
-        /* Ajustement pour le positionnement */
+       
 
         .avatar {
           width: 32px;
@@ -340,3 +338,4 @@
     }
   }
 }
+ */

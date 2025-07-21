@@ -171,6 +171,15 @@ export interface ExplodedGroupedReport extends GroupedReport {
     descriptions: FeedbackDescription[];
   };
 }
+export interface PopularGroupedReport {
+  reportingId: string;
+  marque: string;
+  siteUrl?: string;
+  category: string;
+  subCategory: string;
+  count: number;
+  descriptions: FeedbackDescription[];
+}
 
 
 /* profile */

@@ -1,25 +1,72 @@
-.controls {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: 16px;
+  .purple-background {
+    position: absolute;
+    //top: 60px;
+    left: 0;
+    right: 0;
+    height: 440px;
+    background: #eae6ff;
+    border-radius: 24px;
+    z-index: -1;
+  }
 
-  .profile-filters-container {
+  .no-popular-results {
+    text-align: center;
+    margin: 2rem auto;
+    font-weight: 500;
+    font-size: 1.1rem;
+    color: #555;
+  }
+
+  .controls {
     display: flex;
     align-items: center;
     gap: 12px;
-    flex-wrap: wrap;
+    flex-wrap: wrap; // 🔁 Permet le retour à la ligne sur petit écran
+    margin-bottom: 16px;
 
-    .profile-filters {
+    .profile-filters-container {
       display: flex;
       align-items: center;
       gap: 12px;
+      flex-wrap: wrap;
 
-      .control {
+      .profile-filters {
         display: flex;
         align-items: center;
-        gap: 8px;
-       
+        gap: 12px;
+
+        .control {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+
+
+          select {
+            padding: 10px 12px;
+            border: 1px solid #0000001c;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 400;
+            background-color: white;
+            cursor: pointer;
+            color: #575757;
+          }
+        }
+      }
+    }
+
+    .reset-filters-button {
+      background: none;
+      border: none;
+      margin-top: 4px;
+      cursor: pointer;
+    }
+
+    .profile-filters {
+      .control {
+        display: flex;
+        gap: 12px;
+        align-items: center;
 
         select {
           padding: 10px 12px;
@@ -30,116 +77,272 @@
           background-color: white;
           cursor: pointer;
           color: #575757;
+          appearance: none; // Supprime les chevrons natifs
+          -moz-appearance: none; // Firefox
+          -webkit-appearance: none; // Safari et Chrome
+          position: relative; // Nécessaire pour le chevron personnalisé
+
+          &:focus {
+            outline: none;
+          }
+        }
+
+        // Wrapper pour le chevron personnalisé
+        .select-wrapper {
+          position: relative;
+          display: flex;
+          align-items: center;
+          min-width: 150px; // Largeur minimale pour le select
+
+          select {
+            width: 100%;
+          }
+
+          .chevron-icon {
+            position: absolute;
+            right: 10px;
+            pointer-events: none;
+          }
         }
       }
     }
   }
-  .reset-filters-button {
-    background: none;
-    border: none;
-    margin-top: 4px;
-    cursor: pointer;
-  }
-  .profile-filters {
-    .control {
-      display: flex;
-      gap: 12px;
-      align-items: center;
 
-      select {
-        padding: 10px 12px;
-        border: 1px solid #0000001c;
-        border-radius: 10px;
-        font-size: 13px;
-        font-weight: 400;
-        background-color: white;
-        cursor: pointer;
-        color: #575757;
-        appearance: none; // Supprime les chevrons natifs
-        -moz-appearance: none; // Firefox
-        -webkit-appearance: none; // Safari et Chrome
-        position: relative; // Nécessaire pour le chevron personnalisé
-
-        &:focus {
-          outline: none;
-        }
-      }
-
-      // Wrapper pour le chevron personnalisé
-      .select-wrapper {
-        position: relative;
-        display: flex;
-        align-items: center;
-        min-width: 150px; // Largeur minimale pour le select
-
-        select {
-          width: 100%;
-        }
-
-        .chevron-icon {
-          position: absolute;
-          right: 10px;
-          pointer-events: none;
-        }
-      }
-    }
-  }
-}
-
-.sort-dropdown {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  padding: 10px 12px;
-  border: 1px solid #0000001c;
-  border-radius: 10px;
-  background: white;
-  cursor: pointer;
-
-  .dropdown-toggle {
+  .sort-dropdown {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 6px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: inherit;
-  }
-
-  .dropdown-menu {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    margin-top: 4px;
-    border: 1px solid #ccc;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 12px;
+    border: 1px solid #0000001c;
+    border-radius: 10px;
     background: white;
-    border-radius: 4px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    z-index: 10;
-    min-width: 100px;
+    cursor: pointer;
 
-    button {
-      display: block;
-      width: 100%;
-      padding: 8px 12px;
+    .dropdown-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
       background: none;
       border: none;
-      text-align: left;
-      font-size: 13px;
       cursor: pointer;
+      font-family: inherit;
+      font-size: inherit;
+    }
 
-      &.active {
-        font-weight: bold;
-        background-color: #f0f0f0;
-      }
+    .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 4px;
+      border: 1px solid #ccc;
+      background: white;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      z-index: 10;
+      min-width: 100px;
 
-      &:hover {
-        background-color: #f9f9f9;
+      button {
+        display: block;
+        width: 100%;
+        padding: 8px 12px;
+        background: none;
+        border: none;
+        text-align: left;
+        font-size: 13px;
+        cursor: pointer;
+
+        &.active {
+          font-weight: bold;
+          background-color: #f0f0f0;
+        }
+
+        &:hover {
+          background-color: #f9f9f9;
+        }
       }
     }
   }
+
+  .controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    position: relative;
+  }
+
+  .select-filter {
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 16px;
+    appearance: none;
+    background-image: url("/icons/chevron.svg");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+  }
+
+  .filter-dropdown-wrapper {
+    position: relative;
+
+    .filter-toggle {
+      padding: 10px 16px;
+      font-weight: 600;
+      border-radius: 12px;
+      border: 1px solid #ddd;
+      background-color: #fff;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #f3f3f3;
+      }
+    }
+
+    .filter-dropdown {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      background-color: white;
+      border: 1px solid #eee;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      border-radius: 12px;
+      padding: 12px;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 240px;
+
+      select {
+        padding: 8px 12px;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        font-weight: 500;
+        font-size: 15px;
+      }
+
+      .reset {
+        margin-top: 8px;
+        padding: 8px 12px;
+        background-color: #f8f8f8;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #e4e4e4;
+        }
+      }
+    }
+  }
+
+  .active-filters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .active-filter-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    line-height: 1;
+    padding: 5px 10px;
+    //background-color: #fff5ec;
+    border: 2px solid #8b5cf6;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #000;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    .close-icon {
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    &:hover {
+      background-color: #ffe4cb;
+    }
+  }
+
+  @keyframes pulseHeat {
+    0% {
+      box-shadow: 0 0 0px rgba(255, 85, 0, 0.4);
+    }
+
+    50% {
+      box-shadow: 0 0 15px rgba(255, 85, 0, 0.6);
+    }
+
+    100% {
+      box-shadow: 0 0 0px rgba(255, 85, 0, 0.4);
+    }
+  }
+
+  .hot-report-card {
+    animation: pulseHeat 1.5s infinite;
+    border: 1px solid rgba(255, 85, 0, 0.6);
+    transition: transform 0.3s;
+
+    &:hover {
+      transform: scale(1.01);
+    }
+  }
+
+  @keyframes flame-wiggle {
+  0%, 100% {
+    transform: rotate(0deg) scale(1);
+  }
+  25% {
+    transform: rotate(-10deg) scale(1.05);
+  }
+  75% {
+    transform: rotate(10deg) scale(1.05);
+  }
+}
+
+.select-filter.hot-active option[value="hot"]::before {
+  content: "🔥";
+  display: inline-block;
+  animation: flame-wiggle 1.2s infinite;
+}
+.select-filter option {
+  &::first-letter {
+    animation: flame-wiggle 1.2s infinite;
+  }
+}
+
+
+.select-filter-wrapper {
+  position: relative;
+  display: inline-block;
+
+  .select-filter {
+    padding-left: 2.2rem; // décale le texte pour laisser de la place à la flamme
+  }
+
+  &.hot-active::before {
+    content: "🔥";
+    position: absolute;
+    left: 0.6rem;
+    top: 50%;
+    transform: translateY(-50%);
+    animation: wiggle 1s infinite;
+    font-size: 1.2rem;
+    pointer-events: none;
+  }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: translateY(-50%) rotate(0deg); }
+  25% { transform: translateY(-50%) rotate(-10deg); }
+  50% { transform: translateY(-50%) rotate(10deg); }
+  75% { transform: translateY(-50%) rotate(-5deg); }
 }

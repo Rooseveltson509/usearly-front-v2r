@@ -5,14 +5,36 @@ import FeedbackTabs, { type FeedbackType } from "@src/components/user-profile/Fe
 import UserStatsCard from "@src/components/user-profile/UserStatsCard";
 import HomeGroupedReportsList from "./HomeGroupedReportsList";
 import FeedbackView from "@src/components/feedbacks/FeedbackView";
-import { getPublicCoupsDeCoeur, getPublicSuggestions } from "@src/services/feedbackService";
+import { getGroupedReportsByHot, getPublicCoupsDeCoeur, getPublicSuggestions } from "@src/services/feedbackService";
 import type { CoupDeCoeur, Suggestion } from "@src/types/Reports";
 import SqueletonAnime from "@src/components/loader/SqueletonAnime";
+import HomeFilters from "./HomeFilters";
 
 const Home: React.FC = () => {
   const [activeTab, setActiveTab] = useState<FeedbackType>("report");
   const [feedbackData, setFeedbackData] = useState<(CoupDeCoeur | Suggestion)[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [activeFilter, setActiveFilter] = useState("");
+  const [availableFilters, setAvailableFilters] = useState<string[]>(["rage", "popular", "urgent"]); // par défaut sans "hot"
+
+  useEffect(() => {
+    const checkHotFilter = async () => {
+      try {
+        const res = await getGroupedReportsByHot(1, 1, "hot");
+        const hasHot = res && res.data && Object.keys(res.data).length > 0;
+        if (hasHot && !availableFilters.includes("hot")) {
+          setAvailableFilters((prev) => [...prev, "hot"]);
+          setActiveFilter("hot");
+        }
+      } catch (e) {
+        console.warn("Erreur vérif filtre hot:", e);
+      }
+    };
+
+    checkHotFilter();
+  }, []);
+
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -63,12 +85,19 @@ const Home: React.FC = () => {
         </aside>
 
         <div className="feedback-list-wrapper">
+          <div className="purple-background" />
           {activeTab !== "report" && isLoading && (
             <SqueletonAnime loaderRef={{ current: null }} loading={true} hasMore={false} error={null} />
           )}
 
           {activeTab === "report" ? (
-            <HomeGroupedReportsList activeTab={activeTab} />
+            <HomeGroupedReportsList
+              activeTab={activeTab}
+              activeFilter={activeFilter}
+              onViewModeChange={() => setActiveFilter("")}
+              setActiveFilter={setActiveFilter}
+            />
+
           ) : (
             !isLoading && (
               <FeedbackView
@@ -81,9 +110,9 @@ const Home: React.FC = () => {
                   error: null,
                 }}
                 openId={null}
-                setOpenId={() => {}}
+                setOpenId={() => { }}
                 groupOpen={{}}
-                setGroupOpen={() => {}}
+                setGroupOpen={() => { }}
                 selectedBrand=""
                 selectedCategory=""
                 renderCard={() => <></>}
@@ -91,6 +120,13 @@ const Home: React.FC = () => {
             )
           )}
         </div>
+       {activeTab === "report" && (
+          <aside className="right-panel">
+            <HomeFilters selectedFilter={activeFilter}
+              onChange={setActiveFilter}
+              availableFilters={availableFilters} />
+          </aside>
+        )}
       </main>
     </div>
   );

@@ -1,14 +1,13 @@
 import { type JSX } from "react";
-import type { ExplodedGroupedReport } from "@src/types/Reports";
 import "./ChronologicalReportList.scss";
 import { CalendarDays } from "lucide-react";
 
-interface Props {
-  groupedByDay: Record<string, ExplodedGroupedReport[]>;
-  renderCard: (item: ExplodedGroupedReport, index: number) => JSX.Element;
+interface Props<T> {
+  groupedByDay: Record<string, T[]>;
+  renderCard: (item: T, index: number) => JSX.Element;
 }
 
-const ChronologicalReportList: React.FC<Props> = ({ groupedByDay, renderCard }) => {
+function ChronologicalReportList<T>({ groupedByDay, renderCard }: Props<T>) {
   const entries = Object.entries(groupedByDay);
 
   return (
@@ -30,6 +29,6 @@ const ChronologicalReportList: React.FC<Props> = ({ groupedByDay, renderCard }) 
       })}
     </div>
   );
-};
+}
 
 export default ChronologicalReportList;
