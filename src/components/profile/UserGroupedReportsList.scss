@@ -192,7 +192,8 @@
 .brand-block {
   margin-top: 5px;
   border-radius: $border-radius-md;
-  border: 1px solid #e4e4e4;
+  box-shadow: 0 2px 2px 0px rgb(0 0 0 / 9%);
+  border: 1px solid rgb(243 243 243);
   overflow: hidden;
   cursor: pointer;
 
@@ -302,12 +303,12 @@
       }
     }
     .subcategory-block {
-      border: 1px solid #ededed;
+      border: 1px solid #ffffff;
       padding: 4px 12px;
       margin: 4px 8px;
       border-radius: 8px;
       overflow: hidden;
-      background-color:#f8f8ff;
+      background-color:#f6f7fb;
 
       .date-subcategory {
         color: grey;
@@ -327,13 +328,13 @@
       }
 
       &.open {
-        box-shadow: 0 2px 1px rgb(0 0 0 / 17%);
+        box-shadow: 0 3px 16px -3px rgba(0, 0, 0, 0.24);
         background-color: rgb(255 255 255);
-        border: 1px solid #aaaaaa;
+        border: 1px solid #ffffff;
 
         .subcategory-header {
           border: none;
-          padding: 0.2rem 0.5rem 0 !important;
+          padding: 1rem 0.5rem 0.2rem !important;
         }
 
 

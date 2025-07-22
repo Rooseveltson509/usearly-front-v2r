@@ -3,8 +3,9 @@
 
 .interactive-feedback-card {
   background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  border-radius: 8px;
+  box-shadow: 0 2px 2px 0px rgba(0, 0, 0, 0.09);
+  border: 1px solid rgb(243, 243, 243);
   padding: 0 16px;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
@@ -16,8 +17,9 @@
   }
 
   &.open {
-    background-color: #fafafa;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 3px 16px -3px rgba(0, 0, 0, 0.24);
+    background-color: rgb(255, 255, 255);
+    border: 1px solid #ffffff;
   }
 
   // =============================================
@@ -28,7 +30,7 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    height: 70px;
+    height: 80px;
     cursor: pointer;
 
     &.open {
@@ -50,6 +52,7 @@
       font-family: Inter;
       font-size: 14px;
       font-weight: 400;
+      width: 400px;
 
       .emoji {
         font-size: 30px;
@@ -68,7 +71,7 @@
     .report-extra-info {
       display: flex;
       align-items: center;
-      gap: 64px;
+
       width: 31%;
       justify-content: space-between;
 
@@ -79,9 +82,10 @@
       }
 
       .brand-logo {
-        width: 54px;
-        height: 54px;
+        width: 60px;
+        height: auto;
         object-fit: contain;
+        padding: 4px;
       }
     }
   }

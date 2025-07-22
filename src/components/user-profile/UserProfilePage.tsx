@@ -10,11 +10,12 @@ import small from "../../assets/images/small.svg";
 import badge from "../../assets/icons/Little-badge.svg";
 import UserGroupedReportsList from "../profile/UserGroupedReportsList";
 import UserFeedbackView from "../profile/UserFeedbackView";
+import UserChallenge from "../user-profile/UserChallenge";
 
 const UserProfilePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<FeedbackType>("report");
   const mountCount = useRef(0);
-  
+
   useEffect(() => {
     mountCount.current += 1;
     console.log("UserProfilePage mounted:", mountCount.current);
@@ -53,7 +54,7 @@ const UserProfilePage: React.FC = () => {
         </div>
 
         <aside className="right-panel">
-          <UserSidebarStats />
+          <UserChallenge/>
         </aside>
       </main>
     </div>
