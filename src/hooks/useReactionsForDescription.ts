@@ -4,16 +4,23 @@ import { useEffect, useState } from "react";
 
 export const useReactionsForDescription = (
   userId: string,
-  descriptionId: string
+  id: string,
+  type?: "coupdecoeur" | "suggestion"
 ) => {
   const [reactions, setReactions] = useState<UserReaction[]>([]);
 
   useEffect(() => {
-    if (!descriptionId) return;
+    if (!id) return;
 
     const fetchReactions = async () => {
       try {
-        const res = await apiService.get(`/descriptions/${descriptionId}/reactions`);
+        const endpoint = type
+          ? type === "coupdecoeur"
+            ? `/coupdecoeurs/${id}/reactions`
+            : `/suggestions/${id}/reactions`
+          : `/descriptions/${id}/reactions`; // fallback pour ne rien casser
+
+        const res = await apiService.get(endpoint);
         setReactions(res.data.reactions || []);
       } catch (error) {
         console.error("Erreur lors de la récupération des réactions :", error);
@@ -21,7 +28,7 @@ export const useReactionsForDescription = (
     };
 
     fetchReactions();
-  }, [descriptionId]);
+  }, [id, type]);
 
   const getCount = (emoji: string) =>
     reactions.filter((r) => r.emoji === emoji).length;
@@ -31,9 +38,13 @@ export const useReactionsForDescription = (
 
   const handleReact = async (emoji: string) => {
     try {
-      const res = await apiService.put(`/descriptions/${descriptionId}/reactions`, {
-        emoji,
-      });
+      const endpoint = type
+        ? type === "coupdecoeur"
+          ? `/coupdecoeurs/${id}/reactions`
+          : `/suggestions/${id}/reactions`
+        : `/descriptions/${id}/reactions`; // fallback aussi ici
+
+      const res = await apiService.put(endpoint, { emoji });
       setReactions(res.data.reactions || []);
     } catch (error) {
       console.error("Erreur lors de la réaction :", error);
@@ -47,3 +58,4 @@ export const useReactionsForDescription = (
     handleReact,
   };
 };
+

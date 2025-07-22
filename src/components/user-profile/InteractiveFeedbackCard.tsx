@@ -4,36 +4,37 @@ import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 import type { CoupDeCoeur, Suggestion } from "@src/types/Reports";
 import { useAuth } from "@src/services/AuthContext";
-import { fetchValidBrandLogo } from "@src/utils/brandLogos"; // 🔹 Import ajouté
-import DescriptionCommentSection from "../report-desc-comment/DescriptionCommentSection";
+import { fetchValidBrandLogo } from "@src/utils/brandLogos";
+import SharedFooterCdcAndSuggest from "../shared/SharedFooterCdcAndSuggest";
+import { ChevronDown } from "lucide-react";
 
 interface Props {
   item: (CoupDeCoeur | Suggestion) & {
     type: "suggestion" | "coupdecoeur";
   };
+  isOpen: boolean;
+  onToggle: (id: string) => void;
 }
-
-const getFullUrl = (path: string | null) => {
-  if (!path) return "/default-avatar.png";
-  return `${import.meta.env.VITE_API_BASE_URL}/${path}`;
-};
 
 const isValidDate = (value: any) => {
   const d = new Date(value);
   return !isNaN(d.getTime());
 };
 
-const InteractiveFeedbackCard: React.FC<Props> = ({ item }) => {
-  const [isOpen, setIsOpen] = useState(false);
+const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) => {
   const [showFullText, setShowFullText] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [logos, setLogos] = useState<Record<string, string>>({}); // 🔹 Changé pour un objet
+  const [logos, setLogos] = useState<Record<string, string>>({});
   const { userProfile } = useAuth();
 
   if (!userProfile?.id) return null;
 
-  const toggle = () => setIsOpen((prev) => !prev);
   const toggleText = () => setShowFullText((prev) => !prev);
+
+  const getFullAvatarUrl = (path: string | null | undefined) => {
+    if (!path) return "/default-avatar.png";
+    return `${import.meta.env.VITE_API_BASE_URL}/${path}`;
+  };
 
   const openLightbox = (imageSrc: string) => {
     setSelectedImage(imageSrc);
@@ -47,7 +48,6 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item }) => {
     document.body.style.overflow = "auto";
   };
 
-  // 🔹 Chargement du logo avec fetchValidBrandLogo (exactement comme FlatReportList)
   useEffect(() => {
     const loadBrandLogo = async () => {
       if (item.marque) {
@@ -55,11 +55,9 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item }) => {
         setLogos({ [item.marque]: logoUrl });
       }
     };
-
     loadBrandLogo();
   }, [item.marque]);
 
-  // Cleanup au démontage du composant
   useEffect(() => {
     return () => {
       if (selectedImage) {
@@ -69,18 +67,15 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item }) => {
     };
   }, [selectedImage]);
 
-  // Fermeture avec Escape
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && selectedImage) {
         closeLightbox();
       }
     };
-
     if (selectedImage) {
       document.addEventListener("keydown", handleKeyDown);
     }
-
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
@@ -88,35 +83,37 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item }) => {
 
   const title = item.description?.split(":")[0] || item.emoji || "Feedback";
   const rawDescription = item.description || "";
-  const description =
-    rawDescription.split(":").slice(1).join(":").trim() || rawDescription;
+  const description = rawDescription.split(":").slice(1).join(":").trim() || rawDescription;
 
-  // Limite de caractères pour le "voir plus"
   const DESCRIPTION_LIMIT = 150;
-  const shouldShowToggle =
-    description.length > DESCRIPTION_LIMIT || item.capture;
+  const shouldShowToggle = description.length > DESCRIPTION_LIMIT || item.capture;
 
   return (
     <>
-      <div
-        className={`interactive-feedback-card ${isOpen ? "open" : ""}`}
-        onClick={(e) => {
-          const isReactionOrComment =
-            (e.target as HTMLElement).closest(".feedback-footer") ||
-            (e.target as HTMLElement).closest(".description-comment-section") ||
-            (e.target as HTMLElement).closest(".see-more") ||
-            (e.target as HTMLElement).closest(".capture");
+      <div className={`interactive-feedback-card ${isOpen ? "open" : ""}`}>
+        <div
+          className="card-header"
+          onClick={(e) => {
+            const tag = (e.target as HTMLElement).tagName;
+            const isInteractive =
+              ["BUTTON", "A", "IMG", "INPUT", "TEXTAREA", "SELECT", "SVG", "PATH"].includes(tag);
 
-          if (!isReactionOrComment) toggle();
-        }}
-      >
-        <div className="card-header">
+            const isInFooter =
+              (e.target as HTMLElement).closest(".shared-footer-cdc") ||
+              (e.target as HTMLElement).closest(".description-comment-section");
+
+            if (!isInteractive && !isInFooter) {
+              onToggle(item.id);
+            }
+          }}
+        >
+
           <div className="report-main-info">
             <div className="emoji">{item.emoji || "💬"}</div>
             <strong>{title}</strong>
           </div>
           <div className="report-extra-info">
-            {isValidDate(item.createdAt) && (
+            {!isOpen && isValidDate(item.createdAt) && (
               <span className="report-date">
                 {formatDistanceToNow(new Date(item.createdAt), {
                   locale: fr,
@@ -124,15 +121,36 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item }) => {
                 })}
               </span>
             )}
-            {item.marque && (
-              <img
-                className="brand-logo"
-                src={logos[item.marque] || ""}
-                alt={item.marque}
-              />
+            {isOpen ? (
+              <div className="user-brand-header">
+                <div className="avatar-group">
+                  <img
+                    className="user-avatar"
+                    src={getFullAvatarUrl(item.author?.avatar)}
+                    alt={item.author?.pseudo || "Utilisateur"}
+                  />
+                  <img
+                    className="brand-logo"
+                    src={logos[item.marque] || ""}
+                    alt={item.marque}
+                  />
+                </div>
+                <div className="user-brand-names">
+                  {item.author?.pseudo} <span>×</span> <strong>{item.marque}</strong>
+                </div>
+              </div>
+            ) : (
+              item.marque && (
+                <img className="brand-logo" src={logos[item.marque] || ""} alt={item.marque} />
+              )
             )}
+            <ChevronDown
+              size={18}
+              className={`chevron-icon ${isOpen ? "rotated" : ""}`}
+            />
           </div>
         </div>
+
         {isOpen && (
           <div>
             <div className="feedback-desc">
@@ -184,25 +202,16 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item }) => {
               )}
             </div>
 
-            {/* Footer interactions */}
-            <div className="feedback-footer">
-              {userProfile?.id && item?.id && (
-                <div className="feedback-interactions">
-                  <div className="interactions-row">
-                    <DescriptionCommentSection
-                      userId={userProfile.id}
-                      descriptionId={item.id}
-                      type={item.type}
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
+            <SharedFooterCdcAndSuggest
+              userId={userProfile.id}
+              descriptionId={item.id}
+              type={item.type}
+              onToggle={onToggle}
+            />
           </div>
         )}
       </div>
 
-      {/* Lightbox en dehors de la card, au niveau du body */}
       {selectedImage && (
         <div className="lightbox" onClick={closeLightbox}>
           <img

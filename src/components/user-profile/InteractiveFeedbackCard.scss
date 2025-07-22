@@ -147,6 +147,70 @@
     }
   }
 
+  .chevron-icon {
+    transition: transform 0.3s ease;
+
+    &.rotated {
+      transform: rotate(180deg);
+    }
+  }
+
+
+
+  .user-brand-header {
+    flex-direction: column;
+    align-items: flex-end;
+    margin-top: 4px;
+    margin-right: 12px;
+
+    .avatar-group {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      height: 48px; // 🆙 taille totale du groupe
+      margin-bottom: 6px;
+
+      .user-avatar,
+      .brand-logo {
+        width: 48px; // 🆙 taille avatar/logo
+        height: 48px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #fff;
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+      }
+
+      .user-avatar {
+        position: absolute;
+        left: 0;
+        z-index: 2;
+      }
+
+      .brand-logo {
+        position: absolute;
+        left: 28px; // 🧩 ajustement du chevauchement
+        z-index: 1;
+      }
+    }
+
+
+    .user-brand-names {
+      font-size: 13px;
+      color: #333;
+      text-align: right;
+
+      span {
+        margin: 0 4px;
+      }
+
+      strong {
+        font-weight: 600;
+      }
+    }
+  }
+
+
+
   // =============================================
   // FOOTER INTERACTIONS
   // =============================================
@@ -259,6 +323,7 @@ body.lightbox-open {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }

@@ -9,6 +9,8 @@ const allFilters = [
   { key: "rage", label: "Les plus rageants", emoji: "😡", illustration: rageImg },
   { key: "popular", label: "Les plus populaires", emoji: "👍", illustration: popularImg },
   { key: "urgent", label: "À shaker vite", emoji: "👀", illustration: urgentImg },
+
+  { key: "urgent", label: "À shaker vite", emoji: "👀", illustration: urgentImg },
 ];
 
 type HomeFiltersProps = {

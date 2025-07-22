@@ -21,6 +21,7 @@ interface Props {
   forceOpen?: boolean;
   onCommentCountChange?: (count: number) => void;
   onCommentAddedOrDeleted?: () => void;
+  onCommentsUpdate?: (newCount: number) => void;
 }
 
 const DescriptionCommentSection: React.FC<Props> = ({
@@ -38,6 +39,7 @@ const DescriptionCommentSection: React.FC<Props> = ({
   forceOpen = false,
   onCommentCountChange,
   onCommentAddedOrDeleted,
+  onCommentsUpdate,
 }) => {
   const { userProfile } = useAuth();
   const [localRefreshKey, setLocalRefreshKey] = useState(0);
@@ -51,6 +53,10 @@ const DescriptionCommentSection: React.FC<Props> = ({
     onCommentCountChange?.(comments.length);
   }, [comments.length]);
 
+  useEffect(() => {
+    onCommentsUpdate?.(comments.length);
+  }, [comments.length]);
+
   const toggleComments = () => {
     const newState = !showComments;
     setShowComments(newState);
@@ -61,12 +67,29 @@ const DescriptionCommentSection: React.FC<Props> = ({
   };
 
   useEffect(() => {
+    setShowComments(forceOpen);
     if (forceOpen) {
-      setShowComments(true);
       onOpen?.();
       onOpenSimilarReports?.();
     }
   }, [forceOpen]);
+
+
+
+  useEffect(() => {
+    const handleExternalToggle = () => {
+      setShowComments(true);
+      onOpen?.();
+      onOpenSimilarReports?.();
+    };
+
+    window.addEventListener("usearly-toggle-comments", handleExternalToggle);
+
+    return () => {
+      window.removeEventListener("usearly-toggle-comments", handleExternalToggle);
+    };
+  }, []);
+
 
   useEffect(() => {
     if (forceClose && showComments) {

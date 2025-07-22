@@ -1,0 +1,176 @@
+.shared-footer-cdc {
+  .footer-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    font-size: 14px;
+    background-color: #f9f9fb;
+  }
+
+  .emoji-display {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+/*     .emoji-icon {
+      font-size: 16px;
+    } */
+
+    .reaction-count {
+      font-weight: bold;
+      margin-left: 4px;
+      color: #555;
+    }
+  }
+
+  .comment-count-right {
+    color: #666;
+    font-size: 13px;
+  }
+
+  .footer-divider {
+    height: 1px;
+    background-color: #e2e2e2;
+    margin: 0 12px;
+  }
+
+  .footer-bottom {
+    display: flex;
+    flex-direction: column;
+    background-color: #f9f9fb;
+    padding: 8px 12px;
+
+    .footer-buttons {
+      display: flex;
+      align-items: center;
+      gap: 45px;
+
+      button {
+        background: none;
+        border: none;
+        color: #444;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        cursor: pointer;
+        font-size: 14px;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+.emoji-display {
+  font-size: 16px;
+}
+
+.reaction-summary {
+  background-color: #fff;
+  padding: 4px 8px;
+  border-radius: 20px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+}
+
+.reaction-popup {
+  position: absolute;
+  bottom: 120%;
+  z-index: 999;
+  left: 0;
+}
+
+.reaction-selector-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+
+.reaction-summary {
+  background-color: #fff;
+  padding: 4px 8px;
+  border-radius: 20px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+}
+
+.reaction-popup {
+  position: absolute;
+  bottom: 100%;
+  z-index: 10;
+}
+
+.reaction-selector-wrapper {
+  position: relative;
+}
+
+
+.reaction-selector-wrapper {
+  position: relative;
+}
+
+.reaction-popup {
+  position: absolute;
+  bottom: 120%;
+  z-index: 10;
+  left: 0;
+}
+
+.reaction-summary {
+  background: #fff;
+  padding: 4px 8px;
+  border-radius: 999px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  font-size: 16px;
+}
+
+
+.react-hover-area {
+  position: relative;
+  display: inline-block;
+
+  button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+}
+
+.emoji-picker-container {
+  position: absolute;
+  bottom: 120%;
+  left: 0;
+  z-index: 10;
+}
+
+
+
+.reaction-count {
+  margin-left: 4px;
+  font-weight: 500;
+}
+.emoji-picker-container {
+  span.emoji-icon,
+  button.emoji-icon {
+    text-decoration: none !important;
+  }
+}
+
+.emoji-picker-container {
+  span,
+  button {
+    text-decoration: none !important;
+  }
+}

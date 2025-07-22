@@ -19,6 +19,7 @@ export type LikeFeedbackType = Exclude<FeedbackType, "report">;
 export interface CoupDeCoeur {
   id: string;
   marque: string;
+  descriptionId: string;
   emplacement: string;
   emoji: string;
   description: string;
@@ -37,6 +38,7 @@ export interface CoupDeCoeur {
 export interface Suggestion {
   id: string;
   marque: string;
+  descriptionId: string;
   emplacement: string;
   emoji: string | null;
   description: string;
