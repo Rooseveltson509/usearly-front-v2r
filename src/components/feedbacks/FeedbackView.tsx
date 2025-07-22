@@ -5,7 +5,7 @@ import FilteredReportList from "../report-grouped/feedback-list-header/FilteredR
 import { isToday, isYesterday, format } from "date-fns";
 import { fr } from "date-fns/locale";
 import type { ExplodedGroupedReport, GroupedReport, CoupDeCoeur, Suggestion } from "@src/types/Reports";
-import type { JSX } from "react";
+import { useState, type JSX } from "react";
 import {
   groupByBrandThenCategory,
   groupByBrand,
@@ -42,6 +42,7 @@ const FeedbackView = ({
   selectedCategory,
   renderCard,
 }: Props) => {
+  const [openId, setOpenId] = useState<string | null>(null);
   const exploded = (currentState.data as GroupedReport[]).flatMap((report) =>
     Array.isArray(report.subCategories)
       ? report.subCategories.map((subCategory) => ({
@@ -155,6 +156,8 @@ const FeedbackView = ({
         <InteractiveFeedbackCard
           key={item.id || `feedback-${index}`}
           item={item}
+          isOpen={openId === item.id}
+          onToggle={(id) => setOpenId((prev) => (prev === id ? null : id))}
         />
       ))}
     </>

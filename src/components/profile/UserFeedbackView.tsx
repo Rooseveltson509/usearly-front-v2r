@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import InteractiveFeedbackCard from "@src/components/user-profile/InteractiveFeedbackCard";
 import { useFetchUserFeedback } from "@src/hooks/useFetchUserFeedback";
 import type { FeedbackType } from "@src/components/user-profile/FeedbackTabs";
@@ -11,6 +11,8 @@ interface Props {
 
 const UserFeedbackView: React.FC<Props> = ({ activeTab }) => {
   const { data, loading } = useFetchUserFeedback(activeTab);
+  const [openId, setOpenId] = useState<string | null>(null);
+
 
   if (loading) {
     return (
@@ -37,12 +39,14 @@ const UserFeedbackView: React.FC<Props> = ({ activeTab }) => {
         {(data as CoupDeCoeur[]).map((item, index) => (
           <InteractiveFeedbackCard
             key={item.id || `feedback-${index}`}
-            item={{
-              ...item,
-              type: "coupdecoeur",
-            }}
+            item={{ ...item, type: "coupdecoeur" }}
+            isOpen={openId === item.id}
+            onToggle={(id) =>
+              setOpenId((prev: string | null) => (prev === id ? null : id))
+            }
           />
         ))}
+
       </>
     );
   }
@@ -53,12 +57,14 @@ const UserFeedbackView: React.FC<Props> = ({ activeTab }) => {
         {(data as Suggestion[]).map((item, index) => (
           <InteractiveFeedbackCard
             key={item.id || `feedback-${index}`}
-            item={{
-              ...item,
-              type: "suggestion",
-            }}
+            item={{ ...item, type: "suggestion" }}
+            isOpen={openId === item.id}
+            onToggle={(id) =>
+              setOpenId((prev: string | null) => (prev === id ? null : id))
+            }
           />
         ))}
+
       </>
     );
   }
