@@ -126,6 +126,7 @@ const Home: React.FC = () => {
               onChange={setActiveFilter}
               availableFilters={availableFilters} />
           </aside>
+          
         )}
       </main>
     </div>

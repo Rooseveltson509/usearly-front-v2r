@@ -29,6 +29,17 @@
     align-items: center;
     gap: 2rem;
   }
+  .left {
+    margin-left: 5%; // Maintient la zone de droite complètement à droite
+    display: flex;
+    align-items: center;
+  }
+  .chat {
+    width: 330px;
+    margin-top: -210px;
+    opacity: 0.2;
+    width: 75%;
+  }
 
   .right {
     margin-left: auto; // Maintient la zone de droite complètement à droite
@@ -42,7 +53,7 @@
       .logo {
         position: absolute;
         animation: float 3s ease-in-out infinite;
-        opacity: 0.4;
+        opacity: 0.2;
 
         &.logo-big {
           top: -75px;
@@ -71,6 +82,8 @@
         }
       }
     }
+
+    
 
     @keyframes float {
       0%,
@@ -142,6 +155,15 @@
 // Colonne droite
 .right-panel {
   margin-top: -25px;
+
+  .separator {
+    height: 1px;
+    background: #e8e8e8;
+    width: 80%;
+    margin: 1.4rem auto;  // 'auto' centre horizontalement
+  
+    
+}
 }
 
 // Zone centrale

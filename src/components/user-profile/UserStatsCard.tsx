@@ -64,7 +64,7 @@ const UserStatsCard = () => {
           <span className="label">Usear Power</span>
           <span className="value">
             {loading ? "..." : stats?.usearPower}{" "}
-            <img src={scoreIcon} alt="scoreIcon" width="32" height="32" />
+            <img className="score-icon" src="../src/assets/images/U-score-icon.svg" alt="scoreIcon"  />
           </span>
         </div>
         <div className="badge">
