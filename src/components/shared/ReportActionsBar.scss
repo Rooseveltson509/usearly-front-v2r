@@ -2,11 +2,19 @@
   font-size: 1rem;
   color: var(--color-text-low-emphasis);
   font-weight: 700;
+  padding: 0 4px;
+
   &:hover {
     text-decoration: none !important;
   }
 }
 
+.count-right {
+  :hover {
+    text-decoration: underline;
+    text-underline-offset: 4px; // ajuste la distance
+  }
+}
 
 .report-actions-bar {
   width: 100%;
@@ -22,29 +30,34 @@
 
     .count-left,
     .count-right {
-      font-family: "arial";
-      font-size: 13px;
       display: flex;
       align-items: center;
-      gap: 0.5rem; // Espace plus large entre icône, commentaires et resignalements
+      gap: 0.25rem;
+      font-size: 13px;
+      font-family: "Arial";
       color: #686c7d;
-      font-weight: normal;
 
       :hover {
-        text-decoration: underline;
-        text-underline-offset: 2px;  // ajuste la distance
-        color:#111827;
+        color: #111827;
       }
-
-  
 
       .emoji-icon {
         font-size: 20px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1; // force la hauteur exacte
+        vertical-align: middle; // renfort inline
+        text-decoration: none;
       }
 
       .reaction-count {
-        margin-left: 4px;
-        font-weight: 500;
+        font-weight: bold;
+        line-height: 1; // force l'alignement vertical
+        margin: 0; // supprime tout margin résiduel
+        vertical-align: middle;
+        display: inline-flex; // garantit l'alignement
+        align-items: center;
       }
 
       svg {
@@ -109,20 +122,6 @@
 }
 
 .emoji-reaction-picker {
-  position: absolute;
-  bottom: 120%;
-  /* affiche au-dessus */
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 0.4rem;
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  padding: 0.4rem 0.6rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-  z-index: 20;
-
   .emoji-btn {
     background: none;
     border: none;

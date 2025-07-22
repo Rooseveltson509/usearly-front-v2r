@@ -1,0 +1,93 @@
+.user-challenge {
+  
+
+  border-radius: 12px;
+  padding: 1rem;
+  font-family: "Inter", sans-serif;
+  width: 260px;
+  margin-top: 70px;
+
+  h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    font-family: "Raleway";
+  }
+
+  h2 span.emoji {
+    font-size: 24px; // ajuste la taille selon besoin
+    line-height: 0; // optionnel pour mieux centrer verticalement
+    margin-right: 0; // espace avec le texte
+  }
+
+  &__banner {
+    background: #ffffff;
+    color: #000000;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 8px;
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    border: 1px solid #e0e0e0;
+
+    span {
+      margin-right: 0.4rem;
+    }
+
+    strong {
+      font-weight: bolder;
+      color: #7c3aed;
+    }
+  }
+
+  &__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    .friend {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.8rem;
+
+      &.current-user .avatar {
+        border: 2px solid #7c3aed;
+        padding: 2px;
+        border-radius: 50%;
+      }
+
+      .friend-info {
+        display: flex;
+        align-items: center;
+
+        .avatar {
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          margin-right: 0.6rem;
+        }
+
+        .handle {
+          display: block;
+          font-size: 0.75rem;
+          color: #6b7280;
+        }
+        strong {
+            font-weight: bolder;
+            font-size:14px;
+          }
+      }
+
+      .score {
+        background: #000;
+        color: #fff;
+        border-radius: 16px;
+        padding: 0.3rem 0.7rem;
+        font-size: 0.8rem;
+      }
+    }
+  }
+  
+}
