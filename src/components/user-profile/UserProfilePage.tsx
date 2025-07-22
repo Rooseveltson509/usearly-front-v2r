@@ -11,6 +11,7 @@ import badge from "../../assets/icons/Little-badge.svg";
 import UserGroupedReportsList from "../profile/UserGroupedReportsList";
 import UserFeedbackView from "../profile/UserFeedbackView";
 import UserChallenge from "../user-profile/UserChallenge";
+import UserImpact from "./UserImpact";
 
 const UserProfilePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<FeedbackType>("report");
@@ -28,6 +29,12 @@ const UserProfilePage: React.FC = () => {
         <div className="banner-content">
           <ContributionsOverview activeTab={activeTab} />
           <FeedbackTabs activeTab={activeTab} onTabChange={setActiveTab} />
+        </div>
+        <div className="left">
+          <img
+            className="chat"
+            src="../src/assets/images/bulle-deco-banner.svg"
+          />
         </div>
         {/* zone droite – pastilles statistiques*/}
         <div className="right">
@@ -54,7 +61,9 @@ const UserProfilePage: React.FC = () => {
         </div>
 
         <aside className="right-panel">
-          <UserChallenge/>
+          <UserChallenge />
+          <div className="separator"></div>
+          <UserImpact />
         </aside>
       </main>
     </div>

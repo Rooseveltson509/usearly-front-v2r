@@ -23,6 +23,7 @@ const MainTopBarHome: React.FC = () => {
       </div>
 
       {/* zone droite – pastilles statistiques */}
+      
       <div className="right">
         <div className="decorative-logos">
           <img src={big} alt="big" className="logo logo-big" />
