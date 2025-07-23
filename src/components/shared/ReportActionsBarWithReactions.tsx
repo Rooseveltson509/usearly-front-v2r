@@ -64,7 +64,7 @@ const ReportActionsBarWithReactions: React.FC<Props> = ({
         </div>
 
         <div className="count-right">
-          {commentsCount >= 0 && (
+          {commentsCount > 0 && (
             <span onClick={onCommentClick}>
               {commentsCount} {commentsCount === 1 ? "commentaire" : "commentaires"}
             </span>

@@ -4,12 +4,10 @@ import { getBrandLogo } from "@src/utils/brandLogos";
 import { getCategoryIconPathFromSubcategory } from "@src/utils/IconsUtils";
 import { formatDistance, formatDistanceToNow, parseISO, isAfter } from "date-fns";
 import { fr } from "date-fns/locale";
-import { Camera, ChevronDown, ChevronUp, FileImage, PictureInPicture, Image } from "lucide-react";
+import { ChevronDown, ChevronUp, Image } from "lucide-react";
 import type { UserGroupedReport } from "@src/types/Reports";
-import { pastelColors } from "../constants/pastelColors";
 import "./UserBrandBlock.scss";
 import ReportActionsBarWithReactions from "../shared/ReportActionsBarWithReactions";
-import CommentInputSection from "../report-desc-comment/CommentInputSection";
 import { getCommentsCountForDescription } from "@src/services/commentService";
 import CommentSection from "../comments/CommentSection";
 

@@ -3,13 +3,18 @@ import hotImg from "/assets/filters-reports/hot.png";
 import rageImg from "/assets/filters-reports/rage.png";
 import popularImg from "/assets/filters-reports/popular.png";
 import urgentImg from "/assets/filters-reports/carrying.png";
+import recentImg from "/assets/filters-reports/recent.png"; // 🆕 à ajouter
 
 const allFilters = [
+  {
+    key: "chrono",
+    label: "Les plus récents",
+    emoji: "🕒",
+    illustration: recentImg,
+  },
   { key: "hot", label: "Ça chauffe par ici", emoji: "🔥", illustration: hotImg },
   { key: "rage", label: "Les plus rageants", emoji: "😡", illustration: rageImg },
   { key: "popular", label: "Les plus populaires", emoji: "👍", illustration: popularImg },
-  { key: "urgent", label: "À shaker vite", emoji: "👀", illustration: urgentImg },
-
   { key: "urgent", label: "À shaker vite", emoji: "👀", illustration: urgentImg },
 ];
 
@@ -24,7 +29,12 @@ const HomeFilters = ({ selectedFilter, onChange, availableFilters }: HomeFilters
     ? allFilters.filter((f) => availableFilters.includes(f.key))
     : allFilters;
 
-  const selected = filtersToShow.find((f) => f.key === selectedFilter);
+  const selectedKey = selectedFilter === "" ? "chrono" : selectedFilter;
+  const selected = filtersToShow.find((f) => f.key === selectedKey);
+
+  const isActive = (key: string) =>
+    (key === "chrono" && selectedFilter === "") || key === selectedFilter;
+
 
   return (
     <div className="home-filters">
@@ -37,13 +47,14 @@ const HomeFilters = ({ selectedFilter, onChange, availableFilters }: HomeFilters
         {filtersToShow.map((f) => (
           <button
             key={f.key}
-            className={`filter-line ${selectedFilter === f.key ? "active" : ""}`}
+            className={`filter-line ${isActive(f.key) ? "active" : ""}`}
             onClick={() => onChange(f.key)}
           >
             <span className="emoji">{f.emoji}</span>
             <span className="label">{f.label}</span>
           </button>
         ))}
+
       </div>
     </div>
   );

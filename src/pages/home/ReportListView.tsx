@@ -2,7 +2,11 @@ import ChronologicalReportList from "@src/components/report-grouped/Chronologica
 import ChronoReportCard from "@src/components/report-grouped/report-by-date/ChronoReportCard";
 import HomeBrandBlock from "@src/components/home-grouped-reports-list/HomeBrandBlock";
 import PopularReportCard from "@src/components/report-grouped/reports-popular/PopularReportCard";
-import type { ExplodedGroupedReport, PopularGroupedReport, PublicGroupedReport } from "@src/types/Reports";
+import type {
+  ExplodedGroupedReport,
+  PopularGroupedReport,
+  PublicGroupedReport,
+} from "@src/types/Reports";
 
 interface Props {
   filter: string;
@@ -14,6 +18,10 @@ interface Props {
   rageData: Record<string, PopularGroupedReport[]>;
   expandedItems: Record<string, boolean>;
   handleToggle: (key: string) => void;
+  loadingChrono: boolean;
+  loadingPopular: boolean;
+  loadingPopularEngagement: boolean;
+  loadingRage: boolean;
 }
 
 const ReportListView: React.FC<Props> = ({
@@ -26,14 +34,23 @@ const ReportListView: React.FC<Props> = ({
   rageData,
   expandedItems,
   handleToggle,
+  loadingChrono,
+  loadingPopular,
+  loadingPopularEngagement,
+  loadingRage,
 }) => {
-  if (filter !== "") {
-    const groupedByDay =
-      filter === "popular" ? popularEngagementData :
-      filter === "rage" ? rageData :
-      popularData;
+  const isPopularFilter = ["hot", "popular", "rage", "urgent"].includes(filter);
+  const isChronoFilter = filter === "chrono";
 
-    if (Object.keys(groupedByDay || {}).length === 0) {
+  if (isPopularFilter) {
+    const { groupedByDay, isLoading } =
+      filter === "popular"
+        ? { groupedByDay: popularEngagementData, isLoading: loadingPopularEngagement }
+        : filter === "rage"
+        ? { groupedByDay: rageData, isLoading: loadingRage }
+        : { groupedByDay: popularData, isLoading: loadingPopular };
+
+    if (!isLoading && Object.keys(groupedByDay || {}).length === 0) {
       return (
         <div className="no-popular-results">
           <p>Aucun signalement ne correspond à ce filtre pour le moment.</p>
@@ -60,7 +77,15 @@ const ReportListView: React.FC<Props> = ({
     );
   }
 
-  if (viewMode === "chrono") {
+  if (viewMode === "chrono" && (filter === "" || isChronoFilter)) {
+    if (!loadingChrono && Object.keys(chronoData || {}).length === 0) {
+      return (
+        <div className="no-popular-results">
+          <p>Aucun signalement récent disponible.</p>
+        </div>
+      );
+    }
+
     return (
       <ChronologicalReportList
         groupedByDay={chronoData}
@@ -79,8 +104,10 @@ const ReportListView: React.FC<Props> = ({
     );
   }
 
-  // Flat view
-  if (flatData.length === 0) return <p>Aucun report disponible.</p>;
+  // Flat view sans filtre
+  if (flatData.length === 0) {
+    return <p>Aucun report disponible.</p>;
+  }
 
   const grouped = flatData.reduce<Record<string, typeof flatData>>((acc, report) => {
     if (!acc[report.marque]) acc[report.marque] = [];

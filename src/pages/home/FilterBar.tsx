@@ -1,8 +1,8 @@
 import { SlidersHorizontal } from "lucide-react";
 
 interface Props {
-  filter: "hot" | "rage" | "popular" | "urgent" | "";
-  setFilter: React.Dispatch<React.SetStateAction<"hot" | "rage" | "popular" | "urgent" | "">>;
+  filter: "hot" | "rage" | "popular" | "urgent" | "chrono" | "";
+  setFilter: React.Dispatch<React.SetStateAction<"hot" | "rage" | "popular" | "urgent" | "chrono" | "">>;
   viewMode: "flat" | "chrono";
   setViewMode: (val: "flat" | "chrono") => void;
   setSelectedBrand: (val: string) => void;
@@ -17,6 +17,7 @@ interface Props {
   selectedCategory: string;
   availableBrands: string[];
   availableCategories: string[];
+  labelOverride?: string; // ✅ Ajout ici
 }
 
 const FilterBar: React.FC<Props> = ({
@@ -36,38 +37,49 @@ const FilterBar: React.FC<Props> = ({
   selectedCategory,
   availableBrands,
   availableCategories,
+  labelOverride, // ✅ Récupération ici
 }) => {
   return (
     <>
       <div className={`select-filter-wrapper ${filter === "hot" ? "hot-active" : ""}`}>
         <select
           className="select-filter"
-          value={filter !== "" ? filter : viewMode}
+          value={filter}
           onChange={(e) => {
-            const value = e.target.value;
+            const value = e.target.value as "hot" | "rage" | "popular" | "urgent" | "chrono" | "";
+
             setSelectedBrand("");
             setSelectedCategory("");
 
-            if (["hot", "rage", "popular", "urgent"].includes(value)) {
-              setFilter(value as any);
+            if (value === "chrono") {
+              setFilter("chrono");
+              setViewMode("chrono");
+              onViewModeChange?.("chrono");
+              setActiveFilter(""); // <- ici on vide le vrai filtre backend
+            } else if (["hot", "rage", "popular", "urgent"].includes(value)) {
+              setFilter(value);
               setViewMode("chrono");
               onViewModeChange?.("chrono");
               setActiveFilter(value);
             } else {
+              // fallback éventuel
               setFilter("");
-              setViewMode(value as "flat" | "chrono");
-              onViewModeChange?.(value as "flat" | "chrono");
+              setViewMode("flat");
+              onViewModeChange?.("flat");
               setActiveFilter("");
             }
           }}
         >
-          <option value="flat">🏷️ Les plus récents</option>
-          <option value="chrono">🕒 Vue par date</option>
-          {isHotFilterAvailable && <option value="hot"> Ça chauffe par ici</option>}
+          <option value="chrono">🏷️ Les plus récents</option>
+          {isHotFilterAvailable && (
+            <option value="hot">🔥 Ça chauffe par ici</option>
+          )}
           <option value="rage">😡 Les plus rageants</option>
           <option value="popular">👍 Les plus populaires</option>
           <option value="urgent">👀 À shaker vite</option>
         </select>
+
+
       </div>
 
       <div className="filter-dropdown-wrapper" ref={dropdownRef}>

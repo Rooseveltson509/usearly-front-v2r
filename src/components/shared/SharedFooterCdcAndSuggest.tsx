@@ -5,7 +5,6 @@ import EmojiUrlyReactionPicker from "@src/utils/EmojiUrlyReactionPicker";
 import { getEmojisForType } from "@src/components/constants/emojiMapByType";
 import DescriptionCommentSection from "../report-desc-comment/DescriptionCommentSection";
 import "./SharedFooterCdcAndSuggest.scss";
-import { useAuth } from "@src/services/AuthContext";
 
 interface Props {
     userId: string;

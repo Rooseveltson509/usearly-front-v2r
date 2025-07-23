@@ -14,8 +14,10 @@ const Home: React.FC = () => {
   const [activeTab, setActiveTab] = useState<FeedbackType>("report");
   const [feedbackData, setFeedbackData] = useState<(CoupDeCoeur | Suggestion)[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [activeFilter, setActiveFilter] = useState("");
-  const [availableFilters, setAvailableFilters] = useState<string[]>(["rage", "popular", "urgent"]); // par défaut sans "hot"
+
+  const [activeFilter, setActiveFilter] = useState("chrono");
+  const [viewMode, setViewMode] = useState<"flat" | "chrono">("chrono");
+  const [availableFilters, setAvailableFilters] = useState<string[]>(["chrono", "rage", "popular", "urgent"]);
 
   useEffect(() => {
     const checkHotFilter = async () => {
@@ -34,25 +36,16 @@ const Home: React.FC = () => {
     checkHotFilter();
   }, []);
 
-
-
   useEffect(() => {
     const fetchData = async () => {
-      console.log("Fetching for tab:", activeTab);
       if (activeTab === "coupdecoeur" || activeTab === "suggestion") {
         setIsLoading(true);
         try {
-          let res;
-          if (activeTab === "coupdecoeur") {
-            res = await getPublicCoupsDeCoeur(1, 50);
-          } else if (activeTab === "suggestion") {
-            res = await getPublicSuggestions(1, 50);
-          }
-          console.log("API response for", activeTab, ":", res);
+          const res = activeTab === "coupdecoeur"
+            ? await getPublicCoupsDeCoeur(1, 50)
+            : await getPublicSuggestions(1, 50);
 
           const dataToSet = activeTab === "coupdecoeur" ? res.coupdeCoeurs : res.suggestions;
-          console.log("Data to set for", activeTab, ":", dataToSet);
-
           setFeedbackData(dataToSet || []);
         } catch (e) {
           console.error("Erreur fetch feedback:", e);
@@ -94,10 +87,10 @@ const Home: React.FC = () => {
             <HomeGroupedReportsList
               activeTab={activeTab}
               activeFilter={activeFilter}
-              onViewModeChange={() => setActiveFilter("")}
+              viewMode={viewMode}
+              onViewModeChange={setViewMode}
               setActiveFilter={setActiveFilter}
             />
-
           ) : (
             !isLoading && (
               <FeedbackView
@@ -120,13 +113,24 @@ const Home: React.FC = () => {
             )
           )}
         </div>
-       {activeTab === "report" && (
+
+        {activeTab === "report" && (
           <aside className="right-panel">
-            <HomeFilters selectedFilter={activeFilter}
-              onChange={setActiveFilter}
-              availableFilters={availableFilters} />
+            <HomeFilters
+              selectedFilter={activeFilter}
+              onChange={(key) => {
+                if (key === "chrono") {
+                  setActiveFilter(""); // <-- c'est ça la clé !
+                  setViewMode("chrono");
+                } else {
+                  setActiveFilter(key);
+                  setViewMode("flat");
+                }
+
+              }}
+              availableFilters={availableFilters}
+            />
           </aside>
-          
         )}
       </main>
     </div>
