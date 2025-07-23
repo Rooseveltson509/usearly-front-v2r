@@ -7,16 +7,23 @@
 }
 
 .purple-banner {
-  position: relative;
+  position: relative; // Permet à .banner-content de se positionner par rapport à .main-top-bar
   display: flex;
   align-items: center;
   width: 100%;
-  height: 240px;
-  background: #1b1839;
+  height: 320px;
+  background: rgb(14, 4, 49);
+
+  .chat {
+    opacity: 0.1;
+    position: relative;
+    top: -25px;
+    width: 330px;
+  }
 
   .text {
     position: absolute;
-    top: 200px;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     color: #fff;
@@ -28,12 +35,87 @@
     gap: 8px;
     z-index: 999;
   }
-}
 
-.banner-content {
-  width: 100%;
-  margin: auto;
-  padding: 0 1rem;
+  .feedback-tabs {
+    display: flex;
+    gap: 1rem;
+    top: 16rem;
+    margin-bottom: 1.5rem;
+    justify-content: center;
+    position: absolute;
+    left: 35%;
+  }
+
+  .text__decoration {
+    position: relative;
+    display: inline-block;
+
+    .emoji {
+      position: absolute;
+      bottom: 35px;
+      right: -4px;
+      transition: transform 0.5s ease;
+      &:hover {
+        transform: scale(1.25);
+      }
+    }
+
+    .bulle {
+      margin: 0 10px -35px 5px;
+      width: 220px;
+    }
+  }
+  .right {
+    margin-left: auto; // Maintient la zone de droite complètement à droite
+    display: flex;
+    align-items: center;
+
+    .decorative-logos {
+      position: relative;
+      top: -30px;
+
+      .logo {
+        position: absolute;
+        animation: float 3s ease-in-out infinite;
+        opacity: 0.1;
+
+        &.logo-big {
+          top: -75px;
+          right: 90px;
+          animation-delay: 0s;
+        }
+
+        &.logo-medium {
+          top: 0px;
+          right: 260px;
+          animation-delay: 1s;
+        }
+
+        &.logo-small {
+          top: 100px;
+          right: 200px;
+          animation-delay: 2s;
+        }
+        &.logo-badge {
+          object-fit: cover;
+          width: 120px;
+          top: -10px;
+          right: 250px;
+          animation: none;
+        }
+      }
+    }
+
+    @keyframes float {
+      0%,
+      100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-5px);
+      }
+    }
+  }
 }
 
 .user-main-content {

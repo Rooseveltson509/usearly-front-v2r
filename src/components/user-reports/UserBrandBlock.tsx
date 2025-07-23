@@ -1,16 +1,29 @@
- import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import DescriptionCommentSection from "../report-desc-comment/DescriptionCommentSection";
 import { getBrandLogo } from "@src/utils/brandLogos";
 import { getCategoryIconPathFromSubcategory } from "@src/utils/IconsUtils";
-import { formatDistance, formatDistanceToNow, parseISO, isAfter } from "date-fns";
+import {
+  formatDistance,
+  formatDistanceToNow,
+  parseISO,
+  isAfter,
+} from "date-fns";
 import { fr } from "date-fns/locale";
-import { ChevronDown, ChevronUp, Image } from "lucide-react";
+import {
+  Camera,
+  ChevronDown,
+  ChevronUp,
+  FileImage,
+  PictureInPicture,
+  Image,
+} from "lucide-react";
 import type { UserGroupedReport } from "@src/types/Reports";
+import { pastelColors } from "../constants/pastelColors";
 import "./UserBrandBlock.scss";
 import ReportActionsBarWithReactions from "../shared/ReportActionsBarWithReactions";
+import CommentInputSection from "../report-desc-comment/CommentInputSection";
 import { getCommentsCountForDescription } from "@src/services/commentService";
 import CommentSection from "../comments/CommentSection";
-
 
 interface Props {
   brand: string;
@@ -21,18 +34,36 @@ interface Props {
   onToggle: () => void;
 }
 
-const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, onToggle, siteUrl }) => {
+const UserBrandBlock: React.FC<Props> = ({
+  brand,
+  reports,
+  userProfile,
+  isOpen,
+  onToggle,
+  siteUrl,
+}) => {
   const [expandedSub, setExpandedSub] = useState<string | null>(null);
-  const [expandedOthers, setExpandedOthers] = useState<Record<string, boolean>>({});
+  const [expandedOthers, setExpandedOthers] = useState<Record<string, boolean>>(
+    {}
+  );
   const [showAll, setShowAll] = useState<Record<string, boolean>>({});
   const [modalImage, setModalImage] = useState<string | null>(null);
   const [showComments, setShowComments] = useState<Record<string, boolean>>({});
-  const [showReactions, setShowReactions] = useState<Record<string, boolean>>({});
-  const [commentsCounts, setCommentsCounts] = useState<Record<string, number>>({});
-  const [localCommentsCounts, setLocalCommentsCounts] = useState<Record<string, number>>({});
-  const [refreshCommentsKeys, setRefreshCommentsKeys] = useState<Record<string, number>>({});
-  const [signalementFilters, setSignalementFilters] = useState<Record<string, "pertinent" | "recents" | "anciens">>({});
-
+  const [showReactions, setShowReactions] = useState<Record<string, boolean>>(
+    {}
+  );
+  const [commentsCounts, setCommentsCounts] = useState<Record<string, number>>(
+    {}
+  );
+  const [localCommentsCounts, setLocalCommentsCounts] = useState<
+    Record<string, number>
+  >({});
+  const [refreshCommentsKeys, setRefreshCommentsKeys] = useState<
+    Record<string, number>
+  >({});
+  const [signalementFilters, setSignalementFilters] = useState<
+    Record<string, "pertinent" | "recents" | "anciens">
+  >({});
 
   useEffect(() => {
     const fetchAllCounts = async () => {
@@ -80,15 +111,15 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
     <div className={`brand-block ${isOpen ? "open" : "close"}`}>
       <div className="brand-header" onClick={onToggle}>
         <p className="brand-reports-count">
-          <strong>{reports.length}</strong> signalement{reports.length > 1 ? "s" : ""} sur{" "}
-          <strong>{brand}</strong>
+          <strong>{reports.length}</strong> signalement
+          {reports.length > 1 ? "s" : ""} sur <strong>{brand}</strong>
         </p>
         <p className="date-card">
           {mostRecentDate
             ? `Il y a ${formatDistance(mostRecentDate, new Date(), {
-              locale: fr,
-              includeSeconds: true,
-            }).replace("environ ", "")}`
+                locale: fr,
+                includeSeconds: true,
+              }).replace("environ ", "")}`
             : "Date inconnue"}
         </p>
 
@@ -157,7 +188,6 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                     <h4>{sub.subCategory}</h4>
                   </div>
                   <div className="subcategory-right">
-                   
                     {expandedSub !== sub.subCategory && (
                       <div className="badge-count">{sub.count}</div>
                     )}

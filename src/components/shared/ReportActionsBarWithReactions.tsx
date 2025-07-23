@@ -23,15 +23,18 @@ const ReportActionsBarWithReactions: React.FC<Props> = ({
   onCommentClick,
   onToggleSimilarReports,
 }) => {
-  const { getCount, handleReact } = useReactionsForDescription(userId, descriptionId);
+  const { getCount, handleReact } = useReactionsForDescription(
+    userId,
+    descriptionId
+  );
   const emojis = getEmojisForType("report");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   let hoverTimeout: NodeJS.Timeout;
 
   // ✅ Récupérer toutes les réactions avec leur count
   const allReactions = emojis
-    .map(e => ({ emoji: e.emoji, count: getCount(e.emoji) }))
-    .filter(r => r.count > 0)
+    .map((e) => ({ emoji: e.emoji, count: getCount(e.emoji) }))
+    .filter((r) => r.count > 0)
     .sort((a, b) => b.count - a.count);
 
   const topThree = allReactions.slice(0, 3);
@@ -66,7 +69,8 @@ const ReportActionsBarWithReactions: React.FC<Props> = ({
         <div className="count-right">
           {commentsCount > 0 && (
             <span onClick={onCommentClick}>
-              {commentsCount} {commentsCount === 1 ? "commentaire" : "commentaires"}
+              {commentsCount}{" "}
+              {commentsCount === 1 ? "commentaire" : "commentaires"}
             </span>
           )}
 
@@ -79,11 +83,11 @@ const ReportActionsBarWithReactions: React.FC<Props> = ({
               className="resignalements-link"
               onClick={onToggleSimilarReports}
             >
-              {reportsCount} {reportsCount === 1 ? "signalement" : "signalements"}
+              {reportsCount}{" "}
+              {reportsCount === 1 ? "signalement" : "signalements"}
             </span>
           )}
         </div>
-
       </div>
 
       <div className="separator" />
