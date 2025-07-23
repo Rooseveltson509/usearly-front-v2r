@@ -213,8 +213,8 @@
     transition: all 0.3s ease;
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.062);
-      border: 1px solid #606060;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border: 1px solid #eeeeee;
     }
   }
   .date-card {
@@ -299,7 +299,7 @@
     }
     .subcategory-block {
       border: 1px solid #ffffff;
-      padding: 4px 12px;
+      padding: 4px 16px;
       margin: 4px 8px;
       border-radius: 8px;
       overflow: hidden;

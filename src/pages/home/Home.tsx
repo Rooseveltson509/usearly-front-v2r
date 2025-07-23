@@ -1,18 +1,32 @@
 import React, { useState, useEffect } from "react";
 import "./Home.scss";
 import ContributionsOverview from "@src/components/user-profile/ContributionsOverview";
-import FeedbackTabs, { type FeedbackType } from "@src/components/user-profile/FeedbackTabs";
+import FeedbackTabs, {
+  type FeedbackType,
+} from "@src/components/user-profile/FeedbackTabs";
 import UserStatsCard from "@src/components/user-profile/UserStatsCard";
 import HomeGroupedReportsList from "./HomeGroupedReportsList";
 import FeedbackView from "@src/components/feedbacks/FeedbackView";
-import { getGroupedReportsByHot, getPublicCoupsDeCoeur, getPublicSuggestions } from "@src/services/feedbackService";
+import {
+  getGroupedReportsByHot,
+  getPublicCoupsDeCoeur,
+  getPublicSuggestions,
+} from "@src/services/feedbackService";
 import type { CoupDeCoeur, Suggestion } from "@src/types/Reports";
 import SqueletonAnime from "@src/components/loader/SqueletonAnime";
 import HomeFilters from "./HomeFilters";
+import bulleIcon from "../../assets/images/bulle-top-bar.png";
+import emojiIcon from "../../assets/images/emoji-top-bar.png";
+import chatIcon from "../../assets/images/chat-top-bar.svg";
+import big from "../../assets/images/big.svg";
+import medium from "../../assets/images/medium.svg";
+import small from "../../assets/images/small.svg";
 
-const Home: React.FC = () => {
+function Home() {
   const [activeTab, setActiveTab] = useState<FeedbackType>("report");
-  const [feedbackData, setFeedbackData] = useState<(CoupDeCoeur | Suggestion)[]>([]);
+  const [feedbackData, setFeedbackData] = useState<
+    (CoupDeCoeur | Suggestion)[]
+  >([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [activeFilter, setActiveFilter] = useState("chrono");
@@ -65,10 +79,27 @@ const Home: React.FC = () => {
     <div className="home-page">
       {/* Bandeau violet haut */}
       <div className="purple-banner">
-        <div className="banner-content">
-          <ContributionsOverview activeTab={activeTab} />
-          <FeedbackTabs activeTab={activeTab} onTabChange={setActiveTab} />
+        {/* zone gauche – mascotte */}
+        <img src={chatIcon} alt="chatIcon" className="chat" />
+        {/* message central */}
+        <div className="text">
+          <span>Likez, shakez, faites&nbsp;</span>
+          <div className="text__decoration">
+            <img src={bulleIcon} alt="bulleIcon" className="bulle" />
+            <img src={emojiIcon} alt="emojiIcon" className="emoji" />
+          </div>
+          <span>les marques !</span>
         </div>
+        {/* zone droite – pastilles statistiques */}
+
+        <div className="right">
+          <div className="decorative-logos">
+            <img src={big} alt="big" className="logo logo-big" />
+            <img src={medium} alt="medium" className="logo logo-medium" />
+            <img src={small} alt="small" className="logo logo-small" />
+          </div>
+        </div>
+        {<FeedbackTabs activeTab={activeTab} onTabChange={setActiveTab} /> }
       </div>
 
       {/* Contenu principal */}
@@ -78,9 +109,14 @@ const Home: React.FC = () => {
         </aside>
 
         <div className="feedback-list-wrapper">
-          <div className="purple-background" />
+          <div className="content-background" />
           {activeTab !== "report" && isLoading && (
-            <SqueletonAnime loaderRef={{ current: null }} loading={true} hasMore={false} error={null} />
+            <SqueletonAnime
+              loaderRef={{ current: null }}
+              loading={true}
+              hasMore={false}
+              error={null}
+            />
           )}
 
           {activeTab === "report" ? (
@@ -103,9 +139,9 @@ const Home: React.FC = () => {
                   error: null,
                 }}
                 openId={null}
-                setOpenId={() => { }}
+                setOpenId={() => {}}
                 groupOpen={{}}
-                setGroupOpen={() => { }}
+                setGroupOpen={() => {}}
                 selectedBrand=""
                 selectedCategory=""
                 renderCard={() => <></>}
@@ -113,7 +149,6 @@ const Home: React.FC = () => {
             )
           )}
         </div>
-
         {activeTab === "report" && (
           <aside className="right-panel">
             <HomeFilters
@@ -135,6 +170,6 @@ const Home: React.FC = () => {
       </main>
     </div>
   );
-};
+}
 
 export default Home;

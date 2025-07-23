@@ -3,24 +3,25 @@
 .feedback-tabs {
   display: flex;
   gap: 1rem;
-  margin-top: 1rem;
-  margin-bottom: 1.5rem;
+  margin-top: 0rem;
+  margin-bottom: 2.5rem;
   justify-content: center;
 
   .tab-btn {
     padding: 0.6rem 1.2rem;
     border-radius: 2rem;
     border: 2px solid transparent;
-    background-color: $white;
-    color: #333;
+    background-color: #f5f6fa1c;
+    color: #ffffff73;
     font-size: 14px;
-    font-weight: 600;
+    /* font-weight: 600; */
     cursor: pointer;
     transition: all 0.2s ease;
     font-family: Inter;
 
     &:hover {
-      border: 2px solid white;
+      border: 1px solid white;
+      color: #ffffff;
     }
 
     &.active {

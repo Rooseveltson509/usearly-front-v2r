@@ -5,15 +5,18 @@
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 1rem 3rem 1rem 1rem;
-  height: 260px;
-  background: $tertiary;
-
-  
+  height: 210px;
+  background: rgb(14, 4, 49);
+  .chat {
+    opacity: 0.1;
+    position: relative;
+    top: -40px;
+    width:340px;
+  }
 
   .text {
     position: absolute;
-    top: 50%;
+    top: 42%;
     left: 50%;
     transform: translate(-50%, -50%);
     color: #fff;
@@ -21,7 +24,6 @@
     font-size: 36px;
     font-weight: 200;
     line-height: 130%;
-    display: flex;
     align-items: center;
     gap: 8px; // tu peux garder le gap si tu veux un peu d’espace entre les mots
     z-index: 999;
@@ -32,8 +34,8 @@
 
       .emoji {
         position: absolute;
-        bottom: 30px;
-        right: 2px;
+        bottom: 35px;
+        right: -4px;
         transition: transform 0.5s ease;
         &:hover {
           transform: scale(1.25);
@@ -41,7 +43,8 @@
       }
 
       .bulle {
-        margin: 0 0 -25px 0px;
+        margin: 0 10px -35px 5px;
+        width: 220px;
       }
     }
   }

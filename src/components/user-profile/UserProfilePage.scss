@@ -16,7 +16,7 @@
   width: 100%;
   padding: 1rem 0;
   height: 260px;
-  background: $tertiary;
+  background: rgb(14, 4, 49);
   margin-top: 50px;
 
   .banner-content {
@@ -35,10 +35,10 @@
     align-items: center;
   }
   .chat {
-    width: 330px;
-    margin-top: -210px;
+    width: 260px;
+    margin-top: -170px;
     opacity: 0.2;
-    width: 75%;
+    margin-left: -50px;
   }
 
   .right {
@@ -82,8 +82,6 @@
         }
       }
     }
-
-    
 
     @keyframes float {
       0%,
@@ -149,7 +147,7 @@
 
 // Colonne gauche
 .left-panel {
-  margin-top: -100px;
+  margin-top: -65px;
 }
 
 // Colonne droite
@@ -160,10 +158,8 @@
     height: 1px;
     background: #e8e8e8;
     width: 80%;
-    margin: 1.4rem auto;  // 'auto' centre horizontalement
-  
-    
-}
+    margin: 1.4rem auto; // 'auto' centre horizontalement
+  }
 }
 
 // Zone centrale
@@ -171,7 +167,7 @@
   display: flex;
   flex-direction: column;
   width: 550px;
-  margin: 16px 0;
+  margin: 0px 0;
 }
 
 // ===== Responsive =====
