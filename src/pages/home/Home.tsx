@@ -200,7 +200,7 @@ function Home() {
         {activeTab === "coupdecoeur" && (
           <aside className="right-panel">
             <HomeFiltersCdc
-             
+
             />
           </aside>
         )}
@@ -208,7 +208,7 @@ function Home() {
         {activeTab === "suggestion" && (
           <aside className="right-panel">
             <HomeFiltersSuggestion
-             
+
             />
           </aside>
         )}

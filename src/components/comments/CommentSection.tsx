@@ -5,6 +5,7 @@ import { useAuth } from "@src/services/AuthContext";
 import CommentForm from "./CommentForm";
 import CommentList from "./CommentList";
 import Swal from "sweetalert2";
+import { getFullAvatarUrl } from "@src/utils/avatarUtils";
 
 interface Comment {
     id: string;
@@ -29,8 +30,6 @@ const CommentSection: React.FC<Props> = ({ descriptionId, type, onCommentAdded, 
     const [filter, setFilter] = useState<"pertinent" | "recents" | "anciens">("pertinent");
     const { userProfile } = useAuth();
 
-    const getFullAvatarUrl = (path: string | null) =>
-        path ? `${import.meta.env.VITE_API_BASE_URL}/${path}` : "/default-avatar.png";
 
     const buildCommentEndpoint = () => {
         if (type === "report") return `/descriptions/${descriptionId}/comments`;

@@ -5,10 +5,16 @@ import "./UserAccount.scss";
 import { showToast } from "@src/utils/toastUtils";
 
 
-const getFullAvatarUrl = (path: string | null) => {
+/* const getFullAvatarUrl = (path: string | null) => {
     if (!path) return "/default-avatar.png";
     return `${import.meta.env.VITE_API_BASE_URL}/${path}`;
+}; */
+
+const getFullAvatarUrl = (path: string | null) => {
+    if (!path) return "/default-avatar.png";
+    return path.startsWith("http") ? path : `${import.meta.env.VITE_API_BASE_URL}/${path}`;
 };
+
 
 const UserAccount = () => {
     const { userProfile, fetchUserProfile, logout } = useAuth();
@@ -50,7 +56,7 @@ const UserAccount = () => {
             formData.append("pseudo", pseudo);
             formData.append("born", birthdate);
             formData.append("gender", gender);
-            if (avatarFile) formData.append("avatar", avatarFile);
+            if (avatarFile) formData.append("image", avatarFile);
 
             await updateUserProfile(formData);
             await fetchUserProfile();
@@ -96,7 +102,11 @@ const UserAccount = () => {
                 <img
                     src={avatarPreview || getFullAvatarUrl(userProfile?.avatar || null)}
                     alt="Avatar"
+                    onError={(e) => {
+                        (e.target as HTMLImageElement).src = "/default-avatar.png";
+                    }}
                 />
+
             </div>
 
             <input type="file" accept="image/*" onChange={handleAvatarChange} />
