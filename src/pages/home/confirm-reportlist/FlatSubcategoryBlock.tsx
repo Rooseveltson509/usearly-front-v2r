@@ -32,6 +32,7 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
     const initialDescription = descriptions[0];
     const { comments } = useCommentsForDescription(initialDescription.id, "report", refreshKey);
     const [visibleDescriptionsCount, setVisibleDescriptionsCount] = useState(2); // par défaut 2 visibles
+    const [showCapture, setShowCapture] = useState(false);
 
 
     const toggleExpanded = () => {
@@ -107,30 +108,30 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
                     <div className="main-description">
                         <p className="description-text">{initialDescription.description}</p>
                         {initialDescription.capture && (
-                            <>
+                            <div className="screenshot-section">
                                 <button
                                     className="show-capture-button"
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        setModalImage(initialDescription.capture);
+                                        setShowCapture((prev) => !prev);
                                     }}
                                 >
                                     <Image size={16} style={{ marginRight: 6 }} />
-                                    Voir la capture
+                                    {showCapture ? "Masquer la capture" : "Voir la capture"}
                                 </button>
 
-                                {modalImage && modalImage === initialDescription.capture && (
-                                    <div className="capture-modal" onClick={() => setModalImage(null)}>
+                                {showCapture && (
+                                    <div className="inline-capture">
                                         <img
-                                            src={modalImage || undefined}
+                                            src={initialDescription.capture}
                                             alt="Capture"
-                                            className="capture-modal-img"
-                                            onClick={(e) => e.stopPropagation()}
+                                            className="inline-capture-img"
                                         />
                                     </div>
                                 )}
-                            </>
+                            </div>
                         )}
+
                     </div>
 
                     <ReportActionsBarWithReactions
