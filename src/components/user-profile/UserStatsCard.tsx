@@ -6,11 +6,8 @@ import scoreIcon from "../../assets/images/testLogo.svg";
 import badge from "../../assets/icons/Little-badge.png";
 import Uicon from "/assets/U-score-icon.svg";
 import { useState } from "react";
+import { getFullAvatarUrl } from "@src/utils/avatarUtils";
 
-const getFullAvatarUrl = (path: string | null) => {
-  if (!path) return "/default-avatar.png";
-  return `${import.meta.env.VITE_API_BASE_URL}/${path}`;
-};
 
 const UserStatsCard = () => {
   const { userProfile } = useAuth();
