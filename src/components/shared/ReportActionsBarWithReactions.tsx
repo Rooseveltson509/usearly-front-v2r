@@ -4,6 +4,7 @@ import { useReactionsForDescription } from "@src/hooks/useReactionsForDescriptio
 import { getEmojisForType } from "@src/components/constants/emojiMapByType";
 import "./ReportActionsBar.scss";
 import EmojiUrlyReactionPicker from "@src/utils/EmojiUrlyReactionPicker";
+import statutIcon from "/assets/statut-icon.svg";
 
 interface Props {
   userId: string;
@@ -133,7 +134,7 @@ const ReportActionsBarWithReactions: React.FC<Props> = ({
         </div>
         <div className="status-right">
           <img
-            src="src/assets/icons/statut-icon.svg"
+            src={statutIcon}
             className="icon-statut"
           />
           {/* <CheckCircle size={16} color="#2563eb" /> */}
