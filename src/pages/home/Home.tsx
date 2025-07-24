@@ -21,6 +21,9 @@ import chatIcon from "../../assets/images/chat-top-bar.svg";
 import big from "../../assets/images/big.svg";
 import medium from "../../assets/images/medium.svg";
 import small from "../../assets/images/small.svg";
+import HomeFiltersCdc from "./HomeFiltersCdc";
+import HomeFiltersSuggestion from "./HomeFiltersSuggestion";
+
 
 function Home() {
   const [activeTab, setActiveTab] = useState<FeedbackType>("report");
@@ -116,7 +119,7 @@ function Home() {
         </aside>
 
         <div className="feedback-list-wrapper">
-          <div className="content-background" />
+          {/* <div className="content-background" /> */}
           {activeTab !== "report" && isLoading && (
             <SqueletonAnime
               loaderRef={{ current: null }}
@@ -192,6 +195,21 @@ function Home() {
               availableFilters={availableFilters}
             />
 
+          </aside>
+        )}
+        {activeTab === "coupdecoeur" && (
+          <aside className="right-panel">
+            <HomeFiltersCdc
+             
+            />
+          </aside>
+        )}
+
+        {activeTab === "suggestion" && (
+          <aside className="right-panel">
+            <HomeFiltersSuggestion
+             
+            />
           </aside>
         )}
       </main>

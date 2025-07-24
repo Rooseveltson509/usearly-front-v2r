@@ -4,9 +4,9 @@
 .interactive-feedback-card {
   background: #fff;
   border-radius: 8px;
-  box-shadow: 0 2px 2px 0px rgba(0, 0, 0, 0.09);
+  box-shadow: 0 2px 2px 0px rgba(0, 0, 0, 0.1);
   border: 1px solid rgb(243, 243, 243);
-  padding: 4px 16px;
+  padding: 4px 8px;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   border: 1px solid rgba(0, 0, 0, 0.04);
@@ -48,14 +48,15 @@
       display: flex;
       align-items: center;
       gap: 0.4rem;
-      flex: 1; // prend tout l'espace disponible
+      flex: 1; // Ajout essentiel pour qu'il prenne le reste de la place
+      width: 240px; // ou une valeur fixe si nécessaire (ex: 200px)
 
       .emoji {
         font-size: 36px;
         flex-shrink: 0;
       }
 
-      strong {
+      p {
         font-weight: 800;
         color: #24292f;
         overflow: hidden;
@@ -79,8 +80,8 @@
         font-family: Inter;
         color: #a0aec0;
         text-align: left;
-        margin-left: 0;
-        width: 140px;
+        margin-left: 40px;
+        width: 130px;
       }
 
       .brand-logo {

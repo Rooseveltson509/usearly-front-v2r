@@ -95,8 +95,16 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
           className="card-header"
           onClick={(e) => {
             const tag = (e.target as HTMLElement).tagName;
-            const isInteractive =
-              ["BUTTON", "A", "IMG", "INPUT", "TEXTAREA", "SELECT", "SVG", "PATH"].includes(tag);
+            const isInteractive = [
+              "BUTTON",
+              "A",
+              "IMG",
+              "INPUT",
+              "TEXTAREA",
+              "SELECT",
+              "SVG",
+              "PATH",
+            ].includes(tag);
 
             const isInFooter =
               (e.target as HTMLElement).closest(".shared-footer-cdc") ||
@@ -107,10 +115,9 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
             }
           }}
         >
-
           <div className="report-main-info">
             <div className="emoji">{item.emoji || "💬"}</div>
-            <strong>{title}</strong>
+            <p>{title}</p>
           </div>
           <div className="report-extra-info">
             {!isOpen && isValidDate(item.createdAt) && (
@@ -136,12 +143,17 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
                   />
                 </div>
                 <div className="user-brand-names">
-                  {item.author?.pseudo} <span>×</span> <strong>{item.marque}</strong>
+                  {item.author?.pseudo} <span>×</span>{" "}
+                  <strong>{item.marque}</strong>
                 </div>
               </div>
             ) : (
               item.marque && (
-                <img className="brand-logo" src={logos[item.marque] || ""} alt={item.marque} />
+                <img
+                  className="brand-logo"
+                  src={logos[item.marque] || ""}
+                  alt={item.marque}
+                />
               )
             )}
             <ChevronDown
@@ -211,7 +223,7 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
           </div>
         )}
       </div>
-
+  
       {selectedImage && (
         <div className="lightbox" onClick={closeLightbox}>
           <img
