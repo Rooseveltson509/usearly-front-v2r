@@ -8,6 +8,7 @@ import CommentSection from "@src/components/comments/CommentSection";
 import DescriptionCommentSection from "@src/components/report-desc-comment/DescriptionCommentSection";
 import ReportActionsBarWithReactions from "@src/components/shared/ReportActionsBarWithReactions";
 import { useCommentsForDescription } from "@src/hooks/useCommentsForDescription";
+import { getFullAvatarUrl } from "@src/utils/avatarUtils";
 
 interface Props {
     brand: string;
@@ -39,11 +40,6 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
         setExpanded((prev) => !prev);
         setShowComments(false);
         setShowSimilarReports(false);
-    };
-
-    const getFullAvatarUrl = (path: string | null | undefined) => {
-        if (!path) return "/default-avatar.png";
-        return `${import.meta.env.VITE_API_BASE_URL}/${path}`;
     };
 
     return (

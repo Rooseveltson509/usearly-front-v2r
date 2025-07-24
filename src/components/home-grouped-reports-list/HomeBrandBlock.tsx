@@ -11,6 +11,7 @@ import { formatDistance, formatDistanceToNow, parseISO, isAfter } from "date-fns
 import { fr } from "date-fns/locale";
 import "../user-reports/UserBrandBlock.scss";
 import { getCommentsCountForDescription } from "@src/services/commentService";
+import { getFullAvatarUrl } from "@src/utils/avatarUtils";
 
 interface Props {
   brand: string;
@@ -30,12 +31,6 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
   const [refreshCommentsKeys, setRefreshCommentsKeys] = useState<Record<string, number>>({});
   const [openBrands, setOpenBrands] = useState<Record<string, boolean>>({});
   const [signalementFilters, setSignalementFilters] = useState<Record<string, "pertinent" | "recents" | "anciens">>({});
-
-  const getFullAvatarUrl = (path: string | null | undefined) => {
-    if (!path) return "/default-avatar.png";
-    return `${import.meta.env.VITE_API_BASE_URL}/${path}`;
-  };
-
   const toggleBrand = (brand: string) => {
     setOpenBrands((prev) => ({
       ...prev,
@@ -185,7 +180,7 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
                         <div className="avatars-row">
                           <img
                             src={getFullAvatarUrl(
-                              initialDescription.user?.avatar
+                              initialDescription.user?.avatar || null
                             )}
                             alt="avatar"
                             className="avatar user-avatar"
@@ -325,7 +320,7 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
                               <div className="feedback-avatar">
                                 <div className="feedback-avatar-wrapper">
                                   <img
-                                    src={getFullAvatarUrl(desc.user?.avatar)}
+                                    src={getFullAvatarUrl(desc.user?.avatar || null)}
                                     alt={desc.user?.pseudo}
                                     className="avatar"
                                   />

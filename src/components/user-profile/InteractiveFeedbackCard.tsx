@@ -7,6 +7,7 @@ import { useAuth } from "@src/services/AuthContext";
 import { fetchValidBrandLogo } from "@src/utils/brandLogos";
 import SharedFooterCdcAndSuggest from "../shared/SharedFooterCdcAndSuggest";
 import { ChevronDown } from "lucide-react";
+import { getFullAvatarUrl } from "@src/utils/avatarUtils";
 
 interface Props {
   item: (CoupDeCoeur | Suggestion) & {
@@ -30,11 +31,6 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
   if (!userProfile?.id) return null;
 
   const toggleText = () => setShowFullText((prev) => !prev);
-
-  const getFullAvatarUrl = (path: string | null | undefined) => {
-    if (!path) return "/default-avatar.png";
-    return `${import.meta.env.VITE_API_BASE_URL}/${path}`;
-  };
 
   const openLightbox = (imageSrc: string) => {
     setSelectedImage(imageSrc);
@@ -223,7 +219,7 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
           </div>
         )}
       </div>
-  
+
       {selectedImage && (
         <div className="lightbox" onClick={closeLightbox}>
           <img

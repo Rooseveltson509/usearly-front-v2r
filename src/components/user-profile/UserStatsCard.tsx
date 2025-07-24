@@ -2,7 +2,6 @@ import { useAuth } from "@src/services/AuthContext";
 import "./UserStatsCard.scss";
 import { useUserStatsSummary } from "@src/hooks/useUserStatsSummary";
 import defaultAvatar from "../../assets/images/user.png";
-import scoreIcon from "../../assets/images/testLogo.svg";
 import badge from "../../assets/icons/Little-badge.png";
 import Uicon from "/assets/U-score-icon.svg";
 import { useState } from "react";

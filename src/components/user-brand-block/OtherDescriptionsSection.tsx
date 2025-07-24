@@ -3,6 +3,7 @@ import { fr } from "date-fns/locale";
 import { ChevronDown } from "lucide-react";
 import type { UserGroupedReportDescription } from "@src/types/Reports";
 import DescriptionCommentSection from "../report-desc-comment/DescriptionCommentSection";
+import { getFullAvatarUrl } from "@src/utils/avatarUtils";
 
 interface Props {
   brand: string;
@@ -14,11 +15,6 @@ interface Props {
   onFilterChange: (filter: "pertinent" | "recents" | "anciens") => void;
   onShowMore: () => void;
 }
-
-const getFullAvatarUrl = (path: string | null | undefined) => {
-  if (!path) return "/default-avatar.png";
-  return `${import.meta.env.VITE_API_BASE_URL}/${path}`;
-};
 
 const OtherDescriptionsSection = ({
   brand,

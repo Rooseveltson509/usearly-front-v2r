@@ -7,6 +7,7 @@ import { getBrandLogo } from "@src/utils/brandLogos";
 import { getCategoryIconPathFromSubcategory } from "@src/utils/IconsUtils";
 import type { PublicGroupedReport } from "@src/types/Reports";
 import { useAuth } from "@src/services/AuthContext";
+import { getFullAvatarUrl } from "@src/utils/avatarUtils";
 //import "./BrandBlock.scss"; // ✅ Assure-toi d'y avoir les styles refactorés
 
 interface Props {
@@ -48,11 +49,6 @@ const BrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
   );
 
   const totalCount = reports.reduce((sum, r) => sum + r.totalCount, 0);
-
-  const getFullAvatarUrl = (path: string | null | undefined) => {
-    if (!path) return "/default-avatar.png";
-    return `${import.meta.env.VITE_API_BASE_URL}/${path}`;
-  };
 
   return (
     <div className={`brand-block ${expanded ? "open" : ""}`}>
@@ -102,7 +98,7 @@ const BrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
                       <div className="feedback-avatar">
                         <div className="feedback-avatar-wrapper">
                           <img
-                            src={getFullAvatarUrl(currentDesc.user?.avatar)}
+                            src={getFullAvatarUrl(currentDesc.user?.avatar || null)}
                             alt={currentDesc.user?.pseudo || "Utilisateur"}
                             className="avatar"
                           />

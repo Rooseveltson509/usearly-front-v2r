@@ -11,7 +11,7 @@ interface Props {
   siteUrl: string;
   expandedSub: string | null;
   onToggle: (subCategory: string) => void;
-  getFullAvatarUrl: (url: string | null | undefined) => string;
+  getFullAvatarUrl: (url: string | null) => string;
 }
 
 const SubcategoryHeader: React.FC<Props> = ({

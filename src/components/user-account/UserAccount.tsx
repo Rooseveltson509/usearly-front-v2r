@@ -3,17 +3,7 @@ import { updateUserProfile, updatePassword, deleteUserProfile } from "@src/servi
 import { useAuth } from "@src/services/AuthContext";
 import "./UserAccount.scss";
 import { showToast } from "@src/utils/toastUtils";
-
-
-/* const getFullAvatarUrl = (path: string | null) => {
-    if (!path) return "/default-avatar.png";
-    return `${import.meta.env.VITE_API_BASE_URL}/${path}`;
-}; */
-
-const getFullAvatarUrl = (path: string | null) => {
-    if (!path) return "/default-avatar.png";
-    return path.startsWith("http") ? path : `${import.meta.env.VITE_API_BASE_URL}/${path}`;
-};
+import { getFullAvatarUrl } from "@src/utils/avatarUtils";
 
 
 const UserAccount = () => {
@@ -36,7 +26,7 @@ const UserAccount = () => {
             setEmail(userProfile.email || "");
             setBirthdate(userProfile.born || "");
             setGender(userProfile.gender || "N/A");
-            setAvatarPreview(getFullAvatarUrl(userProfile.avatar || null)); // ✅ FIX ICI
+            setAvatarPreview(getFullAvatarUrl(userProfile.avatar || null));
         }
     }, [userProfile]);
 

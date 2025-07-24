@@ -7,6 +7,7 @@ import "./CommentInputSection.scss";
 import { MoveDiagonal, Trash2 } from "lucide-react";
 import Swal from "sweetalert2";
 import CommentActionsMenu from "../commons/CommentActionsMenu";
+import { getFullAvatarUrl } from "@src/utils/avatarUtils";
 //import CommentActionsMenu from "./CommentActionsMenu";
 
 interface Comment {
@@ -33,11 +34,6 @@ const CommentInputSection: React.FC<Props> = ({ descriptionId, type, onCommentAd
     const [visibleCount, setVisibleCount] = useState(3);
     const [filter, setFilter] = useState<"pertinent" | "recents" | "anciens">("pertinent");
     const { userProfile } = useAuth();
-
-    const getFullAvatarUrl = (path: string | null) => {
-        if (!path) return "/default-avatar.png";
-        return `${import.meta.env.VITE_API_BASE_URL}/${path}`;
-    };
 
     const buildCommentEndpoint = () => {
         if (type === "report") return `/descriptions/${descriptionId}/comments`;
