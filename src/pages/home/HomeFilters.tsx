@@ -9,7 +9,7 @@ const allFilters = [
   {
     key: "chrono",
     label: "Les plus récents",
-    emoji: "🕒",
+    emoji: "📅",
     illustration: recentImg,
   },
   {
@@ -57,8 +57,9 @@ const HomeFilters = ({ selectedFilter, onChange, availableFilters }: HomeFilters
 
   return (
     <div className="home-filters">
+      <div className="content-background" />
       <div className="filters-header">
-        <h2>Les signalements récents !</h2>
+        {/* <h2>Les signalements récents !</h2> */}
         {selected && <img src={selected.illustration} alt={selected.label} />}
       </div>
 

@@ -132,7 +132,11 @@ const ReportActionsBarWithReactions: React.FC<Props> = ({
           </button>
         </div>
         <div className="status-right">
-          <CheckCircle size={16} color="#2563eb" />
+          <img
+            src="src/assets/icons/statut-icon.svg"
+            className="icon-statut"
+          />
+          {/* <CheckCircle size={16} color="#2563eb" /> */}
           <span>En cours de correction</span>
         </div>
       </div>

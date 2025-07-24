@@ -8,7 +8,9 @@
     text-decoration: none !important;
   }
 }
-
+.icon-statut{
+  width:20px;
+  }
 .count-right {
   display: flex;
   align-items: center;
@@ -133,12 +135,13 @@
     }
 
     .status-right {
+      font-family:"inter";
       display: flex;
       align-items: center;
       gap: 0.3rem;
-      color: #2563eb;
+      color: #000000;
       font-size: 0.85rem;
-      font-weight: 500;
+      font-weight: 400;
     }
   }
 }

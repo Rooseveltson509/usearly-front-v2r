@@ -41,7 +41,11 @@ const FilterBar: React.FC<Props> = ({
 }) => {
   return (
     <>
-      <div className={`select-filter-wrapper ${filter === "hot" ? "hot-active" : ""}`}>
+      <div
+        className={`select-filter-wrapper ${
+          filter === "hot" ? "hot-active" : ""
+        }`}
+      >
         <select
           className="select-filter"
           value={filter === "confirmed" ? "hot" : filter}
@@ -87,7 +91,10 @@ const FilterBar: React.FC<Props> = ({
       </div>
 
       <div className="filter-dropdown-wrapper" ref={dropdownRef}>
-        <button className="filter-toggle" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+        <button
+          className="filter-toggle"
+          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+        >
           <SlidersHorizontal size={18} style={{ marginRight: "6px" }} />
           Filtrer
         </button>
@@ -106,7 +113,9 @@ const FilterBar: React.FC<Props> = ({
             >
               <option value="">Toutes les marques</option>
               {availableBrands.map((brand) => (
-                <option key={brand} value={brand}>{brand}</option>
+                <option key={brand} value={brand}>
+                  {brand}
+                </option>
               ))}
             </select>
 
@@ -122,7 +131,9 @@ const FilterBar: React.FC<Props> = ({
             >
               <option value="">Toutes les catégories</option>
               {availableCategories.map((cat) => (
-                <option key={cat} value={cat}>{cat}</option>
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
               ))}
             </select>
 
