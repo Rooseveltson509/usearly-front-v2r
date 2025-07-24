@@ -10,6 +10,7 @@ import "./UserBrandBlock.scss";
 import ReportActionsBarWithReactions from "../shared/ReportActionsBarWithReactions";
 import { getCommentsCountForDescription } from "@src/services/commentService";
 import CommentSection from "../comments/CommentSection";
+import CommentInputSection from "../report-desc-comment/CommentInputSection";
 import { parseISO, isAfter } from "date-fns";
 import { getFullAvatarUrl } from "@src/utils/avatarUtils";
 
