@@ -68,14 +68,12 @@ const ReportActionsBarWithReactions: React.FC<Props> = ({
 
         <div className="count-right">
           {commentsCount > 0 && (
-            <span onClick={onCommentClick}>
-              {commentsCount}{" "}
-              {commentsCount === 1 ? "commentaire" : "commentaires"}
-            </span>
-          )}
-
-          {commentsCount >= 0 && reportsCount > 1 && (
-            <span className="point">•</span>
+            <>
+              <span className="comments-link" onClick={onCommentClick}>
+                {commentsCount} {commentsCount === 1 ? "commentaire" : "commentaires"}
+              </span>
+              <span className="dot-separator">·</span>
+            </>
           )}
 
           {reportsCount > 1 && (
@@ -88,6 +86,7 @@ const ReportActionsBarWithReactions: React.FC<Props> = ({
             </span>
           )}
         </div>
+
       </div>
 
       <div className="separator" />

@@ -29,9 +29,16 @@ function Home() {
   >([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const [activeFilter, setActiveFilter] = useState("chrono");
-  const [viewMode, setViewMode] = useState<"flat" | "chrono">("chrono");
-  const [availableFilters, setAvailableFilters] = useState<string[]>(["chrono", "rage", "popular", "urgent"]);
+  const [activeFilter, setActiveFilter] = useState("confirmed");
+  const [viewMode, setViewMode] = useState<"flat" | "chrono" | "confirmed">("confirmed");
+  const [availableFilters, setAvailableFilters] = useState<string[]>([
+    "confirmed", // 👉 le mettre en premier si tu veux qu’il s'affiche d’abord dans la UI
+    "chrono",
+    "rage",
+    "popular",
+    "urgent",
+  ]);
+
 
   useEffect(() => {
     const checkHotFilter = async () => {
@@ -99,7 +106,7 @@ function Home() {
             <img src={small} alt="small" className="logo logo-small" />
           </div>
         </div>
-        {<FeedbackTabs activeTab={activeTab} onTabChange={setActiveTab} /> }
+        {<FeedbackTabs activeTab={activeTab} onTabChange={setActiveTab} />}
       </div>
 
       {/* Contenu principal */}
@@ -123,7 +130,7 @@ function Home() {
             <HomeGroupedReportsList
               activeTab={activeTab}
               activeFilter={activeFilter}
-              viewMode={viewMode}
+              viewMode={activeFilter === "confirmed" ? "confirmed" : "none" as any}
               onViewModeChange={setViewMode}
               setActiveFilter={setActiveFilter}
             />
@@ -139,9 +146,9 @@ function Home() {
                   error: null,
                 }}
                 openId={null}
-                setOpenId={() => {}}
+                setOpenId={() => { }}
                 groupOpen={{}}
-                setGroupOpen={() => {}}
+                setGroupOpen={() => { }}
                 selectedBrand=""
                 selectedCategory=""
                 renderCard={() => <></>}
@@ -154,17 +161,37 @@ function Home() {
             <HomeFilters
               selectedFilter={activeFilter}
               onChange={(key) => {
-                if (key === "chrono") {
-                  setActiveFilter(""); // <-- c'est ça la clé !
-                  setViewMode("chrono");
-                } else {
-                  setActiveFilter(key);
-                  setViewMode("flat");
-                }
+                window.scrollTo({ top: 0, behavior: "smooth" });
 
+                if (key === "confirmed") {
+                  setActiveFilter("confirmed");
+                  setViewMode("confirmed"); // ✅ seul filtre actif
+                } else {
+                  setActiveFilter(key); // ✅ on garde le visuel du filtre sélectionné
+                  setViewMode("none" as any); // ❌ désactive tous les autres
+                }
               }}
+
+              /*              onChange={(key) => {
+                             window.scrollTo({ top: 0, behavior: "smooth" });
+             
+                             if (key === "chrono") {
+                               setActiveFilter("");
+                               setViewMode("chrono");
+                             } else if (key === "hot") {
+                               setActiveFilter("hot");
+                               setViewMode("flat");
+                             } else if (key === "confirmed") {
+                               setActiveFilter("confirmed");
+                               setViewMode("confirmed");
+                             } else {
+                               setActiveFilter(key);
+                               setViewMode("chrono");
+                             }
+                           }} */
               availableFilters={availableFilters}
             />
+
           </aside>
         )}
       </main>

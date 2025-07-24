@@ -357,3 +357,25 @@
     transform: translateY(-50%) rotate(-5deg);
   }
 }
+
+
+.confirmed-view-btn {
+  margin-top: 8px;
+  margin-left: 4px;
+  background: #f1f1f1;
+  border: 1px solid #ccc;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+
+  &.active {
+    background-color: #d1fae5; // vert clair
+    border-color: #10b981;
+    font-weight: bold;
+  }
+
+  &:hover {
+    background-color: #e0f2f1;
+  }
+}

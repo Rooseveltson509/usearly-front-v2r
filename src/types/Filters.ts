@@ -1,0 +1,1 @@
+export type FilterType = "" | "hot" | "rage" | "popular" | "confirmed" | "urgent" | "chrono";

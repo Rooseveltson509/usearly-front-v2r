@@ -13,6 +13,30 @@ export interface Reaction {
   count: number;
   userIds: string[];
 }
+
+export interface ConfirmedSubcategoryReport {
+  reportingId: number;
+  subCategory: string;
+  count: number;
+  siteUrl: string | null;
+  marque: string;
+  category: string;
+  capture: string | null;
+  createdAt: string;
+  descriptions: {
+    id: number;
+    description: string;
+    emoji?: string;
+    createdAt: string;
+    user: {
+      id: number;
+      pseudo: string;
+      avatar: string;
+    };
+  }[];
+}
+
+
 export type LikeFeedbackType = Exclude<FeedbackType, "report">;
 // équivalent à "coupdecoeur" | "suggestion"
 

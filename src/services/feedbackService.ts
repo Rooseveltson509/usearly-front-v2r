@@ -1,5 +1,5 @@
 import { apiService } from "./apiService";
-import type { CoupDeCoeur, GroupedReport, GroupedReportResponse, Suggestion, UserGroupedReportResponse, UserStatsSummary } from "@src/types/Reports";
+import type { ConfirmedSubcategoryReport, CoupDeCoeur, GroupedReport, GroupedReportResponse, Suggestion, UserGroupedReportResponse, UserStatsSummary } from "@src/types/Reports";
 
 const getAuthToken = () =>
   localStorage.getItem("accessToken") || sessionStorage.getItem("accessToken");
@@ -165,35 +165,6 @@ export const getGroupedReportsByDate = async (page = 1, limit = 15) => {
   return response.data;
 };
 
-/* export const getGroupedReportsByDate = async (
-  page = 1,
-  limit = 15,
-  filter?: string
-) => {
-  const token = localStorage.getItem("accessToken");
-
-  let endpoint = "/reportings/public-grouped-by-date";
-
-  if (filter === "popular") {
-    endpoint = "/reportings/grouped-by-popular";
-  } else if (filter === "hot") {
-    endpoint = "/reportings/grouped-by-hot";
-  } else if (filter === "rage") {
-    endpoint = "/reportings/grouped-by-rage";
-  } else if (filter === "urgent") {
-    endpoint = "/reportings/grouped-by-urgent";
-  }
-
-  const response = await apiService.get(endpoint, {
-    params: { page, limit },
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  return response.data;
-}; */
-
 
 export const getUserReportsGroupedByDate = async (page: number, limit: number) => {
   const res = await apiService.get(`/user/grouped-by-date?page=${page}&limit=${limit}`);
@@ -229,21 +200,34 @@ export const getGroupedReportsByPopularEngagement = async (page = 1, limit = 15)
 };
 
 
-
-/* export const getGroupedReportsByRage = async (page = 1, limit = 15) => {
-  const token = localStorage.getItem("accessToken");
-
-  const response = await apiService.get("/reportings/grouped-by-rage", {
-    params: { page, limit },
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  return response.data;
-}; */
-
 export const getGroupedReportsByRage = async (page = 1, limit = 15) => {
   const response = await apiService.get(`/reportings/grouped-by-rage?page=${page}&limit=${limit}`);
+  return response.data;
+};
+
+
+
+interface GetConfirmedResponse {
+  currentPage: number;
+  total: number;
+  data: ConfirmedSubcategoryReport[];
+}
+
+export const getConfirmedSubcategoryReports = async (
+  page = 1,
+  limit = 15
+): Promise<GetConfirmedResponse> => {
+  const token = localStorage.getItem("accessToken");
+
+  const response = await apiService.get<GetConfirmedResponse>(
+    "/public/confirmed-subcategories",
+    {
+      params: { page, limit },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
   return response.data;
 };

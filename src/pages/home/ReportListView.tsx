@@ -7,10 +7,14 @@ import type {
   PopularGroupedReport,
   PublicGroupedReport,
 } from "@src/types/Reports";
+import FlatReportCard from "./confirm-reportlist/FlatReportCard";
+import FlatSubcategoryBlock from "./confirm-reportlist/FlatSubcategoryBlock";
+import { getBrandLogo } from "@src/utils/brandLogos";
+import SqueletonAnime from "@src/components/loader/SqueletonAnime";
 
 interface Props {
   filter: string;
-  viewMode: "flat" | "chrono";
+  viewMode: "flat" | "chrono" | "confirmed";
   flatData: Array<ExplodedGroupedReport | PublicGroupedReport>;
   chronoData: Record<string, any[]>;
   popularData: Record<string, PopularGroupedReport[]>;
@@ -39,7 +43,7 @@ const ReportListView: React.FC<Props> = ({
   loadingPopularEngagement,
   loadingRage,
 }) => {
-  const isPopularFilter = ["hot", "popular", "rage", "urgent"].includes(filter);
+  const isPopularFilter = ["hot", "popular", "rage", "confirmed", "urgent"].includes(filter);
   const isChronoFilter = filter === "chrono";
 
   if (isPopularFilter) {
@@ -47,8 +51,8 @@ const ReportListView: React.FC<Props> = ({
       filter === "popular"
         ? { groupedByDay: popularEngagementData, isLoading: loadingPopularEngagement }
         : filter === "rage"
-        ? { groupedByDay: rageData, isLoading: loadingRage }
-        : { groupedByDay: popularData, isLoading: loadingPopular };
+          ? { groupedByDay: rageData, isLoading: loadingRage }
+          : { groupedByDay: popularData, isLoading: loadingPopular };
 
     if (!isLoading && Object.keys(groupedByDay || {}).length === 0) {
       return (
@@ -105,9 +109,47 @@ const ReportListView: React.FC<Props> = ({
   }
 
   // Flat view sans filtre
+if (viewMode === "confirmed") {
+  const explodedReports = flatData.filter(
+    (item): item is ExplodedGroupedReport =>
+      "subCategory" in item &&
+      typeof item.subCategory === "object" &&
+      Array.isArray(item.subCategory.descriptions)
+  );
+
+  // ⏳ Affiche le skeleton si on est en train de charger
   if (flatData.length === 0) {
-    return <p>Aucun report disponible.</p>;
+    return (
+      <SqueletonAnime
+        loaderRef={{ current: null }} // ou une vraie ref si tu en as
+        loading={true}
+        hasMore={false}
+        error={null}
+      />
+    );
   }
+
+  if (explodedReports.length === 0) {
+    return <p>Aucun report confirmé disponible.</p>;
+  }
+
+  return (
+    <>
+      {explodedReports.map((item) => (
+        <FlatSubcategoryBlock
+          key={`${item.reportingId}-${item.subCategory.subCategory}`}
+          brand={item.marque}
+          subcategory={item.subCategory.subCategory}
+          descriptions={item.subCategory.descriptions}
+          brandLogoUrl={getBrandLogo(item.marque)}
+          hideFooter={true}
+        />
+      ))}
+    </>
+  );
+}
+
+
 
   const grouped = flatData.reduce<Record<string, typeof flatData>>((acc, report) => {
     if (!acc[report.marque]) acc[report.marque] = [];
