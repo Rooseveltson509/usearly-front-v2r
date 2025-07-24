@@ -10,11 +10,36 @@
 }
 
 .count-right {
-  :hover {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: #666;
+
+  .comments-link {
+    cursor: pointer;
+    color: #444;
     text-decoration: underline;
-    text-underline-offset: 4px; // ajuste la distance
+
+    &:hover {
+      color: #000;
+    }
+  }
+
+  .resignalements-link {
+    cursor: pointer;
+    color: #444;
+
+    &:hover {
+      color: #000;
+    }
+  }
+
+  .dot-separator {
+    margin: 0 2px;
   }
 }
+
 
 .report-actions-bar {
   width: 100%;

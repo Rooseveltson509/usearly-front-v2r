@@ -3,7 +3,7 @@ import { useEffect } from "react";
 interface ScrollOptions {
   loaderRef: React.RefObject<HTMLDivElement | null>;
   filter: string;
-  viewMode: "flat" | "chrono";
+  viewMode: "flat" | "chrono" | "confirmed";
   loadingFlat: boolean;
   loadingChrono: boolean;
   loadingPopular: boolean;
