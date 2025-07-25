@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import Avatar from "../shared/Avatar";
+import { useAuth } from "@src/services/AuthContext";
 
 interface Props {
   avatarUrl: string;
@@ -8,6 +10,7 @@ interface Props {
 
 const CommentForm: React.FC<Props> = ({ avatarUrl, value, onSubmit }) => {
   const [text, setText] = useState(value);
+     const { userProfile } = useAuth();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,7 +21,13 @@ const CommentForm: React.FC<Props> = ({ avatarUrl, value, onSubmit }) => {
 
   return (
     <form onSubmit={handleSubmit} className="comment-form">
-      <img src={avatarUrl} alt="avatar" className="comment-avatar" />
+      <Avatar
+        avatar={avatarUrl}
+        type="user"
+        pseudo={userProfile?.pseudo}
+        className="comment-avatar"
+        wrapperClassName="comment-avatar-wrapper"
+      />
       <input
         type="text"
         placeholder="Commenter…"

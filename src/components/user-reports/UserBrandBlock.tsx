@@ -1,4 +1,4 @@
- import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import DescriptionCommentSection from "../report-desc-comment/DescriptionCommentSection";
 import { getBrandLogo } from "@src/utils/brandLogos";
 import { getCategoryIconPathFromSubcategory } from "@src/utils/IconsUtils";
@@ -13,6 +13,7 @@ import CommentSection from "../comments/CommentSection";
 import CommentInputSection from "../report-desc-comment/CommentInputSection";
 import { parseISO, isAfter } from "date-fns";
 import { getFullAvatarUrl } from "@src/utils/avatarUtils";
+import Avatar from "../shared/Avatar";
 
 
 interface Props {
@@ -135,9 +136,8 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
             return (
               <div
                 key={sub.subCategory}
-                className={`subcategory-block ${
-                  expandedSub === sub.subCategory ? "open" : ""
-                }`}
+                className={`subcategory-block ${expandedSub === sub.subCategory ? "open" : ""
+                  }`}
               >
                 <div
                   className="subcategory-header"
@@ -156,7 +156,7 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                     <h4>{sub.subCategory}</h4>
                   </div>
                   <div className="subcategory-right">
-                   
+
                     {expandedSub !== sub.subCategory && (
                       <div className="badge-count">{sub.count}</div>
                     )}
@@ -172,7 +172,7 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                       </span>
                     )}
 
-                    {sub.subCategory === expandedSub && (
+                    {/*                     {sub.subCategory === expandedSub && (
                       <div className="subcategory-user-brand-info">
                         <div className="avatars-row">
                           <img
@@ -193,7 +193,31 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                           <span className="x">×</span> <strong>{brand}</strong>
                         </div>
                       </div>
+                    )} */}
+
+                    {sub.subCategory === expandedSub && (
+                      <div className="subcategory-user-brand-info">
+                        <div className="avatars-row">
+                          <Avatar
+                            avatar={initialDescription.user.avatar}
+                            pseudo={initialDescription.user.pseudo || "Utilisateur"}
+                            type="user"
+                            wrapperClassName="avatar user-avatar"
+                          />
+                          <Avatar
+                            avatar={getBrandLogo(brand, siteUrl)}
+                            pseudo={brand}
+                            type="brand"
+                            wrapperClassName="avatar brand-logo"
+                          />
+                        </div>
+                        <div className="user-brand-names">
+                          {initialDescription.user.pseudo} <span className="x">×</span>{" "}
+                          <strong>{brand}</strong>
+                        </div>
+                      </div>
                     )}
+
 
                     {expandedSub === sub.subCategory ? (
                       <ChevronUp size={16} />
@@ -358,10 +382,12 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                             <div className="feedback-card" key={desc.id}>
                               <div className="feedback-avatar">
                                 <div className="feedback-avatar-wrapper">
-                                  <img
-                                    src={getFullAvatarUrl(desc.user.avatar)}
-                                    alt={desc.user.pseudo}
+                                  <Avatar
+                                    avatar={desc.user?.avatar || null}
+                                    pseudo={desc.user?.pseudo || "?"}
+                                    type="user"
                                     className="avatar"
+                                    wrapperClassName="avatar-wrapper-override"
                                   />
                                   {desc.emoji && (
                                     <div className="emoji-overlay">

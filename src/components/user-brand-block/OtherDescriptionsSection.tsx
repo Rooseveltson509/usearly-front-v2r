@@ -4,6 +4,7 @@ import { ChevronDown } from "lucide-react";
 import type { UserGroupedReportDescription } from "@src/types/Reports";
 import DescriptionCommentSection from "../report-desc-comment/DescriptionCommentSection";
 import { getFullAvatarUrl } from "@src/utils/avatarUtils";
+import Avatar from "../shared/Avatar";
 
 interface Props {
   brand: string;
@@ -60,14 +61,19 @@ const OtherDescriptionsSection = ({
       {displayDescriptions.map((desc) => (
         <div className="feedback-card" key={desc.id}>
           <div className="feedback-avatar">
-            <div className="feedback-avatar-wrapper">
-              <img
-                src={getFullAvatarUrl(desc.user.avatar)}
-                alt={desc.user.pseudo}
-                className="avatar"
-              />
-              {desc.emoji && <div className="emoji-overlay">{desc.emoji}</div>}
+            <div className="feedback-avatar">
+              <div className="feedback-avatar-wrapper">
+                <Avatar
+                  avatar={desc.user?.avatar || null}
+                  pseudo={desc.user?.pseudo || "?"}
+                  type="user"
+                  className="avatar"
+                  wrapperClassName="avatar-wrapper-override"
+                />
+                {desc.emoji && <div className="emoji-overlay">{desc.emoji}</div>}
+              </div>
             </div>
+
           </div>
           <div className="feedback-content">
             <div className="feedback-meta">

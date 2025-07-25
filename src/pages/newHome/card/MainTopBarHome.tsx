@@ -1,11 +1,11 @@
 import React from "react";
 import "./MainTopBarHome.scss";
-import chatIcon from "../../../assets/images/chat-top-bar.svg";
-import bulleIcon from "../../../assets/images/bulle-top-bar.png";
-import emojiIcon from "../../../assets/images/emoji-top-bar.png";
-import big from "../../../assets/images/big.svg";
-import medium from "../../../assets/images/medium.svg";
-import small from "../../../assets/images/small.svg";
+import chatIcon from "/assets/images/chat-top-bar.svg";
+import bulleIcon from "/assets/images/bulle-top-bar.png";
+import emojiIcon from "/assets/images/emoji-top-bar.png";
+import big from "/assets/images/big.svg";
+import medium from "/assets/images/medium.svg";
+import small from "/assets/images/small.svg";
 const MainTopBarHome: React.FC = () => {
   return (
     <div className="main-top-bar-home">

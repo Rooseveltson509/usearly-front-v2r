@@ -4,10 +4,11 @@ import ContributionsOverview from "./ContributionsOverview";
 import FeedbackTabs, { type FeedbackType } from "./FeedbackTabs";
 import UserSidebarStats from "./UserSidebarStats";
 import "./UserProfilePage.scss";
-import big from "../../assets/images/big.svg";
-import medium from "../../assets/images/medium.svg";
-import small from "../../assets/images/small.svg";
-import badge from "../../assets/icons/Little-badge.svg";
+import big from "/assets/images/big.svg";
+import medium from "/assets/images/medium.svg";
+import small from "/assets/images/small.svg";
+import badge from "/assets/icons/Little-badge.svg";
+import decoBanner from "/assets/images/bulle-deco-banner.svg";
 import UserGroupedReportsList from "../profile/UserGroupedReportsList";
 import UserFeedbackView from "../profile/UserFeedbackView";
 import UserChallenge from "../user-profile/UserChallenge";
@@ -33,7 +34,7 @@ const UserProfilePage: React.FC = () => {
         <div className="left">
           <img
             className="chat"
-            src="../src/assets/images/bulle-deco-banner.svg"
+            src={decoBanner}
           />
         </div>
         {/* zone droite – pastilles statistiques*/}

@@ -12,24 +12,24 @@ const friends: Friend[] = [
   {
     name: "Silvain",
     handle: "@silvainE",
-    avatar: "../src/assets/images/profil/Silvain.png",
+    avatar: "/assets/images/profil/Silvain.png",
     score: 223,
   },
   {
     name: "Gregory",
     handle: "@greg007",
-    avatar: "../src/assets/images/profil/Greg.png",
+    avatar: "/assets/images/profil/Greg.png",
     score: 217,
   },
   {
     name: "Zaia",
     handle: "@zaiaK",
-    avatar: "../src/assets/images/profil/Zaia.png",
+    avatar: "/assets/images/profil/Zaia.png",
     score: 189,
     isUser: true,
   },
     {
-        name: "Alex", handle: "@alex12", avatar: "../src/assets/images/profil/Alex.png", 
+        name: "Alex", handle: "@alex12", avatar: "/assets/images/profil/Alex.png", 
     score: 56 },
 ];
 

@@ -1,11 +1,13 @@
-import { useAuth } from "@src/services/AuthContext";
-import "./UserStatsCard.scss";
 import { useUserStatsSummary } from "@src/hooks/useUserStatsSummary";
-import defaultAvatar from "../../assets/images/user.png";
-import badge from "../../assets/icons/Little-badge.png";
+import defaultAvatar from "/assets/images/user.png";
+import badge from "/assets/icons/Little-badge.png";
 import Uicon from "/assets/U-score-icon.svg";
 import { useState } from "react";
-import { getFullAvatarUrl } from "@src/utils/avatarUtils";
+import { getDisplayName } from "@src/utils/avatarUtils";
+import "./UserStatsCard.scss";
+import Avatar from "../shared/Avatar";
+import { useAuth } from "@src/services/AuthContext";
+
 
 
 const UserStatsCard = () => {
@@ -17,20 +19,12 @@ const UserStatsCard = () => {
 
   return (
     <div className="user-stats-card v2">
-      <div className="avatar-wrapper">
-        <img
-          className="avatar"
-          src={
-            userProfile.avatar
-              ? getFullAvatarUrl(userProfile.avatar)
-              : defaultAvatar
-          }
-          alt="Avatar utilisateur"
-          onError={(e) => {
-            (e.currentTarget as HTMLImageElement).src = defaultAvatar;
-          }}
+          <Avatar
+          avatar={userProfile.avatar}
+          pseudo={getDisplayName(userProfile.pseudo, userProfile.email)}
+          className="avatar" // classe appliquée à l’image OU au fallback
+          wrapperClassName="avatar-wrapper" // classe appliquée à la div parent
         />
-      </div>
 
       <h2 className="username">{userProfile.pseudo}</h2>
       <div className="user-level">Usear Niveau 1</div>

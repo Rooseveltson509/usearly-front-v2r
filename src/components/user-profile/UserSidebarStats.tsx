@@ -1,9 +1,9 @@
 import "./UserSidebarStats.scss";
 import { useUserStatsSummary } from "@src/hooks/useUserStatsSummary";
-import FeedIcon from "../../assets/icons/feedback.png";
-import IdeeIcon from "../../assets/icons/idea.png";
-import SolutionIcon from "../../assets/icons/solution.png";
-import CheckIcon from "../../assets/icons/shake.png";
+import FeedIcon from "/assets/icons/feedback.png";
+import IdeeIcon from "/assets/icons/idea.png";
+import SolutionIcon from "/assets/icons/solution.png";
+import CheckIcon from "/assets/icons/shake.png";
 
 const UserSidebarStats = () => {
   const { stats, loading } = useUserStatsSummary();

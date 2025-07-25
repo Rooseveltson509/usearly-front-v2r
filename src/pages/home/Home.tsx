@@ -15,12 +15,12 @@ import {
 import type { CoupDeCoeur, Suggestion } from "@src/types/Reports";
 import SqueletonAnime from "@src/components/loader/SqueletonAnime";
 import HomeFilters from "./HomeFilters";
-import bulleIcon from "../../assets/images/bulle-top-bar.png";
-import emojiIcon from "../../assets/images/emoji-top-bar.png";
-import chatIcon from "../../assets/images/chat-top-bar.svg";
-import big from "../../assets/images/big.svg";
-import medium from "../../assets/images/medium.svg";
-import small from "../../assets/images/small.svg";
+import bulleIcon from "/assets/images/bulle-top-bar.png";
+import emojiIcon from "/assets/images/emoji-top-bar.png";
+import chatIcon from "/assets/images/chat-top-bar.svg";
+import big from "/assets/images/big.svg";
+import medium from "/assets/images/medium.svg";
+import small from "/assets/images/small.svg";
 import HomeFiltersCdc from "./HomeFiltersCdc";
 import HomeFiltersSuggestion from "./HomeFiltersSuggestion";
 
@@ -119,7 +119,6 @@ function Home() {
         </aside>
 
         <div className="feedback-list-wrapper">
-          {/* <div className="content-background" /> */}
           {activeTab !== "report" && isLoading && (
             <SqueletonAnime
               loaderRef={{ current: null }}
