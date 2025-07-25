@@ -12,6 +12,7 @@ import { fr } from "date-fns/locale";
 import "../user-reports/UserBrandBlock.scss";
 import { getCommentsCountForDescription } from "@src/services/commentService";
 import { getFullAvatarUrl } from "@src/utils/avatarUtils";
+import Avatar from "../shared/Avatar";
 
 interface Props {
   brand: string;
@@ -319,14 +320,17 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
                             <div className="feedback-card" key={desc.id}>
                               <div className="feedback-avatar">
                                 <div className="feedback-avatar-wrapper">
-                                  <img
-                                    src={getFullAvatarUrl(desc.user?.avatar || null)}
-                                    alt={desc.user?.pseudo}
+                                  <Avatar
+                                    avatar={desc.user?.avatar || null}
+                                    pseudo={desc.user?.pseudo || "?"}
+                                    type="user"
                                     className="avatar"
+                                    wrapperClassName="avatar-wrapper-override"
                                   />
                                   {desc.emoji && <div className="emoji-overlay">{desc.emoji}</div>}
                                 </div>
                               </div>
+
                               <div className="feedback-content">
                                 <div className="feedback-meta">
                                   <span className="pseudo">{desc.user?.pseudo}</span>

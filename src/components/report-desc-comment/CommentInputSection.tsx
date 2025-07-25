@@ -8,6 +8,7 @@ import { MoveDiagonal, Trash2 } from "lucide-react";
 import Swal from "sweetalert2";
 import CommentActionsMenu from "../commons/CommentActionsMenu";
 import { getFullAvatarUrl } from "@src/utils/avatarUtils";
+import Avatar from "../shared/Avatar";
 //import CommentActionsMenu from "./CommentActionsMenu";
 
 interface Comment {
@@ -112,6 +113,13 @@ const CommentInputSection: React.FC<Props> = ({ descriptionId, type, onCommentAd
             {userProfile && (
                 <form onSubmit={handleSubmit} className="comment-form">
                     <img src={getFullAvatarUrl(userProfile.avatar)} alt="avatar" className="comment-avatar" />
+                          <Avatar
+                            avatar={userProfile.avatar}
+                            pseudo={userProfile.pseudo}
+                            type="user"
+                            className="comment-avatar"
+                            wrapperClassName="comment-avatar-wrapper"
+                          />
                     <input
                         type="text"
                         placeholder="Commenter…"
@@ -140,7 +148,13 @@ const CommentInputSection: React.FC<Props> = ({ descriptionId, type, onCommentAd
                     <ul className="comment-list">
                         {sortedComments.slice(0, visibleCount).map((comment) => (
                             <li key={comment.id} className="comment-item">
-                                <img src={getFullAvatarUrl(comment.user.avatar)} alt="avatar" className="comment-avatar" />
+                                <Avatar
+                                    avatar={comment.user.avatar}
+                                    pseudo={comment.user.pseudo}
+                                    type="user"
+                                    className="comment-avatar"
+                                    wrapperClassName="comment-avatar-wrapper"
+                                />
                                 <div className="comment-content">
                                     <div className="comment-header">
                                         <span className="comment-author">{comment.user.pseudo}</span>
@@ -148,7 +162,7 @@ const CommentInputSection: React.FC<Props> = ({ descriptionId, type, onCommentAd
                                             ⸱ {formatDistanceToNow(new Date(comment.createdAt), { locale: fr, addSuffix: true })}
                                         </span>
                                         {comment?.user.id === userProfile?.id && (
-                                           <CommentActionsMenu onDelete={() => handleDeleteComment(comment.id)} />
+                                            <CommentActionsMenu onDelete={() => handleDeleteComment(comment.id)} />
                                         )}
                                     </div>
                                     <p className="comment-text">{comment.content}</p>

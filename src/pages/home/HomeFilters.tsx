@@ -59,7 +59,6 @@ const HomeFilters = ({ selectedFilter, onChange, availableFilters }: HomeFilters
     <div className="home-filters">
       <div className="content-background" />
       <div className="filters-header">
-        {/* <h2>Les signalements récents !</h2> */}
         {selected && <img src={selected.illustration} alt={selected.label} />}
       </div>
 

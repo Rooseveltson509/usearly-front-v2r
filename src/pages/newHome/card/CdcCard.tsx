@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import "./CdcCard.scss";
-import HeartHead from "../../../assets/icons/heart-head.svg";
-import profile1 from "../../../assets/tmp/profile1.jpg";
-import brand1 from "../../../assets/tmp/brand1.png";
-import profile2 from "../../../assets/tmp/profile2.jpg";
-import brand2 from "../../../assets/tmp/brand2.png";
+import HeartHead from "/assets/icons/heart-head.svg";
+import profile1 from "/assets/tmp/profile1.jpg";
+import brand1 from "/assets/tmp/brand1.png";
+import profile2 from "/assets/tmp/profile2.jpg";
+import brand2 from "/assets/tmp/brand2.png";
 import { useNavigate } from "react-router-dom";
 
 const CdcCard: React.FC = () => {

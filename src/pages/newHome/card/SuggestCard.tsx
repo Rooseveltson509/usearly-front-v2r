@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import "./SuggestCard.scss";
-import suggestHead from "../../../assets/icons/suggest-head.svg";
-import suggest1 from "../../../assets/tmp/suggest1.png";
-import suggest2 from "../../../assets/tmp/suggest2.png";
+import suggestHead from "/assets/icons/suggest-head.svg";
+import suggest1 from "/assets/tmp/suggest1.png";
+import suggest2 from "/assets/tmp/suggest2.png";
 import { useNavigate } from "react-router-dom";
 
 const SuggestCard: React.FC = () => {

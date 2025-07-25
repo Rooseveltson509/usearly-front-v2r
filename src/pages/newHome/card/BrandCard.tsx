@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./BrandCard.scss";
-import brandHead from "../../../assets/icons/brand-head.svg";
+import brandHead from "/assets/icons/brand-head.svg";
 import { fetchValidBrandLogo } from "../../../utils/brandLogos";
 
 const BrandCard: React.FC = () => {

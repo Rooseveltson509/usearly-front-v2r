@@ -9,6 +9,7 @@ import DescriptionCommentSection from "@src/components/report-desc-comment/Descr
 import ReportActionsBarWithReactions from "@src/components/shared/ReportActionsBarWithReactions";
 import { useCommentsForDescription } from "@src/hooks/useCommentsForDescription";
 import { getFullAvatarUrl } from "@src/utils/avatarUtils";
+import Avatar from "@src/components/shared/Avatar";
 
 interface Props {
     brand: string;
@@ -63,12 +64,20 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
                     {expanded ? (
                         <div className="expanded-header">
                             <div className="avatar-logo-group">
-                                <img
+                                <Avatar
+                                    avatar={initialDescription.user.avatar}
+                                    pseudo={initialDescription.user.pseudo}
+                                    type="user"
                                     className="user-avatar"
-                                    src={getFullAvatarUrl(initialDescription.user.avatar)}
-                                    alt="user"
+                                    wrapperClassName="user-avatar-wrapper"
                                 />
-                                <img className="brand-logo" src={brandLogoUrl} alt="brand" />
+                                <Avatar
+                                    avatar={brandLogoUrl}
+                                    pseudo={brand}
+                                    type="brand"
+                                    className="brand-logo"
+                                    wrapperClassName="brand-logo-wrapper"
+                                />
                             </div>
 
                             <div className="text-meta">
@@ -80,6 +89,7 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
 
                             <ChevronUp size={16} />
                         </div>
+
                     ) : (
                         <div className="collapsed-header">
                             <span className="date-subcategory">
@@ -88,9 +98,13 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
                                     addSuffix: true,
                                 }).replace("environ ", "")}
                             </span>
-                            <div className="avatars">
-                                <img className="brand-logo" src={brandLogoUrl} alt="brand" />
-                            </div>
+                            <Avatar
+                                avatar={brandLogoUrl}
+                                pseudo={brand}
+                                type="brand"
+                                className="brand-logo"
+                                wrapperClassName="avatars"
+                            />
                             <ChevronDown size={16} />
                         </div>
                     )}
@@ -168,17 +182,22 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
                     {showSimilarReports && descriptions.length > 1 && (
                         <div className="other-descriptions">
                             {descriptions.slice(1, 1 + visibleDescriptionsCount).map((desc) => (
-                                <div key={desc.id} className="feedback-card">
-                                    <div className="feedback-avatar">
-                                        <div className="feedback-avatar-wrapper">
-                                            <img
-                                                src={getFullAvatarUrl(desc.user.avatar)}
-                                                alt={desc.user.pseudo}
-                                                className="avatar"
-                                            />
-                                            {desc.emoji && <div className="emoji-overlay">{desc.emoji}</div>}
-                                        </div>
+                                <div key={desc.id} className="feedback-card"> <div className="feedback-avatar">
+                                    <div className="feedback-avatar-wrapper">
+                                        <Avatar
+                                            avatar={desc.user?.avatar || null}
+                                            pseudo={desc.user?.pseudo || "?"}
+                                            type="user"
+                                            className="avatar"
+                                            wrapperClassName="avatar-wrapper-override"
+                                        />
+                                        {desc.emoji && (
+                                            <div className="emoji-overlay">
+                                                {desc.emoji}
+                                            </div>
+                                        )}
                                     </div>
+                                </div>
                                     <div className="feedback-content">
                                         <div className="feedback-meta">
                                             <span className="pseudo">{desc.user.pseudo}</span>

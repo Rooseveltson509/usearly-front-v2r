@@ -8,7 +8,7 @@ import { getCategoryIconPathFromSubcategory } from "@src/utils/IconsUtils";
 import type { PublicGroupedReport } from "@src/types/Reports";
 import { useAuth } from "@src/services/AuthContext";
 import { getFullAvatarUrl } from "@src/utils/avatarUtils";
-//import "./BrandBlock.scss"; // ✅ Assure-toi d'y avoir les styles refactorés
+import Avatar from "../shared/Avatar";
 
 interface Props {
   brand: string;
@@ -97,10 +97,12 @@ const BrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
                     <div className="feedback-card open">
                       <div className="feedback-avatar">
                         <div className="feedback-avatar-wrapper">
-                          <img
-                            src={getFullAvatarUrl(currentDesc.user?.avatar || null)}
-                            alt={currentDesc.user?.pseudo || "Utilisateur"}
+                          <Avatar
+                            avatar={currentDesc.user?.avatar || null}
+                            pseudo={currentDesc.user?.pseudo || "?"}
+                            type="user"
                             className="avatar"
+                            wrapperClassName="avatar-wrapper-override"
                           />
                           {currentDesc.emoji && (
                             <div className="emoji-overlay">{currentDesc.emoji}</div>

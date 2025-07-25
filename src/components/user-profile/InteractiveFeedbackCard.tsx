@@ -8,6 +8,7 @@ import { fetchValidBrandLogo } from "@src/utils/brandLogos";
 import SharedFooterCdcAndSuggest from "../shared/SharedFooterCdcAndSuggest";
 import { ChevronDown } from "lucide-react";
 import { getFullAvatarUrl } from "@src/utils/avatarUtils";
+import Avatar from "../shared/Avatar";
 
 interface Props {
   item: (CoupDeCoeur | Suggestion) & {
@@ -127,22 +128,28 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
             {isOpen ? (
               <div className="user-brand-header">
                 <div className="avatar-group">
-                  <img
-                    className="user-avatar"
-                    src={getFullAvatarUrl(item.author?.avatar)}
-                    alt={item.author?.pseudo || "Utilisateur"}
+                  <Avatar
+                    avatar={item.author?.avatar}
+                    pseudo={item.author?.pseudo || "Utilisateur"}
+                    type="user"
+                    wrapperClassName="user-avatar"
                   />
-                  <img
-                    className="brand-logo"
-                    src={logos[item.marque] || ""}
-                    alt={item.marque}
+
+                  <Avatar
+                    avatar={logos[item.marque] || ""}
+                    pseudo={item.marque}
+                    type="brand"
+                    wrapperClassName="brand-logo"
                   />
+
                 </div>
+
                 <div className="user-brand-names">
                   {item.author?.pseudo} <span>×</span>{" "}
                   <strong>{item.marque}</strong>
                 </div>
               </div>
+
             ) : (
               item.marque && (
                 <img

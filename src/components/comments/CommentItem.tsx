@@ -1,5 +1,6 @@
 import React from "react";
 import CommentActionsMenu from "../commons/CommentActionsMenu";
+import Avatar from "../shared/Avatar";
 
 interface CommentItemProps {
   comment: {
@@ -17,7 +18,13 @@ interface CommentItemProps {
 const CommentItem: React.FC<CommentItemProps> = ({ comment, avatarUrl, dateLabel, isAuthor, onDelete }) => {
   return (
     <li className="comment-item">
-      <img src={avatarUrl} alt="avatar" className="comment-avatar" />
+      <Avatar
+        avatar={avatarUrl}
+        pseudo={comment.user.pseudo}
+        type="user"
+        className="comment-avatar"
+        wrapperClassName="comment-avatar-wrapper"
+      />
       <div className="comment-content">
         <div className="comment-header">
           <span className="comment-author">{comment.user.pseudo}</span>
@@ -26,7 +33,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, avatarUrl, dateLabel
         </div>
         <p className="comment-text">{comment.content}</p>
         {/* A implémenter plus tar */}
-{/*         <div className="comment-actions">
+        {/*         <div className="comment-actions">
           <button type="button">J’aime</button>
           <span> | </span>
           <button type="button">Répondre</button>

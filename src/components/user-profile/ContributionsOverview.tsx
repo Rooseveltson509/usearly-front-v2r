@@ -2,7 +2,7 @@ import "./ContributionsOverview.scss";
 import { useUserStatsSummary } from "@src/hooks/useUserStatsSummary";
 import type { FeedbackType } from "./FeedbackTabs";
 import { useRef, useEffect, useState } from "react";
-import ChatTop from "../../assets/images/chat-top-cont.svg";
+import ChatTop from "/assets/images/chat-top-cont.svg";
 
 interface Props {
   activeTab: FeedbackType;

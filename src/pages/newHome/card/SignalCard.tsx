@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import "./SignalCard.scss";
-import signalHead from "../../../assets/icons/signal-head.svg";
-import signal1 from "../../../assets/tmp/signal1.png";
-import signal2 from "../../../assets/tmp/signal2.png";
-import signal3 from "../../../assets/tmp/signal1.png";
-import signal4 from "../../../assets/tmp/signal2.png";
+import signalHead from "/assets/icons/signal-head.svg";
+import signal1 from "/assets/tmp/signal1.png";
+import signal2 from "/assets/tmp/signal2.png";
+import signal3 from "/assets/tmp/signal1.png";
+import signal4 from "/assets/tmp/signal2.png";
 import { useNavigate } from "react-router-dom";
 
 const SignalCard: React.FC = () => {
