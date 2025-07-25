@@ -14,6 +14,7 @@ import UserFeedbackView from "../profile/UserFeedbackView";
 import UserChallenge from "../user-profile/UserChallenge";
 import UserImpact from "./UserImpact";
 
+
 const UserProfilePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<FeedbackType>("report");
   const mountCount = useRef(0);

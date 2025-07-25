@@ -3,17 +3,14 @@
   margin-bottom: 14px;
   transition: all 0.2s ease-in-out;
   cursor: pointer;
-  
 
   &.flat {
     background-color: #fff;
     padding: 14px 16px;
-
   }
 
   &.open {
     background-color: #e4d4ff; // ton violet clair d’arrière-plan
-   
   }
 
   .subcategory-header {
@@ -42,7 +39,6 @@
           align-items: center;
           gap: 6px; // espace entre le titre et la bulle
           flex-wrap: wrap; // au cas où ça dépasse
-
 
           h4 {
             font-size: 18px;
@@ -75,19 +71,19 @@
       }
     }
 
-.subcategory-right {
-  display: flex;
-  align-items: center;
+    .subcategory-right {
+      display: flex;
+      align-items: center;
 
-.expanded-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  margin-top: 4px;
-  margin-bottom: 4px;
-  position: relative;
-  padding-right: 20px;
+      .expanded-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        margin-top: 4px;
+        margin-bottom: 4px;
+        position: relative;
+        padding-right: 24px;
 
 .avatar-logo-group {
   display: flex;
@@ -129,66 +125,63 @@
   .text-meta {
     text-align: center;
 
-    .user-brand-line {
-      display: block;
-      font-size: 14px;
-      font-weight: 500;
+          .user-brand-line {
+            display: block;
+            font-size: 12px;
+            font-weight: 500;
 
-      .cross {
-        margin: 0 4px;
+            .cross {
+              margin: 0 4px;
+            }
+          }
+
+          .date-subcategory {
+            font-size: 13px;
+            color: #999;
+            margin-left: auto;
+            margin-right: auto;
+            transform: translateX(
+              -20%
+            ); // ✅ décale la date un peu plus à gauche
+          }
+        }
+
+        svg {
+          position: absolute;
+          top: 4px;
+          right: 4px;
+        }
+      }
+
+      .collapsed-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .date-subcategory {
+          font-size: 13px;
+          color: #888;
+          margin-left: auto;
+          transform: translateY(2px); // petit ajustement vertical si besoin
+          margin-right: 30px;
+        }
+
+        .avatars {
+          display: flex;
+          align-items: center;
+
+          .brand-logo {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+          }
+        }
+
+        svg {
+          margin-left: 8px;
+        }
       }
     }
-
-  .date-subcategory {
-    font-size: 13px;
-    color: #999;
-    margin-left: auto;
-    margin-right: auto;
-    transform: translateX(-20%); // ✅ décale la date un peu plus à gauche
-  }
-  }
-
-  svg {
-    position: absolute;
-    top: 4px;
-    right: 4px;
-  }
-}
-
-
-.collapsed-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  .date-subcategory {
-    font-size: 13px;
-    color: #888;
-    margin-left: auto;
-    margin-right: 200px; // ✅ ajuste ici pour la rapprocher de la bulle
-    transform: translateY(2px); // petit ajustement vertical si besoin
-  }
-
-  .avatars {
-    display: flex;
-    align-items: center;
-
-    .brand-logo {
-      width: 48px;
-      height: 48px;
-      object-fit: contain;
-    }
-  }
-
-  svg {
-    margin-left: 8px;
-  }
-}
-
-}
-
-
-
 
     svg {
       margin-top: 4px;
@@ -205,6 +198,9 @@
         font-size: 15px;
         color: #333;
         line-height: 1.4;
+        padding-bottom: 16px;
+        margin-left: 20px;
+        margin-top: -24px;
       }
 
       .show-capture-button {
@@ -225,7 +221,6 @@
   }
 }
 
-
 .subcategory-block.flat {
   background-color: #fff; // fond blanc même en mode fermé
   border-radius: 20px;
@@ -239,11 +234,12 @@
 
   &.open {
     background-color: #fff !important; // forcé pour rester blanc en mode ouvert
-         box-shadow: 0 2px 2px rgba(0,0,0,0.12);
-         &:hover {
-    background-color: #fff !important; // forcé pour rester blanc en mode ouvert
-         box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-  }}
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
+    &:hover {
+      background-color: #fff !important; // forcé pour rester blanc en mode ouvert
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    }
+  }
 
   .subcategory-header {
     display: flex;
@@ -257,9 +253,9 @@
 
       .subcategory-icon {
         max-width: 50px;
-        width:auto;
-        height:auto;
-        max-height:70px;
+        width: auto;
+        height: auto;
+        max-height: 70px;
         margin-right: 0px !important;
       }
 
@@ -280,15 +276,12 @@
         }
       }
     }
-
-
   }
 
   .subcategory-content {
     margin-top: 12px;
   }
 }
-
 
 .avatars-expanded {
   display: flex;
@@ -320,7 +313,7 @@
     align-items: flex-start;
 
     .user-brand-line {
-      font-size: 14px;
+      font-size: 12px;
       font-weight: 500;
 
       .cross {

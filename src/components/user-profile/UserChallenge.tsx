@@ -1,5 +1,6 @@
 import "./UserChallenge.scss";
 
+
 interface Friend {
   name: string;
   handle: string;
