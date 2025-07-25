@@ -298,7 +298,7 @@
     }
     .subcategory-block {
       border: 1px solid #ffffff;
-      padding: 4px 16px;
+      padding:8px 16px 16px 16px;
       margin: 4px 8px;
       border-radius: 8px;
       overflow: hidden;
@@ -380,6 +380,7 @@
           margin: 0;
           flex-grow: 1;
           color: #000;
+          padding-top: 16px;
         }
 
         .subcategory-icon {
