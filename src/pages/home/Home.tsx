@@ -23,6 +23,7 @@ import medium from "/assets/images/medium.svg";
 import small from "/assets/images/small.svg";
 import HomeFiltersCdc from "./HomeFiltersCdc";
 import HomeFiltersSuggestion from "./HomeFiltersSuggestion";
+import FilterIllustration from "./home-illustration/FilterIllustration";
 
 
 function Home() {
@@ -118,100 +119,67 @@ function Home() {
           <UserStatsCard />
         </aside>
 
-        <div className="feedback-list-wrapper">
-          {activeTab !== "report" && isLoading && (
-            <SqueletonAnime
-              loaderRef={{ current: null }}
-              loading={true}
-              hasMore={false}
-              error={null}
-            />
-          )}
-
-          {activeTab === "report" ? (
-            <HomeGroupedReportsList
-              activeTab={activeTab}
-              activeFilter={activeFilter}
-              viewMode={activeFilter === "confirmed" ? "confirmed" : "none" as any}
-              onViewModeChange={setViewMode}
-              setActiveFilter={setActiveFilter}
-            />
-          ) : (
-            !isLoading && (
-              <FeedbackView
+        {activeTab === "report" ? (
+          <div className={`report-banner-container banner-${activeFilter}`}>
+            <div className="feedback-list-wrapper">
+              <HomeGroupedReportsList
                 activeTab={activeTab}
-                viewMode="flat"
-                currentState={{
-                  data: feedbackData,
-                  loading: isLoading,
-                  hasMore: false,
-                  error: null,
-                }}
-                openId={null}
-                setOpenId={() => { }}
-                groupOpen={{}}
-                setGroupOpen={() => { }}
-                selectedBrand=""
-                selectedCategory=""
-                renderCard={() => <></>}
+                activeFilter={activeFilter}
+                viewMode={activeFilter === "confirmed" ? "confirmed" : "none" as any}
+                onViewModeChange={setViewMode}
+                setActiveFilter={setActiveFilter}
               />
-            )
-          )}
-        </div>
-        {activeTab === "report" && (
-          <aside className="right-panel">
-            <HomeFilters
-              selectedFilter={activeFilter}
-              onChange={(key) => {
-                window.scrollTo({ top: 0, behavior: "smooth" });
+            </div>
+            <aside className="right-panel">
+              <FilterIllustration filter={activeFilter} />
+            </aside>
+          </div>
+        ) : (
+          <>
+            <div className="feedback-list-wrapper">
+              {isLoading ? (
+                <SqueletonAnime
+                  loaderRef={{ current: null }}
+                  loading={true}
+                  hasMore={false}
+                  error={null}
+                />
+              ) : (
+                <FeedbackView
+                  activeTab={activeTab}
+                  viewMode="flat"
+                  currentState={{
+                    data: feedbackData,
+                    loading: isLoading,
+                    hasMore: false,
+                    error: null,
+                  }}
+                  openId={null}
+                  setOpenId={() => { }}
+                  groupOpen={{}}
+                  setGroupOpen={() => { }}
+                  selectedBrand=""
+                  selectedCategory=""
+                  renderCard={() => <></>}
+                />
+              )}
+            </div>
 
-                if (key === "confirmed") {
-                  setActiveFilter("confirmed");
-                  setViewMode("confirmed"); // ✅ seul filtre actif
-                } else {
-                  setActiveFilter(key); // ✅ on garde le visuel du filtre sélectionné
-                  setViewMode("none" as any); // ❌ désactive tous les autres
-                }
-              }}
+            {activeTab === "coupdecoeur" && (
+              <aside className="right-panel">
+                <HomeFiltersCdc />
+              </aside>
+            )}
 
-              /*              onChange={(key) => {
-                             window.scrollTo({ top: 0, behavior: "smooth" });
-             
-                             if (key === "chrono") {
-                               setActiveFilter("");
-                               setViewMode("chrono");
-                             } else if (key === "hot") {
-                               setActiveFilter("hot");
-                               setViewMode("flat");
-                             } else if (key === "confirmed") {
-                               setActiveFilter("confirmed");
-                               setViewMode("confirmed");
-                             } else {
-                               setActiveFilter(key);
-                               setViewMode("chrono");
-                             }
-                           }} */
-              availableFilters={availableFilters}
-            />
-
-          </aside>
-        )}
-        {activeTab === "coupdecoeur" && (
-          <aside className="right-panel">
-            <HomeFiltersCdc
-
-            />
-          </aside>
-        )}
-
-        {activeTab === "suggestion" && (
-          <aside className="right-panel">
-            <HomeFiltersSuggestion
-
-            />
-          </aside>
+            {activeTab === "suggestion" && (
+              <aside className="right-panel">
+                <HomeFiltersSuggestion />
+              </aside>
+            )}
+          </>
         )}
       </main>
+
     </div>
   );
 }

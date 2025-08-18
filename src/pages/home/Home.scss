@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #f7f7f7;
+  //background-color: #f7f7f7;
   z-index: 0;
 }
 
@@ -55,6 +55,7 @@
       bottom: 35px;
       right: -4px;
       transition: transform 0.5s ease;
+
       &:hover {
         transform: scale(1.25);
       }
@@ -65,6 +66,7 @@
       width: 220px;
     }
   }
+
   .right {
     margin-left: auto; // Maintient la zone de droite complètement à droite
     display: flex;
@@ -96,6 +98,7 @@
           right: 200px;
           animation-delay: 2s;
         }
+
         &.logo-badge {
           object-fit: cover;
           width: 120px;
@@ -107,10 +110,12 @@
     }
 
     @keyframes float {
+
       0%,
       100% {
         transform: translateY(0px);
       }
+
       50% {
         transform: translateY(-5px);
       }
@@ -121,8 +126,9 @@
 .user-main-content {
   display: flex;
   justify-content: center;
-  width: 90%;
+  width: 100%;
   gap: 24px;
+  margin-top: 20px;
 }
 
 .feedback-list-wrapper {
@@ -130,3 +136,46 @@
   gap: 10px;
   z-index: 4;
 }
+
+.report-banner-container {
+  display: flex;
+  width: 100%;
+  border-radius: 24px;
+  padding: 0 24px 24px 24px;
+  margin-bottom: 32px;
+   margin-top: 32px;
+  box-sizing: border-box;
+  max-height: 400px;
+  position: relative;
+  overflow: visible; // ← ajoute ceci
+
+
+  &.banner-confirmed {
+    background-color: #a871f3;
+  }
+
+  &.banner-popular {
+    background-color: #ffe082;
+  }
+
+  &.banner-rage {
+    background-color: #ff8a80;
+  }
+
+  &.banner-urgent {
+    background-color: #f06292;
+  }
+
+  &.banner-chrono {
+    background-color: #90caf9;
+  }
+
+  .feedback-list-wrapper {
+    flex: 1;
+  }
+
+  .right-panel {
+    margin-left: 24px;
+  }
+}
+

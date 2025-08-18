@@ -116,7 +116,7 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
             {expanded && (
                 <div className="subcategory-content">
                     <div className="main-description">
-                        <p className="description-text">{initialDescription.description}</p>
+                        <p className="description-text">{initialDescription.description}.... {initialDescription.emoji}</p>
                         {initialDescription.capture && (
                             <div className="screenshot-section">
                                 <button

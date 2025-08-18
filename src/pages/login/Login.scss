@@ -21,14 +21,48 @@
   form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 20px;
 
-    input[type="email"],
-    input[type="password"] {
-      padding: 14px;
-      font-size: 16px;
-      border: 1px solid $gray-300;
-      border-radius: $border-radius-md;
+    .floating-group {
+      position: relative;
+
+      input {
+        width: 100%;
+        padding: 1.2rem 1rem 0.6rem;
+        font-size: 1rem;
+        border: 1px solid $gray-300;
+        border-radius: $border-radius-md;
+        background: white;
+        transition: border 0.3s;
+
+        &:focus {
+          border-color: #222;
+          background-color: #fff;
+          outline: none;
+        }
+
+        &.filled + label,
+        &:focus + label {
+          //top: 0.4rem;
+          left: 0.9rem;
+           background-color: #fff;
+          font-size: 0.75rem;
+          color: #222;
+        }
+      }
+
+      label {
+        position: absolute;
+        //top: 1.2rem;
+        left: 1rem;
+        font-size: 1rem;
+        color: $gray-500;
+        pointer-events: none;
+        background: white;
+        padding: 0 0.2rem;
+        transition: 0.2s ease all;
+        z-index: 1;
+      }
     }
 
     .login-options {
@@ -37,10 +71,18 @@
       font-size: 14px;
       align-items: center;
 
+      label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+      }
+
       .forgot-link {
         cursor: pointer;
         color: $primary;
         text-decoration: underline;
+        font-weight: 500;
       }
     }
 
@@ -52,6 +94,11 @@
       border-radius: $border-radius-md;
       border: none;
       cursor: pointer;
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: #0b0a0acc;
+      }
 
       &:disabled {
         background-color: $gray-400;

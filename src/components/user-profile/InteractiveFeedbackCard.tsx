@@ -152,10 +152,11 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
 
             ) : (
               item.marque && (
-                <img
+                <Avatar
+                  avatar={logos[item.marque] || ""}
+                  pseudo={item.marque}
+                  type="brand"
                   className="brand-logo"
-                  src={logos[item.marque] || ""}
-                  alt={item.marque}
                 />
               )
             )}

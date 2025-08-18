@@ -7,10 +7,12 @@ import { Link } from "react-router-dom";
 
 const Login = () => {
   const { login } = useAuth();
-  const [email, setEmail] = useState("");
+  const [loginInput, setLoginInput] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const isEmail = (value: string) => value.includes("@");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,13 +21,21 @@ const Login = () => {
     try {
       let response;
 
-      if (email.includes("@brand.") || email.includes("@marque.")) {
-        response = await loginBrand({ email, mdp: password, rememberMe });
+      if (loginInput.includes("@brand.") || loginInput.includes("@marque.")) {
+        response = await loginBrand({
+          email: loginInput,
+          mdp: password,
+          rememberMe,
+        });
       } else {
-        response = await loginUser({ email, password, rememberMe });
+        response = await loginUser({
+          email: isEmail(loginInput) ? loginInput : undefined,
+          pseudo: !isEmail(loginInput) ? loginInput : undefined,
+          password,
+          rememberMe,
+        });
       }
 
-      // Appel au AuthContext pour stocker les infos
       await login(response.accessToken, response.user, rememberMe);
       showToast("✅ Connexion réussie !");
     } catch (error: any) {
@@ -38,24 +48,37 @@ const Login = () => {
   return (
     <div className="login-container">
       <h2>Ravi de te revoir Usear !</h2>
-      <p>Saisis ton adresse e-mail et ton mot de passe pour rejoindre Usearly.</p>
+      <p>
+        Saisis ton adresse e-mail <strong>ou ton pseudo</strong> et ton mot de
+        passe pour rejoindre Usearly.
+      </p>
 
       <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          placeholder="Email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+        <div className="floating-group">
+          <input
+            type="text"
+            id="loginInput"
+            value={loginInput}
+            onChange={(e) => setLoginInput(e.target.value)}
+            required
+            placeholder=" "
+            className={loginInput ? "filled" : ""}
+          />
+          <label htmlFor="loginInput">Email ou pseudo</label>
+        </div>
 
-        <input
-          type="password"
-          placeholder="Mot de passe"
-          required
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <div className="floating-group">
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            placeholder=" "
+            className={password ? "filled" : ""}
+          />
+          <label htmlFor="password">Mot de passe</label>
+        </div>
 
         <div className="login-options">
           <label>
@@ -66,8 +89,11 @@ const Login = () => {
             />
             Se souvenir de moi.
           </label>
-          <Link to="/forgot-password" className="forgot-link">Mot de passe oublié ?</Link>
+          <Link to="/forgot-password" className="forgot-link">
+            Mot de passe oublié ?
+          </Link>
         </div>
+
         <button type="submit" disabled={loading}>
           {loading ? "Connexion..." : "Se connecter"}
         </button>

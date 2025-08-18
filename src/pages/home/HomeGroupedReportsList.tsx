@@ -8,8 +8,6 @@ import { useConfirmedFlatData } from "@src/hooks/useConfirmedFlatData";
 import SqueletonAnime from "@src/components/loader/SqueletonAnime";
 import ActiveFilterBadges from "./ActiveFilterBadges";
 import FilterBar from "./FilterBar";
-import FlatSubcategoryBlock from "./confirm-reportlist/FlatSubcategoryBlock";
-import ReportListView from "./ReportListView";
 import ConfirmedReportsList from "./confirm-reportlist/ConfirmReportsList";
 import { useGroupedReportsScroll } from "@src/hooks/useGroupedReportsScroll";
 
@@ -23,6 +21,7 @@ interface Props {
     onViewModeChange: (mode: "flat" | "chrono" | "confirmed") => void;
     setActiveFilter: (val: string) => void;
     viewMode: "flat" | "chrono" | "confirmed";
+    renderHighlight?: (card: React.ReactNode) => React.ReactNode;
 }
 
 const HomeGroupedReportsList = ({
@@ -39,7 +38,6 @@ const HomeGroupedReportsList = ({
     const loaderRef = useRef<HTMLDivElement | null>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
     const isChronoView = viewMode === "chrono" && (filter === "" || filter === "chrono");
 
 
@@ -141,92 +139,6 @@ const HomeGroupedReportsList = ({
 
 
     return (
-        /*         <div className="home-grouped-reports-list">
-                    <div className="controls">
-                        <FilterBar
-                            filter={filter}
-                            setFilter={setFilter}
-                            viewMode={viewMode}
-                            setViewMode={onViewModeChange}
-                            setSelectedBrand={setSelectedBrand}
-                            setSelectedCategory={setSelectedCategory}
-                            setActiveFilter={setActiveFilter}
-                            onViewModeChange={onViewModeChange}
-                            isHotFilterAvailable={true}
-                            dropdownRef={dropdownRef}
-                            isDropdownOpen={isDropdownOpen}
-                            setIsDropdownOpen={setIsDropdownOpen}
-                            selectedBrand={selectedBrand}
-                            selectedCategory={selectedCategory}
-                            availableBrands={availableBrands}
-                            availableCategories={availableCategories}
-                            labelOverride={isChronoView ? "Les plus récents" : undefined}
-                        />
-                        <ActiveFilterBadges
-                            selectedBrand={selectedBrand}
-                            selectedCategory={selectedCategory}
-                            onClearBrand={() => setSelectedBrand("")}
-                            onClearCategory={() => setSelectedCategory("")}
-                        />
-                    </div>
-        
-                    {viewMode === "confirmed" ? (
-                        <ConfirmedReportsList
-                            expandedItems={expandedItems}
-                            handleToggle={handleToggle}
-                        />
-                    ) : filter === "hot" && viewMode === "flat" ? (
-                        filteredFlatData.map((item) => (
-                            <FlatSubcategoryBlock
-                                key={item.marque + item.subCategories[0]?.subCategory}
-                                brand={item.marque}
-                                brandLogoUrl={item.siteUrl || "/default-logo.png"}
-                                subcategory={item.subCategories[0]?.subCategory || ""}
-                                descriptions={item.subCategories[0]?.descriptions || []}
-                            />
-                        ))
-                    ) : (
-                        <ReportListView
-                            filter={filter}
-                            viewMode={viewMode}
-                            flatData={filteredFlatData}
-                            chronoData={chronoData}
-                            popularData={{}}
-                            popularEngagementData={popularEngagementData}
-                            rageData={rageData}
-                            expandedItems={expandedItems}
-                            handleToggle={handleToggle}
-                            loadingChrono={loadingChrono}
-                            loadingPopular={false}
-                            loadingPopularEngagement={loadingPopularEngagement}
-                            loadingRage={loadingRage}
-                        />
-                    )}
-        
-        
-                    <SqueletonAnime
-                        loaderRef={loaderRef}
-                        loading={
-                            filter === "popular"
-                                ? loadingPopularEngagement
-                                : filter === "rage"
-                                    ? loadingRage
-                                    : isChronoView
-                                        ? loadingChrono
-                                        : loadingFlat
-                        }
-                        hasMore={
-                            filter === "popular"
-                                ? hasMorePopularEngagement
-                                : filter === "rage"
-                                    ? hasMoreRage
-                                    : isChronoView
-                                        ? hasMoreChrono
-                                        : hasMoreFlat
-                        }
-                        error={null}
-                    />
-                </div> */
         <div className="home-grouped-reports-list">
             <div className="controls">
                 <FilterBar

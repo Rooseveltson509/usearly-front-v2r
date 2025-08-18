@@ -20,16 +20,19 @@ interface RegisterResponse {
 }
 export const loginUser = async ({
   email,
+  pseudo,
   password,
   rememberMe,
 }: {
-  email: string;
+  email?: string;
+  pseudo?: string;
   password: string;
   rememberMe: boolean;
 }) => {
   try {
     const response = await apiService.post("/user/login", {
       email,
+      pseudo,
       password,
       rememberMe,
     });
