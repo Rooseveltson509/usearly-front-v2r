@@ -9,10 +9,10 @@ import { useAuth } from "@src/services/AuthContext";
 import { useCommentsForDescription } from "@src/hooks/useCommentsForDescription";
 import type { ExplodedGroupedReport } from "@src/types/Reports";
 import "./ChronoReportCard.scss";
-import { getBrandLogo } from "@src/utils/brandLogos";
+import Avatar from "@src/components/shared/Avatar";
 
 interface Props {
-  item: ExplodedGroupedReport;
+  item: ExplodedGroupedReport & { brandLogoUrl?: string }; // ✅ on ajoute brandLogoUrl
   isOpen: boolean;
   onToggle: () => void;
 }
@@ -21,22 +21,12 @@ const ChronoReportCard: React.FC<Props> = ({ item, isOpen, onToggle }) => {
   const { userProfile } = useAuth();
   const [showComments, setShowComments] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
-  const [localCommentsCounts, setLocalCommentsCounts] = useState<
-    Record<string, number>
-  >({});
+  const [localCommentsCounts, setLocalCommentsCounts] = useState<Record<string, number>>({});
 
   const firstDescription = item.subCategory.descriptions[0];
   const descriptionId = firstDescription.id;
 
-  const userAvatar = firstDescription.user?.avatar
-    ? `${import.meta.env.VITE_API_BASE_URL}/${firstDescription.user.avatar}`
-    : "/default-avatar.png";
-
-  const { comments, loading } = useCommentsForDescription(
-    descriptionId,
-    "report",
-    refreshKey
-  );
+  const { comments, loading } = useCommentsForDescription(descriptionId, "report", refreshKey);
 
   const handleCommentClick = () => {
     if (!isOpen) {
@@ -63,10 +53,8 @@ const ChronoReportCard: React.FC<Props> = ({ item, isOpen, onToggle }) => {
       <div className="card-header" onClick={onToggle}>
         <div className="left-icon">
           <img
-            src={getCategoryIconPathFromSubcategory(
-              item.subCategory.subCategory
-            )}
-            alt="icon"
+            src={getCategoryIconPathFromSubcategory(item.subCategory.subCategory)}
+            alt="icon catégorie"
           />
         </div>
 
@@ -89,19 +77,26 @@ const ChronoReportCard: React.FC<Props> = ({ item, isOpen, onToggle }) => {
         <div className="right-section">
           {!isOpen ? (
             <div className="brand-logo-container">
-              <img
-                src={getBrandLogo(item.marque, item.siteUrl)}
-                alt={item.marque}
+              <Avatar
+                avatar={item.brandLogoUrl ?? null} // ✅ logo fourni par le parent
+                pseudo={item.marque}
+                type="brand"
                 className="brand-logo"
               />
             </div>
           ) : (
             <div className="user-brand-inline">
               <div className="avatars">
-                <img src={userAvatar} alt="avatar" className="avatar" />
-                <img
-                  src={getBrandLogo(item.marque, item.siteUrl)}
-                  alt="logo"
+                <Avatar
+                  avatar={firstDescription.user?.avatar ?? null}
+                  pseudo={firstDescription.user?.pseudo}
+                  type="user"
+                  className="avatar"
+                />
+                <Avatar
+                  avatar={item.brandLogoUrl ?? null} // ✅ idem ici
+                  pseudo={item.marque}
+                  type="brand"
                   className="avatar"
                 />
               </div>

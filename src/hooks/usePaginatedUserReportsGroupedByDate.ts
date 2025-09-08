@@ -1,6 +1,10 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { getUserReportsGroupedByDate } from "@src/services/feedbackService";
-import type { ExplodedGroupedReport, GetGroupedReportsByDateResponse, PublicGroupedReportFromAPI } from "@src/types/Reports";
+import type {
+    ExplodedGroupedReport,
+    GetGroupedReportsByDateResponse,
+    PublicGroupedReportFromAPI,
+} from "@src/types/Reports";
 
 export const usePaginatedUserReportsGroupedByDate = (enabled: boolean) => {
     const [data, setData] = useState<Record<string, ExplodedGroupedReport[]>>({});
@@ -15,16 +19,15 @@ export const usePaginatedUserReportsGroupedByDate = (enabled: boolean) => {
         }
     }, [loading, hasMore, enabled]);
 
-
-useEffect(() => {
-    if (!previousEnabled.current && enabled) {
-        // Passage de false ➔ true : reset page avant chargement
-        setPage(1);
-        setData({});
-        setHasMore(true);
-    }
-    previousEnabled.current = enabled;
-}, [enabled]);
+    useEffect(() => {
+        if (!previousEnabled.current && enabled) {
+            // Passage de false ➔ true : reset page avant chargement
+            setPage(1);
+            setData({});
+            setHasMore(true);
+        }
+        previousEnabled.current = enabled;
+    }, [enabled]);
 
     useEffect(() => {
         if (!enabled) {
@@ -37,33 +40,36 @@ useEffect(() => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const response: GetGroupedReportsByDateResponse = await getUserReportsGroupedByDate(page, 20);
+                const response: GetGroupedReportsByDateResponse =
+                    await getUserReportsGroupedByDate(page, 20);
 
                 if (response.success) {
                     const transformedData: Record<string, ExplodedGroupedReport[]> = {};
 
                     Object.entries(response.data).forEach(([date, reports]) => {
-                        transformedData[date] = reports.map((report: PublicGroupedReportFromAPI) => ({
-                            id: report.reportingId,
-                            reportingId: report.reportingId,
-                            category: report.category,
-                            marque: report.marque,
-                            totalCount: report.count,
-                            subCategory: {
-                                subCategory: report.subCategory,
-                                count: report.count,
-                                descriptions: report.descriptions,
-                            },
-                            subCategories: [
-                                {
+                        transformedData[date] = reports.map(
+                            (report: PublicGroupedReportFromAPI) => ({
+                                id: report.reportingId,
+                                reportingId: report.reportingId,
+                                category: report.category,
+                                marque: report.marque,
+                                siteUrl: report.siteUrl || null, // ✅ conserve siteUrl
+                                totalCount: report.count,
+                                subCategory: {
                                     subCategory: report.subCategory,
                                     count: report.count,
                                     descriptions: report.descriptions,
                                 },
-                            ],
-
-                            reactions: [],
-                        }));
+                                subCategories: [
+                                    {
+                                        subCategory: report.subCategory,
+                                        count: report.count,
+                                        descriptions: report.descriptions,
+                                    },
+                                ],
+                                reactions: [],
+                            })
+                        );
                     });
 
                     setData((prev) => ({
@@ -76,7 +82,10 @@ useEffect(() => {
                     setHasMore(false);
                 }
             } catch (error) {
-                console.error("❌ Erreur lors du chargement des reports user par date :", error);
+                console.error(
+                    "❌ Erreur lors du chargement des reports user par date :",
+                    error
+                );
                 setHasMore(false);
             } finally {
                 setLoading(false);

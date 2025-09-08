@@ -138,16 +138,16 @@
             right: 24px;
             border: 2px solid white;
             z-index: 1;
-            position: relative;
+            /* position: relative; */
           }
 
           &:last-child {
-            position: absolute;
+            /* position: absolute; */
             right: -10px;
             width: 48px;
             height: 48px;
-            background-color: white;
-            object-fit: contain; // ou cover selon le rendu souhaité
+            /* background-color: white; */
+            object-fit: contain;
             border-radius: 50%;
             border: 2px solid white;
             z-index: 2;

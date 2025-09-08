@@ -10,9 +10,7 @@ import "./UserBrandBlock.scss";
 import ReportActionsBarWithReactions from "../shared/ReportActionsBarWithReactions";
 import { getCommentsCountForDescription } from "@src/services/commentService";
 import CommentSection from "../comments/CommentSection";
-import CommentInputSection from "../report-desc-comment/CommentInputSection";
 import { parseISO, isAfter } from "date-fns";
-import { getFullAvatarUrl } from "@src/utils/avatarUtils";
 import Avatar from "../shared/Avatar";
 
 
@@ -171,30 +169,6 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                         ).replace("environ ", "")}
                       </span>
                     )}
-
-                    {/*                     {sub.subCategory === expandedSub && (
-                      <div className="subcategory-user-brand-info">
-                        <div className="avatars-row">
-                          <img
-                            src={getFullAvatarUrl(
-                              initialDescription.user.avatar
-                            )}
-                            alt="avatar"
-                            className="avatar user-avatar"
-                          />
-                          <img
-                            src={getBrandLogo(brand, siteUrl)}
-                            alt={brand}
-                            className="avatar brand-logo"
-                          />
-                        </div>
-                        <div className="user-brand-names">
-                          {initialDescription.user.pseudo}{" "}
-                          <span className="x">×</span> <strong>{brand}</strong>
-                        </div>
-                      </div>
-                    )} */}
-
                     {sub.subCategory === expandedSub && (
                       <div className="subcategory-user-brand-info">
                         <div className="avatars-row">

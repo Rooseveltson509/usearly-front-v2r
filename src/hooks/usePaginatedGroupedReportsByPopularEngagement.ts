@@ -1,9 +1,32 @@
 import { useState, useEffect, useCallback } from "react";
 import { getGroupedReportsByPopularEngagement } from "@src/services/feedbackService";
-import type { PopularGroupedReport } from "@src/types/Reports";
 
-export const usePaginatedGroupedReportsByPopularEngagement = (filter: string, enabled: boolean) => {
-  const [data, setData] = useState<Record<string, PopularGroupedReport[]>>({});
+interface PopularReport {
+  id: string;
+  reportingId: string;
+  subCategory: string;
+  description: string;
+  siteUrl: string | null;
+  marque: string;
+  category: string;
+  capture: string | null;
+  createdAt: string;
+  user: {
+    id: string;
+    pseudo: string;
+    avatar: string | null;
+  } | null;
+  reactions: any[];
+  comments: any[];
+  stats: {
+    totalReactions: number;
+    totalComments: number;
+    totalInteractions: number;
+  };
+}
+
+export const usePaginatedGroupedReportsByPopularEngagement = (enabled: boolean, pageSize = 20) => {
+  const [data, setData] = useState<PopularReport[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -16,29 +39,29 @@ export const usePaginatedGroupedReportsByPopularEngagement = (filter: string, en
 
   useEffect(() => {
     if (enabled) {
-      setData({});
+      setData([]);
       setPage(1);
       setHasMore(true);
-      setLoading(true);
     }
-  }, [enabled, filter]);
+  }, [enabled]);
 
   useEffect(() => {
-    if (!enabled || !filter) return;
+    if (!enabled) return;
 
     const fetch = async () => {
+      setLoading(true);
       try {
-        setLoading(true);
-        const res = await getGroupedReportsByPopularEngagement(page, 20);
+        const res = await getGroupedReportsByPopularEngagement(page, pageSize);
 
         if (res.success) {
-          setData((prev) => ({ ...prev, ...res.data }));
+          const newData: PopularReport[] = res.data || [];
+          setData((prev) => [...prev, ...newData]);
           setHasMore(page < res.totalPages);
         } else {
           setHasMore(false);
         }
       } catch (e) {
-        console.error("popular-engagement error", e);
+        console.error("❌ popular reports error", e);
         setHasMore(false);
       } finally {
         setLoading(false);
@@ -46,7 +69,7 @@ export const usePaginatedGroupedReportsByPopularEngagement = (filter: string, en
     };
 
     fetch();
-  }, [page, enabled, filter]);
+  }, [page, enabled, pageSize]);
 
   return { data, loading, hasMore, loadMore };
 };

@@ -2,6 +2,18 @@ import type { UserReaction } from "./reaction";
 
 export type FeedbackType = "report" | "coupdecoeur" | "suggestion";
 
+export interface BrandWithSubCategories {
+  marque: string;
+  subCategories: string[];
+}
+
+export interface GetConfirmedResponse {
+  currentPage: number;
+  total: number;
+  data: ConfirmedSubcategoryReport[];
+}
+
+
 export interface User {
   id: string;
   pseudo: string;
@@ -15,7 +27,7 @@ export interface Reaction {
 }
 
 export interface ConfirmedSubcategoryReport {
-  reportingId: number;
+  reportingId: string; // 👈 au lieu de number
   subCategory: string;
   count: number;
   siteUrl: string | null;
@@ -24,17 +36,18 @@ export interface ConfirmedSubcategoryReport {
   capture: string | null;
   createdAt: string;
   descriptions: {
-    id: number;
+    id: string; // 👈 probablement UUID aussi, pas number
     description: string;
     emoji?: string;
     createdAt: string;
     user: {
-      id: number;
+      id: string; // 👈 UUID
       pseudo: string;
       avatar: string;
     };
   }[];
 }
+
 
 
 export type LikeFeedbackType = Exclude<FeedbackType, "report">;
@@ -129,25 +142,25 @@ export interface FeedbackDescription {
   capture: string | null;
   marque: string;
   brand?: string;
-  reactions: { emoji: string; count: number; userIds: string[] }[]; 
+  reactions: { emoji: string; count: number; userIds: string[] }[];
 }
 
 export interface SimplifiedFeedbackDescription {
+  id: string;
+  description: string;
+  emoji: string;
+  createdAt: string;
+  user?: {
     id: string;
-    description: string;
+    pseudo: string;
+    avatar: string | null;
+  };
+  capture: string | null;
+  reactions: {
     emoji: string;
-    createdAt: string;
-    user?: {
-        id: string;
-        pseudo: string;
-        avatar: string | null;
-    };
-    capture: string | null;
-    reactions: {
-        emoji: string;
-        count: number;
-        userIds: string[];
-    }[];
+    count: number;
+    userIds: string[];
+  }[];
 }
 
 
@@ -157,7 +170,7 @@ export interface GroupedReport {
   status?: string;
   category: string;
   marque: string;
-  siteUrl?: string;
+  siteUrl?: string | null;
   totalCount: number;
   subCategories: {
     subCategory: string;
@@ -200,11 +213,44 @@ export interface ExplodedGroupedReport extends GroupedReport {
 export interface PopularGroupedReport {
   reportingId: string;
   marque: string;
-  siteUrl?: string;
+  siteUrl?: string | null;
   category: string;
   subCategory: string;
   count: number;
   descriptions: FeedbackDescription[];
+}
+
+export interface PopularReport {
+  id: string;                // id de la description
+  reportingId: string;
+  subCategory: string;
+  description: string;
+  siteUrl: string | null;
+  marque: string;
+  category: string;
+  capture: string | null;
+  createdAt: string;
+  user: {
+    id: string;
+    pseudo: string;
+    avatar: string | null;
+  } | null;
+  reactions: {
+    emoji: string;
+    count: number;
+    userIds: string[];
+  }[];
+  comments: {
+    id: string;
+    content: string;
+    createdAt: string;
+    userId: string;
+  }[];
+  stats: {
+    totalReactions: number;
+    totalComments: number;
+    totalInteractions: number;
+  };
 }
 
 
@@ -231,7 +277,7 @@ export interface UserGroupedReportDescription {
   description: string;
   emoji: string | null;
   createdAt: string;
-  commentsCount?: number; 
+  commentsCount?: number;
   user: {
     id: string;
     pseudo: string;
@@ -244,7 +290,7 @@ export interface UserGroupedReportDescription {
     userIds: string[];
   }[];
 }
-export interface PublicGroupedReport {
+/* export interface PublicGroupedReport {
   id: string;
   reportingId: string;
   category: string;
@@ -272,23 +318,54 @@ export interface PublicGroupedReport {
       }[];
     }[];
   }[];
+} */
+
+  export interface PublicGroupedReport {
+  id: string;
+  reportingId: string;
+  category: string;
+  marque: string;
+  siteUrl?: string | null;   // ✅ accepte null aussi
+  totalCount: number;
+  subCategories: {
+    subCategory: string;
+    count: number;
+    descriptions: {
+      id: string;
+      description: string;
+      emoji: string;
+      createdAt: string;
+      user?: {
+        id: string;
+        pseudo: string;
+        avatar: string | null;
+      };
+      capture: string | null;
+      reactions: {
+        emoji: string;
+        count: number;
+        userIds: string[];
+      }[];
+    }[];
+  }[];
 }
 
 export type GetGroupedReportsByDateResponse = {
-    success: boolean;
-    total: number;
-    page: number;
-    totalPages: number;
-    data: Record<string, PublicGroupedReportFromAPI[]>;
+  success: boolean;
+  total: number;
+  page: number;
+  totalPages: number;
+  data: Record<string, PublicGroupedReportFromAPI[]>;
 };
 
 
 export interface PublicGroupedReportFromAPI {
-    reportingId: string;
-    marque: string;
-    category: string;
-    subCategory: string;
-    count: number;
-    descriptions: FeedbackDescription[];
+  reportingId: string;
+  marque: string;
+  category: string;
+  subCategory: string;
+  siteUrl?: string | null;
+  count: number;
+  descriptions: FeedbackDescription[];
 }
 

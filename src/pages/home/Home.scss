@@ -136,6 +136,19 @@
   gap: 10px;
   z-index: 4;
 }
+.report-banner-container.banner-filtered {
+  background: #f5f5f5; // ou un violet clair personnalisé
+  // exemple : background: linear-gradient(135deg, #c084fc, #a855f7);
+  
+  .filter-illustration-sidebar {
+    .illustration-content {
+      p {
+        font-weight: 600;
+        color: #333; // lisible sur fond clair
+      }
+    }
+  }
+}
 
 .report-banner-container {
   display: flex;

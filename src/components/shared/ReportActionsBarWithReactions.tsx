@@ -11,6 +11,7 @@ interface Props {
   descriptionId: string;
   reportsCount: number;
   commentsCount: number;
+  reactions?: any[]; 
   onReactClick: () => void;
   onCommentClick: () => void;
   onToggleSimilarReports?: () => void;
@@ -21,6 +22,7 @@ const ReportActionsBarWithReactions: React.FC<Props> = ({
   descriptionId,
   reportsCount,
   commentsCount,
+  reactions,
   onCommentClick,
   onToggleSimilarReports,
 }) => {
