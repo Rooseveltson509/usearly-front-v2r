@@ -58,7 +58,7 @@ const keywordMap: Record<string, string[]> = {
   "incomprehensible.png": [
     "trop d'information", "confusion", "illisible", "trop de texte", "compliqué", "incompréhensible"
   ],
-  "cart-size.png": [
+  "size-product.png": [
     "taille", "dimension", "format", "grande", "petite", "panier"
   ],
   "conflicting-information.png": [

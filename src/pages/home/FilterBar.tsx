@@ -1,8 +1,14 @@
+import { useEffect, useState } from "react";
 import { SlidersHorizontal } from "lucide-react";
+import "./FilterBar.scss";
 
 interface Props {
   filter: "hot" | "rage" | "popular" | "urgent" | "confirmed" | "chrono" | "";
-  setFilter: React.Dispatch<React.SetStateAction<"hot" | "rage" | "popular" | "urgent" | "confirmed" | "chrono" | "">>;
+  setFilter: React.Dispatch<
+    React.SetStateAction<
+      "hot" | "rage" | "popular" | "urgent" | "confirmed" | "chrono" | ""
+    >
+  >;
   viewMode: "flat" | "chrono" | "confirmed";
   setViewMode: (val: "flat" | "chrono" | "confirmed") => void;
   setSelectedBrand: (val: string) => void;
@@ -20,6 +26,16 @@ interface Props {
   labelOverride?: string;
 }
 
+// ✅ fonction de normalisation (mêmes règles que dans HomeGroupedReportsList)
+const normalize = (str: string) =>
+  str
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // accents
+    .replace(/[’']/g, "'") // apostrophes
+    .replace(/[\s.]+$/g, "") // espaces/points finaux
+    .trim();
+
 const FilterBar: React.FC<Props> = ({
   filter,
   setFilter,
@@ -29,7 +45,6 @@ const FilterBar: React.FC<Props> = ({
   setSelectedCategory,
   setActiveFilter,
   onViewModeChange,
-  isHotFilterAvailable,
   dropdownRef,
   isDropdownOpen,
   setIsDropdownOpen,
@@ -37,10 +52,38 @@ const FilterBar: React.FC<Props> = ({
   selectedCategory,
   availableBrands,
   availableCategories,
-  labelOverride,
 }) => {
+  const [search, setSearch] = useState("");
+
+  // ✅ recherche marque normalisée
+  const filteredBrands = search.trim()
+    ? availableBrands.filter((b) => normalize(b).includes(normalize(search)))
+    : availableBrands;
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    if (isDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isDropdownOpen, setIsDropdownOpen, dropdownRef]);
+
   return (
     <>
+      {/* 🔥 Premier select = filtres globaux */}
       <div
         className={`select-filter-wrapper ${
           filter === "hot" ? "hot-active" : ""
@@ -50,8 +93,7 @@ const FilterBar: React.FC<Props> = ({
           className="select-filter"
           value={filter === "confirmed" ? "hot" : filter}
           onChange={(e) => {
-            const value = e.target.value as "hot" | "rage" | "popular" | "urgent" | "confirmed" | "chrono" | "";
-
+            const value = e.target.value as typeof filter;
             setSelectedBrand("");
             setSelectedCategory("");
 
@@ -59,9 +101,9 @@ const FilterBar: React.FC<Props> = ({
               setFilter("chrono");
               setViewMode("chrono");
               onViewModeChange?.("chrono");
-              setActiveFilter("");
+              setActiveFilter("chrono");
             } else if (value === "hot") {
-              setFilter("confirmed"); // 🟢 le vrai filtre est "confirmed"
+              setFilter("confirmed");
               setViewMode("confirmed");
               onViewModeChange?.("confirmed");
               setActiveFilter("confirmed");
@@ -78,18 +120,14 @@ const FilterBar: React.FC<Props> = ({
             }
           }}
         >
-
-          <option value="chrono">🏷️ Les plus récents</option>
           <option value="hot">🔥 Ça chauffe par ici</option>
-          {/*          {isHotFilterAvailable && (
-            <option value="hot">🔥 Ça chauffe par ici</option>
-          )} */}
           <option value="rage">😡 Les plus rageants</option>
           <option value="popular">👍 Les plus populaires</option>
           <option value="urgent">👀 À shaker vite</option>
         </select>
       </div>
 
+      {/* 🔧 Deuxième filtre : input + catégories */}
       <div className="filter-dropdown-wrapper" ref={dropdownRef}>
         <button
           className="filter-toggle"
@@ -101,33 +139,55 @@ const FilterBar: React.FC<Props> = ({
 
         {isDropdownOpen && (
           <div className="filter-dropdown">
-            <select
-              value={selectedBrand}
-              onChange={(e) => {
-                setSelectedBrand(e.target.value);
-                setViewMode("flat");
-                setFilter("");
-                onViewModeChange?.("flat");
-                setActiveFilter("");
-              }}
-            >
-              <option value="">Toutes les marques</option>
-              {availableBrands.map((brand) => (
-                <option key={brand} value={brand}>
-                  {brand}
-                </option>
-              ))}
-            </select>
+            {/* 🔍 Recherche marque */}
+            <input
+              type="text"
+              value={search || selectedBrand}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Rechercher une marque..."
+            />
 
+            {search && (
+              <ul className="autocomplete-list">
+                {filteredBrands.length > 0 ? (
+                  filteredBrands.map((brand) => (
+                    <li
+                      key={brand}
+                      onClick={() => {
+                        setSelectedBrand(brand);
+                        setSelectedCategory("");
+                        setSearch("");
+                        setIsDropdownOpen(false);
+
+                        // 👉 Mode recherche (filtre vide)
+                        setViewMode("flat");
+                        setFilter("");
+                        onViewModeChange?.("flat");
+                        setActiveFilter("");
+                      }}
+                    >
+                      {brand}
+                    </li>
+                  ))
+                ) : (
+                  <li className="no-results">Aucune marque trouvée</li>
+                )}
+              </ul>
+            )}
+
+            {/* 🎯 Select catégories dépendantes de la marque */}
             <select
               value={selectedCategory}
               onChange={(e) => {
                 setSelectedCategory(e.target.value);
+
+                // 👉 reste en mode recherche (filtre vide)
                 setViewMode("flat");
                 setFilter("");
                 onViewModeChange?.("flat");
                 setActiveFilter("");
               }}
+              disabled={!selectedBrand}
             >
               <option value="">Toutes les catégories</option>
               {availableCategories.map((cat) => (
@@ -143,10 +203,13 @@ const FilterBar: React.FC<Props> = ({
                 onClick={() => {
                   setSelectedBrand("");
                   setSelectedCategory("");
-                  setViewMode("flat");
-                  setFilter("");
-                  onViewModeChange?.("flat");
-                  setActiveFilter("");
+                  setSearch("");
+
+                  // 👉 retour au comportement par défaut
+                  setViewMode("confirmed");
+                  setFilter("confirmed");
+                  onViewModeChange?.("confirmed");
+                  setActiveFilter("confirmed");
                 }}
               >
                 Réinitialiser

@@ -1,6 +1,6 @@
 import "./UserGroupedReportsList.scss";
 import { useAuth } from "@src/services/AuthContext";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import ChronologicalReportList from "@src/components/report-grouped/ChronologicalReportList";
 import ChronoReportCard from "@src/components/report-grouped/report-by-date/ChronoReportCard";
 import { useUserProfileFilters } from "@src/hooks/useUserProfileFilters";
@@ -14,6 +14,7 @@ import UserBrandBlock from "../user-reports/UserBrandBlock";
 import SqueletonAnime from "../loader/SqueletonAnime";
 import { ArrowDownWideNarrow, ChevronDown, ListRestart } from "lucide-react";
 import { useInfiniteGroupedReports } from "@src/hooks/useInfiniteGroupedReports";
+import { fetchValidBrandLogo } from "@src/utils/brandLogos";
 
 type ViewMode = "brand" | "date";
 
@@ -25,6 +26,9 @@ const UserGroupedReportsList: React.FC = () => {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const loaderRef = useRef<HTMLDivElement | null>(null);
   const [activeCardId, setActiveCardId] = useState<string | null>(null);
+  const [enrichedChronoData, setEnrichedChronoData] = useState<
+    Record<string, (ExplodedGroupedReport & { brandLogoUrl?: string })[]>
+  >({});
 
   const resetKey = `${viewMode}`;
 
@@ -57,29 +61,60 @@ const UserGroupedReportsList: React.FC = () => {
   } = usePaginatedUserReportsGroupedByDate(viewMode === "date");
 
   /* ────────────────────────────────────────────────────────────
-     INFINITE SCROLL (vue par MARQUE)
+     Enrichir les données chrono avec brandLogoUrl
      ──────────────────────────────────────────────────────────── */
+  useEffect(() => {
+    if (!chronoData) return;
+
+    const enrich = async () => {
+      const result: Record<
+        string,
+        (ExplodedGroupedReport & { brandLogoUrl?: string })[]
+      > = {};
+
+      for (const [day, items] of Object.entries(
+        chronoData as Record<string, ExplodedGroupedReport[]>
+      )) {
+        result[day] = await Promise.all(
+          items.map(async (item) => {
+            console.log("🟡 enrich item:", {
+              marque: item.marque,
+              siteUrl: item.siteUrl,
+            });
+
+            const brandLogoUrl = await fetchValidBrandLogo(
+              item.marque,
+              item.siteUrl || undefined
+            );
+            return { ...item, brandLogoUrl };
+          })
+        );
+      }
+
+      setEnrichedChronoData(result);
+    };
+
+    enrich();
+  }, [chronoData]);
+
+  /* INFINITE SCROLL (vue par MARQUE) */
   useEffect(() => {
     if (!loaderRef.current || viewMode !== "brand") return;
 
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && hasMore && !loading) {
-        loadMore();
-      }
-    }, { threshold: 0.3 });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !loading) {
+          loadMore();
+        }
+      },
+      { threshold: 0.3 }
+    );
 
     observer.observe(loaderRef.current);
     return () => observer.disconnect();
   }, [hasMore, loading, loadMore, viewMode]);
 
-
-  useEffect(() => {
-    console.log("Reports updated", reports);
-    console.log("Filtered data updated", filteredData);
-  }, [reports, filteredData]);
-
-
-  /* INFINITE SCROLL (vue par DATE) déjà en place, conservé */
+  /* INFINITE SCROLL (vue par DATE) */
   useEffect(() => {
     if (!loaderRef.current || viewMode !== "date") return;
 
@@ -202,9 +237,9 @@ const UserGroupedReportsList: React.FC = () => {
         ))}
 
       {/* === RENDU PAR DATE === */}
-      {viewMode === "date" && chronoData && (
+      {viewMode === "date" && enrichedChronoData && (
         <ChronologicalReportList
-          groupedByDay={chronoData as Record<string, ExplodedGroupedReport[]>}
+          groupedByDay={enrichedChronoData}
           renderCard={(item) => {
             const id =
               item.subCategory.descriptions[0]?.id ||
@@ -221,7 +256,6 @@ const UserGroupedReportsList: React.FC = () => {
             );
           }}
         />
-
       )}
 
       {/* === LOADER / SQUELETON === */}

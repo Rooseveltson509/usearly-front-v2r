@@ -1,5 +1,5 @@
 import { apiService } from "./apiService";
-import type { ConfirmedSubcategoryReport, CoupDeCoeur, GroupedReport, GroupedReportResponse, Suggestion, UserGroupedReportResponse, UserStatsSummary } from "@src/types/Reports";
+import type { BrandWithSubCategories, ConfirmedSubcategoryReport, CoupDeCoeur, GetConfirmedResponse, GroupedReport, GroupedReportResponse, Suggestion, UserGroupedReportResponse, UserStatsSummary } from "@src/types/Reports";
 
 const getAuthToken = () =>
   localStorage.getItem("accessToken") || sessionStorage.getItem("accessToken");
@@ -199,19 +199,24 @@ export const getGroupedReportsByPopularEngagement = async (page = 1, limit = 15)
   return response.data;
 };
 
+export const getPopularReports = async (
+  page = 1,
+  limit = 15
+): Promise<any> => {
+  const token = localStorage.getItem("accessToken");
 
-export const getGroupedReportsByRage = async (page = 1, limit = 15) => {
-  const response = await apiService.get(`/reportings/grouped-by-rage?page=${page}&limit=${limit}`);
+  const response = await apiService.get<any>(
+    "/reportings/grouped-by-popular-engagement",
+    {
+      params: { page, limit },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
   return response.data;
 };
-
-
-
-interface GetConfirmedResponse {
-  currentPage: number;
-  total: number;
-  data: ConfirmedSubcategoryReport[];
-}
 
 export const getConfirmedSubcategoryReports = async (
   page = 1,
@@ -230,4 +235,28 @@ export const getConfirmedSubcategoryReports = async (
   );
 
   return response.data;
+};
+
+export const getRageReports = async (
+  page = 1,
+  limit = 15
+): Promise<GetConfirmedResponse> => {
+  const token = localStorage.getItem("accessToken");
+
+  const response = await apiService.get<GetConfirmedResponse>(
+    "/public/rage-reports",
+    {
+      params: { page, limit, debug: 1 },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
+};
+
+export const getAllBrands = async (): Promise<BrandWithSubCategories[]> => {
+  const res = await apiService.get("/reportings/brands");
+  return res.data.data || [];
 };

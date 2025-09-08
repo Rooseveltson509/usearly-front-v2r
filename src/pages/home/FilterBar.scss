@@ -1,0 +1,44 @@
+.filter-dropdown {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+  select,
+  input[type="text"] {
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    outline: none;
+    background: #fafafa;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+    &:focus {
+      border-color: #3b82f6; // bleu
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+      background: #fff;
+    }
+  }
+
+  .reset {
+    margin-top: 6px;
+    padding: 6px 12px;
+    background: #f87171;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: #dc2626; // rouge plus foncé
+    }
+  }
+}

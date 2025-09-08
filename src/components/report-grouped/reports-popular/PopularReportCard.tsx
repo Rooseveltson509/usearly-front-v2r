@@ -10,140 +10,141 @@ import { useCommentsForDescription } from "@src/hooks/useCommentsForDescription"
 import type { PopularGroupedReport } from "@src/types/Reports";
 import "./PopularReportCard.scss";
 import { getBrandLogo } from "@src/utils/brandLogos";
+import Avatar from "@src/components/shared/Avatar";
 
 interface Props {
-    item: PopularGroupedReport;
-    isOpen: boolean;
-    onToggle: () => void;
-    isHot?: boolean;
+  item: PopularGroupedReport;
+  isOpen: boolean;
+  onToggle: () => void;
+  isHot?: boolean;
 }
 
 const PopularReportCard: React.FC<Props> = ({ item, isOpen, onToggle, isHot }) => {
-    const { userProfile } = useAuth();
-    const [showComments, setShowComments] = useState(false);
-    const [refreshKey, setRefreshKey] = useState(0);
-    const [localCommentsCounts, setLocalCommentsCounts] = useState<Record<string, number>>({});
+  const { userProfile } = useAuth();
+  const [showComments, setShowComments] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [localCommentsCounts, setLocalCommentsCounts] = useState<Record<string, number>>({});
 
-    const firstDescription = item.descriptions?.[0];
-    if (!firstDescription) return null;
+  const firstDescription = item.descriptions?.[0];
+  if (!firstDescription) return null;
 
-    const descriptionId = firstDescription.id;
+  const descriptionId = firstDescription.id;
+  const { comments, loading } = useCommentsForDescription(descriptionId, "report", refreshKey);
 
-    const userAvatar = firstDescription.user?.avatar
-        ? `${import.meta.env.VITE_API_BASE_URL}/${firstDescription.user.avatar}`
-        : "/default-avatar.png";
+  const handleCommentClick = () => {
+    if (!isOpen) {
+      onToggle();
+      setShowComments(true);
+    } else {
+      setShowComments((prev) => !prev);
+    }
+  };
 
-    const { comments, loading } = useCommentsForDescription(descriptionId, "report", refreshKey);
+  useEffect(() => {
+    if (!loading && comments.length > 0) {
+      setLocalCommentsCounts((prev) => ({
+        ...prev,
+        [descriptionId]: comments.length,
+      }));
+    }
+  }, [comments.length, descriptionId, loading]);
 
-    const handleCommentClick = () => {
-        if (!isOpen) {
-            onToggle();
-            setShowComments(true);
-        } else {
-            setShowComments((prev) => !prev);
-        }
-    };
+  const currentCount = localCommentsCounts[descriptionId] ?? 0;
 
-    useEffect(() => {
-        if (!loading && comments.length > 0) {
-            setLocalCommentsCounts((prev) => ({
-                ...prev,
-                [descriptionId]: comments.length,
-            }));
-        }
-    }, [comments.length, descriptionId, loading]);
-
-    const currentCount = localCommentsCounts[descriptionId] ?? 0;
-
-    return (
-        <div className={`report-card ${isHot ? "hot-effect" : ""}`}>
-            <div className="card-header" onClick={onToggle}>
-                <div className="left-icon">
-                    <img src={getCategoryIconPathFromSubcategory(item.subCategory)} alt="icon" />
-                </div>
-
-                <div className="card-title">
-                    <div className="title-and-meta">
-                        <h4>{item.subCategory || "Suggestion"}</h4>
-                        <div className="meta-info">
-                            {!isOpen && (
-                            <span className="date-card">
-                                {formatDistanceToNow(new Date(firstDescription.createdAt), {
-                                    locale: fr,
-                                    addSuffix: true,
-                                }).replace("environ ", "")}
-                            </span>
-                            )}
-
-                        </div>
-                    </div>
-                </div>
-
-                <div className="right-section">
-                    {!isOpen ? (
-                        <div className="brand-logo-container">
-                            <img
-                                src={getBrandLogo(item.marque, item.siteUrl)}
-                                alt={item.marque}
-                                className="brand-logo"
-                            />
-                        </div>
-                    ) : (
-                        <div className="user-brand-inline">
-                            <div className="avatars">
-                                <img src={userAvatar} alt="avatar" className="avatar" />
-                                <img
-                                    src={getBrandLogo(item.marque, item.siteUrl)}
-                                    alt="logo"
-                                    className="avatar"
-                                />
-                            </div>
-                            <div className="label">
-                                {userProfile?.pseudo} <span className="x">×</span>{" "}
-                                <strong>{item.marque}</strong>
-                            </div>
-                        </div>
-                    )}
-                </div>
-
-                <div className="chevron">
-                    {isOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                </div>
-            </div>
-
-            {isOpen && (
-                <div className="card-content">
-                    <div className="card-description">
-                        <p>{firstDescription.description}</p>
-                    </div>
-
-                    <ReportActionsBarWithReactions
-                        userId={userProfile?.id || ""}
-                        descriptionId={descriptionId}
-                        reportsCount={item.count}
-                        commentsCount={currentCount}
-                        onReactClick={() => { }}
-                        onCommentClick={handleCommentClick}
-                        onToggleSimilarReports={() => { }}
-                    />
-
-                    {showComments && userProfile?.id && (
-                        <DescriptionCommentSection
-                            userId={userProfile.id}
-                            descriptionId={descriptionId}
-                            type="report"
-                            forceOpen={true}
-                            hideFooter={true}
-                            onCommentCountChange={(count) =>
-                                setLocalCommentsCounts((prev) => ({ ...prev, [descriptionId]: count }))
-                            }
-                            onCommentAddedOrDeleted={() => setRefreshKey((prev) => prev + 1)}
-                        />
-                    )}
-                </div>
-            )}
+  return (
+    <div className={`report-card ${isHot ? "hot-effect" : ""}`}>
+      <div className="card-header" onClick={onToggle}>
+        <div className="left-icon">
+          <img src={getCategoryIconPathFromSubcategory(item.subCategory)} alt="icon" />
         </div>
-    );
+
+        <div className="card-title">
+          <div className="title-and-meta">
+            <h4>{item.subCategory || "Suggestion"}</h4>
+            <div className="meta-info">
+              {!isOpen && (
+                <span className="date-card">
+                  {formatDistanceToNow(new Date(firstDescription.createdAt), {
+                    locale: fr,
+                    addSuffix: true,
+                  }).replace("environ ", "")}
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="right-section">
+          {!isOpen ? (
+            <div className="brand-logo-container">
+              <img
+                src={getBrandLogo(item.marque, item.siteUrl ?? undefined)}
+                alt={item.marque}
+                className="brand-logo"
+              />
+            </div>
+          ) : (
+            <div className="user-brand-inline">
+              <div className="avatars">
+                <Avatar
+                  avatar={firstDescription.user?.avatar ?? null}
+                  pseudo={firstDescription.user?.pseudo}
+                  type="user"
+                  className="avatar"
+                />
+                <Avatar
+                  avatar={getBrandLogo(item.marque, item.siteUrl ?? undefined)}
+                  pseudo={item.marque}
+                  type="brand"
+                  className="avatar"
+                />
+              </div>
+              <div className="label">
+                {firstDescription.user?.pseudo} <span className="x">×</span>{" "}
+                <strong>{item.marque}</strong>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="chevron">
+          {isOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+        </div>
+      </div>
+
+      {isOpen && (
+        <div className="card-content">
+          <div className="card-description">
+            <p>{firstDescription.description}</p>
+          </div>
+
+          <ReportActionsBarWithReactions
+            userId={userProfile?.id || ""}
+            descriptionId={descriptionId}
+            reportsCount={item.count}
+            commentsCount={currentCount}
+            onReactClick={() => {}}
+            onCommentClick={handleCommentClick}
+            onToggleSimilarReports={() => {}}
+          />
+
+          {showComments && userProfile?.id && (
+            <DescriptionCommentSection
+              userId={userProfile.id}
+              descriptionId={descriptionId}
+              type="report"
+              forceOpen={true}
+              hideFooter={true}
+              onCommentCountChange={(count) =>
+                setLocalCommentsCounts((prev) => ({ ...prev, [descriptionId]: count }))
+              }
+              onCommentAddedOrDeleted={() => setRefreshKey((prev) => prev + 1)}
+            />
+          )}
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default PopularReportCard;

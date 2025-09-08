@@ -10,31 +10,40 @@ import ReportActionsBarWithReactions from "@src/components/shared/ReportActionsB
 import { useCommentsForDescription } from "@src/hooks/useCommentsForDescription";
 import { getFullAvatarUrl } from "@src/utils/avatarUtils";
 import Avatar from "@src/components/shared/Avatar";
+import { getFullMediaUrl } from "@src/utils/mediaUtils";
+import { getBrandLogo } from "@src/utils/brandLogos";
 
 interface Props {
     brand: string;
+    siteUrl?: string;
     brandLogoUrl: string;
     subcategory: string;
+    capture?: string | null;
     descriptions: any[]; // adapte si besoin avec ton type exact
     hideFooter?: boolean;
 }
 
 const FlatSubcategoryBlock: React.FC<Props> = ({
     brand,
+    siteUrl,
     brandLogoUrl,
     subcategory,
     descriptions,
     hideFooter,
+    capture,
 }) => {
     const [expanded, setExpanded] = useState(true);
     const [showComments, setShowComments] = useState(false);
     const [showSimilarReports, setShowSimilarReports] = useState(false);
     const [modalImage, setModalImage] = useState<string | null>(null);
     const [refreshKey, setRefreshKey] = useState(0);
-    const initialDescription = descriptions[0];
+    const initialDescription = descriptions?.[0];
     const { comments } = useCommentsForDescription(initialDescription.id, "report", refreshKey);
     const [visibleDescriptionsCount, setVisibleDescriptionsCount] = useState(2); // par défaut 2 visibles
     const [showCapture, setShowCapture] = useState(false);
+    const captureUrl = capture || initialDescription.capture || null;
+    const logo = brandLogoUrl || getBrandLogo(brand, siteUrl);
+
 
 
     const toggleExpanded = () => {
@@ -42,7 +51,9 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
         setShowComments(false);
         setShowSimilarReports(false);
     };
-
+    if (!initialDescription) {
+        return null; // ou un fallback
+    }
     return (
         <div className={`subcategory-block flat ${expanded ? "open" : ""}`}>
             <div className="subcategory-header" onClick={toggleExpanded}>
@@ -65,8 +76,8 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
                         <div className="expanded-header">
                             <div className="avatar-logo-group">
                                 <Avatar
-                                    avatar={initialDescription.user.avatar}
-                                    pseudo={initialDescription.user.pseudo}
+                                    avatar={initialDescription.user?.avatar || "/default-avatar.png"}
+                                    pseudo={initialDescription.user?.pseudo || "Utilisateur inconnu"}
                                     type="user"
                                     className="user-avatar"
                                     wrapperClassName="user-avatar-wrapper"
@@ -117,7 +128,7 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
                 <div className="subcategory-content">
                     <div className="main-description">
                         <p className="description-text">{initialDescription.description}.... {initialDescription.emoji}</p>
-                        {initialDescription.capture && (
+                        {captureUrl && (
                             <div className="screenshot-section">
                                 <button
                                     className="show-capture-button"
@@ -133,7 +144,7 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
                                 {showCapture && (
                                     <div className="inline-capture">
                                         <img
-                                            src={initialDescription.capture}
+                                            src={captureUrl}
                                             alt="Capture"
                                             className="inline-capture-img"
                                         />

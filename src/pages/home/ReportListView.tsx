@@ -43,7 +43,7 @@ const ReportListView: React.FC<Props> = ({
   loadingPopularEngagement,
   loadingRage,
 }) => {
-  const isPopularFilter = ["hot", "popular", "rage", "confirmed", "urgent"].includes(filter);
+  const isPopularFilter = ["hot", "popular", "urgent"].includes(filter);
   const isChronoFilter = filter === "chrono";
 
   if (isPopularFilter) {
@@ -109,45 +109,45 @@ const ReportListView: React.FC<Props> = ({
   }
 
   // Flat view sans filtre
-if (viewMode === "confirmed") {
-  const explodedReports = flatData.filter(
-    (item): item is ExplodedGroupedReport =>
-      "subCategory" in item &&
-      typeof item.subCategory === "object" &&
-      Array.isArray(item.subCategory.descriptions)
-  );
+  if (viewMode === "confirmed" || filter === "rage") {
+    const explodedReports = flatData.filter(
+      (item): item is ExplodedGroupedReport =>
+        "subCategory" in item &&
+        typeof item.subCategory === "object" &&
+        Array.isArray(item.subCategory.descriptions)
+    );
 
-  // ⏳ Affiche le skeleton si on est en train de charger
-  if (flatData.length === 0) {
+    if (flatData.length === 0) {
+      return (
+        <SqueletonAnime
+          loaderRef={{ current: null }}
+          loading={true}
+          hasMore={false}
+          error={null}
+        />
+      );
+    }
+
+    if (explodedReports.length === 0) {
+      return <p>Aucun report disponible pour ce filtre.</p>;
+    }
+
     return (
-      <SqueletonAnime
-        loaderRef={{ current: null }} // ou une vraie ref si tu en as
-        loading={true}
-        hasMore={false}
-        error={null}
-      />
+      <>
+        {explodedReports.map((item) => (
+          <FlatSubcategoryBlock
+            key={`${item.reportingId}-${item.subCategory.subCategory}`}
+            brand={item.marque}
+            subcategory={item.subCategory.subCategory}
+            descriptions={item.subCategory.descriptions}
+            brandLogoUrl={getBrandLogo(item.marque)}
+            hideFooter={true}
+          />
+        ))}
+      </>
     );
   }
 
-  if (explodedReports.length === 0) {
-    return <p>Aucun report confirmé disponible.</p>;
-  }
-
-  return (
-    <>
-      {explodedReports.map((item) => (
-        <FlatSubcategoryBlock
-          key={`${item.reportingId}-${item.subCategory.subCategory}`}
-          brand={item.marque}
-          subcategory={item.subCategory.subCategory}
-          descriptions={item.subCategory.descriptions}
-          brandLogoUrl={getBrandLogo(item.marque)}
-          hideFooter={true}
-        />
-      ))}
-    </>
-  );
-}
 
 
 

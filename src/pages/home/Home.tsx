@@ -32,9 +32,11 @@ function Home() {
     (CoupDeCoeur | Suggestion)[]
   >([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
+  const [selectedBrand, setSelectedBrand] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [activeFilter, setActiveFilter] = useState("confirmed");
   const [viewMode, setViewMode] = useState<"flat" | "chrono" | "confirmed">("confirmed");
+  const [selectedSiteUrl, setSelectedSiteUrl] = useState<string | undefined>();
   const [availableFilters, setAvailableFilters] = useState<string[]>([
     "confirmed", // 👉 le mettre en premier si tu veux qu’il s'affiche d’abord dans la UI
     "chrono",
@@ -120,7 +122,8 @@ function Home() {
         </aside>
 
         {activeTab === "report" ? (
-          <div className={`report-banner-container banner-${activeFilter}`}>
+          <div className={`report-banner-container ${selectedBrand || selectedCategory ? "banner-filtered" : `banner-${activeFilter}`
+            }`}>
             <div className="feedback-list-wrapper">
               <HomeGroupedReportsList
                 activeTab={activeTab}
@@ -128,10 +131,21 @@ function Home() {
                 viewMode={activeFilter === "confirmed" ? "confirmed" : "none" as any}
                 onViewModeChange={setViewMode}
                 setActiveFilter={setActiveFilter}
+                // 🔎 on transmet setters pour que FilterBar modifie bien l’état parent
+                selectedBrand={selectedBrand}
+                setSelectedBrand={setSelectedBrand}
+                setSelectedSiteUrl={setSelectedSiteUrl}
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
               />
             </div>
             <aside className="right-panel">
-              <FilterIllustration filter={activeFilter} />
+              <FilterIllustration
+                filter={activeFilter}
+                selectedBrand={selectedBrand}
+                siteUrl={selectedSiteUrl}
+                selectedCategory={selectedCategory}
+              />
             </aside>
           </div>
         ) : (

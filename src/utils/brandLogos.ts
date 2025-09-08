@@ -30,42 +30,44 @@ async function urlExists(url: string): Promise<boolean> {
  * Permet de récupérer dynamiquement le logo d'une marque,
  * en utilisant en priorité siteUrl, sinon le nom de la marque.
  */
+function normalizeDomain(siteUrl: string): string {
+  return siteUrl.replace(/^https?:\/\//, "").replace(/^www\./, "").trim();
+}
+
 export async function fetchValidBrandLogo(
   brand: string,
   siteUrl?: string
 ): Promise<string> {
   const key = brand.toLowerCase().trim();
 
-  // 1️⃣ Vérifie le static logo
+  // 1️⃣ Static logos
   if (staticLogos[key]) return staticLogos[key];
 
-  // 2️⃣ Utilise siteUrl en priorité pour Clearbit
+  // 2️⃣ Utilise siteUrl si dispo
   if (siteUrl) {
-    const clearbitURL = fallbackClearbit(siteUrl); // siteUrl === "adidas.com"
+    const domain = normalizeDomain(siteUrl); // "zenity.fr"
+    const clearbitURL = fallbackClearbit(domain);
     if (await urlExists(clearbitURL)) return clearbitURL;
   }
 
-  // 3️⃣ Fallback Clearbit sur brand.com si siteUrl absent
+  // 3️⃣ Fallback Clearbit brand.com
   const clearbitURL = fallbackClearbit(`${key}.com`);
   if (await urlExists(clearbitURL)) return clearbitURL;
 
-  // 4️⃣ Fallback favicon Google si nécessaire
-  const faviconURL = fallbackFavicon(siteUrl || `${key}.com`);
+  // 4️⃣ Favicon Google
+  const domain = siteUrl ? normalizeDomain(siteUrl) : `${key}.com`;
+  const faviconURL = fallbackFavicon(domain);
   if (await urlExists(faviconURL)) return faviconURL;
 
   // 5️⃣ Placeholder
   return fallbackPlaceholder;
 }
 
-
-/**
- * Utilitaire simple pour usage direct sans test d'existence.
- */
 export function getBrandLogo(brand: string, siteUrl?: string): string {
   const key = brand.toLowerCase().trim();
 
   if (staticLogos[key]) return staticLogos[key];
-  if (siteUrl) return fallbackClearbit(siteUrl);
+  if (siteUrl) return fallbackClearbit(normalizeDomain(siteUrl));
 
   return fallbackClearbit(`${key}.com`);
 }
