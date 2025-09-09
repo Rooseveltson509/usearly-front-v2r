@@ -1,5 +1,6 @@
 @use "@styles/base/variables" as *;
 @use "@styles/utils/mixins" as *;
+@use "./variablesLogin" as *;
 
 .login-container {
   max-width: 500px;
@@ -11,9 +12,10 @@
     font-size: 28px;
     font-weight: bold;
     margin-bottom: 10px;
+    margin-top: 55px;
   }
 
-  p {
+   p {
     margin-bottom: 30px;
     color: $gray-600;
   }
@@ -36,7 +38,7 @@
         transition: border 0.3s;
 
         &:focus {
-          border-color: #222;
+          border-color: $color-dark;
           background-color: #fff;
           outline: none;
         }
@@ -45,15 +47,14 @@
         &:focus + label {
           //top: 0.4rem;
           left: 0.9rem;
-           background-color: #fff;
+          background-color: #fff;
           font-size: 0.75rem;
-          color: #222;
+          color: $color-dark;
         }
       }
 
       label {
         position: absolute;
-        //top: 1.2rem;
         left: 1rem;
         font-size: 1rem;
         color: $gray-500;

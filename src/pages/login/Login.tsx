@@ -2,7 +2,7 @@ import { useState } from "react";
 import { loginUser, loginBrand } from "@src/services/apiService";
 import { showToast } from "@src/utils/toastUtils";
 import { useAuth } from "@src/services/AuthContext";
-import "./Login.scss";
+import "./styles/Login.scss";
 import { Link } from "react-router-dom";
 
 const Login = () => {
