@@ -3,8 +3,9 @@ import { useEffect, useState } from "react";
 import { registerUser } from "@src/services/apiService";
 import type { RegisterData } from "@src/types/RegisterData";
 import { useNavigate } from "react-router-dom";
-import "./Register.scss";
+import "./styles/Register.scss";
 import { showToast } from "@src/utils/toastUtils";
+import PasswordRules from "./Components/PasswordRules/PasswordRules";
 
 const passwordRules = {
   length: (val: string) => val.length >= 8,
@@ -76,7 +77,6 @@ const Register = () => {
       //setToastMessage(error.message);
       showToast(error.message, "error");
       //setToastType("error");
-
     }
   };
 
@@ -85,70 +85,83 @@ const Register = () => {
       <h2>Faisons de toi un Usear !</h2>
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
-        <label>Pseudo (visible par tous)</label>
-        <input {...register("pseudo", { required: true })} />
-
-        <input
-          type="email"
-          placeholder="Email"
-          {...register("email", { required: true })}
-        />
-
-        <input
-          type="password"
-          placeholder="Mot de passe*"
-          {...register("password", { required: true })}
-        />
-
-        <ul className="password-rules">
-          <li className={validations.length ? "valid" : "invalid"}>
-            Au moins 8 caractères.
-          </li>
-          <li className={validations.uppercase ? "valid" : "invalid"}>
-            Au moins une lettre majuscule.
-          </li>
-          <li className={validations.lowercase ? "valid" : "invalid"}>
-            Au moins une lettre minuscule.
-          </li>
-          <li className={validations.number ? "valid" : "invalid"}>
-            Au moins un chiffre.
-          </li>
-          <li className={validations.special ? "valid" : "invalid"}>
-            Au moins un caractère spécial.
-          </li>
-        </ul>
-        {/[^\w@$!%*?&]/.test(password) && (
-          <p className="invalid-special">
-            ❌ Caractère non autorisé détecté. Seuls <strong>@ $ ! % * ? &</strong> sont permis.
-          </p>
-        )}
-
-        <input
-          type="password"
-          placeholder="Confirmation Mot de passe*"
-          {...register("password_confirm", {
-            validate: (val) => val === password || "Les mots de passe ne correspondent pas",
-          })}
-        />
-
-        <div className="double-field">
-          <input
-            type="date"
-            placeholder="Date de naissance*"
-            {...register("born", { required: true })}
+        <div>
+          <input 
+            {...register("pseudo", { required: true })}
+            type="text"
+            id="pseudo"
+            placeholder="Pseudo"
           />
-          <select {...register("gender", { required: true })}>
-            <option value="">Genre</option>
-            <option value="Femme">Femme</option>
-            <option value="Homme">Homme</option>
-            <option value="Autre">Autre</option>
-          </select>
+          <label htmlFor="pseudo">Pseudo* (visible par tous)</label>
         </div>
 
-        <label className="terms-checkbox">
-          <input type="checkbox" required />
-          J’accepte les conditions d'utilisation et la politique de confidentialité.
-        </label>
+        <div>
+          <input
+            type="email"
+            id="email"
+            placeholder="Email"
+            {...register("email", { required: true })}
+          />
+          <label htmlFor="email">Adresse e-mail*</label>
+        </div>
+
+        <div>
+          <input 
+            type="password"
+            id="password"
+            placeholder="Mot de passe*"
+            {...register("password", { required: true })}
+          />
+          <label htmlFor="password">Mot de passe*</label>
+          { password && (
+            <PasswordRules
+              value={password}
+              enabled={["length", "lowercase", "uppercase", "number", "special"]}
+              className="input-rules"
+            />
+          )}
+        </div>
+
+        <div>
+          <input
+            type="password"
+            id="password_confirm"
+            placeholder="Confirmation Mot de passe*"
+            {...register("password_confirm", {
+              validate: (val) => val === password || "Les mots de passe ne correspondent pas",
+            })}
+          />
+          <label htmlFor="password_confirm">Confirme ton mot de passe*</label>
+        </div>
+
+        <div className="double-field">
+          <div>
+            <input
+              type="date"
+              id="born"
+              placeholder="Date de naissance*"
+              {...register("born", { required: true })}
+            />
+            <label htmlFor="born">Date de naissance*</label>
+          </div>
+          <div>
+            { /* A styliser */}
+            <select id="gender" {...register("gender", { required: true })}>
+              <option value="">Genre</option>
+              <option value="Femme">Femme</option>
+              <option value="Homme">Homme</option>
+              <option value="Autre">Autre</option>
+            </select>
+            <label htmlFor="gender">Genre*</label>
+          </div>
+        </div>
+
+        <div className="terms-conditions">
+          <label className="terms-checkbox">
+            <input type="checkbox" required />
+            <p>J’accepte les conditions d'utilisation et la politique de confidentialité.*</p>
+          </label>
+        </div>
 
         {successMessage && <p className="success-message">{successMessage}</p>}
         {errorMessage && <p className="error-message">{errorMessage}</p>}
