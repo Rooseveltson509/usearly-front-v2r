@@ -1,14 +1,19 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import { loginUser, loginBrand } from "@src/services/apiService";
 import { showToast } from "@src/utils/toastUtils";
 import { useAuth } from "@src/services/AuthContext";
 import "./styles/Login.scss";
 import { Link } from "react-router-dom";
 import iconEye from "../../../assets/images/eye-password-logo.svg";
+import UsearlyDraw from "../Usearly";
 
 const Login = () => {
   const { login } = useAuth();
-  const [loginInput, setLoginInput] = useState("");
+  const location = useLocation();
+  // if navigated here with state.email, use it to prefill the login input
+  const initialEmail = (location.state as any)?.email ?? "";
+  const [loginInput, setLoginInput] = useState(initialEmail);
   const [password, setPassword] = useState("");
   const [step, setStep] = useState(1);
   const [rememberMe, setRememberMe] = useState(false);
@@ -151,7 +156,7 @@ const Login = () => {
           )
         }
       </form>
-
+      <UsearlyDraw />
       <div className="login-footer-logo">Usearly</div>
     </div>
   );

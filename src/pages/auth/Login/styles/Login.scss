@@ -1,6 +1,5 @@
-@use "@styles/base/variables" as *;
+@use "@styles/base/_variables" as *;
 @use "@styles/utils/mixins" as *;
-@use "./variablesLogin" as *;
 
 .login-container {
   max-width: 500px;
@@ -13,16 +12,15 @@
     font-family: $font-main-title;
     font-size: 2.25rem;
     font-weight: 500;
-    color: $color-dark;
+    color: $dark;
     margin-bottom: 8px;
-    margin-top: 96px;
   }
 
   p{
     font-family: $font-main-text;
     text-align: left;
     font-size: 0.813rem;
-    color: $color-dark;
+    color: $dark;
   }
 
   .login-subtitle {
@@ -66,18 +64,18 @@
         max-width: 29.813rem;
         padding: 1.25rem;
         font-size: 0.875rem;
-        color: $color-dark;
-        border: 0.8px solid $color-dark;
+        color: $dark;
+        border: 0.8px solid $dark;
         border-radius: 4px;
         background: white;
         transition: border 0.3s;
 
         &::placeholder {
-          color: $color-dark;
+          color: $dark;
         }
 
         // &:focus {
-        //   border-color: $color-dark;
+        //   border-color: $dark;
         //   background-color: #fff;
         //   outline: none;
         // }
@@ -87,7 +85,7 @@
         //   left: 0.9rem;
         //   background-color: #fff;
         //   font-size: 0.75rem;
-        //   color: $color-dark;
+        //   color: $dark;
         // }
       }
     }
@@ -112,11 +110,11 @@
     .info-text {
         margin-top: 18px;
         font-size: 0.813rem;
-        color: $color-dark;
+        color: $dark;
         text-align: left;
         p{
           a {
-            color: $color-dark;
+            color: $dark;
             text-decoration: underline !important;
             cursor: pointer;
           }
@@ -139,7 +137,7 @@
         cursor: pointer;
 
         input{
-          border: 1px solid $color-dark;
+          border: 1px solid $dark;
         }
       }
 
@@ -163,7 +161,7 @@
 
     button {
       margin-top: 34px;
-      background-color: $color-dark;
+      background-color: $dark;
       color: white;
       padding: 14px;
       font-size: 16px;
@@ -177,7 +175,7 @@
       }
 
       &:disabled {
-        background-color: $color-dark;
+        background-color: $dark;
         opacity: 0.8;
         cursor: not-allowed;
       }
@@ -193,7 +191,7 @@
   }
 
   .error-message {
-    color: $color-error;
+    color: $danger;
     font-size: 0.875rem;
     margin: 7px 5px 10px 5px;
     text-align: left;

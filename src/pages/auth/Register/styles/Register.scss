@@ -1,6 +1,5 @@
 @use "@styles/base/variables" as *;
 @use "@styles/utils/mixins" as *;
-@use "./_variablesRegister" as *;
 
 .register-container {
   max-width: 600px;
@@ -9,7 +8,6 @@
   text-align: center;
 
   h2 {
-    margin-top: 55px;
     font-size: 2rem;
     font-weight: 700;
     margin-bottom: 2rem;
@@ -33,7 +31,7 @@
         transition: border 0.3s;
 
         &:focus {
-          border-color: $color-dark;
+          border-color: $dark;
           background-color: #fff;
           outline: none;
         }
@@ -43,7 +41,7 @@
           left: 0.9rem;
           background-color: #fff;
           font-size: 0.75rem;
-          color: $color-dark;
+          color: $dark;
         }
       }
 
@@ -115,16 +113,40 @@
     }
 
     button {
-      background: $color-dark;
-      color: #fff;
-      font-weight: 600;
-      padding: 1rem;
-      border-radius: 8px;
+      margin-top: 34px;
+      background-color: $dark;
+      color: white;
+      padding: 14px;
+      font-size: 16px;
+      border-radius: $border-radius-md;
       border: none;
       cursor: pointer;
+      transition: background-color 0.2s ease;
 
       &:hover {
-        background: $color-dark;
+        background-color: #0b0a0acc;
+      }
+
+      &:disabled {
+        background-color: $dark;
+        opacity: 0.8;
+        cursor: not-allowed;
+      }
+    }
+
+    input {
+      width: 100%;
+      max-width: 29.813rem;
+      padding: 1.25rem;
+      font-size: 0.875rem;
+      color: $dark;
+      border: 0.8px solid $dark;
+      border-radius: 4px;
+      background: white;
+      transition: border 0.3s;
+
+      &::placeholder {
+        color: $dark;
       }
     }
   }

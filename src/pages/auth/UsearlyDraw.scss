@@ -1,0 +1,95 @@
+// /* UsearlyDraw.css */
+ @use "@styles/base/variables" as *;
+
+// .usearly-wrap {
+//   /* Couleur du texte/contour */
+//   color: $dark;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   min-height: 40vh;
+// }
+
+// .usearly-svg {
+//     position: absolute;
+//     width: 100%;
+//     height: 405px;
+// }
+
+// .usearly-glyph {
+//   /* Police + taille (tu peux changer) */
+//     font-size: 15rem;
+//     font-family: $font-main-text;
+//     font-weight: 700;
+
+//   /* Effet "dessin" par le contour */
+//   fill: transparent;
+//   stroke: currentColor;
+//   stroke-width: 2;
+//   stroke-linecap: round;
+//   stroke-linejoin: round;
+
+//   /* Animation de tracé : toutes les lettres en même temps */
+//   stroke-dasharray: 1000;   /* valeur “grande” pour couvrir la longueur */
+//   stroke-dashoffset: 800;  /* on commence “non tracé” */
+//   animation:
+//     usearly-draw 5s ease-out forwards,
+// }
+
+// @keyframes usearly-draw {
+//   to { stroke-dashoffset: 0; }
+// }
+
+// /* Respecte l’accessibilité (réduit le mouvement si demandé) */
+// @media (prefers-reduced-motion: reduce) {
+//   .usearly-glyph {
+//     animation: none;
+//     stroke-dashoffset: 0;
+//     fill: currentColor;
+//   }
+// }
+
+/* UsearlyDraw.scss */
+.usearly-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 40vh;
+  color: $dark;
+  margin-top: 9.063rem;
+}
+
+.usearly-svg {
+    position: absolute;
+    width: 90%;
+    height: 405px;          /* responsive */
+    overflow: visible;     /* ne coupe pas les bords */
+}
+
+.usearly-path {
+  fill: transparent;                /* contour uniquement */
+  stroke: currentColor;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke; /* épaisseur stable au scaling */
+  stroke-linecap: round;
+  stroke-linejoin: round;
+
+  /* Animation “dessin” */
+  stroke-dasharray: 1;   /* 100% de la longueur (grâce à pathLength="1") */
+  stroke-dashoffset: 1;  /* caché au départ */
+  animation: usearly-draw 60s ease-out forwards;
+  will-change: stroke-dashoffset;
+}
+
+@keyframes usearly-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* Accessibilité : pas d’anim si l’utilisateur préfère réduire les motions */
+@media (prefers-reduced-motion: reduce) {
+  .usearly-path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}
+

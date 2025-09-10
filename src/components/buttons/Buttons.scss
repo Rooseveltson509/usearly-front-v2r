@@ -1,0 +1,17 @@
+@import "@styles/base/variables";
+
+$buttonColor: #2D1E2C;
+
+.btn-primary {
+    background-color: $dark;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 16px 96px;
+    font-size: 1rem;
+    cursor: pointer;
+
+    &:hover {
+        background-color: darken($dark, 5%);
+    }
+}

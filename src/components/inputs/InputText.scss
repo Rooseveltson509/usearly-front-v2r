@@ -1,0 +1,31 @@
+@use "@styles/base/_variables" as *;
+
+input {
+    width: 100%;
+    max-width: 29.813rem;
+    padding: 1.25rem;
+    font-size: 0.875rem;
+    color: $dark;
+    border: 0.8px solid $dark;
+    border-radius: 4px;
+    background: white;
+    transition: border 0.3s;
+
+    &::placeholder {
+        color: $dark;
+    }
+
+    // &:focus {
+    //   border-color: $dark;
+    //   background-color: #fff;
+    //   outline: none;
+    // }
+
+    // &.filled + label,
+    // &:focus + label {
+    //   left: 0.9rem;
+    //   background-color: #fff;
+    //   font-size: 0.75rem;
+    //   color: $dark;
+    // }
+}

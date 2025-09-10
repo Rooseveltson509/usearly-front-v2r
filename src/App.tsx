@@ -13,6 +13,7 @@ import RequestResetPassword from "./pages/forgot-and-reset-pwd/RequestResetPassw
 import ResetPassword from "./pages/forgot-and-reset-pwd/ResetPassword";
 import NavigateToHome from "./pages/NavigateToHome";
 import NewHome from "./pages/newHome/NewHome";
+import CheckUser from "./pages/auth/CheckUser";
 
 function App() {
   return (
@@ -25,6 +26,14 @@ function App() {
               element={
                 <GuestRoute>
                   <Register />
+                </GuestRoute>
+              }
+            />
+            <Route
+              path="/lookup"
+              element={
+                <GuestRoute>
+                  <CheckUser />
                 </GuestRoute>
               }
             />

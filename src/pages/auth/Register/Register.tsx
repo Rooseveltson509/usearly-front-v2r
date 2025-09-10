@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import "./styles/Register.scss";
 import { showToast } from "@src/utils/toastUtils";
 import PasswordRules from "./Components/PasswordRules/PasswordRules";
+import UsearlyDraw from "../Usearly";
+import InputText from "../../../components/inputs/InputText";
 
 const passwordRules = {
   length: (val: string) => val.length >= 8,
@@ -86,13 +88,7 @@ const Register = () => {
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <div>
-          <input 
-            {...register("pseudo", { required: true })}
-            type="text"
-            id="pseudo"
-            placeholder="Pseudo"
-          />
-          <label htmlFor="pseudo">Pseudo* (visible par tous)</label>
+          <InputText registerName={"pseudo"} id="pseudo" type="text" placeholder="Pseudo" label="Pseudo* (visible par tous)" required />
         </div>
 
         <div>
@@ -168,6 +164,7 @@ const Register = () => {
 
         <button type="submit">Créer un compte</button>
       </form>
+      <UsearlyDraw />
     </div>
   );
 };
