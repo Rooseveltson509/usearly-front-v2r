@@ -177,7 +177,8 @@
       }
 
       &:disabled {
-        background-color: $gray-400;
+        background-color: $color-dark;
+        opacity: 0.8;
         cursor: not-allowed;
       }
     }
@@ -189,5 +190,12 @@
     color: #f2f2f2;
     font-weight: bold;
     opacity: 0.3;
+  }
+
+  .error-message {
+    color: $color-error;
+    font-size: 0.875rem;
+    margin: 7px 5px 10px 5px;
+    text-align: left;
   }
 }

@@ -4,7 +4,7 @@ import { showToast } from "@src/utils/toastUtils";
 import { useAuth } from "@src/services/AuthContext";
 import "./styles/Login.scss";
 import { Link } from "react-router-dom";
-import iconEye from "../../../../public/assets/icons/eye-password-logo.svg";
+import iconEye from "../../../assets/images/eye-password-logo.svg";
 
 const Login = () => {
   const { login } = useAuth();
@@ -14,6 +14,7 @@ const Login = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
 
   const isEmail = (value: string) => value.includes("@");
 
@@ -42,11 +43,23 @@ const Login = () => {
       await login(response.accessToken, response.user, rememberMe);
       showToast("✅ Connexion réussie !");
     } catch (error: any) {
-      showToast(error.message || "Erreur de connexion", "error");
+      setError(error.message || "Erreur de connexion");
     } finally {
       setLoading(false);
     }
   };
+
+  function continueButton(){
+    if(step === 1 && loginInput && isEmail(loginInput)){
+      setStep(2);
+      setError("");
+    } else if(step === 1 && (!loginInput || !isEmail(loginInput))){
+      setError("Veuillez entrer une adresse E-mail valide.");
+    } else if (step === 2){
+      setStep(1);
+      setError("");
+    }
+  }
 
   return (
     <div className="login-container">
@@ -61,7 +74,7 @@ const Login = () => {
         <>
           <h2>Quel est ton mot de passe ?</h2>
           <p className="login-subtitle login-mdp-subtitle">
-            {loginInput}<span onClick={() => setStep(1)}>Modifier</span>
+            {loginInput}<span onClick={() => continueButton()}>Modifier</span>
           </p>
         </>
       )}
@@ -81,6 +94,7 @@ const Login = () => {
                   className={loginInput ? "filled" : ""}
                 />
                 <label htmlFor="loginInput"></label>
+                {error && <p className="error-message">{error}</p>}
               </div>
               <div className="info-text">
                 <p>En continuant, tu acceptes les <a href="#">conditions d'utilisation</a> et tu confirmes avoir lu la <a href="#">politique de confidentialité</a> de Usearly.</p>
@@ -107,6 +121,7 @@ const Login = () => {
                   <img src={iconEye} alt="" className="eye-icon" />
                 </button>
                 <label htmlFor="password"></label>
+                {error && <p className="error-message">{error}</p>}
               </div>
 
               <div className="login-options">
@@ -126,7 +141,7 @@ const Login = () => {
           )}
 
         { step === 1 ? (
-            <button type="button" onClick={() => setStep(2)}>
+            <button type="button" onClick={() => continueButton()}>
               Continuer
             </button>
           ) : (
