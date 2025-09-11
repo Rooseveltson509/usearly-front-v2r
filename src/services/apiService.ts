@@ -232,5 +232,3 @@ export const deleteUserProfile = async () => {
     throw new Error(msg);
   }
 };
-
-
