@@ -8,6 +8,7 @@ import { showToast } from "@src/utils/toastUtils";
 import PasswordRules from "./Components/PasswordRules/PasswordRules";
 import UsearlyDraw from "../Usearly";
 import InputText from "../../../components/inputs/InputText";
+import Buttons from "@src/components/buttons/Buttons";
 
 const passwordRules = {
   length: (val: string) => val.length >= 8,
@@ -234,7 +235,7 @@ const Register = () => {
         {successMessage && <p className="success-message">{successMessage}</p>}
         {errorMessage && <p className="error-message">{errorMessage}</p>}
 
-        <button type="submit">Créer un compte</button>
+        <Buttons title="Créer un compte" type="submit" />
       </form>
 
       <UsearlyDraw />

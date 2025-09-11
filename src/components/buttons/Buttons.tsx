@@ -1,8 +1,15 @@
+import type { MouseEventHandler } from "react";
 import "./Buttons.scss"
 
-function Buttons({title, onClick}: {title: string, onClick: () => void}) {
+type ButtonProps = {
+  title: string;
+  type?: "button" | "submit";
+  onClick?: MouseEventHandler<HTMLButtonElement>;
+}
+
+function Buttons({title, onClick, type = "button"}: ButtonProps) {
   return (
-    <button className="btn-primary" onClick={onClick}>{title}</button>
+    <button type={type} className="btn-primary" onClick={onClick}>{title}</button>
   );
 }
 

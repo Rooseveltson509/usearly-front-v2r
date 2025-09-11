@@ -176,7 +176,7 @@
 
       .terms-checkbox {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         gap: 0.5rem;
         a{
           color: $dark;
@@ -184,6 +184,7 @@
           cursor: pointer;
         }
         input{
+          margin-top: 0.165rem;
           width: auto;
           height: auto;
         }
@@ -203,24 +204,6 @@
 
     button {
       margin-top: 34px;
-      background-color: $dark;
-      color: white;
-      padding: 14px;
-      font-size: 16px;
-      border-radius: $border-radius-md;
-      border: none;
-      cursor: pointer;
-      transition: background-color 0.2s ease;
-
-      &:hover {
-        background-color: #0b0a0acc;
-      }
-
-      &:disabled {
-        background-color: $dark;
-        opacity: 0.8;
-        cursor: not-allowed;
-      }
     }
 
     input {
