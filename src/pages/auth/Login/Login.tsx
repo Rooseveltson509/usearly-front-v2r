@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { loginUser, loginBrand } from "@src/services/apiService";
 import { showToast } from "@src/utils/toastUtils";
 import { useAuth } from "@src/services/AuthContext";
@@ -21,6 +21,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const isEmail = (value: string) => value.includes("@");
 
@@ -46,8 +47,29 @@ const Login = () => {
         });
       }
 
-      await login(response.accessToken, response.user, rememberMe);
-      showToast("✅ Connexion réussie !");
+      // 🟡 Cas spécial : compte non confirmé
+      if (response.requiresConfirmation) {
+        showToast("⚠️ Ton compte n'a pas encore été confirmé. Vérifie ton email.", "warning");
+        if (response.user?.id && response.user?.email) {
+          navigate(`/confirm?userId=${response.user.id}&email=${encodeURIComponent(response.user.email)}`);
+        }
+        return;
+      }
+
+      // 🟡 Cas spécial : compte expiré
+      if (response.expired) {
+        showToast("❌ Ton compte a expiré car il n’a pas été confirmé à temps. Recrée un compte.", "error");
+        return;
+      }
+
+      // 🟢 Cas normal
+      if (response.accessToken && response.user) {
+        await login(response.accessToken, response.user, rememberMe);
+        showToast("✅ Connexion réussie !");
+      } else {
+        throw new Error("Réponse de connexion invalide.");
+      }
+
     } catch (error: any) {
       setError(error.message || "Erreur de connexion");
     } finally {
@@ -55,13 +77,14 @@ const Login = () => {
     }
   };
 
-  function continueButton(){
-    if(step === 1 && loginInput && isEmail(loginInput)){
+
+  function continueButton() {
+    if (step === 1 && loginInput && isEmail(loginInput)) {
       setStep(2);
       setError("");
-    } else if(step === 1 && (!loginInput || !isEmail(loginInput))){
+    } else if (step === 1 && (!loginInput || !isEmail(loginInput))) {
       setError("Veuillez entrer une adresse E-mail valide.");
-    } else if (step === 2){
+    } else if (step === 2) {
       setStep(1);
       setError("");
     }
@@ -84,73 +107,77 @@ const Login = () => {
           </p>
         </>
       )}
-      
+
 
       <form onSubmit={handleSubmit}>
-          { step === 1 ? (
-            <>
-              <div className="floating-group">
-                <input
-                  type="text"
-                  id="loginInput"
-                  required
-                  placeholder="E-mail*"
-                  value={loginInput}
-                  onChange={(e) => setLoginInput(e.target.value)}
-                  className={loginInput ? "filled" : ""}
-                />
-                <label htmlFor="loginInput"></label>
-                {error && <p className="error-message">{error}</p>}
-              </div>
-              <div className="info-text">
-                <p>En continuant, tu acceptes les <a href="#">conditions d'utilisation</a> et tu confirmes avoir lu la <a href="#">politique de confidentialité</a> de Usearly.</p>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="floating-group">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  placeholder="Mot de passe*"
-                  className={`password-input ${password ? "filled" : ""}`}
-                />
-                <button
-                  type="button"
-                  className="eye-btn"
-                  aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
-                  onClick={() => setShowPassword((value) => !value)}
-                >
-                  <img src={iconEye} alt="" className="eye-icon" />
-                </button>
-                <label htmlFor="password"></label>
-                {error && <p className="error-message">{error}</p>}
-              </div>
+        {step === 1 ? (
+          <>
+            <div className="floating-group">
+              <input
+                type="text"
+                id="loginInput"
+                required
+                placeholder="E-mail*"
+                value={loginInput}
+                onChange={(e) => setLoginInput(e.target.value)}
+                className={loginInput ? "filled" : ""}
+              />
+              <label htmlFor="loginInput"></label>
+              {error && <p className="error-message">{error}</p>}
+            </div>
+            <div className="info-text">
+              <p>En continuant, tu acceptes les <a href="#">conditions d'utilisation</a> et tu confirmes avoir lu la <a href="#">politique de confidentialité</a> de Usearly.</p>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="floating-group">
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                placeholder="Mot de passe*"
+                className={`password-input ${password ? "filled" : ""}`}
+              />
+              <button
+                type="button"
+                className="eye-btn"
+                aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
+                onClick={() => setShowPassword((value) => !value)}
+              >
+                <img src={iconEye} alt="" className="eye-icon" />
+              </button>
+              <label htmlFor="password"></label>
+              {error && <p className="error-message">{error}</p>}
+            </div>
 
-              <div className="login-options">
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={rememberMe}
-                    onChange={(e) => setRememberMe(e.target.checked)}
-                  />
-                  Se souvenir de moi.
-                </label>
-                <Link to="/forgot-password" className="forgot-link">
-                  Mot de passe oublié ?
-                </Link>
-              </div>
-            </>
-          )}
+            <div className="login-options">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                />
+                Se souvenir de moi.
+              </label>
+              <Link to="/forgot-password" className="forgot-link">
+                Mot de passe oublié ?
+              </Link>
+            </div>
+          </>
+        )}
 
-        { step === 1 ? (
-            <Buttons type="button" title="Continuer" onClick={() => continueButton()} />
-          ) : (
-            <Buttons type="submit" disabled={loading} title={loading ? "Connexion..." : "Se connecter"} />
-          )
+        {step === 1 ? (
+          <button type="button" onClick={() => continueButton()}>
+            Continuer
+          </button>
+        ) : (
+          <button type="submit" disabled={loading}>
+            {loading ? "Connexion..." : "Se connecter"}
+          </button>
+        )
         }
       </form>
       <UsearlyDraw />

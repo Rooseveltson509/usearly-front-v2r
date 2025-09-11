@@ -1,6 +1,6 @@
 import "./Toast.scss"
 
-export const showToast = (message: string, type: "success" | "error" = "success") => {
+export const showToast = (message: string, type: "success" | "error" | "warning" = "success") => {
   const toast = document.createElement("div");
   toast.className = `custom-toast ${type}`;
   toast.innerText = message;

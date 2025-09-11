@@ -14,10 +14,16 @@ export const apiService = axios.create({
   withCredentials: true,
 });
 
-interface RegisterResponse {
-  userId: string;
-  email: string;
+export interface RegisterResponse {
+  userId?: string;   // optionnel car si compte expiré, on ne renvoie pas toujours un ID
+  email?: string;    // pareil : parfois c'est juste un message
+  message?: string;
+
+  requiresConfirmation?: boolean; // ⚠️ compte déjà créé mais non confirmé
+  expired?: boolean;              // ⚠️ compte supprimé car délai dépassé
+  success?: boolean;              // homogénéité avec login
 }
+
 export const loginUser = async ({
   email,
   pseudo,
@@ -90,6 +96,7 @@ export const registerUser = async (
     throw new Error(errorMessage);
   }
 };
+
 
 // ✅ Intercepteur de requête – juste pour attacher le token
 apiService.interceptors.request.use(

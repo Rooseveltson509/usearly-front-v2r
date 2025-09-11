@@ -110,10 +110,24 @@ const Register = () => {
       };
 
       const response = await registerUser(payload);
-      showToast("✅ Connexion réussie !", "success");
-      navigate(`/confirm?userId=${response.userId}&email=${encodeURIComponent(response.email)}`);
+
+      // 🟢 Cas spécial : déjà inscrit mais non confirmé
+      if (response.requiresConfirmation) {
+        showToast("⚠️ Ce compte existe déjà mais n'a pas été confirmé. Vérifie ton email.", "warning");
+        if (response.userId && response.email) {
+          navigate(`/confirm?userId=${response.userId}&email=${encodeURIComponent(response.email)}`);
+        }
+        return;
+      }
+
+      // 🟢 Cas normal
+      showToast(`✅ ${response.email} inscrit avec succès !`, "success");
+      if (response.userId && response.email) {
+        navigate(`/confirm?userId=${response.userId}&email=${encodeURIComponent(response.email)}`);
+      }
+
     } catch (error: any) {
-      showToast(error.message, "error");
+      showToast(error.message || "❌ Erreur lors de l'inscription.", "error");
     }
   };
 
@@ -157,23 +171,7 @@ const Register = () => {
         </div>
 
         <div>
-          <InputText
-            registration={register("pseudo", { required: true })}
-            id="pseudo"
-            type="text"
-            placeholder="Pseudo"
-            required
-          />
-        </div>
-
-        <div>
-          <InputText
-            registration={register("password", { required: true })}
-            id="password"
-            type="password"
-            placeholder="Mot de passe*"
-            required
-          />
+          <InputText registration={register("password", { required: true })} id="password" type="password" placeholder="Mot de passe*" required />
           {password && (
             <PasswordRules
               value={password}
@@ -184,15 +182,9 @@ const Register = () => {
         </div>
 
         <div>
-          <InputText
-            registration={register("password_confirm", {
-              validate: (val) => val === password || "Les mots de passe ne correspondent pas",
-            })}
-            id="password_confirm"
-            type="password"
-            placeholder="Confirmation Mot de passe*"
-            required
-          />
+          <InputText registration={register("password_confirm", {
+            validate: (val) => val === password || "Les mots de passe ne correspondent pas",
+          })} id="password_confirm" type="password" placeholder="Confirmation Mot de passe*" required />
         </div>
 
         <div className="double-field">
