@@ -6,8 +6,9 @@ import type { CoupDeCoeur, Suggestion } from "@src/types/Reports";
 import { useAuth } from "@src/services/AuthContext";
 import { fetchValidBrandLogo } from "@src/utils/brandLogos";
 import SharedFooterCdcAndSuggest from "../shared/SharedFooterCdcAndSuggest";
-import { getFullAvatarUrl } from "@src/utils/avatarUtils";
 import Avatar from "../shared/Avatar";
+import { brandColors } from "@src/utils/brandColors";
+import { getContrastTextColor } from "@src/utils/colorUtils";
 
 interface Props {
   item: (CoupDeCoeur | Suggestion) & {
@@ -68,33 +69,61 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
   const description = rawDescription.trim();
   const DESCRIPTION_LIMIT = 150;
   const shouldShowToggle = description.length > DESCRIPTION_LIMIT || item.capture;
+  const bgColor = brandColors[item.marque?.toLowerCase()] || brandColors.default;
+  const textColor = getContrastTextColor(bgColor);
 
   return (
     <div className={`feedback-card ${isOpen ? "open" : ""}`}>
       {/* Bloc gauche : icône + titre */}
-      <div className="feedback-left">
-        <div className="feedback-icon">{item.emoji}</div>
-        <div className="feedback-type">
-          <p>
-            {item.title ? (
-              // 🟢 Si l'IA a généré un titre
-              item.title
-            ) : (
-              // 🔙 Sinon fallback sur ton ancien rendu statique
-              item.type === "coupdecoeur" ? (
-                <>
-                  Une dinguerie <br /> la fonctionnalité{" "}
-                  <span className="highlight">Moment</span> sur {item.marque}
-                </>
+      <div className="feedback-type">
+        {item.title ? (
+          <div
+            className="feedback-left"
+            style={{ backgroundColor: bgColor }}
+          >
+            <div className="feedback-icon">{item.emoji}</div>
+
+            <div className="punchlines">
+              {item.title ? (
+                item.title.split("\n").map((line, index) => (
+                  <div
+                    key={index}
+                    className={`bubble ${index === 0 ? "primary" : "secondary"}`}
+                    style={{
+                      backgroundColor: index === 0 ? "#fff" : "#fff",
+                      color: index === 0 ? bgColor : "#000",
+                      border: `2px solid ${bgColor}`,
+                      boxShadow: index === 0 ? "0 2px 6px rgba(0,0,0,0.1)" : "none",
+                    }}
+                  >
+                    {line}
+                  </div>
+                ))
               ) : (
-                <>
-                  Une suggestion <br /> pour{" "}
-                  <span className="highlight">{item.marque}</span>
-                </>
-              )
+                <div className="bubble primary">
+                  {item.type === "coupdecoeur"
+                    ? "Un coup de cœur utilisateur"
+                    : "Une suggestion pour la marque"}
+                </div>
+              )}
+            </div>
+          </div>
+
+        ) : (
+          <p>
+            {item.type === "coupdecoeur" ? (
+              <>
+                Une dinguerie <br /> la fonctionnalité{" "}
+                <span className="highlight">Moment</span> sur {item.marque}
+              </>
+            ) : (
+              <>
+                Une suggestion <br /> pour{" "}
+                <span className="highlight">{item.marque}</span>
+              </>
             )}
           </p>
-        </div>
+        )}
       </div>
 
       {/* Bloc droit : contenu */}
