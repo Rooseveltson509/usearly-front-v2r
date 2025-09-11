@@ -121,7 +121,7 @@ const Register = () => {
       <h2>Faisons de toi un Usear !</h2>
 
       <p className="register-subtitle">
-        Nous avons envoyé un code à{" "}
+        Votre mail est bien {" "}
         <span
           ref={emailSpanRef}
           {...editableProps}
@@ -133,7 +133,7 @@ const Register = () => {
         >
           {/* quand non éditable, contenu contrôlé par React ; en mode éditable, le DOM gère (avec ZWS) */}
           {!mailContentEditable ? mailUser : null}
-        </span>{" "}
+        </span>{" ? "}
         <span
           className="modifyLink"
           onClick={() => setMailContentEditable(!mailContentEditable)}

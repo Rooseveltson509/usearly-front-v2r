@@ -15,7 +15,7 @@ const Login = () => {
   const initialEmail = (location.state as any)?.email ?? "";
   const [loginInput, setLoginInput] = useState(initialEmail);
   const [password, setPassword] = useState("");
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(initialEmail ? 2 : 1);
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
