@@ -113,7 +113,7 @@ const Header = () => {
                     S'inscrire
                   </NavLink>
                   <NavLink
-                    to="/login"
+                    to="/lookup"
                     className="menu-item"
                     onClick={() => setUserMenuOpen(false)}
                   >

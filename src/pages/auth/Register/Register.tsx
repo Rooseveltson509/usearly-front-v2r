@@ -119,32 +119,33 @@ const Register = () => {
 
   return (
     <div className="register-container">
-      <h2>Faisons de toi un Usear !</h2>
-
-      <p className="register-subtitle">
-        Votre mail est bien {" "}
-        <span
-          ref={emailSpanRef}
-          {...editableProps}
-          role="textbox"
-          tabIndex={0}
-          className={mailContentEditable ? "editable" : ""}
-          onInput={handleSpanInput}
-          onKeyDown={handleSpanKeyDown}
-        >
-          {/* quand non éditable, contenu contrôlé par React ; en mode éditable, le DOM gère (avec ZWS) */}
-          {!mailContentEditable ? mailUser : null}
-        </span>{" ? "}
-        <span
-          className="modifyLink"
-          onClick={() => setMailContentEditable(!mailContentEditable)}
-        >
-          Modifier
-        </span>
-      </p>
+      <h2 style={{ marginBottom: initialEmail ? 0 : "2.5rem" }}>Faisons de toi un Usear !</h2>
+      {initialEmail && (
+        <p className="register-subtitle">
+          Votre mail est bien {" "}
+            <span
+              ref={emailSpanRef}
+              {...editableProps}
+            role="textbox"
+            tabIndex={0}
+            className={mailContentEditable ? "editable" : ""}
+            onInput={handleSpanInput}
+            onKeyDown={handleSpanKeyDown}
+          >
+            {/* quand non éditable, contenu contrôlé par React ; en mode éditable, le DOM gère (avec ZWS) */}
+            {!mailContentEditable ? mailUser : null}
+          </span>{" ? "}
+          <span
+            className="modifyLink"
+            onClick={() => setMailContentEditable(!mailContentEditable)}
+          >
+            Modifier
+          </span>
+        </p>
+      )}
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
-        <div style={{ display: "none" }}>
+        <div style={{ display: initialEmail ? "none" : "block" }}>
           <InputText
             registration={register("email", { required: true })}
             id="email"
