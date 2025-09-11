@@ -6,11 +6,30 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  font-family: $font-main-text;
 
   h2 {
     font-size: 2rem;
+    text-align: left;
     font-weight: 700;
-    margin-bottom: 2rem;
+    margin-bottom: 0.438rem;
+  }
+
+  p{
+    text-align: left;
+    margin-bottom: 2.5rem;
+    .modifyLink{
+      color: #585858;
+      text-decoration: underline;
+      line-height: normal;
+      text-decoration-line: underline;
+      text-decoration-style: solid;
+      text-decoration-skip-ink: auto;
+      text-decoration-thickness: auto;
+      text-underline-offset: auto;
+      text-underline-position: from-font;
+      cursor: pointer;
+    }
   }
 
   form {
@@ -20,15 +39,20 @@
 
     div{
       position: relative;
-      input, select {
+      width: 100%;
+      select {
         width: 100%;
-        height: 3.125rem;
-        padding: 1.2rem 1rem 0.6rem;
-        font-size: 1rem;
-        border: 1px solid $gray-300;
-        border-radius: $border-radius-md;
+        padding: 1.25rem;
+        font-size: 0.875rem;
+        color: $dark;
+        border: 0.8px solid $dark;
+        border-radius: 4px;
         background: white;
         transition: border 0.3s;
+
+        &::placeholder {
+            color: $dark;
+        }
 
         &:focus {
           border-color: $dark;
@@ -95,6 +119,11 @@
         display: flex;
         align-items: center;
         gap: 0.5rem;
+        a{
+          color: $dark;
+          text-decoration: underline !important;
+          cursor: pointer;
+        }
         input{
           width: auto;
           height: auto;
@@ -102,7 +131,8 @@
         p{
           font-size: 0.8rem;
           text-align: left;
-          font-weight: 700;
+          font-weight: 400;
+          margin-bottom: 0;
         }
         @media screen and (min-width: 570px) {
           p{
@@ -136,7 +166,6 @@
 
     input {
       width: 100%;
-      max-width: 29.813rem;
       padding: 1.25rem;
       font-size: 0.875rem;
       color: $dark;

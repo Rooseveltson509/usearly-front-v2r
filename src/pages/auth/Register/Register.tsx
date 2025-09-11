@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { registerUser } from "@src/services/apiService";
 import type { RegisterData } from "@src/types/RegisterData";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./styles/Register.scss";
 import { showToast } from "@src/utils/toastUtils";
 import PasswordRules from "./Components/PasswordRules/PasswordRules";
@@ -27,7 +27,10 @@ const Register = () => {
     handleSubmit,
     watch,
   } = useForm<RegisterData>({ mode: "onChange" });
+  const location = useLocation();
   const password = watch("password", "");
+  const initialEmail = (location.state as any)?.email ?? "";
+  const [mailUser, setMailUser] = useState(initialEmail);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
@@ -85,30 +88,17 @@ const Register = () => {
   return (
     <div className="register-container">
       <h2>Faisons de toi un Usear !</h2>
-
+      <p className="register-subtitle">Nous avons envoyé un code à {mailUser} <span className="modifyLink" onClick={() => navigate("/lookup")}>Modifier</span></p>
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <div>
-          <InputText registerName={"pseudo"} id="pseudo" type="text" placeholder="Pseudo" label="Pseudo* (visible par tous)" required />
+          <InputText registration={register("pseudo", { required: true })} id="pseudo" type="text" placeholder="Pseudo" required />
         </div>
 
+        {/* <div>
+          <InputText registerName={"email"} id="email" type="email" placeholder="Email" required />
+        </div> */}
         <div>
-          <input
-            type="email"
-            id="email"
-            placeholder="Email"
-            {...register("email", { required: true })}
-          />
-          <label htmlFor="email">Adresse e-mail*</label>
-        </div>
-
-        <div>
-          <input 
-            type="password"
-            id="password"
-            placeholder="Mot de passe*"
-            {...register("password", { required: true })}
-          />
-          <label htmlFor="password">Mot de passe*</label>
+          <InputText registration={register("password", { required: true })} id="password" type="password" placeholder="Mot de passe*" required />
           { password && (
             <PasswordRules
               value={password}
@@ -119,43 +109,30 @@ const Register = () => {
         </div>
 
         <div>
-          <input
-            type="password"
-            id="password_confirm"
-            placeholder="Confirmation Mot de passe*"
-            {...register("password_confirm", {
-              validate: (val) => val === password || "Les mots de passe ne correspondent pas",
-            })}
-          />
-          <label htmlFor="password_confirm">Confirme ton mot de passe*</label>
+          <InputText registration={register("password_confirm", { validate: (val) => val === password || "Les mots de passe ne correspondent pas",
+            })} id="password_confirm" type="password" placeholder="Confirmation Mot de passe*" required />
         </div>
 
         <div className="double-field">
           <div>
-            <input
-              type="date"
-              id="born"
-              placeholder="Date de naissance*"
-              {...register("born", { required: true })}
-            />
-            <label htmlFor="born">Date de naissance*</label>
+            <InputText registration={register("born", { required: true })} id="born" type="date" placeholder="Date de naissance*" required />
           </div>
           <div>
             { /* A styliser */}
             <select id="gender" {...register("gender", { required: true })}>
-              <option value="">Genre</option>
+              <option value="">Genre*</option>
               <option value="Femme">Femme</option>
               <option value="Homme">Homme</option>
               <option value="Autre">Autre</option>
             </select>
-            <label htmlFor="gender">Genre*</label>
+            <label htmlFor="gender"></label>
           </div>
         </div>
 
         <div className="terms-conditions">
           <label className="terms-checkbox">
             <input type="checkbox" required />
-            <p>J’accepte les conditions d'utilisation et la politique de confidentialité.*</p>
+            <p>J'accepte les <a href="#" target="_blank" rel="noopener noreferrer">conditions d'utilisation</a> et je confirme avoir lu la <a href="#" target="_blank" rel="noopener noreferrer">politique de confidentialité</a> de Usearly.</p>
           </label>
         </div>
 

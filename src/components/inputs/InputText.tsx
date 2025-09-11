@@ -1,27 +1,64 @@
-import React from "react";
-import { useForm } from "react-hook-form";
-import type { RegisterData } from "@src/types/RegisterData";
 import "./InputText.scss";
+import React, { forwardRef } from "react";
+import type { UseFormRegisterReturn } from "react-hook-form";
 
-// Forward the ref so parent components can read the input value without querying the DOM
-const InputText = React.forwardRef<HTMLInputElement, { registerName: any; id: string; type: string; placeholder: string; label?: string; required?: boolean }>(
-    ({ registerName, id, type, placeholder, label = "", required = false }, ref) => {
-        const { register } = useForm<RegisterData>({ mode: "onChange" });
-        return (
-            <>
-                <input
-                    {...register(registerName, { required: required })}
-                    ref={ref}
-                    type={type}
-                    id={id}
-                    placeholder={placeholder}
-                />
-                <label htmlFor={id}>{label}</label>
-            </>
-        );
-    }
+type Props = {
+  id: string;
+  label?: string;
+  type?: React.HTMLInputTypeAttribute;
+  placeholder?: string;
+  required?: boolean;
+  /** résultat de register('name', { ...rules }) */
+  registration?: UseFormRegisterReturn;
+  /** message d’erreur optionnel */
+  error?: string;
+  className?: string;
+  containerClassName?: string;
+};
+
+/**
+ * Input flottant compatible react-hook-form.
+ * On passe le résultat de `register(...)` via `registration`.
+ */
+const InputText = forwardRef<HTMLInputElement, Props>(
+  (
+    {
+      id,
+      label = "",
+      type = "text",
+      placeholder,
+      required,
+      registration,
+      error,
+      className = "",
+      containerClassName = "floating-group",
+      ...rest
+    },
+    ref
+  ) => {
+    return (
+      <div className={`${containerClassName}${error ? " has-error" : ""}`}>
+        <input
+          id={id}
+          type={type}
+          placeholder={placeholder}
+          required={required}
+          aria-invalid={!!error}
+          className={className}
+          // on fusionne les refs : RHF + éventuelle ref parent
+          {...registration}
+          ref={(el) => {
+            registration?.ref?.(el);
+            if (typeof ref === "function") ref(el);
+            else if (ref) (ref as React.MutableRefObject<HTMLInputElement | null>).current = el;
+          }}
+          {...rest}
+        />
+        {label && <label htmlFor={id}>{label}</label>}
+      </div>
+    );
+  }
 );
 
 InputText.displayName = "InputText";
-
 export default InputText;

@@ -17,7 +17,7 @@ function CheckUser() {
     const email = emailRef.current?.value?.trim() ?? "";
     console.log("CheckUser: email=", email);
 
-        if (!email) {
+        if (!email || !email.includes("@")) {
             setError("Veuillez entrer une adresse E-mail valide.");
             return;
         }
@@ -40,7 +40,7 @@ function CheckUser() {
         <div className="check-user-form">
             <h2>Saisi ton E-mail pour nous rejoindre ou te connecter</h2>
             <div>
-                <InputText ref={emailRef} registerName={"email"} id="email" type="email" placeholder="Email*" required />
+                <InputText ref={emailRef} id="email" type="email" placeholder="Email*" required />
                 { error && <p className="error-message">{error}</p> }
             </div>
             <div>

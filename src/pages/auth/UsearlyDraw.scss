@@ -77,7 +77,7 @@
   /* Animation “dessin” */
   stroke-dasharray: 1;   /* 100% de la longueur (grâce à pathLength="1") */
   stroke-dashoffset: 1;  /* caché au départ */
-  animation: usearly-draw 60s ease-out forwards;
+  animation: usearly-draw 45s ease-out forwards;
   will-change: stroke-dashoffset;
 }
 

@@ -2,7 +2,6 @@
 
 input {
     width: 100%;
-    max-width: 29.813rem;
     padding: 1.25rem;
     font-size: 0.875rem;
     color: $dark;
@@ -28,4 +27,9 @@ input {
     //   font-size: 0.75rem;
     //   color: $dark;
     // }
+}
+
+input[type="checkbox"] {
+    width: auto;
+    accent-color: $dark;
 }

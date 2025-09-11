@@ -68,16 +68,16 @@ export default function PasswordRules({
 
   return (
     <div className={className}>
-      <ul className="password-rules">
+      <div className="password-rules">
         {entries.map(([key, rule]) => (
-          <li key={key} className={rule.test(value) ? "valid" : "invalid"}>
+          <span key={key} className={rule.test(value) ? "valid" : "invalid"}>
             {rule.label}
-          </li>
+          </span>
         ))}
-      </ul>
+      </div>
       {disallowed && (
         <p className="invalid-special">
-          ❌ Caractère non autorisé détecté. Seuls <strong>{allowedSpecialChars.split("").join(" ")}</strong> sont permis.
+          Caractère non autorisé détecté. Seuls <strong>{allowedSpecialChars.split("").join(" ")}</strong> sont permis.
         </p>
       )}
     </div>
