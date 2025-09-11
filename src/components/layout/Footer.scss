@@ -1,0 +1,16 @@
+footer{
+    margin-top: 3.313rem;
+    padding-bottom: 6.125rem;
+    padding-left: 2.938rem;
+    text-align: center;
+    font-size: 0.75rem;
+    div{
+      margin-bottom: 0.5rem;
+      ul{
+        display: flex;
+        flex-direction: row;
+        list-style: none;
+        gap: 1.5rem;
+      }
+    }
+}

@@ -1,0 +1,182 @@
+@use "@styles/base/variables" as *;
+@use "@styles/utils/mixins" as *;
+
+.register-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  font-family: $font-main-text;
+
+  h2 {
+    font-size: 2rem;
+    text-align: left;
+    font-weight: 700;
+    margin-bottom: 0.438rem;
+  }
+
+  p{
+    text-align: left;
+    margin-bottom: 2.5rem;
+    .modifyLink{
+      color: #585858;
+      text-decoration: underline;
+      line-height: normal;
+      text-decoration-line: underline;
+      text-decoration-style: solid;
+      text-decoration-skip-ink: auto;
+      text-decoration-thickness: auto;
+      text-underline-offset: auto;
+      text-underline-position: from-font;
+      cursor: pointer;
+    }
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+
+    div{
+      position: relative;
+      width: 100%;
+      select {
+        width: 100%;
+        padding: 1.25rem;
+        font-size: 0.875rem;
+        color: $dark;
+        border: 0.8px solid $dark;
+        border-radius: 4px;
+        background: white;
+        transition: border 0.3s;
+
+        &::placeholder {
+            color: $dark;
+        }
+
+        &:focus {
+          border-color: $dark;
+          background-color: #fff;
+          outline: none;
+        }
+
+        &.filled + label,
+        &:focus + label {
+          left: 0.9rem;
+          background-color: #fff;
+          font-size: 0.75rem;
+          color: $dark;
+        }
+      }
+
+      input + label {
+        position: absolute;
+        top: -10px;
+        left: 1rem;
+        font-size: 0.8rem;
+        color: $gray-500;
+        pointer-events: none;
+        background: white;
+        padding: 0.2rem 0.4rem;
+        border-radius: 10px;
+        transition: 0.2s ease all;
+        z-index: 1;
+      }
+
+      select + label {
+        position: absolute;
+        top: -10px;
+        left: 1rem;
+        font-size: 0.8rem;
+        color: $gray-500;
+        pointer-events: none;
+        background: white;
+        padding: 0.2rem 0.4rem;
+        border-radius: 10px;
+        transition: 0.2s ease all;
+        z-index: 1;
+      }
+    }
+
+    .double-field {
+      display: flex;
+      gap: 1rem;
+
+      div {
+        flex: 1;
+        input,
+        select {
+          flex: 1;
+        }
+      }
+    }
+
+    .terms-conditions{
+      display: flex;
+      justify-content: left;
+
+      .terms-checkbox {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        a{
+          color: $dark;
+          text-decoration: underline !important;
+          cursor: pointer;
+        }
+        input{
+          width: auto;
+          height: auto;
+        }
+        p{
+          font-size: 0.8rem;
+          text-align: left;
+          font-weight: 400;
+          margin-bottom: 0;
+        }
+        @media screen and (min-width: 570px) {
+          p{
+            font-size: 0.9rem;
+          }
+        }
+      }
+    }
+
+    button {
+      margin-top: 34px;
+      background-color: $dark;
+      color: white;
+      padding: 14px;
+      font-size: 16px;
+      border-radius: $border-radius-md;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: #0b0a0acc;
+      }
+
+      &:disabled {
+        background-color: $dark;
+        opacity: 0.8;
+        cursor: not-allowed;
+      }
+    }
+
+    input {
+      width: 100%;
+      padding: 1.25rem;
+      font-size: 0.875rem;
+      color: $dark;
+      border: 0.8px solid $dark;
+      border-radius: 4px;
+      background: white;
+      transition: border 0.3s;
+
+      &::placeholder {
+        color: $dark;
+      }
+    }
+  }
+}

@@ -1,8 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./components/layout/Layout";
-import Register from "./pages/home/register/Register";
+import Register from "./pages/auth/Register/Register";
 import { AuthProvider } from "./services/AuthContext";
-import Login from "./pages/login/Login";
+import Login from "./pages/auth/Login/Login";
 import ConfirmAccount from "./components/confirm-account/ConfirmAccount";
 import GuestRoute from "./components/context/GuestRoute";
 import UserProfilePage from "./components/user-profile/UserProfilePage";
@@ -13,6 +13,7 @@ import RequestResetPassword from "./pages/forgot-and-reset-pwd/RequestResetPassw
 import ResetPassword from "./pages/forgot-and-reset-pwd/ResetPassword";
 import NavigateToHome from "./pages/NavigateToHome";
 import NewHome from "./pages/newHome/NewHome";
+import CheckUser from "./pages/auth/CheckUser";
 
 function App() {
   return (
@@ -25,6 +26,14 @@ function App() {
               element={
                 <GuestRoute>
                   <Register />
+                </GuestRoute>
+              }
+            />
+            <Route
+              path="/lookup"
+              element={
+                <GuestRoute>
+                  <CheckUser />
                 </GuestRoute>
               }
             />
