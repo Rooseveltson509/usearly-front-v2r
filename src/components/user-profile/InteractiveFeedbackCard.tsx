@@ -6,6 +6,219 @@ import type { CoupDeCoeur, Suggestion } from "@src/types/Reports";
 import { useAuth } from "@src/services/AuthContext";
 import { fetchValidBrandLogo } from "@src/utils/brandLogos";
 import SharedFooterCdcAndSuggest from "../shared/SharedFooterCdcAndSuggest";
+import { getFullAvatarUrl } from "@src/utils/avatarUtils";
+import Avatar from "../shared/Avatar";
+
+interface Props {
+  item: (CoupDeCoeur | Suggestion) & {
+    type: "suggestion" | "coupdecoeur";
+  };
+  isOpen: boolean;
+  onToggle: (id: string) => void;
+}
+
+const isValidDate = (value: any) => {
+  const d = new Date(value);
+  return !isNaN(d.getTime());
+};
+
+const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) => {
+  const [showFullText, setShowFullText] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [logos, setLogos] = useState<Record<string, string>>({});
+  const { userProfile } = useAuth();
+
+  if (!userProfile?.id) return null;
+
+  const toggleText = () => setShowFullText((prev) => !prev);
+
+  const openLightbox = (imageSrc: string) => {
+    setSelectedImage(imageSrc);
+    document.body.classList.add("lightbox-open");
+    document.body.style.overflow = "hidden";
+  };
+
+  const closeLightbox = () => {
+    setSelectedImage(null);
+    document.body.classList.remove("lightbox-open");
+    document.body.style.overflow = "auto";
+  };
+
+  useEffect(() => {
+    const loadBrandLogo = async () => {
+      if (item.marque) {
+        const logoUrl = await fetchValidBrandLogo(item.marque, item.siteUrl);
+        setLogos({ [item.marque]: logoUrl });
+      }
+    };
+    loadBrandLogo();
+  }, [item.marque]);
+
+  useEffect(() => {
+    return () => {
+      if (selectedImage) {
+        document.body.classList.remove("lightbox-open");
+        document.body.style.overflow = "auto";
+      }
+    };
+  }, [selectedImage]);
+
+  const title = item.type === "coupdecoeur" ? "Coup de cœur" : "Suggestion";
+  const rawDescription = item.description || "";
+  const description = rawDescription.trim();
+  const DESCRIPTION_LIMIT = 150;
+  const shouldShowToggle = description.length > DESCRIPTION_LIMIT || item.capture;
+
+  return (
+    <div className={`feedback-card ${isOpen ? "open" : ""}`}>
+      {/* Bloc gauche : icône + titre */}
+      <div className="feedback-left">
+        <div className="feedback-icon">{item.emoji}</div>
+        <div className="feedback-type">
+          <p>
+            {item.title ? (
+              // 🟢 Si l'IA a généré un titre
+              item.title
+            ) : (
+              // 🔙 Sinon fallback sur ton ancien rendu statique
+              item.type === "coupdecoeur" ? (
+                <>
+                  Une dinguerie <br /> la fonctionnalité{" "}
+                  <span className="highlight">Moment</span> sur {item.marque}
+                </>
+              ) : (
+                <>
+                  Une suggestion <br /> pour{" "}
+                  <span className="highlight">{item.marque}</span>
+                </>
+              )
+            )}
+          </p>
+        </div>
+      </div>
+
+      {/* Bloc droit : contenu */}
+      <div className="feedback-right" onClick={() => onToggle(item.id)}>
+        <div className="feedback-header">
+          <div className="feedback-meta">
+            <span className="user-brand">
+              {item.author?.pseudo} × <strong>{item.marque}</strong>
+            </span>
+            {isValidDate(item.createdAt) && (
+              <span className="feedback-date">
+                {formatDistanceToNow(new Date(item.createdAt), {
+                  locale: fr,
+                  addSuffix: true,
+                })}
+              </span>
+            )}
+          </div>
+
+          <div className="avatar-with-brand">
+            <div className="user-avatar-wrapper">
+              <Avatar
+                avatar={item.author?.avatar}
+                pseudo={item.author?.pseudo || "Utilisateur"}
+                type="user"
+                wrapperClassName="user-avatar"
+              />
+              {item.marque && (
+                <div className="brand-overlay">
+                  <Avatar
+                    avatar={logos[item.marque] || ""}
+                    pseudo={item.marque}
+                    type="brand"
+                    wrapperClassName="brand-logo"
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+
+        <div className="feedback-body">
+          {showFullText ? (
+            <p>
+              {description}
+              {item.capture && (
+                <div className="capture-wrapper">
+                  <img
+                    src={item.capture}
+                    alt="capture"
+                    className="capture"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openLightbox(item.capture!);
+                    }}
+                  />
+                </div>
+              )}
+              {shouldShowToggle && (
+                <button
+                  className="see-more"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleText();
+                  }}
+                >
+                  Voir moins
+                </button>
+              )}
+            </p>
+          ) : (
+            <p>
+              {description.length > DESCRIPTION_LIMIT
+                ? `${description.slice(0, DESCRIPTION_LIMIT)}…`
+                : description}
+              {shouldShowToggle && (
+                <button
+                  className="see-more"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleText();
+                  }}
+                >
+                  Voir plus
+                </button>
+              )}
+            </p>
+          )}
+        </div>
+
+        <SharedFooterCdcAndSuggest
+          userId={userProfile.id}
+          descriptionId={item.id}
+          type={item.type}
+          onToggle={onToggle}
+        />
+      </div>
+
+      {selectedImage && (
+        <div className="lightbox" onClick={closeLightbox}>
+          <img
+            src={selectedImage}
+            alt="Zoom"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default InteractiveFeedbackCard;
+
+
+
+/* import React, { useState, useEffect } from "react";
+import "./InteractiveFeedbackCard.scss";
+import { formatDistanceToNow } from "date-fns";
+import { fr } from "date-fns/locale";
+import type { CoupDeCoeur, Suggestion } from "@src/types/Reports";
+import { useAuth } from "@src/services/AuthContext";
+import { fetchValidBrandLogo } from "@src/utils/brandLogos";
+import SharedFooterCdcAndSuggest from "../shared/SharedFooterCdcAndSuggest";
 import { ChevronDown } from "lucide-react";
 import { getFullAvatarUrl } from "@src/utils/avatarUtils";
 import Avatar from "../shared/Avatar";
@@ -242,3 +455,4 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
 };
 
 export default InteractiveFeedbackCard;
+ */
