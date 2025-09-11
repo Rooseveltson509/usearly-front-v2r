@@ -7,6 +7,7 @@ import "./styles/Login.scss";
 import { Link } from "react-router-dom";
 import iconEye from "../../../assets/images/eye-password-logo.svg";
 import UsearlyDraw from "../Usearly";
+import Buttons from "@src/components/buttons/Buttons";
 
 const Login = () => {
   const { login } = useAuth();
@@ -146,13 +147,9 @@ const Login = () => {
           )}
 
         { step === 1 ? (
-            <button type="button" onClick={() => continueButton()}>
-              Continuer
-            </button>
+            <Buttons type="button" title="Continuer" onClick={() => continueButton()} />
           ) : (
-            <button type="submit" disabled={loading}>
-              {loading ? "Connexion..." : "Se connecter"}
-            </button>
+            <Buttons type="submit" disabled={loading} title={loading ? "Connexion..." : "Se connecter"} />
           )
         }
       </form>

@@ -1,4 +1,5 @@
 import InputText from "../../components/inputs/InputText";
+import { checkMailExists } from "@src/services/apiService";
 import UsearlyDraw from "./Usearly";
 import { useNavigate } from "react-router-dom";
 import { useState, useRef } from "react";
@@ -12,7 +13,7 @@ function CheckUser() {
     const [error, setError] = useState("");
     const emailRef = useRef<HTMLInputElement | null>(null);
 
-    function CheckIfUserExist() {
+    async function CheckIfUserExist() {
     // read the input value from the forwarded ref
     const email = emailRef.current?.value?.trim() ?? "";
     console.log("CheckUser: email=", email);
@@ -24,7 +25,11 @@ function CheckUser() {
 
         // TODO: replace this mock check with a real API call to verify whether the user exists
         // For now we'll set UserExists to true when email contains 'exist', otherwise false
-        const exists = email.toLowerCase().includes("exist");
+        const exists = await checkMailExists(email).then(res => res.exists).catch(err => {
+            console.error("Erreur lors de la vérification de l'email :", err);
+            setError("Erreur lors de la vérification de l'email.");
+            return false;
+        });
         setUserExists(exists);
 
         if (exists) {
