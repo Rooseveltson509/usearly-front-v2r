@@ -203,8 +203,8 @@ const Register = () => {
               required
             />
           </div>
-          <div>
-            <select id="gender" {...register("gender", { required: true })}>
+          <div className="select-wrap">
+            <select id="gender" className="select" {...register("gender", { required: true })}>
               <option value="">Genre*</option>
               <option value="Femme">Femme</option>
               <option value="Homme">Homme</option>
