@@ -232,3 +232,13 @@ export const deleteUserProfile = async () => {
     throw new Error(msg);
   }
 };
+
+export const checkMailExists = async (email: string): Promise<{ exists: boolean }> => {
+  try {
+    const response = await apiService.post("/check-email", { email });
+    return response.data;
+  } catch (error) {
+    console.error("Erreur lors de la vérification de l'email :", error);
+    throw new Error("Erreur lors de la vérification de l'email.");
+  }
+};

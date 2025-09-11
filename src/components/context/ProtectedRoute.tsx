@@ -15,7 +15,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedTypes 
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/lookup" replace />;
   }
 
   if (allowedTypes && userProfile && !allowedTypes.includes(userProfile.type)) {

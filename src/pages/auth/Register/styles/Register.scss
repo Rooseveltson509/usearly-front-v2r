@@ -15,6 +15,25 @@
     margin-bottom: 0.438rem;
   }
 
+  .register-subtitle{
+    .editable {
+      display: inline-block;
+      min-width: 2ch;
+      border: 1px solid $dark;
+      border-radius: 4px;
+      padding: 0.1rem 0.2rem;
+      margin: 0rem 0.2rem;
+      background: white;
+      transition: border 0.3s;
+      outline: none;
+
+      &:focus {
+        border-color: $dark;
+        outline: 2px solid $dark;
+      }
+    }
+  }
+
   p{
     text-align: left;
     margin-bottom: 2.5rem;
@@ -40,8 +59,24 @@
     div{
       position: relative;
       width: 100%;
-      select {
+      .select-wrap {
+        position: relative;
         width: 100%;
+        height: auto;
+      }
+
+      .select {
+        // cacher le chevron natif
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+
+        // espace à droite pour le chevron custom
+        padding-right: 2.5rem;
+
+        // optionnel: styles visuels
+        width: 100%;
+        height: 100%;
         padding: 1.25rem;
         font-size: 0.875rem;
         color: $dark;
@@ -67,6 +102,30 @@
           font-size: 0.75rem;
           color: $dark;
         }
+      }
+
+      .select::-ms-expand {
+        display: none;
+      }
+
+      .select-wrap::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: 0.75rem;
+        transform: translateY(-50%);
+        width: 0.7rem;
+        height: 0.7rem;
+        pointer-events: none;
+
+        background-image: url("data:image/svg+xml;utf8,\
+        <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23111' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+      }
+
+      .select{
+        padding-right: 2.5rem;
       }
 
       input + label {
@@ -117,7 +176,7 @@
 
       .terms-checkbox {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         gap: 0.5rem;
         a{
           color: $dark;
@@ -125,6 +184,7 @@
           cursor: pointer;
         }
         input{
+          margin-top: 0.165rem;
           width: auto;
           height: auto;
         }
@@ -144,24 +204,6 @@
 
     button {
       margin-top: 34px;
-      background-color: $dark;
-      color: white;
-      padding: 14px;
-      font-size: 16px;
-      border-radius: $border-radius-md;
-      border: none;
-      cursor: pointer;
-      transition: background-color 0.2s ease;
-
-      &:hover {
-        background-color: #0b0a0acc;
-      }
-
-      &:disabled {
-        background-color: $dark;
-        opacity: 0.8;
-        cursor: not-allowed;
-      }
     }
 
     input {

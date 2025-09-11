@@ -7,6 +7,7 @@ import "./styles/Login.scss";
 import { Link } from "react-router-dom";
 import iconEye from "../../../assets/images/eye-password-logo.svg";
 import UsearlyDraw from "../Usearly";
+import Buttons from "@src/components/buttons/Buttons";
 
 const Login = () => {
   const { login } = useAuth();
@@ -15,7 +16,7 @@ const Login = () => {
   const initialEmail = (location.state as any)?.email ?? "";
   const [loginInput, setLoginInput] = useState(initialEmail);
   const [password, setPassword] = useState("");
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(initialEmail ? 2 : 1);
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -146,13 +147,9 @@ const Login = () => {
           )}
 
         { step === 1 ? (
-            <button type="button" onClick={() => continueButton()}>
-              Continuer
-            </button>
+            <Buttons type="button" title="Continuer" onClick={() => continueButton()} />
           ) : (
-            <button type="submit" disabled={loading}>
-              {loading ? "Connexion..." : "Se connecter"}
-            </button>
+            <Buttons type="submit" disabled={loading} title={loading ? "Connexion..." : "Se connecter"} />
           )
         }
       </form>

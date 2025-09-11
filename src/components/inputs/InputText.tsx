@@ -5,6 +5,7 @@ import type { UseFormRegisterReturn } from "react-hook-form";
 type Props = {
   id: string;
   label?: string;
+  value?: string | number;
   type?: React.HTMLInputTypeAttribute;
   placeholder?: string;
   required?: boolean;
@@ -26,6 +27,7 @@ const InputText = forwardRef<HTMLInputElement, Props>(
       id,
       label = "",
       type = "text",
+      value,
       placeholder,
       required,
       registration,
@@ -39,20 +41,21 @@ const InputText = forwardRef<HTMLInputElement, Props>(
     return (
       <div className={`${containerClassName}${error ? " has-error" : ""}`}>
         <input
-          id={id}
-          type={type}
-          placeholder={placeholder}
-          required={required}
-          aria-invalid={!!error}
-          className={className}
-          // on fusionne les refs : RHF + éventuelle ref parent
-          {...registration}
-          ref={(el) => {
-            registration?.ref?.(el);
-            if (typeof ref === "function") ref(el);
-            else if (ref) (ref as React.MutableRefObject<HTMLInputElement | null>).current = el;
-          }}
-          {...rest}
+            id={id}
+            type={type}
+            placeholder={placeholder}
+            required={required}
+            aria-invalid={!!error}
+            className={className}
+            value={value}
+            // on fusionne les refs : RHF + éventuelle ref parent
+            {...registration}
+            ref={(el) => {
+                registration?.ref?.(el);
+                if (typeof ref === "function") ref(el);
+                else if (ref) (ref as React.MutableRefObject<HTMLInputElement | null>).current = el;
+            }}
+            {...rest}
         />
         {label && <label htmlFor={id}>{label}</label>}
       </div>
