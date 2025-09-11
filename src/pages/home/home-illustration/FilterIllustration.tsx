@@ -3,18 +3,26 @@ import rageImg from "/assets/filters-reports/rage.png";
 import popularImg from "/assets/filters-reports/popular.png";
 import urgentImg from "/assets/filters-reports/carrying.png";
 import recentImg from "/assets/filters-reports/recent.png";
+
+// 🎨 Ajouts spécifiques pour Coup de cœur & Suggestions
+import likedImg from "/assets/filters-cdc/liked-cdc.png";
+import recentCdcImg from "/assets/filters-cdc/recent-cdc.png";
+import commentedImg from "/assets/filters-cdc/commented.png";
+
+import discussedImg from "/assets/filters-suggestion/discussed.png";
+import recentSuggestionImg from "/assets/filters-suggestion/recentSuggestion.png";
+import likedSuggestionImg from "/assets/filters-suggestion/liked.png";
+
 import { useEffect, useState } from "react";
-import {
-  fetchValidBrandLogo,
-  getBrandLogo,
-} from "@src/utils/brandLogos";
+import { fetchValidBrandLogo, getBrandLogo } from "@src/utils/brandLogos";
 import "./FilterIllustration.scss";
 
 const illustrationMap = {
+  // === Signalements ===
   default: {
     label: "Filtrez les résultats",
     emoji: "✨",
-    img: recentImg, // ou une icône neutre si tu veux
+    img: recentImg,
   },
   chrono: {
     label: "Les plus récents",
@@ -40,6 +48,40 @@ const illustrationMap = {
     label: "À shaker vite",
     emoji: "👀",
     img: urgentImg,
+  },
+
+  // === Coups de cœur ===
+  liked: {
+    label: "Les plus aimés",
+    emoji: "🥰",
+    img: likedImg,
+  },
+  recent: {
+    label: "Les plus récents",
+    emoji: "🕒",
+    img: recentCdcImg,
+  },
+  commented: {
+    label: "Les plus commentés",
+    emoji: "💬",
+    img: commentedImg,
+  },
+
+  // === Suggestions ===
+  discussed: {
+    label: "Les plus discutées",
+    emoji: "💡",
+    img: discussedImg,
+  },
+  recentSuggestion: {
+    label: "Les plus récentes",
+    emoji: "🕒",
+    img: recentSuggestionImg,
+  },
+  likedSuggestion: {
+    label: "Les plus likés",
+    emoji: "🥰",
+    img: likedSuggestionImg,
   },
 };
 
@@ -106,7 +148,7 @@ const FilterIllustration = ({
     );
   }
 
-  // 👉 Cas 2 : filtres globaux classiques (ou "default" si vide)
+  // 👉 Cas 2 : filtres globaux (reports, cdc, suggestions)
   const key = filter === "" ? "default" : (filter as keyof typeof illustrationMap);
   const data = illustrationMap[key];
   if (!data) return null;

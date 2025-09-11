@@ -1,4 +1,4 @@
-import "./HomeFilters.scss";
+/* import "./HomeFilters.scss";
 import hotImg from "/assets/filters-reports/hot.png";
 import rageImg from "/assets/filters-reports/rage.png";
 import popularImg from "/assets/filters-reports/popular.png";
@@ -79,3 +79,4 @@ const HomeFilters = ({ selectedFilter, onChange, availableFilters }: HomeFilters
 };
 
 export default HomeFilters;
+ */
