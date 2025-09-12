@@ -6,7 +6,7 @@ import Login from "./pages/auth/Login/Login";
 import ConfirmAccount from "./components/confirm-account/ConfirmAccount";
 import GuestRoute from "./components/context/GuestRoute";
 import UserProfilePage from "./components/user-profile/UserProfilePage";
-import UserAccount from "./components/user-account/UserAccount";
+import UserAccount from "./pages/UserAccount/UserAccount";
 import ProtectedRoute from "./components/context/ProtectedRoute";
 import { Home } from "./pages/home";
 import RequestResetPassword from "./pages/forgot-and-reset-pwd/RequestResetPassword";

@@ -6,8 +6,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import "./styles/Register.scss";
 import { showToast } from "@src/utils/toastUtils";
 import PasswordRules from "./Components/PasswordRules/PasswordRules";
-import UsearlyDraw from "../Usearly";
-import InputText from "../../../components/inputs/InputText";
+import UsearlyDraw from "../../../components/background/Usearly";
+import InputText from "../../../components/inputs/inputsGlobal/InputText";
 import Buttons from "@src/components/buttons/Buttons";
 
 const passwordRules = {

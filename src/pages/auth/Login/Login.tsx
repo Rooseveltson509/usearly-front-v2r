@@ -6,7 +6,7 @@ import { useAuth } from "@src/services/AuthContext";
 import "./styles/Login.scss";
 import { Link } from "react-router-dom";
 import iconEye from "../../../assets/images/eye-password-logo.svg";
-import UsearlyDraw from "../Usearly";
+import UsearlyDraw from "../../../components/background/Usearly";
 import Buttons from "@src/components/buttons/Buttons";
 
 const Login = () => {
@@ -154,7 +154,6 @@ const Login = () => {
         }
       </form>
       <UsearlyDraw />
-      <div className="login-footer-logo">Usearly</div>
     </div>
   );
 };

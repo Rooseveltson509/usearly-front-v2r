@@ -1,6 +1,6 @@
-import InputText from "../../components/inputs/InputText";
+import InputText from "../../components/inputs/inputsGlobal/InputText";
 import { checkMailExists } from "@src/services/apiService";
-import UsearlyDraw from "./Usearly";
+import UsearlyDraw from "../../components/background/Usearly";
 import { useNavigate } from "react-router-dom";
 import { useState, useRef } from "react";
 import "./CheckUser.scss";

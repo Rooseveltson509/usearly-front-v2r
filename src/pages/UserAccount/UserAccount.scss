@@ -1,0 +1,10 @@
+@use "@src/styles/base/variables" as *;
+@use "@src/styles/utils/mixins" as *;
+
+.user-account-container{
+  display: flex;
+  gap: 2.563rem;
+  background-color: #F7F7F7;
+  padding-top: 2.75rem;
+  justify-content: center;
+}
