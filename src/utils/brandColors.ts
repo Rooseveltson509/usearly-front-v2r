@@ -1,3 +1,5 @@
+import { LayoutDashboard } from "lucide-react";
+
 export const brandColors: Record<string, string> = {
   // Streaming & Entertainment
   netflix: "#E50914",
@@ -9,6 +11,7 @@ export const brandColors: Record<string, string> = {
   deepar: "#113CCF",
   huggingface: "#F58220",
   linkedin: "#0A66C2",
+  emcitv: "#1246c7",
 
   // E-commerce & Retail
   amazon: "#FF9900",
@@ -18,6 +21,7 @@ export const brandColors: Record<string, string> = {
   nike: "#111111",
   adidas: "#0B2C5F",
   shein: "#000000",
+  laboutiqueofficielle: "#e74b58",
 
   // Tech
   apple: "#555555",
@@ -42,5 +46,5 @@ export const brandColors: Record<string, string> = {
   expedia: "#FFB700",
 
   // Default fallback
-  default: "#f9f9fb",
+  default: "#3b3b3cff",
 };

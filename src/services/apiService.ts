@@ -14,10 +14,35 @@ export const apiService = axios.create({
   withCredentials: true,
 });
 
-interface RegisterResponse {
-  userId: string;
-  email: string;
+export interface RegisterResponse {
+  userId?: string;   // optionnel car si compte expiré, on ne renvoie pas toujours un ID
+  email?: string;    // pareil : parfois c'est juste un message
+  message?: string;
+  code?: string;
+
+  requiresConfirmation?: boolean; // ⚠️ compte déjà créé mais non confirmé
+  expired?: boolean;              // ⚠️ compte supprimé car délai dépassé
+  success?: boolean;              // homogénéité avec login
 }
+
+
+export interface LoginResponse {
+  success?: boolean;
+  message?: string;
+  accessToken?: string;
+  refreshToken?: string;
+  user?: {
+    id?: string;
+    email?: string;
+    pseudo?: string;
+    avatar?: string;
+    type?: string;
+  };
+
+  requiresConfirmation?: boolean; // ⚠️ compte pas confirmé
+  expired?: boolean;              // ⚠️ compte supprimé car délai dépassé
+}
+
 export const loginUser = async ({
   email,
   pseudo,
@@ -28,22 +53,36 @@ export const loginUser = async ({
   pseudo?: string;
   password: string;
   rememberMe: boolean;
-}) => {
+}): Promise<LoginResponse> => {
   try {
-    const response = await apiService.post("/user/login", {
+    const { data } = await apiService.post<LoginResponse>("/user/login", {
       email,
       pseudo,
       password,
       rememberMe,
     });
 
-    return response.data; // contient accessToken + user { avatar, type: 'user' }
-  } catch (error: any) {
-    const msg =
-      error.response?.data?.message || "Erreur lors de la connexion utilisateur.";
-    throw new Error(msg);
+    return data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error) && error.response?.data) {
+      const data = error.response.data as LoginResponse;
+
+      // ✅ Cas spéciaux renvoyés par le back
+      if (data.requiresConfirmation || data.expired) {
+        return data;
+      }
+
+      throw new Error(data.message || "Erreur lors de la connexion utilisateur.");
+    }
+
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+
+    throw new Error("Erreur inconnue lors de la connexion utilisateur.");
   }
 };
+
 
 export const loginBrand = async ({
   email,
@@ -69,6 +108,36 @@ export const loginBrand = async ({
   }
 };
 
+/* export const registerUser = async (
+  data: RegisterData
+): Promise<RegisterResponse> => {
+  try {
+    const { data: response } = await apiService.post<RegisterResponse>(
+      "/user/register",
+      data
+    );
+    return response;
+  } catch (error: any) {
+    if (axios.isAxiosError(error)) {
+      const resp = error.response?.data;
+
+      // 🟡 Cas spécial : backend renvoie un objet connu
+      if (resp?.requiresConfirmation || resp?.expired) {
+        return resp as RegisterResponse;
+      }
+
+      // 🟥 Sinon erreur classique
+      throw new Error(resp?.error || "Erreur inconnue lors de l’inscription.");
+    }
+
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+
+    throw new Error("Erreur inconnue lors de l’inscription....");
+  }
+}; */
+
 export const registerUser = async (
   data: RegisterData
 ): Promise<RegisterResponse> => {
@@ -78,16 +147,37 @@ export const registerUser = async (
       data
     );
     return response;
-  } catch (error: unknown) {
-    let errorMessage = "Erreur inconnue lors de l’inscription.";
-
+  } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      errorMessage = error.response?.data?.error || errorMessage;
-    } else if (error instanceof Error) {
-      errorMessage = error.message;
+      const resp = error.response?.data;
+
+      // 🟢 Cas spécial : confirmation requise
+      if (resp?.code === "CONFIRMATION_REQUIRED") {
+        return resp as RegisterResponse; // on retourne normalement
+      }
+
+      if (resp?.requiresConfirmation || resp?.expired) {
+        return resp as RegisterResponse;
+      }
+
+      // ❌ autres erreurs → on propage
+      throw {
+        code: resp?.code || "UNKNOWN",
+        message:
+          resp?.message ||
+          resp?.error ||
+          "Erreur inconnue lors de l’inscription.",
+      };
     }
 
-    throw new Error(errorMessage);
+    if (error instanceof Error) {
+      throw { code: "JS_ERROR", message: error.message };
+    }
+
+    throw {
+      code: "UNKNOWN",
+      message: "Erreur inconnue lors de l’inscription....",
+    };
   }
 };
 

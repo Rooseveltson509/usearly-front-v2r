@@ -11,6 +11,8 @@ import {
 } from "@src/services/feedbackService";
 import type { CoupDeCoeur, Suggestion } from "@src/types/Reports";
 import SqueletonAnime from "@src/components/loader/SqueletonAnime";
+import { getCoupsDeCoeurByBrand, getSuggestionsByBrand } from "@src/services/coupDeCoeurService";
+import { fetchFeedbackData } from "@src/services/feedbackFetcher";
 
 // 🖼️ Assets
 import bulleIcon from "/assets/images/bulle-top-bar.png";
@@ -62,45 +64,70 @@ function Home() {
     checkHotFilter();
   }, []);
 
+  // 🟢 Quand selectedBrand change → fetch par marque
   useEffect(() => {
-    if (activeTab === "report") {
-      setActiveFilter("confirmed"); // 🔥 garde ton comportement existant
-    } else if (activeTab === "coupdecoeur") {
-      setActiveFilter("liked"); // 🥰 par défaut pour coup de cœur
-    } else if (activeTab === "suggestion") {
-      setActiveFilter("discussed"); // 💡 par défaut pour suggestions
-    }
-  }, [activeTab]);
+    const fetchByBrand = async () => {
+      if (!selectedBrand) return;
 
-
-  // ✅ Récupération des données pour coupdecoeur et suggestion
-  useEffect(() => {
-    const fetchData = async () => {
-      if (activeTab === "coupdecoeur" || activeTab === "suggestion") {
-        setIsLoading(true);
-        try {
-          const res =
-            activeTab === "coupdecoeur"
-              ? await getPublicCoupsDeCoeur(1, 50)
-              : await getPublicSuggestions(1, 50);
-
-          const dataToSet =
-            activeTab === "coupdecoeur" ? res.coupdeCoeurs : res.suggestions;
-
-          setFeedbackData(dataToSet || []);
-        } catch (e) {
-          console.error("Erreur fetch feedback:", e);
-          setFeedbackData([]);
-        } finally {
-          setIsLoading(false);
+      setIsLoading(true);
+      try {
+        let res;
+        if (activeTab === "coupdecoeur") {
+          res = await getCoupsDeCoeurByBrand(selectedBrand, 1, 50);
+        } else if (activeTab === "suggestion") {
+          res = await getSuggestionsByBrand(selectedBrand, 1, 50);
         }
+        const dataToSet =
+          activeTab === "coupdecoeur" ? res?.coupdeCoeurs : res?.suggestions;
+        setFeedbackData(dataToSet || []);
+      } catch (e) {
+        console.error("Erreur fetch par marque:", e);
+        setFeedbackData([]);
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    if (activeTab !== "report") {
-      fetchData();
+    if (selectedBrand) {
+      fetchByBrand();
     }
-  }, [activeTab]);
+  }, [selectedBrand, activeTab]);
+
+
+
+  // Quand l’onglet change → reset filtre par défaut et fetch (sauf si une marque est choisie)
+  useEffect(() => {
+    if (selectedBrand) return; // 🚨 Priorité à la recherche par marque
+
+    let defaultFilter = "confirmed";
+    if (activeTab === "coupdecoeur") defaultFilter = "all";
+    if (activeTab === "suggestion") defaultFilter = "all";
+
+    setActiveFilter(defaultFilter);
+
+    if (activeTab !== "report") {
+      setIsLoading(true);
+      fetchFeedbackData(defaultFilter, activeTab)
+        .then((res) => setFeedbackData(res.data))
+        .catch(() => setFeedbackData([]))
+        .finally(() => setIsLoading(false));
+    }
+  }, [activeTab, selectedBrand]); // ⚡️ dépend aussi de selectedBrand
+
+
+  // Quand on change de filtre → fetch (sauf si une marque est choisie)
+  useEffect(() => {
+    if (selectedBrand) return; // 🚨 Priorité à la recherche par marque
+
+    if (activeTab !== "report") {
+      setIsLoading(true);
+      fetchFeedbackData(activeFilter, activeTab)
+        .then((res) => setFeedbackData(res.data))
+        .catch(() => setFeedbackData([]))
+        .finally(() => setIsLoading(false));
+    }
+  }, [activeFilter, activeTab, selectedBrand]); // ⚡️ idem ici
+
 
   return (
     <div className="home-page">
@@ -142,8 +169,8 @@ function Home() {
         {activeTab === "report" && (
           <div
             className={`report-banner-container ${selectedBrand || selectedCategory
-                ? "banner-filtered"
-                : `banner-${activeFilter}`
+              ? "banner-filtered"
+              : `banner-${activeFilter}`
               }`}
           >
             <div className="feedback-list-wrapper">

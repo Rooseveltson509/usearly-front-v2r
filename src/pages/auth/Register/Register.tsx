@@ -9,6 +9,8 @@ import PasswordRules from "./Components/PasswordRules/PasswordRules";
 import UsearlyDraw from "../../../components/background/Usearly";
 import InputText from "../../../components/inputs/inputsGlobal/InputText";
 import Buttons from "@src/components/buttons/Buttons";
+import { useHandleAuthRedirect } from "@src/hooks/useHandleAuthRedirect";
+import { errorMessages } from "@src/utils/errorMessages";
 
 const passwordRules = {
   length: (val: string) => val.length >= 8,
@@ -20,24 +22,30 @@ const passwordRules = {
 
 const formatDateToFR = (isoDate: string): string => {
   const [year, month, day] = isoDate.split("-");
-  return `${day}-${month}-${year}`; // format attendu : dd-mm-yyyy
+  return `${day}-${month}-${year}`;
 };
 
-// caractère invisible pour garder le curseur dans le span vide
 const ZWS = "\u200B";
 
 const Register = () => {
-  const { register, handleSubmit, watch } = useForm<RegisterData>({ mode: "onChange" });
+  const {
+    register,
+    handleSubmit,
+    watch,
+    getValues,
+    formState: { errors },
+  } = useForm<RegisterData>({ mode: "onChange" });
+
   const location = useLocation();
+  const navigate = useNavigate();
+  const { handleAuthRedirect } = useHandleAuthRedirect();
   const password = watch("password", "");
   const initialEmail = (location.state as any)?.email ?? "";
+
   const [mailUser, setMailUser] = useState(initialEmail);
   const [mailContentEditable, setMailContentEditable] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const navigate = useNavigate();
-  const allowedSpecialChars = "@$!%*?&";
   const emailSpanRef = useRef<HTMLSpanElement | null>(null);
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
 
   const [validations, setValidations] = useState({
     length: false,
@@ -48,7 +56,7 @@ const Register = () => {
   });
 
   useEffect(() => {
-    const invalidSpecialChar = /[^A-Za-z0-9@$!%*?&]/.test(password); // ❌ char non autorisé
+    const invalidSpecialChar = /[^A-Za-z0-9@$!%*?&]/.test(password);
     setValidations({
       length: passwordRules.length(password),
       lowercase: passwordRules.lowercase(password),
@@ -63,8 +71,8 @@ const Register = () => {
     const el = emailSpanRef.current;
     if (!el) return;
 
-    if (!el.textContent || el.textContent === "") {
-      el.textContent = (mailUser && mailUser.length > 0) ? mailUser : ZWS;
+    if (!el.textContent) {
+      el.textContent = mailUser || ZWS;
     }
 
     el.focus();
@@ -76,19 +84,17 @@ const Register = () => {
     sel?.addRange(range);
   }, [mailContentEditable, mailUser]);
 
-  const editableProps = mailContentEditable
-    ? ({ contentEditable: true, suppressContentEditableWarning: true } as const)
-    : {};
-
   const handleSpanInput = (e: React.FormEvent<HTMLSpanElement>) => {
     const raw = e.currentTarget.textContent ?? "";
     const clean = raw.replace(new RegExp(ZWS, "g"), "");
-    console.log("handleSpanInput: raw=", raw, " clean=", clean);
     setMailUser(clean);
   };
 
   const handleSpanKeyDown = (e: React.KeyboardEvent<HTMLSpanElement>) => {
-    const text = (emailSpanRef.current?.textContent ?? "").replace(new RegExp(ZWS, "g"), "");
+    const text = (emailSpanRef.current?.textContent ?? "").replace(
+      new RegExp(ZWS, "g"),
+      ""
+    );
     if ((e.key === "Backspace" || e.key === "Delete") && text.length === 0) {
       e.preventDefault();
     }
@@ -96,8 +102,6 @@ const Register = () => {
 
   const onSubmit = async (data: RegisterData) => {
     const formattedDate = formatDateToFR(data.born);
-    setErrorMessage("");
-    setSuccessMessage("");
 
     try {
       const payload = {
@@ -110,31 +114,74 @@ const Register = () => {
       };
 
       const response = await registerUser(payload);
-      showToast("✅ Connexion réussie !", "success");
-      navigate(`/confirm?userId=${response.userId}&email=${encodeURIComponent(response.email)}`);
+
+      // 🟢 Cas spécial : confirmation requise
+      if (response.code === "CONFIRMATION_REQUIRED") {
+        if (response.userId && response.email) {
+          const url = `/confirm?userId=${response.userId}&email=${encodeURIComponent(
+            response.email
+          )}`;
+          showToast(
+            `📧 ${response.email} existe déjà. Confirme ton compte pour continuer.`,
+            "info"
+          );
+          navigate(url, { replace: true });
+        }
+        return;
+      }
+
+      // 🟢 Cas normal → success
+      const ok = handleAuthRedirect(response, {
+        onSuccess: () => {
+          showToast(`✅ ${response.email} inscrit avec succès !`, "success");
+          if (response.userId && response.email) {
+            navigate(
+              `/confirm?userId=${response.userId}&email=${encodeURIComponent(
+                response.email
+              )}`
+            );
+          }
+        },
+      });
+
+      if (!ok) return;
     } catch (error: any) {
-      showToast(error.message, "error");
+      // 🔴 autres erreurs (vraies erreurs)
+      const code = error.code || "";
+      const message =
+        errorMessages[code] ||
+        error.message ||
+        "❌ Erreur lors de l'inscription.";
+      showToast(message, "error");
     }
   };
 
+
+  const editableProps = mailContentEditable
+    ? ({ contentEditable: true, suppressContentEditableWarning: true } as const)
+    : {};
+
   return (
     <div className="register-container">
-      <h2 style={{ marginBottom: initialEmail ? 0 : "2.5rem" }}>Faisons de toi un Usear !</h2>
+      <h2 style={{ marginBottom: initialEmail ? 0 : "2.5rem" }}>
+        Faisons de toi un Usear !
+      </h2>
+
       {initialEmail && (
         <p className="register-subtitle">
-          Votre mail est bien {" "}
-            <span
-              ref={emailSpanRef}
-              {...editableProps}
+          Votre mail est bien{" "}
+          <span
+            ref={emailSpanRef}
+            {...editableProps}
             role="textbox"
             tabIndex={0}
             className={mailContentEditable ? "editable" : ""}
             onInput={handleSpanInput}
             onKeyDown={handleSpanKeyDown}
           >
-            {/* quand non éditable, contenu contrôlé par React ; en mode éditable, le DOM gère (avec ZWS) */}
             {!mailContentEditable ? mailUser : null}
-          </span>{" ? "}
+          </span>{" "}
+          ?{" "}
           <span
             className="modifyLink"
             onClick={() => setMailContentEditable(!mailContentEditable)}
@@ -144,35 +191,64 @@ const Register = () => {
         </p>
       )}
 
-      <form onSubmit={handleSubmit(onSubmit)} noValidate>
-        <div style={{ display: initialEmail ? "none" : "block" }}>
+      <form
+        onSubmit={handleSubmit(onSubmit, (errors) => {
+          if (errors.password_confirm) {
+            showToast(errors.password_confirm.message as string, "error");
+          }
+        })}
+        noValidate
+      >
+        <InputText
+          registration={register("pseudo", { required: true })}
+          id="pseudo"
+          type="text"
+          label="Pseudo*"
+          required
+        />
+
+        {!initialEmail && (
           <InputText
             registration={register("email", { required: true })}
             id="email"
             type="email"
-            placeholder="Email*"
-            value={mailUser}
+            label="Email*"
+            defaultValue={mailUser}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setMailUser(e.target.value)
+            }
             required
           />
-        </div>
+        )}
 
-        <div>
-          <InputText
-            registration={register("pseudo", { required: true })}
-            id="pseudo"
-            type="text"
-            placeholder="Pseudo"
-            required
-          />
-        </div>
-
-        <div>
+        {/* Champ mot de passe */}
+        {/*         <div>
           <InputText
             registration={register("password", { required: true })}
             id="password"
             type="password"
             placeholder="Mot de passe*"
             required
+            onFocus={() => setIsPasswordFocused(true)}
+            onBlur={() => setIsPasswordFocused(false)}
+          />
+          {(isPasswordFocused || password) && (
+            <PasswordRules
+              value={password}
+              enabled={["length", "lowercase", "uppercase", "number", "special"]}
+              className="input-rules"
+            />
+          )}
+        </div> */}
+        <div>
+          <InputText
+            registration={register("password", { required: true })}
+            id="password"
+            type="password"
+            label="Mot de passe*"
+            required
+            /* onFocus={() => setIsPasswordFocused(true)}
+            onBlur={() => setIsPasswordFocused(false)} */
           />
           {password && (
             <PasswordRules
@@ -183,36 +259,43 @@ const Register = () => {
           )}
         </div>
 
-        <div>
-          <InputText
-            registration={register("password_confirm", {
-              validate: (val) => val === password || "Les mots de passe ne correspondent pas",
-            })}
-            id="password_confirm"
-            type="password"
-            placeholder="Confirmation Mot de passe*"
-            required
-          />
-        </div>
+        <InputText
+          registration={register("password_confirm", {
+            validate: (val) =>
+              val === getValues("password") ||
+              "Les mots de passe ne correspondent pas",
+          })}
+          id="password_confirm"
+          type="password"
+          label="Confirmation Mot de passe*"
+          required
+        />
+        {errors.password_confirm && (
+          <p className="error-message">
+            {errors.password_confirm.message as string}
+          </p>
+        )}
 
         <div className="double-field">
-          <div>
-            <InputText
-              registration={register("born", { required: true })}
-              id="born"
-              type="date"
-              placeholder="Date de naissance*"
-              required
-            />
-          </div>
+          <InputText
+            registration={register("born", { required: true })}
+            id="born"
+            type="date"
+            label="Date de naissance*"
+            required
+          />
+
           <div className="select-wrap">
-            <select id="gender" className="select" {...register("gender", { required: true })}>
+            <select
+              id="gender"
+              className="select"
+              {...register("gender", { required: true })}
+            >
               <option value="">Genre*</option>
               <option value="Femme">Femme</option>
               <option value="Homme">Homme</option>
               <option value="Autre">Autre</option>
             </select>
-            <label htmlFor="gender"></label>
           </div>
         </div>
 
@@ -232,9 +315,6 @@ const Register = () => {
             </p>
           </label>
         </div>
-
-        {successMessage && <p className="success-message">{successMessage}</p>}
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
 
         <Buttons title="Créer un compte" type="submit" />
       </form>

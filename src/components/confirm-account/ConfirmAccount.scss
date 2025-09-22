@@ -16,9 +16,8 @@
 
   .code-inputs {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     gap: 10px;
-    margin-bottom: 1.5rem;
 
     input {
       width: 40px;
@@ -29,14 +28,22 @@
       border-radius: 8px;
       transition: border-color 0.3s ease;
 
-      &:focus {
-        outline: none;
-        border-color: #00aaff;
-      }
+      // ⚠️ reset pour éviter les styles globaux
+      padding: 0 !important;
+      background: #fff !important;
+      color: #000 !important;
+      box-shadow: none !important;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #3b82f6; // bleu focus
     }
   }
 
+
   .confirm-btn {
+    margin-top: 12px;
     width: 100%;
     padding: 12px;
     background-color: #00aaff;

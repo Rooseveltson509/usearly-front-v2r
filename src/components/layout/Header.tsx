@@ -43,9 +43,11 @@ const Header = () => {
           <NavLink to="/home" className="link">
             Accueil
           </NavLink>
-          <NavLink to="/feedback" className="link">
-            Feedbacks
-          </NavLink>
+          {isAuthenticated && (
+            <NavLink to="/feedback" className="link">
+              Feedbacks
+            </NavLink>
+          )}
           <NavLink to="/marque" className="link">
             Marques
           </NavLink>

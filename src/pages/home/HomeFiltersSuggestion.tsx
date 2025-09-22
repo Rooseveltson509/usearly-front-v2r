@@ -2,7 +2,6 @@ import { useState, useRef } from "react";
 import FilterBarGeneric from "./genericFilters/FilterBarGeneric";
 import "./HomeFiltersSuggestion.scss";
 
-
 interface Props {
   filter: string;
   setFilter: (val: string) => void;
@@ -25,6 +24,7 @@ const HomeFiltersSuggestion = ({
   return (
     <FilterBarGeneric
       options={[
+        { value: "all", label: "🌍 Toutes les suggestions" }, // ✅ Ajout du filtre neutre
         { value: "discussed", label: "💬 Les plus discutées" },
         { value: "recentSuggestion", label: "🕒 Les plus récentes" },
         { value: "likedSuggestion", label: "👍 Les plus appréciées" },
