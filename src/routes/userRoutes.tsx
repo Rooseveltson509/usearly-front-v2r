@@ -5,7 +5,7 @@ import { Home } from "@src/pages/home";
 
 // ✅ Lazy imports
 const UserProfilePage = lazy(() => import("@src/components/user-profile/UserProfilePage"));
-const UserAccount = lazy(() => import("@src/components/user-account/UserAccount"));
+const UserAccount = lazy(() => import("@src/pages/UserAccount/UserAccount"));
 const NavigateToHome = lazy(() => import("@src/pages/NavigateToHome"));
 const NewHome = lazy(() => import("@src/pages/newHome/NewHome"));
 
