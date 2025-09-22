@@ -43,9 +43,9 @@ function CheckUser() {
   return (
     <div className="check-user-container">
         <div className="check-user-form">
-            <h2>Saisi ton E-mail pour nous rejoindre ou te connecter</h2>
+            <h2>Saisi une adresse E-mail pour nous rejoindre ou te connecter</h2>
             <div>
-                <InputText ref={emailRef} id="email" type="email" placeholder="Email*" required />
+                <InputText ref={emailRef} id="email" label="Email*" type="email" required />
                 { error && <p className="error-message">{error}</p> }
             </div>
             <div>

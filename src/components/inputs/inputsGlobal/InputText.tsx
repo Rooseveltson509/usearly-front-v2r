@@ -1,28 +1,19 @@
 import "./InputText.scss";
-import React, { forwardRef } from "react";
+import React, { forwardRef, useState, useEffect } from "react";
 import type { UseFormRegisterReturn } from "react-hook-form";
 
-type Props = {
-    id: string;
-    label?: string;
-    value?: string | number;
-    type?: React.HTMLInputTypeAttribute;
-    placeholder?: string;
-    required?: boolean;
-    /** résultat de register('name', { ...rules }) */
-    registration?: UseFormRegisterReturn;
-    /** message d’erreur optionnel */
-    error?: string;
-    className?: string;
-    containerClassName?: string;
-    disabled?: boolean;
-    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+type Props = React.InputHTMLAttributes<HTMLInputElement> & {
+  id: string;
+  label?: string;
+  value?: string | number;
+  type?: React.HTMLInputTypeAttribute;
+  required?: boolean;
+  registration?: UseFormRegisterReturn; // résultat de register
+  error?: string;
+  className?: string;
+  containerClassName?: string;
 };
 
-/**
- * Input flottant compatible react-hook-form.
- * On passe le résultat de `register(...)` via `registration`.
- */
 const InputText = forwardRef<HTMLInputElement, Props>(
   (
     {
@@ -30,45 +21,56 @@ const InputText = forwardRef<HTMLInputElement, Props>(
       label = "",
       type = "text",
       value,
-      placeholder,
       required,
       registration,
       error,
       className = "",
       containerClassName = "floating-group",
+      defaultValue,
       onChange,
-      disabled = false,
       ...rest
     },
     ref
   ) => {
+    const [isFilled, setIsFilled] = useState(
+      !!value || !!defaultValue
+    );
+
+    // synchroniser si `value` est contrôlé par un parent
+    useEffect(() => {
+      setIsFilled(!!value);
+    }, [value]);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setIsFilled(e.target.value !== "");
+      onChange?.(e); // garde l’onChange du parent
+    };
+
     return (
       <div className={`${containerClassName}${error ? " has-error" : ""}`}>
-        {label && <label htmlFor={id}>{label}</label>}
         <input
-            style={{ marginTop: label ? "0.5rem" : ""}}
-            id={id}
-            type={type}
-            placeholder={placeholder}
-            required={required}
-            aria-invalid={!!error}
-            className={className}
-            value={value}
-            onChange={onChange}
-            disabled={disabled}
-            // on fusionne les refs : RHF + éventuelle ref parent
-            {...registration}
-            ref={(el) => {
-                registration?.ref?.(el);
-                if (typeof ref === "function") ref(el);
-                else if (ref) (ref as React.MutableRefObject<HTMLInputElement | null>).current = el;
-            }}
-            {...rest}
+          id={id}
+          type={type}
+          required={required}
+          aria-invalid={!!error}
+          className={`${className} ${isFilled ? "filled" : ""}`}
+          value={value}
+          defaultValue={defaultValue}
+          {...registration}
+          onChange={handleChange}
+          ref={(el) => {
+            registration?.ref?.(el);
+            if (typeof ref === "function") ref(el);
+            else if (ref) (ref as React.MutableRefObject<HTMLInputElement | null>).current = el;
+          }}
+          {...rest}
         />
+        {label && <label htmlFor={id}>{label}</label>}
       </div>
     );
   }
 );
 
 InputText.displayName = "InputText";
+
 export default InputText;

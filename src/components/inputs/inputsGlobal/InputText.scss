@@ -1,36 +1,63 @@
 @use "@styles/base/_variables" as *;
 
 
-input {
-    width: 100%;
-    padding: 1.25rem;
-    font-size: 0.875rem;
-    color: $dark;
-    border: 0.8px solid $dark;
-    border-radius: 4px;
-    background: white;
-    transition: border 0.3s;
 
-    &::placeholder {
-        color: $dark;
+
+.floating-group {
+  position: relative;
+
+  input {
+    width: 100%;
+    padding: 1.25rem 2.5rem 0.5rem 0.75rem; // espace à droite pour l’icône
+    font-size: 1rem;
+    color: $dark;
+    border: 1px solid $dark;
+    border-radius: 6px;
+    background: white;
+    transition: border-color 0.3s;
+
+    &:focus {
+      outline: none;
+      border-color: $primary;
     }
 
-    // &:focus {
-    //   border-color: $dark;
-    //   background-color: #fff;
-    //   outline: none;
-    // }
+    // 🟢 label flotte si focus ou si input a une valeur (.filled)
+    &:focus + label,
+    &.filled + label {
+      top: -0.6rem;
+      left: 0.6rem;
+      font-size: 0.75rem;
+      color: $primary;
+      background: white;
+      padding: 0 0.25rem;
+    }
+  }
 
-    // &.filled + label,
-    // &:focus + label {
-    //   left: 0.9rem;
-    //   background-color: #fff;
-    //   font-size: 0.75rem;
-    //   color: $dark;
-    // }
-}
+  label {
+    position: absolute;
+    top: 1rem; // label "dans" l'input au repos
+    left: 0.75rem;
+    font-size: 1rem;
+    color: $gray-600;
+    pointer-events: none;
+    transition: all 0.2s ease;
+  }
 
-input[type="checkbox"] {
-    width: auto;
-    accent-color: $dark;
+  // 👁 bouton œil aligné dans l’input
+  .eye-btn {
+    position: absolute;
+    top: 4%; // ✅ bien centré verticalement
+    right: 0.6rem;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+
+    .eye-icon {
+      width: 20px;
+      height: 20px;
+      opacity: 0.7;
+    }
+  }
 }

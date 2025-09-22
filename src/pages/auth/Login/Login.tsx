@@ -1,18 +1,21 @@
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import { loginUser, loginBrand } from "@src/services/apiService";
 import { showToast } from "@src/utils/toastUtils";
 import { useAuth } from "@src/services/AuthContext";
 import "./styles/Login.scss";
-import { Link } from "react-router-dom";
 import iconEye from "../../../assets/images/eye-password-logo.svg";
 import UsearlyDraw from "../../../components/background/Usearly";
 import Buttons from "@src/components/buttons/Buttons";
+import { useHandleAuthRedirect } from "@src/hooks/useHandleAuthRedirect";
+import InputText from "@src/components/inputs/inputsGlobal/InputText";
 
 const Login = () => {
   const { login } = useAuth();
   const location = useLocation();
-  // if navigated here with state.email, use it to prefill the login input
+  const navigate = useNavigate();
+  const { handleAuthRedirect } = useHandleAuthRedirect();
+
   const initialEmail = (location.state as any)?.email ?? "";
   const [loginInput, setLoginInput] = useState(initialEmail);
   const [password, setPassword] = useState("");
@@ -21,7 +24,6 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  const navigate = useNavigate();
 
   const isEmail = (value: string) => value.includes("@");
 
@@ -31,13 +33,8 @@ const Login = () => {
 
     try {
       let response;
-
       if (loginInput.includes("@brand.") || loginInput.includes("@marque.")) {
-        response = await loginBrand({
-          email: loginInput,
-          mdp: password,
-          rememberMe,
-        });
+        response = await loginBrand({ email: loginInput, mdp: password, rememberMe });
       } else {
         response = await loginUser({
           email: isEmail(loginInput) ? loginInput : undefined,
@@ -47,29 +44,16 @@ const Login = () => {
         });
       }
 
-      // 🟡 Cas spécial : compte non confirmé
-      if (response.requiresConfirmation) {
-        showToast("⚠️ Ton compte n'a pas encore été confirmé. Vérifie ton email.", "warning");
-        if (response.user?.id && response.user?.email) {
-          navigate(`/confirm?userId=${response.user.id}&email=${encodeURIComponent(response.user.email)}`);
-        }
-        return;
-      }
+      const ok = handleAuthRedirect(response, {
+        onSuccess: async () => {
+          if (response.accessToken && response.user) {
+            await login(response.accessToken, response.user, rememberMe);
+            showToast("✅ Connexion réussie !");
+          }
+        },
+      });
 
-      // 🟡 Cas spécial : compte expiré
-      if (response.expired) {
-        showToast("❌ Ton compte a expiré car il n’a pas été confirmé à temps. Recrée un compte.", "error");
-        return;
-      }
-
-      // 🟢 Cas normal
-      if (response.accessToken && response.user) {
-        await login(response.accessToken, response.user, rememberMe);
-        showToast("✅ Connexion réussie !");
-      } else {
-        throw new Error("Réponse de connexion invalide.");
-      }
-
+      if (!ok) return;
     } catch (error: any) {
       setError(error.message || "Erreur de connexion");
     } finally {
@@ -77,69 +61,68 @@ const Login = () => {
     }
   };
 
-
-  function continueButton() {
-    if (step === 1 && loginInput && isEmail(loginInput)) {
-      setStep(2);
-      setError("");
-    } else if (step === 1 && (!loginInput || !isEmail(loginInput))) {
-      setError("Veuillez entrer une adresse E-mail valide.");
-    } else if (step === 2) {
+  const continueButton = () => {
+    if (step === 1) {
+      if (loginInput && isEmail(loginInput)) {
+        setStep(2);
+        setError("");
+      } else {
+        setError("Veuillez entrer une adresse E-mail valide.");
+      }
+    } else {
       setStep(1);
       setError("");
     }
-  }
+  };
 
   return (
     <div className="login-container">
       {step === 1 ? (
         <>
           <h2>Ravi de te revoir !</h2>
-          <p className="login-subtitle">
-            Entre ton adresse e-mail et ton mot de passe pour te connecter
-          </p>
+          <p className="login-subtitle">Entre ton adresse e-mail et ton mot de passe pour te connecter</p>
         </>
       ) : (
         <>
           <h2>Quel est ton mot de passe ?</h2>
           <p className="login-subtitle login-mdp-subtitle">
-            {loginInput}<span onClick={() => continueButton()}>Modifier</span>
+            {loginInput} <span onClick={continueButton}>Modifier</span>
           </p>
         </>
       )}
 
-
       <form onSubmit={handleSubmit}>
         {step === 1 ? (
           <>
-            <div className="floating-group">
-              <input
-                type="text"
-                id="loginInput"
-                required
-                placeholder="E-mail*"
-                value={loginInput}
-                onChange={(e) => setLoginInput(e.target.value)}
-                className={loginInput ? "filled" : ""}
-              />
-              <label htmlFor="loginInput"></label>
-              {error && <p className="error-message">{error}</p>}
-            </div>
+            <InputText
+              id="loginInput"
+              label="Email*"
+              type="text"
+              value={loginInput}
+              onChange={(e) => setLoginInput(e.target.value)}
+              required
+              className={loginInput ? "filled" : ""}
+            />
+            {error && <p className="error-message">{error}</p>}
             <div className="info-text">
-              <p>En continuant, tu acceptes les <a href="#">conditions d'utilisation</a> et tu confirmes avoir lu la <a href="#">politique de confidentialité</a> de Usearly.</p>
+              <p>
+                En continuant, tu acceptes les{" "}
+                <a href="#">conditions d'utilisation</a> et tu confirmes avoir lu la{" "}
+                <a href="#">politique de confidentialité</a> de Usearly.
+              </p>
             </div>
           </>
         ) : (
           <>
-            <div className="floating-group">
-              <input
-                type={showPassword ? "text" : "password"}
+            <div className="floating-group password-group">
+              <InputText
                 id="password"
+                label="Mot de passe*"
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                placeholder="Mot de passe*"
-                className={`password-input ${password ? "filled" : ""}`}
+                className={password ? "filled" : ""}
               />
               <button
                 type="button"
@@ -147,11 +130,10 @@ const Login = () => {
                 aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
                 onClick={() => setShowPassword((value) => !value)}
               >
-                <img src={iconEye} alt="" className="eye-icon" />
+                <img src={iconEye} alt="toggle visibility" className="eye-icon" />
               </button>
-              <label htmlFor="password"></label>
-              {error && <p className="error-message">{error}</p>}
             </div>
+            {error && <p className="error-message">{error}</p>}
 
             <div className="login-options">
               <label>
@@ -170,16 +152,16 @@ const Login = () => {
         )}
 
         {step === 1 ? (
-          <button type="button" onClick={() => continueButton()}>
+          <button type="button" onClick={continueButton}>
             Continuer
           </button>
         ) : (
-          <button type="submit" disabled={loading}>
+          <button type="submit" disabled={loading} className="btn-primary">
             {loading ? "Connexion..." : "Se connecter"}
           </button>
-        )
-        }
+        )}
       </form>
+
       <UsearlyDraw />
     </div>
   );

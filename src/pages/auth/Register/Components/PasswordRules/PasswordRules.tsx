@@ -1,4 +1,3 @@
-// Components/PasswordRules.tsx
 import { useMemo } from "react";
 import "./styles/PasswordRules.scss";
 
@@ -9,7 +8,7 @@ type Props = {
   value: string;
   enabled?: RuleKey[];
   rules?: Partial<Record<RuleKey, Rule>>;
-  showOnlyWhenValue?: boolean;
+  forceVisible?: boolean; 
   allowedSpecialChars?: string;
   className?: string;
 };
@@ -38,7 +37,7 @@ export default function PasswordRules({
   value,
   enabled,
   rules,
-  showOnlyWhenValue = true,
+  forceVisible = false,
   allowedSpecialChars = allowedSpecialCharsDefault,
   className,
 }: Props) {
@@ -47,10 +46,8 @@ export default function PasswordRules({
     [allowedSpecialChars]
   );
 
-  // fusion des règles (default + overrides)
   const merged = useMemo(() => ({ ...defaults, ...rules }), [defaults, rules]);
 
-  // quelles règles afficher
   const entries = useMemo(
     () =>
       (Object.entries(merged) as [RuleKey, Rule][])
@@ -58,13 +55,18 @@ export default function PasswordRules({
     [merged, enabled]
   );
 
-  if (showOnlyWhenValue && !value) return null;
-
-  // warning si caractères non autorisés
   const disallowed = useMemo(() => {
     const re = new RegExp(`[^\\w${escapeForRegex(allowedSpecialChars)}]`);
     return re.test(value);
   }, [value, allowedSpecialChars]);
+
+  // ✅ Vérifier si toutes les règles passent
+  const allValid = entries.every(([_, rule]) => rule.test(value));
+
+  // ✅ Afficher si : valeur saisie ET (pas valide OU forçage)
+  const shouldShow = value.length > 0 && (!allValid || forceVisible);
+
+  if (!shouldShow) return null;
 
   return (
     <div className={className}>
@@ -77,7 +79,8 @@ export default function PasswordRules({
       </div>
       {disallowed && (
         <p className="invalid-special">
-          Caractère non autorisé détecté. Seuls <strong>{allowedSpecialChars.split("").join(" ")}</strong> sont permis.
+          Caractère non autorisé détecté. Seuls{" "}
+          <strong>{allowedSpecialChars.split("").join(" ")}</strong> sont permis.
         </p>
       )}
     </div>

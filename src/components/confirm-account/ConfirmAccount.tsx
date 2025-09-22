@@ -16,11 +16,14 @@ const ConfirmAccount = () => {
     const { login } = useAuth();
 
     const handleInput = (index: number, value: string) => {
-        if (!/^\d?$/.test(value)) return;
+        // autorise uniquement les chiffres
+        const digit = value.replace(/[^0-9]/g, "");
         const newCode = [...code];
-        newCode[index] = value;
+        newCode[index] = digit;
         setCode(newCode);
-        if (value && index < 5) {
+
+        // focus suivant si rempli
+        if (digit && index < 5) {
             inputsRef.current[index + 1]?.focus();
         }
     };
@@ -43,7 +46,6 @@ const ConfirmAccount = () => {
 
             // Authentification via contexte
             login(accessToken, user); // pas besoin de rememberMe ici
-
             showToast("✅ Compte confirmé avec succès !");
         } catch (error: any) {
             const message =
@@ -74,7 +76,7 @@ const ConfirmAccount = () => {
                         key={i}
                         type="text"
                         maxLength={1}
-                        value={digit}
+                        value={code[i]}
                         ref={(el) => {
                             inputsRef.current[i] = el;
                         }}
