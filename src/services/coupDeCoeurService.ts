@@ -71,3 +71,13 @@ export const getAllBrands = async (): Promise<string[]> => {
   const res = await apiService.get("/brands");
   return res.data || [];
 };
+
+export const getAllBrandsSuggestion = async (): Promise<string[]> => {
+  const res = await apiService.get("/brands-suggest");
+  return res.data || [];
+};
+
+export const getSuggestionById = async (id: string) => {
+  const { data } = await apiService.get(`/suggestions/${id}`);
+  return data;
+};

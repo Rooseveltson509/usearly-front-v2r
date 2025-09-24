@@ -46,7 +46,7 @@ function Home() {
     "urgent",
   ]);
 
-  // ✅ Vérifie si le filtre "hot" est dispo
+  // ✅ Vérifie si le filtre "hot" est dispo (une seule fois)
   useEffect(() => {
     const checkHotFilter = async () => {
       try {
@@ -60,83 +60,66 @@ function Home() {
         console.warn("Erreur vérif filtre hot:", e);
       }
     };
-
     checkHotFilter();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // 🟢 Quand selectedBrand change → fetch par marque
+  // 🟢 Reset du filtre par défaut quand l’onglet change (si pas de marque sélectionnée)
   useEffect(() => {
-    const fetchByBrand = async () => {
-      if (!selectedBrand) return;
-
-      setIsLoading(true);
-      try {
-        let res;
-        if (activeTab === "coupdecoeur") {
-          res = await getCoupsDeCoeurByBrand(selectedBrand, 1, 50);
-        } else if (activeTab === "suggestion") {
-          res = await getSuggestionsByBrand(selectedBrand, 1, 50);
-        }
-        const dataToSet =
-          activeTab === "coupdecoeur" ? res?.coupdeCoeurs : res?.suggestions;
-        setFeedbackData(dataToSet || []);
-      } catch (e) {
-        console.error("Erreur fetch par marque:", e);
-        setFeedbackData([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    if (selectedBrand) {
-      fetchByBrand();
-    }
-  }, [selectedBrand, activeTab]);
-
-
-
-  // Quand l’onglet change → reset filtre par défaut et fetch (sauf si une marque est choisie)
-  useEffect(() => {
-    if (selectedBrand) return; // 🚨 Priorité à la recherche par marque
+    if (selectedBrand) return;
 
     let defaultFilter = "confirmed";
     if (activeTab === "coupdecoeur") defaultFilter = "all";
-    if (activeTab === "suggestion") defaultFilter = "all";
+    if (activeTab === "suggestion") defaultFilter = "allSuggest";
 
     setActiveFilter(defaultFilter);
+  }, [activeTab, selectedBrand]);
 
-    if (activeTab !== "report") {
-      setIsLoading(true);
-      fetchFeedbackData(defaultFilter, activeTab)
-        .then((res) => setFeedbackData(res.data))
-        .catch(() => setFeedbackData([]))
-        .finally(() => setIsLoading(false));
-    }
-  }, [activeTab, selectedBrand]); // ⚡️ dépend aussi de selectedBrand
-
-
-  // Quand on change de filtre → fetch (sauf si une marque est choisie)
+  // 🟢 Fetch centralisé
   useEffect(() => {
-    if (selectedBrand) return; // 🚨 Priorité à la recherche par marque
+    let isMounted = true;
 
-    if (activeTab !== "report") {
+    const fetchData = async () => {
       setIsLoading(true);
-      fetchFeedbackData(activeFilter, activeTab)
-        .then((res) => setFeedbackData(res.data))
-        .catch(() => setFeedbackData([]))
-        .finally(() => setIsLoading(false));
-    }
-  }, [activeFilter, activeTab, selectedBrand]); // ⚡️ idem ici
+      try {
+        let result: any;
 
+        if (selectedBrand) {
+          // 🔹 Priorité au filtre par marque
+          if (activeTab === "coupdecoeur") {
+            result = await getCoupsDeCoeurByBrand(selectedBrand, 1, 50);
+            if (isMounted) setFeedbackData(result?.coupdeCoeurs || []);
+          } else if (activeTab === "suggestion") {
+            result = await getSuggestionsByBrand(selectedBrand, 1, 50);
+            if (isMounted) setFeedbackData(result?.suggestions || []);
+          }
+        } else {
+          // 🔹 Cas générique (pas de marque sélectionnée)
+          if (activeTab !== "report") {
+            const res = await fetchFeedbackData(activeFilter, activeTab);
+            if (isMounted) setFeedbackData(res.data || []);
+          }
+        }
+      } catch (e) {
+        console.error("Erreur fetch:", e);
+        if (isMounted) setFeedbackData([]);
+      } finally {
+        if (isMounted) setIsLoading(false);
+      }
+    };
+
+    fetchData();
+    return () => {
+      isMounted = false;
+    };
+  }, [activeTab, activeFilter, selectedBrand]);
 
   return (
     <div className="home-page">
       {/* Bandeau violet haut */}
       <div className="purple-banner">
-        {/* zone gauche – mascotte */}
         <img src={chatIcon} alt="chatIcon" className="chat" />
 
-        {/* message central */}
         <div className="text">
           <span>Likez, shakez, faites&nbsp;</span>
           <div className="text__decoration">
@@ -146,7 +129,6 @@ function Home() {
           <span>les marques !</span>
         </div>
 
-        {/* zone droite – pastilles statistiques */}
         <div className="right">
           <div className="decorative-logos">
             <img src={big} alt="big" className="logo logo-big" />
@@ -155,11 +137,9 @@ function Home() {
           </div>
         </div>
 
-        {/* Tabs (report, coupdecoeur, suggestion) */}
         <FeedbackTabs activeTab={activeTab} onTabChange={setActiveTab} />
       </div>
 
-      {/* Contenu principal */}
       <main className="user-main-content">
         <aside className="left-panel">
           <UserStatsCard />
@@ -170,8 +150,7 @@ function Home() {
           <div
             className={`report-banner-container ${selectedBrand || selectedCategory
               ? "banner-filtered"
-              : `banner-${activeFilter}`
-              }`}
+              : `banner-${activeFilter}`}`}
           >
             <div className="feedback-list-wrapper">
               <HomeGroupedReportsList
@@ -202,8 +181,7 @@ function Home() {
         {/* === Onglet Coups de cœur === */}
         {activeTab === "coupdecoeur" && (
           <div
-            className={`cdc-banner-container ${selectedBrand ? "banner-filtered" : `banner-${activeFilter}`
-              }`}
+            className={`cdc-banner-container ${selectedBrand ? "banner-filtered" : `banner-${activeFilter}`}`}
           >
             <div className="feedback-list-wrapper">
               <HomeFiltersCdc
@@ -214,26 +192,16 @@ function Home() {
               />
 
               {isLoading ? (
-                <SqueletonAnime
-                  loaderRef={{ current: null }}
-                  loading={true}
-                  hasMore={false}
-                  error={null}
-                />
+                <SqueletonAnime loaderRef={{ current: null }} loading={true} hasMore={false} error={null} />
               ) : (
                 <FeedbackView
                   activeTab={activeTab}
                   viewMode="flat"
-                  currentState={{
-                    data: feedbackData,
-                    loading: isLoading,
-                    hasMore: false,
-                    error: null,
-                  }}
+                  currentState={{ data: feedbackData, loading: isLoading, hasMore: false, error: null }}
                   openId={null}
-                  setOpenId={() => { }}
+                  setOpenId={() => {}}
                   groupOpen={{}}
-                  setGroupOpen={() => { }}
+                  setGroupOpen={() => {}}
                   selectedBrand={selectedBrand}
                   selectedCategory=""
                   renderCard={() => <></>}
@@ -250,8 +218,7 @@ function Home() {
         {/* === Onglet Suggestions === */}
         {activeTab === "suggestion" && (
           <div
-            className={`suggestion-banner-container ${selectedBrand ? "banner-filtered" : `banner-${activeFilter}`
-              }`}
+            className={`suggestion-banner-container ${selectedBrand ? "banner-filtered" : `banner-${activeFilter}`}`}
           >
             <div className="feedback-list-wrapper">
               <HomeFiltersSuggestion
@@ -262,26 +229,16 @@ function Home() {
               />
 
               {isLoading ? (
-                <SqueletonAnime
-                  loaderRef={{ current: null }}
-                  loading={true}
-                  hasMore={false}
-                  error={null}
-                />
+                <SqueletonAnime loaderRef={{ current: null }} loading={true} hasMore={false} error={null} />
               ) : (
                 <FeedbackView
                   activeTab={activeTab}
                   viewMode="flat"
-                  currentState={{
-                    data: feedbackData,
-                    loading: isLoading,
-                    hasMore: false,
-                    error: null,
-                  }}
+                  currentState={{ data: feedbackData, loading: isLoading, hasMore: false, error: null }}
                   openId={null}
-                  setOpenId={() => { }}
+                  setOpenId={() => {}}
                   groupOpen={{}}
-                  setGroupOpen={() => { }}
+                  setGroupOpen={() => {}}
                   selectedBrand={selectedBrand}
                   selectedCategory=""
                   renderCard={() => <></>}

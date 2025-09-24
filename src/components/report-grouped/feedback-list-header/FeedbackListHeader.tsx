@@ -1,4 +1,4 @@
-import { useState } from "react";
+/* import { useState } from "react";
 import tri from "../../../assets/icons/tri-croissant.png";
 import { ChevronDown } from "lucide-react";
 
@@ -31,7 +31,7 @@ const FeedbackListHeader = ({ viewMode, onChange, activeTab }: Props) => {
 
   return (
     <div className="view-toggle">
-      {/* Dropdown avec icône */}
+
       <div className="dropdown-container">
         <button
           onClick={() => setShowDropdown(!showDropdown)}
@@ -63,7 +63,7 @@ const FeedbackListHeader = ({ viewMode, onChange, activeTab }: Props) => {
         )}
       </div>
 
-      {/* Bouton de filtre */}
+
       <button
         className={viewMode === "filtered" ? "active" : ""}
         onClick={() => onChange("filtered")}
@@ -74,4 +74,4 @@ const FeedbackListHeader = ({ viewMode, onChange, activeTab }: Props) => {
   );
 };
 
-export default FeedbackListHeader;
+export default FeedbackListHeader; */

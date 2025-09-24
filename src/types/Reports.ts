@@ -84,6 +84,7 @@ export interface Suggestion {
   emoji: string | null;
   description: string;
   siteUrl: string;
+  votes?: number;
   capture: string | null;
   createdAt: string;
   updatedAt: string;
@@ -95,6 +96,7 @@ export interface Suggestion {
     avatar: string;
   };
   isAdopted?: boolean;
+  duplicateCount?: number;
 }
 
 

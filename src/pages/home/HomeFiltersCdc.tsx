@@ -36,13 +36,14 @@ const HomeFiltersCdc = ({
 
 
   return (
+    <div className="controls">
     <FilterBarGeneric
       options={[
         { value: "all", label: "🌍 Tous les coups de cœur" }, // ✅ Ajout du filtre "all"
         { value: "popular", label: "🥰 Les plus aimés" }, // getPopularCoupsDeCoeur
         { value: "enflammes", label: "🔥 Les plus enflammés" }, // getEnflammesCoupsDeCoeur
-        { value: "recent", label: "🕒 Les plus récents" },
-        { value: "commented", label: "💬 Les plus commentés" },
+        /* { value: "recent", label: "🕒 Les plus récents" },
+        { value: "commented", label: "💬 Les plus commentés" }, */
       ]}
       filter={filter}
       setFilter={setFilter}
@@ -57,6 +58,7 @@ const HomeFiltersCdc = ({
       selectedBrand={selectedBrand}
       setSelectedBrand={setSelectedBrand}
     />
+    </div>
   );
 };
 

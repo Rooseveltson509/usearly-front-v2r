@@ -1,4 +1,4 @@
-import { useState } from "react";
+/* import { useState } from "react";
 import "./MainContent.scss";
 import type { FeedbackType } from "@src/types/Reports";
 
@@ -108,7 +108,7 @@ const MainContent: React.FC<Props> = ({ activeTab }) => {
                 </div>
             </div>
 
-            {/* ✅ Filtres déplacés ici (en dehors du bloc violet) */}
+
             <div className="filters-row">
                 <div className="filters-wrapper">
                     {filters.map((f) => (
@@ -126,4 +126,4 @@ const MainContent: React.FC<Props> = ({ activeTab }) => {
     );
 }
 
-export default MainContent;
+export default MainContent; */
