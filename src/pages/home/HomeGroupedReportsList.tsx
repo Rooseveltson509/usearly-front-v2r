@@ -293,7 +293,6 @@ const HomeGroupedReportsList = ({
       </div>
     );
   }
-
   // === rendu ===
   return (
     <div className="home-grouped-reports-list">
