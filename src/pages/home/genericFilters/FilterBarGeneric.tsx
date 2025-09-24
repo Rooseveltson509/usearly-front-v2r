@@ -30,7 +30,7 @@ interface Props {
     availableBrands?: string[];
     availableCategories?: string[];
 
-    dropdownRef?: React.RefObject<HTMLDivElement | null>;
+    dropdownRef: React.RefObject<HTMLDivElement | null>;
     isDropdownOpen?: boolean;
     setIsDropdownOpen?: (val: boolean) => void;
 
@@ -79,7 +79,7 @@ const FilterBarGeneric: React.FC<Props> = ({
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
             if (
-                dropdownRef?.current &&
+                dropdownRef.current &&
                 !dropdownRef.current.contains(e.target as Node)
             ) {
                 setIsDropdownOpen(false);

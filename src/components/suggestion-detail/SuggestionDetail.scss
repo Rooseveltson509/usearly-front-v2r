@@ -1,0 +1,22 @@
+.suggestion-detail-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 60px;
+  padding: 20px;
+  min-height: calc(100vh - 100px); // prend tout l’espace moins header
+  background: #fafafa; // optionnel pour différencier la page
+}
+
+.page-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 30px;
+  text-align: center;
+  color: #222;
+}
+
+.suggestion-card-wrapper {
+  width: 100%;
+  max-width: 850px;
+}

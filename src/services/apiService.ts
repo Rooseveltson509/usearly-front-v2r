@@ -108,36 +108,6 @@ export const loginBrand = async ({
   }
 };
 
-/* export const registerUser = async (
-  data: RegisterData
-): Promise<RegisterResponse> => {
-  try {
-    const { data: response } = await apiService.post<RegisterResponse>(
-      "/user/register",
-      data
-    );
-    return response;
-  } catch (error: any) {
-    if (axios.isAxiosError(error)) {
-      const resp = error.response?.data;
-
-      // 🟡 Cas spécial : backend renvoie un objet connu
-      if (resp?.requiresConfirmation || resp?.expired) {
-        return resp as RegisterResponse;
-      }
-
-      // 🟥 Sinon erreur classique
-      throw new Error(resp?.error || "Erreur inconnue lors de l’inscription.");
-    }
-
-    if (error instanceof Error) {
-      throw new Error(error.message);
-    }
-
-    throw new Error("Erreur inconnue lors de l’inscription....");
-  }
-}; */
-
 export const registerUser = async (
   data: RegisterData
 ): Promise<RegisterResponse> => {

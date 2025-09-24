@@ -14,6 +14,7 @@ import ResetPassword from "./pages/forgot-and-reset-pwd/ResetPassword";
 import NavigateToHome from "./pages/NavigateToHome";
 import NewHome from "./pages/newHome/NewHome";
 import CheckUser from "./pages/auth/CheckUser";
+import SuggestionDetail from "./components/suggestion-detail/SuggestionDetail";
 
 function App() {
   return (
@@ -78,6 +79,16 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
+            <Route
+              path="/suggestions/:id"
+              element={
+                <ProtectedRoute allowedTypes={["user"]}>
+                  <SuggestionDetail />
+                </ProtectedRoute>
+              }
+            />
+
             <Route
               path="/forgot-password"
               element={

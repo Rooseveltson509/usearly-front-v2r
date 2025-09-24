@@ -32,3 +32,12 @@ export const getPublicSuggestions = async (page = 1, limit = 10) => {
   });
   return data;
 };
+
+export const voteForSuggestion = async (id: string) => {
+  const { data } = await apiService.post(
+    `/suggestions/${id}/vote`,
+    {},
+    { headers: { Authorization: `Bearer ${getAuthToken()}` } }
+  );
+  return data;
+};

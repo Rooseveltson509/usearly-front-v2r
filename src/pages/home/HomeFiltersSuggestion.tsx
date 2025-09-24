@@ -1,6 +1,7 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import FilterBarGeneric from "./genericFilters/FilterBarGeneric";
 import "./HomeFiltersSuggestion.scss";
+import { getAllBrandsSuggestion } from "@src/services/coupDeCoeurService";
 
 interface Props {
   filter: string;
@@ -18,13 +19,25 @@ const HomeFiltersSuggestion = ({
   const [viewMode, setViewMode] = useState<"flat" | "chrono" | "confirmed">("flat");
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [availableBrands, setAvailableBrands] = useState<string[]>([]);
 
-  const availableBrands = ["Nike", "Adidas", "Zara"]; // 👉 idem, brancher useBrands()
+  useEffect(() => {
+    const fetchBrands = async () => {
+      try {
+        const brands = await getAllBrandsSuggestion();
+        setAvailableBrands(brands);
+      } catch (e) {
+        console.error("Erreur chargement marques:", e);
+      }
+    };
+    fetchBrands();
+  }, []);
 
   return (
+    <div className="controls">
     <FilterBarGeneric
       options={[
-        { value: "all", label: "🌍 Toutes les suggestions" }, // ✅ Ajout du filtre neutre
+        { value: "allSuggest", label: "🌍 Toutes les suggestions" }, // ✅ Ajout du filtre neutre
         { value: "discussed", label: "💬 Les plus discutées" },
         { value: "recentSuggestion", label: "🕒 Les plus récentes" },
         { value: "likedSuggestion", label: "👍 Les plus appréciées" },
@@ -42,6 +55,7 @@ const HomeFiltersSuggestion = ({
       selectedBrand={selectedBrand}
       setSelectedBrand={setSelectedBrand}
     />
+    </div>
   );
 };
 
