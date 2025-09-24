@@ -372,6 +372,8 @@ const HomeGroupedReportsList = ({
             handleToggle={(key) =>
               setExpandedItems((prev) => ({ ...prev, [key]: !prev[key] }))
             }
+            searchTerm={searchTerm}
+            onClearSearchTerm={() => setSearchTerm("")}
           />
         )
       ) : filter === "rage" ? (
@@ -387,6 +389,8 @@ const HomeGroupedReportsList = ({
             handleToggle={(key) =>
               setExpandedItems((prev) => ({ ...prev, [key]: !prev[key] }))
             }
+            searchTerm={searchTerm}
+            onClearSearchTerm={() => setSearchTerm("")}
           />
         )
       ) : filter === "popular" ? (

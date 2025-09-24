@@ -1,3 +1,5 @@
+@use "@src/styles/base/variables" as *;
+
 .search-bar {
     display:flex;
     span{
@@ -24,10 +26,13 @@
         margin-left: 34px;
         width: 200px;
     }
+    input:focus-visible{
+        outline: 2px solid $dark;
+    }
     input.active{
         border-radius: 0 12px 12px 0;
         border-left: none;
-        margin-left: 40px;
+        margin-left: 32.5px;
     }
     .none{
         display: none;

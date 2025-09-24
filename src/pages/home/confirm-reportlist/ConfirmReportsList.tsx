@@ -6,9 +6,13 @@ import ReportListView from "../ReportListView";
 const ConfirmedReportsList = ({
   expandedItems,
   handleToggle,
+  searchTerm,
+  onClearSearchTerm,
 }: {
   expandedItems: Record<string, boolean>;
   handleToggle: (key: string) => void;
+  searchTerm?: string;
+  onClearSearchTerm?: () => void;
 }) => {
   const { data, loading } = useConfirmedFlatData();
 
@@ -41,10 +45,10 @@ const ConfirmedReportsList = ({
       loadingPopular={false}
       loadingPopularEngagement={false}
       loadingRage={false}
+      searchTerm={searchTerm}
+      onClearSearchTerm={onClearSearchTerm}
     />
   );
 };
 
 export default ConfirmedReportsList;
-
-
