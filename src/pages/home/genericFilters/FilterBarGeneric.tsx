@@ -98,7 +98,7 @@ const FilterBarGeneric: React.FC<Props> = ({
     }, [isDropdownOpen, setIsDropdownOpen, dropdownRef]);
 
     return (
-        <>
+        <div className="filter-bar-generic-container">
             {/* 🔥 Premier select = filtres dynamiques */}
             <div className="select-filter-wrapper">
                 <select
@@ -226,7 +226,7 @@ const FilterBarGeneric: React.FC<Props> = ({
                     )}
                 </div>
             )}
-        </>
+        </div>
     );
 };
 

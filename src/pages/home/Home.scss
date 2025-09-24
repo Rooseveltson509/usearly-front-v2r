@@ -36,10 +36,21 @@
   gap: 20px;
   width: 100%;
 
+  .filter-bar-generic-container{
+    display: flex;
+    justify-content: space-between;
+    width: 72.5%;
+    max-width: 740px;
+  }
+  @media screen and (max-width: 1350px) {
+    max-width: 100%;
+  }
+
   .feedback-card {
     background: #fff;
     border-radius: 12px;
     padding: 16px;
+    padding-bottom: 0px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
     transition: box-shadow 0.2s ease;
 
@@ -70,7 +81,7 @@
  display: flex;
   width: 100%;
   border-radius: 24px;
-  padding: 0 24px 24px 12px;
+  padding: 0 0px 24px 12px;
   margin-bottom: 32px;
   margin-top: 4rem;
   box-sizing: border-box;
@@ -78,6 +89,9 @@
   min-height: 200px;
   position: relative;
   overflow: visible;
+  @media screen and (max-width: 1375px){
+    padding: 0 12px 24px 12px;
+  }
 
   .feedback-list-wrapper {
     flex: 1;
@@ -90,7 +104,7 @@
     margin-top: 24px;
     position: relative;
     z-index: 1;
-    @media screen and (max-width: 1375px) {
+    @media screen and (max-width: 1350px) {
       display: none;
     }
   }
@@ -108,26 +122,33 @@
   width: 100%;
   border-radius: 24px;
   padding: 16px 24px;
-  margin: 32px 0;
+  margin: 4.5rem 0 32px 0;
   justify-content: space-between;
   align-items: flex-start;
   position: relative;
-  min-height: 200px; // ✅ hauteur fixe
-
-  background-color: #ffe9f0; // Rose clair
+  min-height: 200px;
 
   .feedback-list-wrapper {
     flex: 1;
     position: relative;
     z-index: 2;
-    margin-top: -80px; // ✅ cartes par-dessus
+    margin-top: -80px;
+    gap: 25px;
   }
 
-  .right-panel {
-    margin-left: 24px;
-    position: relative;
-    z-index: 1;
+  .cdc-content{
+    display: flex;
+    .right-panel {
+      position: relative;
+      z-index: 1;
+      right: 0;
+      img{
+        width: 200px;
+        margin-left: 20px;
+      }
+    }
   }
+
 
   &.banner-liked { background-color: #ffb3c6; }
   &.banner-recent { background-color: #ffd6e0; }
@@ -168,7 +189,6 @@
 /* ==== Coups de cœur ==== */
 .cdc-banner-container {
   @extend .report-banner-container;
-  background-color: #ffe9f0; // Rose clair
   height: 450px; // ✅ Ajoute une hauteur fixe
 }
 

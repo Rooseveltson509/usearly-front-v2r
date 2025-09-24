@@ -1,7 +1,7 @@
-import hotImg from "/assets/filters-reports/hot.png";
-import rageImg from "/assets/filters-reports/rage.png";
-import popularImg from "/assets/filters-reports/popular.png";
-import urgentImg from "/assets/filters-reports/carrying.png";
+import hotImg from "/assets/filters-reports/hot1.png";
+import rageImg from "/assets/filters-reports/rage1.png";
+import popularImg from "/assets/filters-reports/popular1.png";
+import urgentImg from "/assets/filters-reports/carrying1.png";
 import recentImg from "/assets/filters-reports/recent.png";
 
 // 🎨 Ajouts spécifiques pour Coup de cœur & Suggestions

@@ -16,6 +16,7 @@ import { fetchFeedbackData } from "@src/services/feedbackFetcher";
 import PurpleBanner from "./components/purpleBanner/PurpleBanner";
 
 // 🖼️ Assets
+import cdcImgSide from "/assets/filters-cdc/liked-cdc.png"
 import bulleIcon from "/assets/images/bulle-top-bar.png";
 import emojiIcon from "/assets/images/emoji-top-bar.png";
 import chatIcon from "/assets/images/chat-top-bar.svg";
@@ -194,33 +195,39 @@ function Home() {
                 selectedBrand={selectedBrand}
                 setSelectedBrand={setSelectedBrand}
               />
-
-              {isLoading ? (
-                <SqueletonAnime
-                  loaderRef={{ current: null }}
-                  loading={true}
-                  hasMore={false}
-                  error={null}
-                />
-              ) : (
-                <FeedbackView
-                  activeTab={activeTab}
-                  viewMode="flat"
-                  currentState={{
-                    data: feedbackData,
-                    loading: isLoading,
-                    hasMore: false,
-                    error: null,
-                  }}
-                  openId={null}
-                  setOpenId={() => { }}
-                  groupOpen={{}}
-                  setGroupOpen={() => { }}
-                  selectedBrand={selectedBrand}
-                  selectedCategory=""
-                  renderCard={() => <></>}
-                />
-              )}
+              <div className="cdc-content">
+                <div>
+                  {isLoading ? (
+                    <SqueletonAnime
+                      loaderRef={{ current: null }}
+                      loading={true}
+                      hasMore={false}
+                      error={null}
+                    />
+                  ) : (
+                    <FeedbackView
+                      activeTab={activeTab}
+                      viewMode="flat"
+                      currentState={{
+                        data: feedbackData,
+                        loading: isLoading,
+                        hasMore: false,
+                        error: null,
+                      }}
+                      openId={null}
+                      setOpenId={() => { }}
+                      groupOpen={{}}
+                      setGroupOpen={() => { }}
+                      selectedBrand={selectedBrand}
+                      selectedCategory=""
+                      renderCard={() => <></>}
+                    />
+                  )}
+                </div>
+                <aside className="right-panel">
+                  <img src={cdcImgSide} alt="igm" />
+                </aside>
+              </div>
             </div>
 
             <aside className="right-panel">

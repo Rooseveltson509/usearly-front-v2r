@@ -132,12 +132,11 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
           <div className="feedback-meta">
             <span className="user-brand">
               {item.author?.pseudo} × <strong>{item.marque}</strong>
-            </span>
+            </span>⸱
             {isValidDate(item.createdAt) && (
               <span className="feedback-date">
                 {formatDistanceToNow(new Date(item.createdAt), {
                   locale: fr,
-                  addSuffix: true,
                 })}
               </span>
             )}
