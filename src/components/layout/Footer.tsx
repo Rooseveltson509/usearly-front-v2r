@@ -7,12 +7,12 @@ const Footer: React.FC = () => (
         <div style={{ marginBottom: '0.5rem' }}>
             <ul>
                 <li>
-                    <Link to="/cgu" style={{ margin: '0 1rem', color: '#333', textDecoration: 'none' }}>
+                    <Link to="/cgu" style={{ textDecoration: 'none' }}>
                         Conditions générales d'utilisation
                     </Link>
                 </li>
                 <li>
-                    <Link to="/contact" style={{ margin: '0 1rem', color: '#333', textDecoration: 'none' }}>
+                    <Link to="/contact" style={{ textDecoration: 'none' }}>
                         Nous contacter
                     </Link>
                 </li>
