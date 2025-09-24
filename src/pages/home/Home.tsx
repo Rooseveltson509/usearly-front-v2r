@@ -13,6 +13,7 @@ import type { CoupDeCoeur, Suggestion } from "@src/types/Reports";
 import SqueletonAnime from "@src/components/loader/SqueletonAnime";
 import { getCoupsDeCoeurByBrand, getSuggestionsByBrand } from "@src/services/coupDeCoeurService";
 import { fetchFeedbackData } from "@src/services/feedbackFetcher";
+import PurpleBanner from "./components/purpleBanner/PurpleBanner";
 
 // 🖼️ Assets
 import bulleIcon from "/assets/images/bulle-top-bar.png";
@@ -39,7 +40,7 @@ function Home() {
   const [selectedSiteUrl, setSelectedSiteUrl] = useState<string | undefined>();
 
   const [availableFilters, setAvailableFilters] = useState<string[]>([
-    "confirmed", // 👉 affiché en premier
+    "hot", // 👉 affiché en premier
     "chrono",
     "rage",
     "popular",
@@ -132,32 +133,7 @@ function Home() {
   return (
     <div className="home-page">
       {/* Bandeau violet haut */}
-      <div className="purple-banner">
-        {/* zone gauche – mascotte */}
-        <img src={chatIcon} alt="chatIcon" className="chat" />
-
-        {/* message central */}
-        <div className="text">
-          <span>Likez, shakez, faites&nbsp;</span>
-          <div className="text__decoration">
-            <img src={bulleIcon} alt="bulleIcon" className="bulle" />
-            <img src={emojiIcon} alt="emojiIcon" className="emoji" />
-          </div>
-          <span>les marques !</span>
-        </div>
-
-        {/* zone droite – pastilles statistiques */}
-        <div className="right">
-          <div className="decorative-logos">
-            <img src={big} alt="big" className="logo logo-big" />
-            <img src={medium} alt="medium" className="logo logo-medium" />
-            <img src={small} alt="small" className="logo logo-small" />
-          </div>
-        </div>
-
-        {/* Tabs (report, coupdecoeur, suggestion) */}
-        <FeedbackTabs activeTab={activeTab} onTabChange={setActiveTab} />
-      </div>
+      <PurpleBanner activeTab={activeTab} onTabChange={setActiveTab} />
 
       {/* Contenu principal */}
       <main className="user-main-content">
@@ -174,12 +150,18 @@ function Home() {
               }`}
           >
             <div className="feedback-list-wrapper">
+              {/* @ts-ignore */}
               <HomeGroupedReportsList
                 activeTab={activeTab}
                 activeFilter={activeFilter}
                 viewMode={activeFilter === "confirmed" ? "confirmed" : "none" as any}
                 onViewModeChange={setViewMode}
                 setActiveFilter={setActiveFilter}
+                // Additional props that the component's Props type typically expects:
+                filter={activeFilter}
+                setFilter={setActiveFilter}
+                setViewMode={setViewMode}
+                isHotFilterAvailable={availableFilters.includes("hot")}
                 selectedBrand={selectedBrand}
                 setSelectedBrand={setSelectedBrand}
                 setSelectedSiteUrl={setSelectedSiteUrl}
