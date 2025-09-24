@@ -157,9 +157,6 @@ const FilterIllustration = ({
     <div className="filter-illustration-sidebar">
       <div className="illustration-content">
         <img src={data.img} alt={data.label} />
-        <p>
-          {data.emoji} {data.label}
-        </p>
       </div>
     </div>
   );
