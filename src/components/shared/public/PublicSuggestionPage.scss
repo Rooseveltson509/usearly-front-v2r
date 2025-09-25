@@ -1,0 +1,33 @@
+.public-suggestion-page {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 1rem;
+
+  h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .cta-login {
+    margin-top: 2rem;
+    text-align: center;
+
+    .btn-login, .btn-register {
+      margin: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .btn-login {
+      background: #007bff;
+      color: #fff;
+    }
+
+    .btn-register {
+      background: #28a745;
+      color: #fff;
+    }
+  }
+}
