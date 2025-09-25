@@ -5,6 +5,7 @@ import EmojiUrlyReactionPicker from "@src/utils/EmojiUrlyReactionPicker";
 import { getEmojisForType } from "@src/components/constants/emojiMapByType";
 import DescriptionCommentSection from "../report-desc-comment/DescriptionCommentSection";
 import "./SharedFooterCdcAndSuggest.scss";
+import ShareModal from "./share-modal/ShareModal";
 
 interface Props {
   userId: string;
@@ -25,6 +26,7 @@ const SharedFooterCdcAndSuggest: React.FC<Props> = ({
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [commentCount, setCommentCount] = useState(0);
+  const [showShareModal, setShowShareModal] = useState(false);
   let hoverTimeout: NodeJS.Timeout;
 
   const { reactions, getCount, handleReact } = useReactionsForDescription(
@@ -120,13 +122,18 @@ const SharedFooterCdcAndSuggest: React.FC<Props> = ({
           {/* Partager */}
           <button
             className="share-btn"
-            onClick={() => {
-              navigator.clipboard.writeText(window.location.href);
-              alert("Lien copié !");
-            }}
+            onClick={() => setShowShareModal(true)}
           >
             <Share2 size={16} /> Partager
           </button>
+
+          {showShareModal && (
+            <ShareModal
+              suggestionId={descriptionId}
+              onClose={() => setShowShareModal(false)}
+            />
+          )}
+
         </div>
 
         <div className="comments-section">

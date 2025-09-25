@@ -15,6 +15,7 @@ import NavigateToHome from "./pages/NavigateToHome";
 import NewHome from "./pages/newHome/NewHome";
 import CheckUser from "./pages/auth/CheckUser";
 import SuggestionDetail from "./components/suggestion-detail/SuggestionDetail";
+import PublicSuggestionPage from "./components/shared/public/PublicSuggestionPage";
 
 function App() {
   return (
@@ -47,6 +48,14 @@ function App() {
               }
             />
 
+            <Route
+              path="/share/:id/public"
+              element={
+                <GuestRoute>
+                  <PublicSuggestionPage />
+                </GuestRoute>
+              }
+            />
             <Route
               path="/login"
               element={
