@@ -57,6 +57,7 @@ const HomeFiltersCdc = ({
       availableBrands={availableBrands}
       selectedBrand={selectedBrand}
       setSelectedBrand={setSelectedBrand}
+      locationInfo={"cdc"}
     />
     </div>
   );

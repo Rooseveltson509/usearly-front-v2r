@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./InteractiveFeedbackCard.scss";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNowStrict } from 'date-fns';
 import { fr } from "date-fns/locale";
 import type { CoupDeCoeur, Suggestion } from "@src/types/Reports";
 import { useAuth } from "@src/services/AuthContext";
@@ -143,91 +143,96 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
 
       {/* Bloc droit : contenu */}
       <div className="feedback-right" onClick={() => onToggle(item.id)}>
-        <div className="feedback-header">
-          <div className="feedback-meta">
-            <span className="user-brand">
-              {item.author?.pseudo} × <strong>{item.marque}</strong>
-            </span>
-            {isValidDate(item.createdAt) && (
-              <span className="feedback-date">
-                {formatDistanceToNow(new Date(item.createdAt), {
-                  locale: fr,
-                  addSuffix: true,
-                })}
-              </span>
-            )}
-          </div>
-
-          <div className="avatar-with-brand">
-            <div className="user-avatar-wrapper">
-              <Avatar
-                avatar={item.author?.avatar}
-                pseudo={item.author?.pseudo || "Utilisateur"}
-                type="user"
-                wrapperClassName="user-avatar"
-              />
-              {item.marque && (
-                <div className="brand-overlay">
-                  <Avatar
-                    avatar={logos[item.marque] || ""}
-                    pseudo={item.marque}
-                    type="brand"
-                    wrapperClassName="brand-logo"
-                  />
-                </div>
+        <div className="feedback-content">
+          <div className="feedback-header">
+            <div className="feedback-meta">
+              <span className="user-brand">
+                {item.author?.pseudo} × <strong>{item.marque}</strong>
+              </span>⸱
+              {isValidDate(item.createdAt) && (
+                <span className="feedback-date">
+                  {formatDistanceToNowStrict(new Date(item.createdAt), {
+                    locale: fr,
+                  })}
+                </span>
               )}
             </div>
+
+            <div className="avatar-with-brand">
+              <div className="user-avatar-wrapper">
+                <Avatar
+                  avatar={item.author?.avatar}
+                  pseudo={item.author?.pseudo || "Utilisateur"}
+                  type="user"
+                  wrapperClassName="user-avatar"
+                />
+                {item.marque && (
+                  <div className="brand-overlay">
+                    <Avatar
+                      avatar={logos[item.marque] || ""}
+                      pseudo={item.marque}
+                      type="brand"
+                      wrapperClassName="brand-logo"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
-        </div>
 
-
-        <div className="feedback-body">
-          {showFullText ? (
-            <p>
-              {description}
-              {item.capture && (
-                <div className="capture-wrapper">
-                  <img
-                    src={item.capture}
-                    alt="capture"
-                    className="capture"
+          <div className="feedback-body">
+            {showFullText ? (
+              <p>
+                {description}
+                {item.capture && (
+                  <div className="capture-wrapper">
+                    <img
+                      src={item.capture}
+                      alt="capture"
+                      className="capture"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openLightbox(item.capture!);
+                      }}
+                    />
+                  </div>
+                )}
+                {shouldShowToggle && (
+                  <button
+                    className="see-more"
                     onClick={(e) => {
                       e.stopPropagation();
-                      openLightbox(item.capture!);
+                      toggleText();
                     }}
-                  />
-                </div>
-              )}
-              {shouldShowToggle && (
-                <button
-                  className="see-more"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    toggleText();
-                  }}
-                >
-                  Voir moins
-                </button>
-              )}
-            </p>
-          ) : (
-            <p>
-              {description.length > DESCRIPTION_LIMIT
-                ? `${description.slice(0, DESCRIPTION_LIMIT)}…`
-                : description}
-              {shouldShowToggle && (
-                <button
-                  className="see-more"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    toggleText();
-                  }}
-                >
-                  Voir plus
-                </button>
-              )}
-            </p>
-          )}
+                  >
+                    Voir moins
+                  </button>
+                )}
+              </p>
+            ) : (
+              <>
+                <h2 className="cdc-post-title">
+                  {item.title}
+                </h2>
+                <p>
+                  {description.length > DESCRIPTION_LIMIT
+                    ? `${description.slice(0, DESCRIPTION_LIMIT)}…`
+                    : description}
+                  {shouldShowToggle && (
+                    <button
+                      className="see-more"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleText();
+                      }}
+                    >
+                      Voir plus
+                    </button>
+                  )}
+                </p>
+              </>
+            )}
+          </div>
         </div>
 
         {item.type === "suggestion" && (

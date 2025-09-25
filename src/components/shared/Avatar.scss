@@ -18,7 +18,7 @@
 
 // ✅ Image réelle
 .avatar-img-custom {
-    object-fit: contain; // important pour les logos PNG
+    object-fit: cover; // important pour les logos PNG
     width: 100%;
     height: 100%;
     display: block;

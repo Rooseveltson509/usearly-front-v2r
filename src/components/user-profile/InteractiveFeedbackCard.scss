@@ -3,16 +3,19 @@
 
 .feedback-card {
   display: flex;
+  align-items: stretch;        // étire les enfants sur la même hauteur
   background: #fff;
-  border-radius: 12px;
+  border-radius: 0px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   margin-bottom: 16px;
-  overflow: hidden;
-  transition: all 0.3s ease;
+  overflow: hidden;            // respecte l’arrondi du parent
+  transition: box-shadow 0.3s ease;
+  padding: 2px;
 
   &.open {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
   }
+}
 
   .feedback-footer {
     margin-top: 1rem;
@@ -161,18 +164,95 @@
     flex: 1;
     padding: 16px;
     cursor: pointer;
+  }
+/* Wrapper de la colonne gauche (enfant direct de .feedback-card) */
+.feedback-type {
+  flex: 0 0 200px;             // largeur fixe de la colonne gauche
+  display: flex;               // permet à l’enfant de prendre 100% en hauteur
+}
+
+/* Colonne gauche colorée */
+.feedback-type > .feedback-left {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  min-height: 180px;           // plancher visuel
+  border-radius: 12px 0 0 12px;
+
+  .feedback-icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+  }
+
+  /* Bulles (titre multi-lignes) */
+  .punchlines {
     display: flex;
     flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+    margin-top: 8px;
+    min-height: 175px;
 
+    .bubble {
+      padding: 10px 16px;
+      border-radius: 18px;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.4;
+      max-width: 220px;
+      word-break: break-word;
+      position: relative;
+
+      // petite animation pop (unique déclaration)
+      opacity: 0;
+      transform: scale(0.9);
+      animation: bubblePop 0.4s ease forwards;
+
+      &.primary {
+        align-self: flex-start;
+        border-radius: 18px 18px 18px 4px;
+        animation-delay: 0.1s;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        font-weight: 700;
+      }
+
+      &.secondary {
+        align-self: flex-end;
+        border-radius: 18px 18px 4px 18px;
+        margin-right: 12px;
+        animation-delay: 0.3s;
+      }
+    }
+  }
+}
+
+/* Contenu (colonne droite) */
+.feedback-right {
+  flex: 1;
+  padding: 16px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-bottom: 0px;
+  padding-left: 5px;
+  padding-right: 8px;
+
+  .feedback-content{
+    gap: 22.5px;
     .feedback-header {
       display: flex;
-      align-items: center;
-      justify-content: space-between; // pousse avatar + logo à droite
-      margin-bottom: 12px;
+      justify-content: space-between;
 
       .avatar-with-brand {
         position: relative;
         display: inline-block;
+        margin-top: -20px;
+        margin-right: 20px;
 
         .user-avatar-wrapper {
           position: relative;
@@ -188,45 +268,50 @@
 
           .brand-overlay {
             position: absolute;
-            bottom: -4px;
+            bottom: 0px;
             right: -12px;
 
             .brand-logo {
-              width: 48px; // ✅ même taille que l’avatar utilisateur
+              width: 48px;
               height: 48px;
               border-radius: 50%;
               object-fit: cover;
-              border: 2px solid #fff; // contour blanc pour séparer visuellement
+              border: 1px solid #fff;
             }
           }
         }
       }
 
       .feedback-meta {
-        margin-left: 12px;
         display: flex;
-        flex-direction: column;
-        align-items: flex-end;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 5px;
         font-size: 12px;
         color: #777;
 
         .user-brand {
           font-weight: 500;
           margin-bottom: 4px;
+          strong{
+            color: $dark;
+          }
         }
 
         .feedback-date {
-          font-size: 11px;
+          font-size: 12px;
+          color: $light-color-1;
+          opacity: 0.8;
         }
       }
     }
-
 
     .feedback-body {
       font-size: 14px;
       color: #333;
       line-height: 1.5;
       margin-bottom: 12px;
+      padding-right: 45px;
 
       .see-more {
         border: none;
@@ -250,10 +335,17 @@
           cursor: zoom-in;
         }
       }
+
+      .cdc-post-title{
+        color: $dark;
+        font-size: 18px;
+        font-weight: 700;
+      }
     }
   }
 }
 
+/* Lightbox image */
 .lightbox {
   position: fixed;
   inset: 0;
@@ -270,11 +362,12 @@
   }
 }
 
+/* Responsive */
 @media (max-width: 768px) {
   .feedback-card {
     flex-direction: column;
 
-    .feedback-left {
+    .feedback-type {
       flex: none;
       width: 100%;
     }
@@ -285,6 +378,7 @@
   }
 }
 
+/* ---- Animations (unique) ---- */
 @keyframes bubblePop {
   0% {
     opacity: 0;

@@ -104,6 +104,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 5px;
     padding: 0.8rem 0 0.4rem 0;
     font-family: "Arial";
 
@@ -138,6 +139,7 @@
       font-family:"inter";
       display: flex;
       align-items: center;
+      width: max-content;
       gap: 0.3rem;
       color: #000000;
       font-size: 0.85rem;

@@ -1,3 +1,5 @@
+@use "@src/styles/base/variables" as *;
+
 .shared-footer-cdc {
   .footer-header-row {
     display: flex;
@@ -13,16 +15,24 @@
   .emoji-display {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 2px;
 
-    /*     .emoji-icon {
-      font-size: 16px;
-    } */
+    span.emoji-icons{
+      .emoji-icon:last-child {
+        background-color: white;
+        padding: 0px 1.5px 0px 1.5px;
+        border-radius: 50%;
+        margin-left: -10px;
+      }
+    }
+
+    .emoji-icon {
+      font-size: 14px;
+    }
 
     .reaction-count {
-      font-weight: bold;
-      margin-left: 4px;
-      color: #555;
+      color: $light-color-1;
+      font-size: 14px;
     }
   }
 
@@ -52,6 +62,8 @@
       display: flex;
       align-items: center;
       gap: 36px;
+      color: $light-color-1;
+      opacity: 0.7;
 
       button {
         background: none;

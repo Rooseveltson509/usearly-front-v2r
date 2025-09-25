@@ -6,9 +6,13 @@ import ReportListView from "../ReportListView";
 const RageReportsList = ({
   expandedItems,
   handleToggle,
+  searchTerm,
+  onClearSearchTerm,
 }: {
   expandedItems: Record<string, boolean>;
   handleToggle: (key: string) => void;
+  searchTerm?: string;
+  onClearSearchTerm?: () => void;
 }) => {
   const { data, loading } = usePaginatedGroupedReportsByRage(true);
 
@@ -46,6 +50,8 @@ const explodedData: ExplodedGroupedReport[] = data.map((r) => ({
       loadingPopular={false}
       loadingPopularEngagement={false}
       loadingRage={loading}
+      searchTerm={searchTerm}
+      onClearSearchTerm={onClearSearchTerm}
     />
   );
 };

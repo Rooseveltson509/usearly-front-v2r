@@ -1,3 +1,5 @@
+import './ReportListView.scss';
+
 import ChronologicalReportList from "@src/components/report-grouped/ChronologicalReportList";
 import ChronoReportCard from "@src/components/report-grouped/report-by-date/ChronoReportCard";
 import HomeBrandBlock from "@src/components/home-grouped-reports-list/HomeBrandBlock";
@@ -7,10 +9,17 @@ import type {
   PopularGroupedReport,
   PublicGroupedReport,
 } from "@src/types/Reports";
-import FlatReportCard from "./confirm-reportlist/FlatReportCard";
+// import FlatReportCard from "./confirm-reportlist/FlatReportCard";
 import FlatSubcategoryBlock from "./confirm-reportlist/FlatSubcategoryBlock";
 import { getBrandLogo } from "@src/utils/brandLogos";
 import SqueletonAnime from "@src/components/loader/SqueletonAnime";
+
+const normalizeText = (value: string) =>
+  value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim();
 
 interface Props {
   filter: string;
@@ -26,6 +35,8 @@ interface Props {
   loadingPopular: boolean;
   loadingPopularEngagement: boolean;
   loadingRage: boolean;
+  searchTerm?: string;
+  onClearSearchTerm?: () => void;
 }
 
 const ReportListView: React.FC<Props> = ({
@@ -42,6 +53,8 @@ const ReportListView: React.FC<Props> = ({
   loadingPopular,
   loadingPopularEngagement,
   loadingRage,
+  searchTerm,
+  onClearSearchTerm,
 }) => {
   const isPopularFilter = ["hot", "popular", "urgent"].includes(filter);
   const isChronoFilter = filter === "chrono";
@@ -132,9 +145,32 @@ const ReportListView: React.FC<Props> = ({
       return <p>Aucun report disponible pour ce filtre.</p>;
     }
 
+    const normalizedSearchTerm = searchTerm
+      ? normalizeText(searchTerm)
+      : "";
+
+    const filteredExplodedReports = normalizedSearchTerm
+      ? explodedReports.filter((item) =>
+          normalizeText(item.subCategory.subCategory || "").includes(
+            normalizedSearchTerm
+          )
+        )
+      : explodedReports;
+
+    if (filteredExplodedReports.length === 0) {
+      return (
+        <div className="no-search-results">
+          <p>Aucun résultat pour "{searchTerm}"</p>
+          <button type="button" onClick={onClearSearchTerm} className="clear-button">
+            Effacer
+          </button>
+        </div>
+      );
+    }
+
     return (
       <>
-        {explodedReports.map((item) => (
+        {filteredExplodedReports.map((item) => (
           <FlatSubcategoryBlock
             key={`${item.reportingId}-${item.subCategory.subCategory}`}
             brand={item.marque}

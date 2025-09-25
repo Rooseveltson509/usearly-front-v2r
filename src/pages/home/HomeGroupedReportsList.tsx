@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import type { FeedbackType } from "@src/components/user-profile/FeedbackTabs";
 import { useFetchGroupedReports } from "@src/hooks/useFetchGroupedReports";
 import { usePaginatedGroupedReportsByDate } from "@src/hooks/usePaginatedGroupedReportsByDate";
@@ -8,6 +8,7 @@ import { useConfirmedFlatData } from "@src/hooks/useConfirmedFlatData";
 import SqueletonAnime from "@src/components/loader/SqueletonAnime";
 import ActiveFilterBadges from "./ActiveFilterBadges";
 import FilterBar from "./FilterBar";
+const FilterBarAny = (FilterBar as unknown) as React.ComponentType<any>;
 import ConfirmedReportsList from "./confirm-reportlist/ConfirmReportsList";
 import type { FilterType } from "@src/types/Filters";
 import "./HomeGroupedReportsList.scss";
@@ -19,19 +20,92 @@ import { useBrands } from "@src/hooks/useBrands";
 import { apiService } from "@src/services/apiService";
 
 interface Props {
+  filter: any;
+  setFilter: (val: FilterType) => void;
+  viewMode: "flat" | "chrono" | "confirmed";
+  setViewMode: (mode: "flat" | "chrono" | "confirmed") => void;
+  setSelectedBrand: (val: string) => void;
+  setSelectedCategory: (val: string) => void;
+  setActiveFilter: (val: string) => void;
+  onViewModeChange: (mode: "flat" | "chrono" | "confirmed") => void;
+  isHotFilterAvailable: boolean;
+  dropdownRef: React.RefObject<HTMLDivElement>;
+  isDropdownOpen: boolean;
+  setIsDropdownOpen: (val: boolean) => void;
+  selectedBrand: string;
+  selectedCategory: string;
+  availableBrands: string[];
+  availableCategories: string[];
+  searchTerm: string;
+  onSearchTermChange: (val: string) => void;
   activeTab: FeedbackType;
   activeFilter: string;
-  onViewModeChange: (mode: "flat" | "chrono" | "confirmed") => void;
-  setActiveFilter: (val: string) => void;
-  viewMode: "flat" | "chrono" | "confirmed";
-  renderHighlight?: (card: React.ReactNode) => React.ReactNode;
-
-  selectedBrand: string;
-  setSelectedBrand: (val: string) => void;
   setSelectedSiteUrl: (val: string | undefined) => void;
-  selectedCategory: string;
-  setSelectedCategory: (val: string) => void;
 }
+
+type ReportDescription = {
+  id?: string | number;
+  title?: string;
+  description?: string;
+  text?: string;
+  [key: string]: unknown;
+};
+
+type FilteredReport = {
+  reportingId: string | number;
+  marque: string;
+  category: string;
+  subCategory: string;
+  descriptions?: ReportDescription[];
+  capture?: string;
+  siteUrl?: string;
+};
+
+const normalizeText = (value: string) =>
+  value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim();
+
+const getSearchableStrings = (report: FilteredReport) => {
+  const values: string[] = [];
+
+  if (report.subCategory) {
+    values.push(report.subCategory);
+  }
+
+  if (report.category) {
+    values.push(report.category);
+  }
+
+  if (Array.isArray(report.descriptions)) {
+    report.descriptions.forEach((item) => {
+      if (typeof item === "string") {
+        values.push(item);
+        return;
+      }
+
+      if (item && typeof item === "object") {
+        const record = item as Record<string, unknown>;
+        const description = record.description;
+        if (typeof description === "string") {
+          values.push(description);
+        }
+        const title = record.title;
+        if (typeof title === "string") {
+          values.push(title);
+        }
+        const text = record.text;
+        if (typeof text === "string") {
+          values.push(text);
+        }
+      }
+    });
+  }
+
+  return values;
+};
 
 const HomeGroupedReportsList = ({
   activeTab,
@@ -50,15 +124,19 @@ const HomeGroupedReportsList = ({
   const loaderRef = useRef<HTMLDivElement | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [filteredReports, setFilteredReports] = useState<any[]>([]);
+  const [filteredReports, setFilteredReports] = useState<FilteredReport[]>([]);
   const [loadingFiltered, setLoadingFiltered] = useState(false);
   const [initializing, setInitializing] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const isChronoView =
     viewMode === "chrono" && (filter === undefined || filter === "chrono");
 
   const { brands } = useBrands();
-  const availableBrands = brands.map((b) => b.marque);
+  const availableBrands = useMemo(
+    () => brands.map((b) => b.marque),
+    [brands]
+  );
 
   // === HOOKS data ===
   const { data: flatData, loading: loadingFlat, hasMore: hasMoreFlat } =
@@ -86,6 +164,7 @@ const HomeGroupedReportsList = ({
     useConfirmedFlatData();
 
   // === auto sélection du filtre par défaut ===
+
   useEffect(() => {
     if (!initializing) return;
 
@@ -147,20 +226,64 @@ const HomeGroupedReportsList = ({
     fetchFilteredReports();
   }, [selectedBrand]);
 
-  const availableSubCategories = selectedBrand
-    ? [
-        ...new Set(
-          filteredReports
-            .filter((r) => r.marque === selectedBrand)
-            .map((r) => r.subCategory)
-            .filter(Boolean)
-        ),
-      ]
-    : [];
+  useEffect(() => {
+    setSearchTerm("");
+  }, [selectedBrand]);
 
-  const reportsToDisplay = selectedCategory
-    ? filteredReports.filter((r) => r.subCategory === selectedCategory)
-    : filteredReports;
+  const availableSubCategories = useMemo(() => {
+    if (!selectedBrand) {
+      return [];
+    }
+
+    return Array.from(
+      new Set(
+        filteredReports
+          .filter((report) => report.marque === selectedBrand)
+          .map((report) => report.subCategory)
+          .filter(Boolean)
+      )
+    );
+  }, [filteredReports, selectedBrand]);
+
+  const filteredByCategory = useMemo(() => {
+    if (selectedCategory) {
+      return filteredReports.filter(
+        (report) => report.subCategory === selectedCategory
+      );
+    }
+    return filteredReports;
+  }, [filteredReports, selectedCategory]);
+
+  const normalizedSearchTerm = useMemo(() => {
+    const trimmed = searchTerm.trim();
+    return trimmed ? normalizeText(trimmed) : "";
+  }, [searchTerm]);
+
+  const reportsToDisplay = useMemo(() => {
+    if (!normalizedSearchTerm) {
+      return filteredByCategory;
+    }
+
+    return filteredByCategory.filter((report) => {
+      const searchableValues = getSearchableStrings(report);
+      return searchableValues.some((value) =>
+        normalizeText(value).includes(normalizedSearchTerm)
+      );
+    });
+  }, [filteredByCategory, normalizedSearchTerm]);
+  useEffect(() => {
+    if (!selectedBrand && !selectedCategory) {
+      setSelectedSiteUrl(undefined);
+      return;
+    }
+
+    if (reportsToDisplay.length === 0) {
+      setSelectedSiteUrl(undefined);
+      return;
+    }
+
+    setSelectedSiteUrl(reportsToDisplay[0].siteUrl);
+  }, [reportsToDisplay, selectedBrand, selectedCategory, setSelectedSiteUrl]);
 
   // === rendu initial (skeleton si initializing) ===
   if (initializing) {
@@ -170,12 +293,10 @@ const HomeGroupedReportsList = ({
       </div>
     );
   }
-
   // === rendu ===
   return (
     <div className="home-grouped-reports-list">
-      <div className="controls">
-        <FilterBar
+        <FilterBarAny
           filter={filter || ""}
           setFilter={setFilter}
           viewMode={viewMode}
@@ -192,14 +313,10 @@ const HomeGroupedReportsList = ({
           selectedCategory={selectedCategory}
           availableBrands={availableBrands}
           availableCategories={availableSubCategories}
-          labelOverride={
-            viewMode === "confirmed"
-              ? "✅ Confirmés"
-              : isChronoView
-              ? "🏷️ Les plus récents"
-              : undefined
-          }
+          searchTerm={searchTerm}
+          onSearchTermChange={setSearchTerm}
         />
+        
 
         <ActiveFilterBadges
           selectedBrand={selectedBrand}
@@ -207,7 +324,6 @@ const HomeGroupedReportsList = ({
           onClearBrand={() => setSelectedBrand("")}
           onClearCategory={() => setSelectedCategory("")}
         />
-      </div>
 
       {/* === données filtrées === */}
       {selectedBrand || selectedCategory ? (
@@ -220,30 +336,25 @@ const HomeGroupedReportsList = ({
             </div>
           ) : (
             Object.entries(
-              reportsToDisplay.reduce((acc: Record<string, any[]>, report) => {
+              reportsToDisplay.reduce((acc: Record<string, FilteredReport[]>, report) => {
                 if (!acc[report.category]) acc[report.category] = [];
                 acc[report.category].push(report);
                 return acc;
               }, {})
             ).map(([category, reports]) => (
               <div key={category} className="category-block">
-                {reports.map((report, idx) => {
-                  if (idx === 0) {
-                    setSelectedSiteUrl(report.siteUrl);
-                  }
-                  return (
-                    <FlatSubcategoryBlock
-                      key={`${report.reportingId}-${report.subCategory}`}
-                      brand={report.marque}
-                      siteUrl={report.siteUrl}
-                      subcategory={report.subCategory}
-                      descriptions={report.descriptions || []}
-                      brandLogoUrl={getBrandLogo(report.marque, report.siteUrl)}
-                      capture={report.capture}
-                      hideFooter={true}
-                    />
-                  );
-                })}
+                {reports.map((report) => (
+                  <FlatSubcategoryBlock
+                    key={`${report.reportingId}-${report.subCategory}`}
+                    brand={report.marque}
+                    siteUrl={report.siteUrl}
+                    subcategory={report.subCategory}
+                    descriptions={report.descriptions || []}
+                    brandLogoUrl={getBrandLogo(report.marque, report.siteUrl)}
+                    capture={report.capture}
+                    hideFooter={true}
+                  />
+                ))}
               </div>
             ))
           )}
@@ -261,6 +372,8 @@ const HomeGroupedReportsList = ({
             handleToggle={(key) =>
               setExpandedItems((prev) => ({ ...prev, [key]: !prev[key] }))
             }
+            searchTerm={searchTerm}
+            onClearSearchTerm={() => setSearchTerm("")}
           />
         )
       ) : filter === "rage" ? (
@@ -276,6 +389,8 @@ const HomeGroupedReportsList = ({
             handleToggle={(key) =>
               setExpandedItems((prev) => ({ ...prev, [key]: !prev[key] }))
             }
+            searchTerm={searchTerm}
+            onClearSearchTerm={() => setSearchTerm("")}
           />
         )
       ) : filter === "popular" ? (

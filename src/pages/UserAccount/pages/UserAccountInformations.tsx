@@ -145,7 +145,7 @@ function UserAccountInformations() {
               <h2>Photo actuelle</h2>
               <div>
                 <img src={avatarPreview} alt="Preview" className="preview-img" />
-                <img src={PenModifyIcon} alt="Modifier" onClick={avatarImgClick} className="modify-icon" />
+                <img src={PenModifyIcon} alt="Modifier" onClick={avatarImgClick} className="modify-icon with-img" />
               </div>
             </>
           ) : (

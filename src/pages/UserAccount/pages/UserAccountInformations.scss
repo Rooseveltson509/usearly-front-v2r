@@ -45,6 +45,10 @@
             cursor: pointer;
             box-shadow: 2px 3px 5px $gray-500;
         }
+        .with-img{
+            left: -30px;
+            bottom: 10px;
+        }
     }
     #avatarImg{
         display: none;
