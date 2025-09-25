@@ -3,240 +3,185 @@
 
 .feedback-card {
   display: flex;
+  align-items: stretch;        // étire les enfants sur la même hauteur
   background: #fff;
-  border-radius: 12px;
+  border-radius: 0px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   margin-bottom: 16px;
-  overflow: hidden;
-  transition: all 0.3s ease;
+  overflow: hidden;            // respecte l’arrondi du parent
+  transition: box-shadow 0.3s ease;
+  padding: 2px;
 
   &.open {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
   }
+}
 
-/* .punchlines {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: flex-start;
-  margin-top: 8px;
-  min-height: 175px;
-  background-color: #7ac5ea; // couleur de fond bleue
+/* Wrapper de la colonne gauche (enfant direct de .feedback-card) */
+.feedback-type {
+  flex: 0 0 200px;             // largeur fixe de la colonne gauche
+  display: flex;               // permet à l’enfant de prendre 100% en hauteur
+}
 
-  .bubble {
-    padding: 10px 16px;
-    border-radius: 18px;
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 1.4;
-    max-width: 220px;
-    word-break: break-word;
-    position: relative;
-
-    &.primary {
-      align-self: flex-start;
-      border-radius: 18px 18px 18px 4px; // 👈 bulle orientée à gauche
-      margin-left: 0;
-    }
-
-    &.secondary {
-      align-self: flex-end;
-      border-radius: 18px 18px 4px 18px; // 👈 bulle orientée à droite
-      margin-right: 12px; // petit décalage vers l'intérieur
-    }
-  }
-} */
-
-.feedback-left {
-  flex: 0 0 200px; // largeur fixe pour garder la colonne gauche
+/* Colonne gauche colorée */
+.feedback-type > .feedback-left {
+  flex: 1;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 16px;
-  min-height: 180px; // pour forcer un minimum de hauteur
-  border-radius: 12px 0 0 12px; // arrondi gauche
+  min-height: 180px;           // plancher visuel
+  border-radius: 12px 0 0 12px;
 
   .feedback-icon {
     font-size: 32px;
     margin-bottom: 12px;
   }
 
- .punchlines {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: flex-start;
-  margin-top: 8px;
-  min-height: 175px;
-  position: relative;
-
-  .bubble {
-    padding: 10px 16px;
-    border-radius: 18px;
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 1.4;
-    max-width: 220px;
-    word-break: break-word;
-    position: relative;
-    opacity: 0;
-    transform: scale(0.9);
-    animation: bubblePop 0.4s ease forwards;
-
-    &.primary {
-      align-self: flex-start;
-      border-radius: 18px 18px 18px 4px;
-      animation-delay: 0.1s;
-    }
-
-    &.secondary {
-      align-self: flex-end;
-      border-radius: 18px 18px 4px 18px;
-      margin-right: 12px;
-      animation-delay: 0.3s;
-    }
-  }
-}
-
-@keyframes bubblePop {
-  0% {
-    opacity: 0;
-    transform: scale(0.8) translateY(10px);
-  }
-  60% {
-    opacity: 1;
-    transform: scale(1.05) translateY(0);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-}
-
-
-  .bubble {
-    padding: 10px 16px;
-    border-radius: 18px;
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 1.4;
-    max-width: 90%;
-    word-break: break-word;
-
-    &.primary {
-      align-self: flex-start;
-      border-radius: 18px 18px 18px 4px;
-    }
-
-    &.secondary {
-      align-self: flex-end;
-      border-radius: 18px 18px 4px 18px;
-    }
-  }
-}
-.bubble.primary {
-  font-weight: 700;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-  .feedback-right {
-    flex: 1;
-    padding: 16px;
-    cursor: pointer;
+  /* Bulles (titre multi-lignes) */
+  .punchlines {
     display: flex;
     flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+    margin-top: 8px;
+    min-height: 175px;
 
-    .feedback-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between; // pousse avatar + logo à droite
-      margin-bottom: 12px;
+    .bubble {
+      padding: 10px 16px;
+      border-radius: 18px;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.4;
+      max-width: 220px;
+      word-break: break-word;
+      position: relative;
 
-      .avatar-with-brand {
+      // petite animation pop (unique déclaration)
+      opacity: 0;
+      transform: scale(0.9);
+      animation: bubblePop 0.4s ease forwards;
+
+      &.primary {
+        align-self: flex-start;
+        border-radius: 18px 18px 18px 4px;
+        animation-delay: 0.1s;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        font-weight: 700;
+      }
+
+      &.secondary {
+        align-self: flex-end;
+        border-radius: 18px 18px 4px 18px;
+        margin-right: 12px;
+        animation-delay: 0.3s;
+      }
+    }
+  }
+}
+
+/* Contenu (colonne droite) */
+.feedback-right {
+  flex: 1;
+  padding: 16px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-bottom: 0px;
+  padding-left: 5px;
+
+  .feedback-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+
+    .avatar-with-brand {
+      position: relative;
+      display: inline-block;
+
+      .user-avatar-wrapper {
         position: relative;
         display: inline-block;
 
-        .user-avatar-wrapper {
-          position: relative;
-          display: inline-block;
+        .user-avatar {
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+          overflow: hidden;
+          margin-right: 20px;
+        }
 
-          .user-avatar {
+        .brand-overlay {
+          position: absolute;
+          bottom: -4px;
+          right: -12px;
+
+          .brand-logo {
             width: 48px;
             height: 48px;
             border-radius: 50%;
-            overflow: hidden;
-            margin-right: 20px;
+            object-fit: cover;
+            border: 2px solid #fff;
           }
-
-          .brand-overlay {
-            position: absolute;
-            bottom: -4px;
-            right: -12px;
-
-            .brand-logo {
-              width: 48px; // ✅ même taille que l’avatar utilisateur
-              height: 48px;
-              border-radius: 50%;
-              object-fit: cover;
-              border: 2px solid #fff; // contour blanc pour séparer visuellement
-            }
-          }
-        }
-      }
-
-      .feedback-meta {
-        display: flex;
-        flex-direction: row;
-        align-items: flex-start;
-        gap: 5px;
-        font-size: 12px;
-        color: #777;
-
-        .user-brand {
-          font-weight: 500;
-          margin-bottom: 4px;
-        }
-
-        .feedback-date {
-          font-size: 12px;
         }
       }
     }
 
+    .feedback-meta {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 5px;
+      font-size: 12px;
+      color: #777;
 
-    .feedback-body {
-      font-size: 14px;
-      color: #333;
-      line-height: 1.5;
-      margin-bottom: 12px;
-
-      .see-more {
-        border: none;
-        background: transparent;
-        color: #0073e6;
+      .user-brand {
         font-weight: 500;
-        cursor: pointer;
-        margin-left: 4px;
-
-        &:hover {
-          text-decoration: underline;
-        }
+        margin-bottom: 4px;
       }
 
-      .capture-wrapper {
-        margin-top: 12px;
+      .feedback-date {
+        font-size: 12px;
+      }
+    }
+  }
 
-        img {
-          max-width: 100%;
-          border-radius: 8px;
-          cursor: zoom-in;
-        }
+  .feedback-body {
+    font-size: 14px;
+    color: #333;
+    line-height: 1.5;
+    margin-bottom: 12px;
+
+    .see-more {
+      border: none;
+      background: transparent;
+      color: #0073e6;
+      font-weight: 500;
+      cursor: pointer;
+      margin-left: 4px;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    .capture-wrapper {
+      margin-top: 12px;
+
+      img {
+        max-width: 100%;
+        border-radius: 8px;
+        cursor: zoom-in;
       }
     }
   }
 }
 
+/* Lightbox image */
 .lightbox {
   position: fixed;
   inset: 0;
@@ -253,11 +198,12 @@
   }
 }
 
+/* Responsive */
 @media (max-width: 768px) {
   .feedback-card {
     flex-direction: column;
 
-    .feedback-left {
+    .feedback-type {
       flex: none;
       width: 100%;
     }
@@ -268,17 +214,9 @@
   }
 }
 
+/* ---- Animations (unique) ---- */
 @keyframes bubblePop {
-  0% {
-    opacity: 0;
-    transform: scale(0.8) translateY(10px);
-  }
-  60% {
-    opacity: 1;
-    transform: scale(1.05) translateY(0);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
+  0%   { opacity: 0; transform: scale(0.8) translateY(10px); }
+  60%  { opacity: 1; transform: scale(1.05) translateY(0); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
 }
