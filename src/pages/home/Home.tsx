@@ -177,45 +177,35 @@ function Home() {
                 selectedBrand={selectedBrand}
                 setSelectedBrand={setSelectedBrand}
               />
-
-            <div className="cdc-content">
-              <div className="background-cdc" ></div>
-                <div className="feedback-list-section">
-                  {isLoading ? (
-                    <SqueletonAnime
-                      loaderRef={{ current: null }}
-                      loading={true}
-                      hasMore={false}
-                      error={null}
+              {isLoading ? (
+                <SqueletonAnime
+                  loaderRef={{ current: null }}
+                  loading={true}
+                  hasMore={false}
+                  error={null}
+                />
+              ) : (
+                <div className="feedback-view-container">
+                  <div className="feedback-view-wrapper">
+                    <FeedbackView
+                      activeTab={activeTab}
+                      viewMode="flat"
+                      currentState={{ data: feedbackData, loading: isLoading, hasMore: false, error: null }}
+                      openId={null}
+                      setOpenId={() => {}}
+                      groupOpen={{}}
+                      setGroupOpen={() => {}}
+                      selectedBrand={selectedBrand}
+                      selectedCategory=""
+                      renderCard={() => <></>}
                     />
-                  ) : (
-                    <div className="feedback-view-container">
-                      <div className="feedback-view-wrapper">
-                        <FeedbackView
-                          activeTab={activeTab}
-                          viewMode="flat"
-                          currentState={{ data: feedbackData, loading: isLoading, hasMore: false, error: null }}
-                          openId={null}
-                          setOpenId={() => {}}
-                          groupOpen={{}}
-                          setGroupOpen={() => {}}
-                          selectedBrand={selectedBrand}
-                          selectedCategory=""
-                          renderCard={() => <></>}
-                        />
-                      </div>
-                      <aside className="right-panel">
-                        <img src={cdcImgSide} alt="igm" />
-                      </aside>
-                    </div>
-                  )}
+                  </div>
+                  <aside className="right-panel">
+                    <FilterIllustration filter={activeFilter} selectedBrand={selectedBrand} />
+                  </aside>
                 </div>
-              </div>
+              )}
             </div>
-
-            {/* <aside className="right-panel">
-              <FilterIllustration filter={activeFilter} selectedBrand={selectedBrand} />
-            </aside> */}
           </div>
         )}
 

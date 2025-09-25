@@ -39,11 +39,10 @@ const HomeFiltersCdc = ({
     <div className="controls">
     <FilterBarGeneric
       options={[
-        { value: "all", label: "🌍 Tous les coups de cœur" }, // ✅ Ajout du filtre "all"
-        { value: "popular", label: "🥰 Les plus aimés" }, // getPopularCoupsDeCoeur
-        { value: "enflammes", label: "🔥 Les plus enflammés" }, // getEnflammesCoupsDeCoeur
-        /* { value: "recent", label: "🕒 Les plus récents" },
-        { value: "commented", label: "💬 Les plus commentés" }, */
+        { value: "all", label: "👍 Coups de cœur populaires" }, // ✅ Ajout du filtre "all"
+        { value: "enflammes", label: "❤️‍🔥 Coups de cœur les plus enflammés" }, // getEnflammesCoupsDeCoeur
+        { value: "recent", label: "💌 Coups de cœur les plus récents" },
+        /* { value: "commented", label: "💬 Les plus commentés" }, */
       ]}
       filter={filter}
       setFilter={setFilter}

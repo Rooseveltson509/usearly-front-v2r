@@ -4,10 +4,10 @@ import SearchBar from "./components/searchBar/SearchBar";
 import "./FilterBar.scss";
 
 interface Props {
-  filter: "hot" | "rage" | "popular" | "urgent" | "confirmed" | "chrono" | "";
+  filter: "hot" | "rage" | "popular" | "recent" | "urgent" | "confirmed" | "chrono" | "";
   setFilter: React.Dispatch<
     React.SetStateAction<
-      "hot" | "rage" | "popular" | "urgent" | "confirmed" | "chrono" | ""
+      "hot" | "rage" | "popular" | "recent" | "urgent" | "confirmed" | "chrono" | ""
     >
   >;
   viewMode: "flat" | "chrono" | "confirmed";
@@ -113,7 +113,7 @@ const FilterBar: React.FC<Props> = ({
                 setViewMode("confirmed");
                 onViewModeChange?.("confirmed");
                 setActiveFilter("confirmed");
-              } else if (["rage", "popular", "urgent"].includes(value)) {
+              } else if (["rage", "popular", "recent", "urgent"].includes(value)) {
                 setFilter(value as any);
                 setViewMode("chrono");
                 onViewModeChange?.("chrono");
@@ -126,9 +126,10 @@ const FilterBar: React.FC<Props> = ({
               }
             }}
           >
-            <option value="hot">🔥 Ça chauffe par ici</option>
-            <option value="rage">😡 Les plus rageants</option>
-            <option value="popular">👍 Les plus populaires</option>
+            <option value="hot">🔥 Problèmes les plus signalés</option>
+            <option value="rage">😡 Problèmes les plus rageants</option>
+            <option value="popular">👍 Signalements les plus populaires</option>
+            <option value="recent">📅 Signalements les plus récents</option>
             <option value="urgent">👀 À shaker vite</option>
           </select>
         </div>

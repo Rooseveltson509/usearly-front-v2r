@@ -2,6 +2,9 @@
   width: 320px;
   padding: 20px;
   padding-right: 0;
+  @media screen and (min-width: 1620px) {
+    padding-left: 0;
+  }
   position: sticky;
   top: 100px;
   height: fit-content;
