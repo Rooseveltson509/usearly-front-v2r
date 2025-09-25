@@ -1,0 +1,125 @@
+/* ===============================
+   🎨 Bandeau violet haut
+   =============================== */
+.purple-banner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 250px;
+  background: rgb(14, 4, 49);
+  @media screen and (max-width: 1150px) {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .chat {
+    opacity: 0.1;
+    position: relative;
+    top: -4rem;
+    width: 330px;
+    @media screen and (max-width: 750px) {
+      display: none;
+    }
+  }
+
+  .text {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    @media screen and (max-width:750px){
+      transform: translate(-85%, -50%);
+    }
+    color: #fff;
+    font-family: Urbanist, sans-serif;
+    font-size: 36px;
+    font-weight: 200;
+    line-height: 130%;
+    z-index: 999;
+  }
+
+  .feedback-tabs {
+    display: flex;
+    gap: 1rem;
+    top: 11.5rem;
+    margin-bottom: 1.5rem;
+    justify-content: center;
+    position: absolute;
+    left: 35%;
+    @media screen and (max-width:1150px){
+      left: 0;
+      right: 0;
+      width: 100%;
+      transform:none;
+    }
+  }
+
+  .text__decoration {
+    position: relative;
+    display: inline-block;
+
+    .emoji {
+      position: absolute;
+      bottom: 35px;
+      right: -4px;
+      transition: transform 0.5s ease;
+
+      &:hover {
+        transform: scale(1.25);
+      }
+    }
+
+    .bulle {
+      margin: 0 10px -35px 5px;
+      width: 220px;
+    }
+  }
+
+  .right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+
+    .decorative-logos {
+      position: relative;
+      top: -4rem;
+      @media screen and (max-width:750px){
+        top: -70px;
+      }
+      right: -60px;
+
+      .logo {
+        position: absolute;
+        animation: float 3s ease-in-out infinite;
+        opacity: 0.1;
+
+        &.logo-big {
+          top: -75px;
+          right: 90px;
+        }
+
+        &.logo-medium {
+          top: 0px;
+          right: 260px;
+          animation-delay: 1s;
+        }
+
+        &.logo-small {
+          top: 100px;
+          right: 200px;
+          animation-delay: 2s;
+        }
+      }
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-5px);
+      }
+    }
+  }
+}

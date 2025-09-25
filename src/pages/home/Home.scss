@@ -1,115 +1,12 @@
 .home-page {
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   z-index: 0;
+  overflow: auto;
 }
 
-/* ===============================
-   🎨 Bandeau violet haut
-   =============================== */
-.purple-banner {
-  position: relative;
-  display: flex;
-  align-items: center;
-  width: 100%;
-  height: 320px;
-  background: rgb(14, 4, 49);
-
-  .chat {
-    opacity: 0.1;
-    position: relative;
-    top: -25px;
-    width: 330px;
-  }
-
-  .text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #fff;
-    font-family: Urbanist, sans-serif;
-    font-size: 36px;
-    font-weight: 200;
-    line-height: 130%;
-    z-index: 999;
-  }
-
-  .feedback-tabs {
-    display: flex;
-    gap: 1rem;
-    top: 16rem;
-    margin-bottom: 1.5rem;
-    justify-content: center;
-    position: absolute;
-    left: 35%;
-  }
-
-  .text__decoration {
-    position: relative;
-    display: inline-block;
-
-    .emoji {
-      position: absolute;
-      bottom: 35px;
-      right: -4px;
-      transition: transform 0.5s ease;
-
-      &:hover {
-        transform: scale(1.25);
-      }
-    }
-
-    .bulle {
-      margin: 0 10px -35px 5px;
-      width: 220px;
-    }
-  }
-
-  .right {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-
-    .decorative-logos {
-      position: relative;
-      top: -30px;
-
-      .logo {
-        position: absolute;
-        animation: float 3s ease-in-out infinite;
-        opacity: 0.1;
-
-        &.logo-big {
-          top: -75px;
-          right: 90px;
-        }
-
-        &.logo-medium {
-          top: 0px;
-          right: 260px;
-          animation-delay: 1s;
-        }
-
-        &.logo-small {
-          top: 100px;
-          right: 200px;
-          animation-delay: 2s;
-        }
-      }
-    }
-
-    @keyframes float {
-      0%, 100% {
-        transform: translateY(0px);
-      }
-      50% {
-        transform: translateY(-5px);
-      }
-    }
-  }
-}
 
 /* ===============================
    🎨 Contenu principal
@@ -120,6 +17,16 @@
   width: 100%;
   gap: 24px;
   margin-top: 20px;
+  padding-left: max(5.5rem, 5%);
+  padding-right: max(5.5rem, 5%);
+  @media screen and (max-width: 1150px) {
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+  @media screen and (max-width: 992px) {
+    display: flex;
+    flex-direction: row-reverse;
+  }
 }
 
 .feedback-list-wrapper {
@@ -129,15 +36,35 @@
   gap: 20px;
   width: 100%;
 
+  .filter-bar-generic-container{
+    display: flex;
+    justify-content: space-between;
+    width: 72.5%;
+    max-width: 740px;
+  }
+  @media screen and (max-width: 1350px) {
+    max-width: 100%;
+  }
+
   .feedback-card {
     background: #fff;
     border-radius: 12px;
-    padding: 16px;
+    padding: 20px 16px 0px 15px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
     transition: box-shadow 0.2s ease;
 
     &:hover {
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+
+    .feedback-type{
+      margin-bottom: 16px;
+
+      .feedback-left{
+        width: 269px;
+        height: 299px;
+        border-radius: 16px;
+      }
     }
   }
 }
@@ -163,13 +90,17 @@
  display: flex;
   width: 100%;
   border-radius: 24px;
-  padding: 0 24px 24px;
+  padding: 0 0px 24px 12px;
   margin-bottom: 32px;
-  margin-top: 32px;
+  margin-top: 4rem;
   box-sizing: border-box;
   max-height: 400px;
+  min-height: 200px;
   position: relative;
   overflow: visible;
+  @media screen and (max-width: 1375px){
+    padding: 0 12px 24px 12px;
+  }
 
   .feedback-list-wrapper {
     flex: 1;
@@ -179,15 +110,18 @@
   }
 
   .right-panel {
-    margin-left: 24px;
+    margin-top: 24px;
     position: relative;
     z-index: 1;
+    @media screen and (max-width: 1350px) {
+      display: none;
+    }
   }
 
-  &.banner-confirmed { background-color: #a871f3; }
-  &.banner-popular { background-color: #ffe082; }
-  &.banner-rage { background-color: #ff8a80; }
-  &.banner-urgent { background-color: #f06292; }
+  &.banner-confirmed { background-color: #C6D8FE; }
+  &.banner-popular { background-color: #D6F2CE; }
+  &.banner-rage { background-color: #F6CBE1; }
+  &.banner-urgent { background-color: #D9C5F6; }
   &.banner-chrono { background-color: #90caf9; }
 }
 
@@ -197,30 +131,77 @@
   width: 100%;
   border-radius: 24px;
   padding: 16px 24px;
-  margin: 32px 0;
+  margin: 4.5rem 0 32px 0;
   justify-content: space-between;
   align-items: flex-start;
   position: relative;
-  min-height: 200px; // ✅ hauteur fixe
-
-  background-color: #ffe9f0; // Rose clair
+  min-height: 200px;
 
   .feedback-list-wrapper {
     flex: 1;
     position: relative;
     z-index: 2;
-    margin-top: -80px; // ✅ cartes par-dessus
+    margin-top: -80px;
+    gap: 25px;
+    .background-cdc{
+      position: absolute;
+      background-color: #FFE9E9;
+      width: 100%;
+      max-width: 1100px;
+      height: 300px;
+      margin-left: -30px;
+      margin-top: -15px;
+      border-radius: 16px;
+      z-index: -1;
+      @media screen and (max-width: 1570px) {
+        width: calc(100% + 30px);
+        margin-left: -15px;
+      }
+    }
+    .filter-bar-generic-container{
+      @media screen and (max-width: 1570px) {
+        width: 100%;
+        max-width: none;
+      }
+    }
   }
 
-  .right-panel {
-    margin-left: 24px;
-    position: relative;
-    z-index: 1;
+  .cdc-content{
+    display: flex;
+    .right-panel {
+      position: relative;
+      z-index: 1;
+      right: 0;
+      width: 27.5%;
+      @media screen and (max-width: 1570px) {
+        display: none;
+      }
+      img{
+        width: 100%;
+        max-width: 291px;
+        margin-left: 20px;
+      }
+    }
+    @media screen and (max-width: 1570px) { 
+      .feedback-list-section{
+        width: 100%;
+        .feedback-view-container{
+          .feedback-view-wrapper{
+            width: 100%;
+          }
+        }
+      }
+    }
   }
+
 
   &.banner-liked { background-color: #ffb3c6; }
   &.banner-recent { background-color: #ffd6e0; }
   &.banner-commented { background-color: #ffc1d9; }
+  .feedback-view-container{
+    display: flex;
+    flex-direction: row;
+  }
 }
 
 /* ==== Suggestions ==== */
@@ -257,7 +238,6 @@
 /* ==== Coups de cœur ==== */
 .cdc-banner-container {
   @extend .report-banner-container;
-  background-color: #ffe9f0; // Rose clair
   height: 450px; // ✅ Ajoute une hauteur fixe
 }
 
@@ -266,4 +246,22 @@
   @extend .report-banner-container;
   background-color: #e9f6ff; // Bleu clair
   height: 450px; // ✅ Idem
+}
+
+
+.left-panel {
+  @media screen and (max-width: 1150px) {
+    margin-top: 0;
+  }
+  @media screen and (max-width: 992px) {
+    display: none;
+  }
+}
+
+.cdc-content .feedback-card{
+  padding: 20px 0px 0px 15px;
+  @media screen and (max-width: 1570px) {
+    width: 100%;
+    max-width: none;
+  }
 }

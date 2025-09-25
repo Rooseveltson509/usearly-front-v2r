@@ -37,6 +37,7 @@ interface Props {
     selectedBrand?: string;
     selectedCategory?: string;
     labelOverride?: string;
+    locationInfo?: string | null;
 }
 
 // ✅ fonction de normalisation (mêmes règles que dans HomeGroupedReportsList)
@@ -68,6 +69,7 @@ const FilterBarGeneric: React.FC<Props> = ({
     setIsDropdownOpen = () => { },
     selectedBrand = "",
     selectedCategory = "",
+    locationInfo = null,
 }) => {
     const [search, setSearch] = useState("");
 
@@ -98,11 +100,11 @@ const FilterBarGeneric: React.FC<Props> = ({
     }, [isDropdownOpen, setIsDropdownOpen, dropdownRef]);
 
     return (
-        <>
+        <div className="filter-bar-generic-container">
             {/* 🔥 Premier select = filtres dynamiques */}
             <div className="select-filter-wrapper">
                 <select
-                    className="select-filter"
+                    className={`select-filter ${locationInfo === "cdc" ? "cdc-style" : ""}`}
                     value={filter}
                     onChange={(e) => {
                         const value = e.target.value;
@@ -226,7 +228,7 @@ const FilterBarGeneric: React.FC<Props> = ({
                     )}
                 </div>
             )}
-        </>
+        </div>
     );
 };
 

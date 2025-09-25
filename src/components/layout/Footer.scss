@@ -1,11 +1,15 @@
+@use "@src/styles/base/variables" as *;
+
 footer{
     margin-top: 3.313rem;
-    padding-bottom: 6.125rem;
+    padding-top: 6.125rem;
+    padding-bottom: 1rem;
     padding-left: 2.938rem;
     text-align: center;
     font-size: 0.75rem;
+    color: #ababab;
     div{
-      margin-bottom: 0.5rem;
+      margin-top: 0.5rem;
       ul{
         display: flex;
         flex-direction: row;

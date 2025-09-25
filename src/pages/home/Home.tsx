@@ -13,8 +13,10 @@ import type { CoupDeCoeur, Suggestion } from "@src/types/Reports";
 import SqueletonAnime from "@src/components/loader/SqueletonAnime";
 import { getCoupsDeCoeurByBrand, getSuggestionsByBrand } from "@src/services/coupDeCoeurService";
 import { fetchFeedbackData } from "@src/services/feedbackFetcher";
+import PurpleBanner from "./components/purpleBanner/PurpleBanner";
 
 // 🖼️ Assets
+import cdcImgSide from "/assets/img-banner/banner-cdc-pop.png"
 import bulleIcon from "/assets/images/bulle-top-bar.png";
 import emojiIcon from "/assets/images/emoji-top-bar.png";
 import chatIcon from "/assets/images/chat-top-bar.svg";
@@ -39,7 +41,7 @@ function Home() {
   const [selectedSiteUrl, setSelectedSiteUrl] = useState<string | undefined>();
 
   const [availableFilters, setAvailableFilters] = useState<string[]>([
-    "confirmed", // 👉 affiché en premier
+    "hot", // 👉 affiché en premier
     "chrono",
     "rage",
     "popular",
@@ -117,28 +119,7 @@ function Home() {
   return (
     <div className="home-page">
       {/* Bandeau violet haut */}
-      <div className="purple-banner">
-        <img src={chatIcon} alt="chatIcon" className="chat" />
-
-        <div className="text">
-          <span>Likez, shakez, faites&nbsp;</span>
-          <div className="text__decoration">
-            <img src={bulleIcon} alt="bulleIcon" className="bulle" />
-            <img src={emojiIcon} alt="emojiIcon" className="emoji" />
-          </div>
-          <span>les marques !</span>
-        </div>
-
-        <div className="right">
-          <div className="decorative-logos">
-            <img src={big} alt="big" className="logo logo-big" />
-            <img src={medium} alt="medium" className="logo logo-medium" />
-            <img src={small} alt="small" className="logo logo-small" />
-          </div>
-        </div>
-
-        <FeedbackTabs activeTab={activeTab} onTabChange={setActiveTab} />
-      </div>
+      <PurpleBanner activeTab={activeTab} onTabChange={setActiveTab} />
 
       <main className="user-main-content">
         <aside className="left-panel">
@@ -153,12 +134,18 @@ function Home() {
               : `banner-${activeFilter}`}`}
           >
             <div className="feedback-list-wrapper">
+              {/* @ts-ignore */}
               <HomeGroupedReportsList
                 activeTab={activeTab}
                 activeFilter={activeFilter}
                 viewMode={activeFilter === "confirmed" ? "confirmed" : "none" as any}
                 onViewModeChange={setViewMode}
                 setActiveFilter={setActiveFilter}
+                // Additional props that the component's Props type typically expects:
+                filter={activeFilter}
+                setFilter={setActiveFilter}
+                setViewMode={setViewMode}
+                isHotFilterAvailable={availableFilters.includes("hot")}
                 selectedBrand={selectedBrand}
                 setSelectedBrand={setSelectedBrand}
                 setSelectedSiteUrl={setSelectedSiteUrl}
@@ -191,27 +178,44 @@ function Home() {
                 setSelectedBrand={setSelectedBrand}
               />
 
-              {isLoading ? (
-                <SqueletonAnime loaderRef={{ current: null }} loading={true} hasMore={false} error={null} />
-              ) : (
-                <FeedbackView
-                  activeTab={activeTab}
-                  viewMode="flat"
-                  currentState={{ data: feedbackData, loading: isLoading, hasMore: false, error: null }}
-                  openId={null}
-                  setOpenId={() => {}}
-                  groupOpen={{}}
-                  setGroupOpen={() => {}}
-                  selectedBrand={selectedBrand}
-                  selectedCategory=""
-                  renderCard={() => <></>}
-                />
-              )}
+            <div className="cdc-content">
+              <div className="background-cdc" ></div>
+                <div className="feedback-list-section">
+                  {isLoading ? (
+                    <SqueletonAnime
+                      loaderRef={{ current: null }}
+                      loading={true}
+                      hasMore={false}
+                      error={null}
+                    />
+                  ) : (
+                    <div className="feedback-view-container">
+                      <div className="feedback-view-wrapper">
+                        <FeedbackView
+                          activeTab={activeTab}
+                          viewMode="flat"
+                          currentState={{ data: feedbackData, loading: isLoading, hasMore: false, error: null }}
+                          openId={null}
+                          setOpenId={() => {}}
+                          groupOpen={{}}
+                          setGroupOpen={() => {}}
+                          selectedBrand={selectedBrand}
+                          selectedCategory=""
+                          renderCard={() => <></>}
+                        />
+                      </div>
+                      <aside className="right-panel">
+                        <img src={cdcImgSide} alt="igm" />
+                      </aside>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
 
-            <aside className="right-panel">
+            {/* <aside className="right-panel">
               <FilterIllustration filter={activeFilter} selectedBrand={selectedBrand} />
-            </aside>
+            </aside> */}
           </div>
         )}
 

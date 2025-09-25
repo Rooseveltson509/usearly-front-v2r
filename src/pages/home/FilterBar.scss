@@ -42,3 +42,18 @@
     }
   }
 }
+
+
+
+.filter-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+
+  .filter-dropdown-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+}
