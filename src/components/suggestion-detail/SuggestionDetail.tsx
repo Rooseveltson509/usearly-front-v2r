@@ -11,6 +11,10 @@ const SuggestionDetail = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        document.title = "Suggestion - Usearly 🚀";
+    }, []);
+
+    useEffect(() => {
         const fetchData = async () => {
             if (!id) return;
             try {

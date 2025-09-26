@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"; // si tu utilises react-router
 import { apiService } from "@src/services/apiService";
-//import PublicSuggestionCard from "@src/components/public/PublicSuggestionCard";
 import "./PublicSuggestionPage.scss"; // optionnel pour le style
 import PublicSuggestionCard from "./PublicSuggestionCard";
 
