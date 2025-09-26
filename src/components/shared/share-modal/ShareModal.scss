@@ -1,3 +1,5 @@
+@use "@src/styles/base/variables" as *;
+
 .share-modal-overlay {
   position: fixed;
   inset: 0;
@@ -96,10 +98,91 @@
       font-size: 16px;
       cursor: pointer;
       color: #888;
+    }
+  }
+}
+.share-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
 
-      &:hover {
-        color: #000;
-      }
+.share-modal {
+  background: #fefefe;
+  border-radius: 12px;
+  padding: 20px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  h3{
+    color: $dark;
+  }
+}
+
+.results-list {
+  margin: 10px 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.result-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+
+  &:hover {
+    background: #f5f5f5;
+  }
+
+  &.selected {
+    background: #e0f7fa;
+  }
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+
+  .share-btn {
+    background-color: #90EE90 !important;
+    color: #fff;
+    border-radius: 6px;
+    padding: 6px 12px;
+  }
+}
+.selected-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  margin-top: 8px;
+  background: #f5f5f5;
+  border-radius: 6px;
+
+  button {
+    margin-left: auto;
+    background: transparent;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #888;
+
+    &:hover {
+      color: #000;
     }
   }
 
@@ -190,4 +273,9 @@
       }
     }
   }
+}
+
+.share-modal.avatar-fallback-custom{
+  width: 24px;
+  height: 24px;
 }

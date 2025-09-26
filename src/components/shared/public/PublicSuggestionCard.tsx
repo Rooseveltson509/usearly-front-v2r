@@ -65,6 +65,10 @@ const PublicSuggestionCard: React.FC<Props> = ({ item }) => {
 
   const textColor = getContrastTextColor(bgColor);
 
+  const votes = item.votes ?? 0;
+  const max = 300;
+  const pct = Math.max(0, Math.min(100, (votes / max) * 100)); // clamp 0–100 
+
   return (
     <div className="feedback-card open">
       {/* Bloc gauche */}
@@ -179,27 +183,22 @@ const PublicSuggestionCard: React.FC<Props> = ({ item }) => {
 
         {/* Bloc interaction public */}
         <div className="feedback-footer">
-          <div className="vote-progress">
-            <progress value={item.votes || 0} max={300}></progress>
-            <span>{item.votes || 0}/300</span>
+          <div
+            className="vote-progress"
+            style={{ ["--pct" as any]: `${pct}%` }}   // variable CSS pour la position
+          >
+            <progress className="pg" value={votes} max={max} />
+            {/* étoile décorative au bout du remplissage */}
+            <span className="pg-thumb" aria-hidden="true" />
+            <span className="pg-count">{votes}/{max}</span>
           </div>
 
-          {/* Bouton remplacé */}
           <button
             className="vote-button disabled"
             onClick={() => alert("Connectez-vous pour voter")}
           >
             🔒 Connectez-vous pour voter
           </button>
-
-          {/* Info doublons */}
-          {typeof item.duplicateCount === "number" &&
-            item.duplicateCount > 0 && (
-              <p className="duplicate-info">
-                Déjà rejointe par <strong>{item.duplicateCount}</strong>{" "}
-                utilisateur{item.duplicateCount > 1 ? "s" : ""}
-              </p>
-            )}
         </div>
       </div>
 

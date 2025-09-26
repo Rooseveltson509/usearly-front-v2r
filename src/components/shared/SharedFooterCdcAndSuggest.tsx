@@ -13,6 +13,7 @@ interface Props {
   type: "coupdecoeur" | "suggestion";
   statusLabel?: string;
   onToggle?: (id: string) => void;
+  onVoteClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const SharedFooterCdcAndSuggest: React.FC<Props> = ({
@@ -21,6 +22,7 @@ const SharedFooterCdcAndSuggest: React.FC<Props> = ({
   type,
   onToggle,
   statusLabel = "En cours de correction",
+  onVoteClick,
 }) => {
   const emojis = getEmojisForType(type);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -89,47 +91,61 @@ const SharedFooterCdcAndSuggest: React.FC<Props> = ({
 
       <div className="footer-bottom">
         <div className="footer-buttons">
-          {/* Réagir */}
-          <div
-            className="react-hover-area"
-            onMouseEnter={() => {
-              if (hoverTimeout) clearTimeout(hoverTimeout);
-              setShowEmojiPicker(true);
-            }}
-            onMouseLeave={() => {
-              hoverTimeout = setTimeout(() => {
-                setShowEmojiPicker(false);
-              }, 250);
-            }}
-          >
-            <button type="button">
-              <ThumbsUp size={16} />
-              <span>Réagir</span>
+          <div className="action-user-buttons">
+            {/* Réagir */}
+            <div
+              className="react-hover-area"
+              onMouseEnter={() => {
+                if (hoverTimeout) clearTimeout(hoverTimeout);
+                setShowEmojiPicker(true);
+              }}
+              onMouseLeave={() => {
+                hoverTimeout = setTimeout(() => {
+                  setShowEmojiPicker(false);
+                }, 250);
+              }}
+            >
+              <button type="button">
+                <ThumbsUp size={16} />
+                {type === "coupdecoeur" && <span>Réagir</span>}
+              </button>
+              {showEmojiPicker && (
+                <div className="emoji-picker-container">
+                  <EmojiUrlyReactionPicker
+                    onSelect={handleAddReaction}
+                    type={type}
+                    userId={userId}
+                    descriptionId={descriptionId}
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* Commenter */}
+            <button className="comment-toggle-btn" onClick={toggleComments}>
+              <MessageCircle size={16} /> {type === "coupdecoeur" && "Commenter"}
             </button>
-            {showEmojiPicker && (
-              <div className="emoji-picker-container">
-                <EmojiUrlyReactionPicker
-                  onSelect={handleAddReaction}
-                  type={type}
-                  userId={userId}
-                  descriptionId={descriptionId}
-                />
-              </div>
+
+            {/* Partager */}
+            <button
+              className="share-btn"
+              onClick={() => setShowShareModal(true)}
+            >
+              <Share2 size={16} /> {type === "coupdecoeur" && "Partager"}
+            </button>
+          </div>
+          <div>
+            {type === "suggestion" && onVoteClick && (
+              <button
+                className="vote-button"
+                onClick={(e) => {
+                  onVoteClick(e);
+                }}
+              >
+                Voter
+              </button>
             )}
           </div>
-
-          {/* Commenter */}
-          <button className="comment-toggle-btn" onClick={toggleComments}>
-            <MessageCircle size={16} /> Commenter
-          </button>
-
-          {/* Partager */}
-          <button
-            className="share-btn"
-            onClick={() => setShowShareModal(true)}
-          >
-            <Share2 size={16} /> Partager
-          </button>
 
           {showShareModal && (
             <ShareModal
