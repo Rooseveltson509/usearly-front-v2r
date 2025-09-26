@@ -37,10 +37,10 @@ const HomeFiltersSuggestion = ({
     <div className="controls">
     <FilterBarGeneric
       options={[
-        { value: "allSuggest", label: "🌍 Toutes les suggestions" }, // ✅ Ajout du filtre neutre
-        { value: "discussed", label: "💬 Les plus discutées" },
-        { value: "recentSuggestion", label: "🕒 Les plus récentes" },
-        { value: "likedSuggestion", label: "👍 Les plus appréciées" },
+        { value: "allSuggest", label: "👍️ Suggestions les plus populaires" }, // ✅ Ajout du filtre neutre
+        // { value: "discussed", label: "💬 Les plus discutées" },
+        { value: "recentSuggestion", label: "🪄 Suggestions ouvertes aux votes" },
+        { value: "likedSuggestion", label: "🙌 Suggestions adoptées" },
       ]}
       filter={filter}
       setFilter={setFilter}

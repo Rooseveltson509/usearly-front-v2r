@@ -129,7 +129,7 @@ const FilterBar: React.FC<Props> = ({
             <option value="hot">🔥 Problèmes les plus signalés</option>
             <option value="rage">😡 Problèmes les plus rageants</option>
             <option value="popular">👍 Signalements les plus populaires</option>
-            <option value="recent">📅 Signalements les plus récents</option>
+            <option value="chrono">📅 Signalements les plus récents</option>
             <option value="urgent">👀 À shaker vite</option>
           </select>
         </div>

@@ -215,28 +215,32 @@ function Home() {
             className={`suggestion-banner-container ${selectedBrand ? "banner-filtered" : `banner-${activeFilter}`}`}
           >
             <div className="feedback-list-wrapper">
-              <HomeFiltersSuggestion
-                filter={activeFilter}
-                setFilter={setActiveFilter}
-                selectedBrand={selectedBrand}
-                setSelectedBrand={setSelectedBrand}
-              />
+              <div>
+                <HomeFiltersSuggestion
+                  filter={activeFilter}
+                  setFilter={setActiveFilter}
+                  selectedBrand={selectedBrand}
+                  setSelectedBrand={setSelectedBrand}
+                />
+              </div>
 
               {isLoading ? (
                 <SqueletonAnime loaderRef={{ current: null }} loading={true} hasMore={false} error={null} />
               ) : (
-                <FeedbackView
-                  activeTab={activeTab}
-                  viewMode="flat"
-                  currentState={{ data: feedbackData, loading: isLoading, hasMore: false, error: null }}
-                  openId={null}
-                  setOpenId={() => {}}
-                  groupOpen={{}}
-                  setGroupOpen={() => {}}
-                  selectedBrand={selectedBrand}
-                  selectedCategory=""
-                  renderCard={() => <></>}
-                />
+                <div>
+                  <FeedbackView
+                    activeTab={activeTab}
+                    viewMode="flat"
+                    currentState={{ data: feedbackData, loading: isLoading, hasMore: false, error: null }}
+                    openId={null}
+                    setOpenId={() => {}}
+                    groupOpen={{}}
+                    setGroupOpen={() => {}}
+                    selectedBrand={selectedBrand}
+                    selectedCategory=""
+                    renderCard={() => <></>}
+                  />
+                </div>
               )}
             </div>
 

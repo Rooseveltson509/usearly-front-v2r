@@ -86,7 +86,7 @@
 
 /* ==== Signalements ==== */
 .report-banner-container {
- display: flex;
+  display: flex;
   width: 100%;
   border-radius: 24px;
   padding: 0 0px 24px 12px;
@@ -94,6 +94,7 @@
   margin-top: 4rem;
   box-sizing: border-box;
   max-height: 400px;
+  height: 280px;
   min-height: 200px;
   position: relative;
   overflow: visible;
@@ -117,11 +118,11 @@
     }
   }
 
-  &.banner-confirmed { background-color: #DDE2FF; }
-  &.banner-popular { background-color: #DDE2FF; }
-  &.banner-rage { background-color: #DDE2FF; }
-  &.banner-urgent { background-color: #DDE2FF; }
-  &.banner-chrono { background-color: #DDE2FF; }
+  &.banner-confirmed { background-color: #E9F0FF; height: 240px; }
+  &.banner-popular { background-color: #E9F0FF; }
+  &.banner-rage { background-color: #E9F0FF; }
+  &.banner-urgent { background-color: #E9F0FF; height: 240px; }
+  &.banner-chrono { background-color: #E9F0FF; height: 240px; }
 }
 
 /* ==== Coups de cœur ==== */
@@ -195,11 +196,12 @@
   }
 
 
-  &.banner-liked,
-  &.banner-recent,
-  &.banner-commented,
-  &.banner-all,
-  &.banner-enflammes,
+  &.banner-liked { background-color: #FFE9E9; }
+  &.banner-recent { background-color: #FFE9E9; height: 310px;}
+  &.banner-commented { background-color: #FFE9E9; }
+  &.banner-chrono { background-color: #FFE9E9; height: 270px; }
+  &.banner-all { background-color: #FFE9E9; height: 330px; }
+  &.banner-enflammes { background-color: #FFE9E9; height: 290px; }
   &.banner-popular { background-color: #FFE9E9; }
   .feedback-view-container{
     display: flex;
@@ -214,18 +216,20 @@
   border-radius: 24px;
   padding: 16px 24px;
   margin: 32px 0;
+  margin-top: 75px;
   justify-content: space-between;
   align-items: flex-start;
   position: relative;
   min-height: 200px; // ✅ hauteur fixe
 
-  background-color: #e9f6ff; // Bleu clair
+  background-color: #F1E9FF; // Bleu clair
 
   .feedback-list-wrapper {
     flex: 1;
     position: relative;
     z-index: 2;
-    margin-top: -80px; // ✅ cartes par-dessus
+    margin-top: -70px; // ✅ cartes par-dessus
+    gap: 30px;
   }
 
   .right-panel {
@@ -234,9 +238,20 @@
     z-index: 1;
   }
 
-  &.banner-discussed { background-color: #a8d8ff; }
-  &.banner-recent { background-color: #cce9ff; }
-  &.banner-liked { background-color: #b3e0ff; }
+  .filter-bar-generic-container{
+    width: 100%;
+  }
+
+  .filter-bar-generic-container{
+    @media screen and (max-width: 1350px) {
+      width: 100%;
+      max-width: none;
+    }
+  }
+
+  &.banner-discussed { background-color: #F1E9FF; }
+  &.banner-recent { background-color: #F1E9FF; }
+  &.banner-liked { background-color: #F1E9FF; }
 }
 /* ==== Coups de cœur ==== */
 .cdc-banner-container {
@@ -247,8 +262,8 @@
 /* ==== Suggestions ==== */
 .suggestion-banner-container {
   @extend .report-banner-container;
-  background-color: #e9f6ff; // Bleu clair
-  height: 450px; // ✅ Idem
+  background-color: #F1E9FF;
+  height: 350px;
 }
 
 
