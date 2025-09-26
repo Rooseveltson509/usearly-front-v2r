@@ -1,4 +1,4 @@
-@import "@styles/base/variables";
+@import "../../styles/base/_variables";
 
 $buttonColor: #2D1E2C;
 
@@ -14,7 +14,7 @@ $buttonColor: #2D1E2C;
     transition: all 0.2s ease;
 
     &:hover {
-        background-color: darken($dark, 5%);
+        background-color: #1b1c1d;
     }
 
     &:disabled {
