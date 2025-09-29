@@ -37,14 +37,29 @@ const PublicSuggestionCard: React.FC<Props> = ({ item }) => {
   };
 
   useEffect(() => {
-    const loadBrandLogo = async () => {
-      if (item.marque) {
-        const logoUrl = await fetchValidBrandLogo(item.marque, item.siteUrl);
-        setLogos({ [item.marque]: logoUrl });
-      }
+    const brandKey = item.marque?.trim();
+    if (!brandKey) return;
+
+    let isMounted = true;
+
+    fetchValidBrandLogo(brandKey, item.siteUrl)
+      .then((logoUrl) => {
+        if (!isMounted) return;
+        setLogos((prev) => {
+          if (prev[brandKey] === logoUrl) {
+            return prev;
+          }
+          return { ...prev, [brandKey]: logoUrl };
+        });
+      })
+      .catch(() => {
+        /* silent */
+      });
+
+    return () => {
+      isMounted = false;
     };
-    loadBrandLogo();
-  }, [item.marque]);
+  }, [item.marque, item.siteUrl]);
 
   useEffect(() => {
     return () => {
@@ -64,6 +79,8 @@ const PublicSuggestionCard: React.FC<Props> = ({ item }) => {
   const bgColor = brandColors[brandKey] || brandColors.default;
 
   const textColor = getContrastTextColor(bgColor);
+  const brandName = item.marque?.trim() ?? "";
+  const brandLogo = brandName ? logos[brandName] : "";
 
   const votes = item.votes ?? 0;
   const max = 300;
@@ -129,11 +146,11 @@ const PublicSuggestionCard: React.FC<Props> = ({ item }) => {
                 type="user"
                 wrapperClassName="user-avatar"
               />
-              {item.marque && (
+              {brandName && (
                 <div className="brand-overlay">
                   <Avatar
-                    avatar={logos[item.marque] || ""}
-                    pseudo={item.marque}
+                    avatar={brandLogo || ""}
+                    pseudo={brandName}
                     type="brand"
                     wrapperClassName="brand-logo"
                   />

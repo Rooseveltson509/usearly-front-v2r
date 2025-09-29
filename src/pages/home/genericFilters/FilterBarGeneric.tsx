@@ -38,6 +38,9 @@ interface Props {
     selectedCategory?: string;
     labelOverride?: string;
     locationInfo?: string | null;
+
+    brandFocusFilter?: string;
+    baseFilterValue?: string;
 }
 
 // ✅ fonction de normalisation (mêmes règles que dans HomeGroupedReportsList)
@@ -70,6 +73,8 @@ const FilterBarGeneric: React.FC<Props> = ({
     selectedBrand = "",
     selectedCategory = "",
     locationInfo = null,
+    brandFocusFilter = "",
+    baseFilterValue,
 }) => {
     const [search, setSearch] = useState("");
 
@@ -164,11 +169,12 @@ const FilterBarGeneric: React.FC<Props> = ({
                                                             setSearch("");
                                                             setIsDropdownOpen(false);
 
-                                                            // 👉 Mode recherche (filtre vide)
+                                                            const focusedFilter = brandFocusFilter ?? "";
+                                                            // 👉 Mode recherche (filtre solo marque)
                                                             setViewMode("flat");
-                                                            setFilter("");
+                                                            setFilter(focusedFilter);
                                                             onViewModeChange?.("flat");
-                                                            setActiveFilter("");
+                                                            setActiveFilter(focusedFilter);
                                                         }}
                                                     >
                                                         {brand}
@@ -216,9 +222,11 @@ const FilterBarGeneric: React.FC<Props> = ({
 
                                         // 👉 retour au comportement par défaut
                                         setViewMode("chrono");
-                                        setFilter(options[0]?.value || "");
+                                        const fallbackFilter =
+                                            baseFilterValue ?? options.find((opt) => opt.value !== brandFocusFilter)?.value ?? options[0]?.value ?? "";
+                                        setFilter(fallbackFilter);
                                         onViewModeChange?.("chrono");
-                                        setActiveFilter(options[0]?.value || "");
+                                        setActiveFilter(fallbackFilter);
                                     }}
                                 >
                                     Réinitialiser

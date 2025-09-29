@@ -75,14 +75,29 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
   }, [item.id, item.type]);
 
   useEffect(() => {
-    const loadBrandLogo = async () => {
-      if (item.marque) {
-        const logoUrl = await fetchValidBrandLogo(item.marque, item.siteUrl);
-        setLogos({ [item.marque]: logoUrl });
-      }
+    const brandKey = item.marque?.trim();
+    if (!brandKey) return;
+
+    let isMounted = true;
+
+    fetchValidBrandLogo(brandKey, item.siteUrl)
+      .then((logoUrl) => {
+        if (!isMounted) return;
+        setLogos((prev) => {
+          if (prev[brandKey] === logoUrl) {
+            return prev;
+          }
+          return { ...prev, [brandKey]: logoUrl };
+        });
+      })
+      .catch(() => {
+        /* noop */
+      });
+
+    return () => {
+      isMounted = false;
     };
-    loadBrandLogo();
-  }, [item.marque]);
+  }, [item.marque, item.siteUrl]);
 
   useEffect(() => {
     return () => {
@@ -100,6 +115,8 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
   const shouldShowToggle = description.length > DESCRIPTION_LIMIT || item.capture;
   const bgColor = brandColors[item.marque?.toLowerCase()] || brandColors.default;
   const textColor = getContrastTextColor(bgColor);
+  const brandName = item.marque?.trim() ?? "";
+  const brandLogo = brandName ? logos[brandName] : "";
 
   const max = 300;
   const pct = Math.max(0, Math.min(100, (votes / max) * 100));
@@ -183,11 +200,11 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
                   type="user"
                   wrapperClassName="user-avatar"
                 />
-                {item.marque && (
+                {brandName && (
                   <div className="brand-overlay">
                     <Avatar
-                      avatar={logos[item.marque] || ""}
-                      pseudo={item.marque}
+                      avatar={brandLogo || ""}
+                      pseudo={brandName}
                       type="brand"
                       wrapperClassName="brand-logo"
                     />

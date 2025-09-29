@@ -72,7 +72,8 @@
    🎨 Bandeaux (Filtres)
    =============================== */
 .banner-filtered {
-  background: #f5f5f5;
+  background: var(--filtered-banner-bg, #f5f5f5);
+  border: 1px solid var(--brand-banner-border, transparent);
 
   .filter-illustration-sidebar {
     .illustration-content {
@@ -106,6 +107,8 @@
   min-height: 200px;
   position: relative;
   overflow: visible;
+  background-color: var(--brand-banner-bg, #E9F0FF);
+  border: 1px solid var(--brand-banner-border, transparent);
   @media screen and (max-width: 1375px){
     padding: 0 12px 24px 12px;
   }
@@ -126,11 +129,11 @@
     }
   }
 
-  &.banner-confirmed { background-color: #E9F0FF; height: 240px; }
-  &.banner-popular { background-color: #E9F0FF; }
-  &.banner-rage { background-color: #E9F0FF; }
-  &.banner-urgent { background-color: #E9F0FF; height: 240px; }
-  &.banner-chrono { background-color: #E9F0FF; height: 240px; }
+  &.banner-confirmed { background-color: var(--brand-banner-bg, #E9F0FF); height: 240px; }
+  &.banner-popular { background-color: var(--brand-banner-bg, #E9F0FF); }
+  &.banner-rage { background-color: var(--brand-banner-bg, #E9F0FF); }
+  &.banner-urgent { background-color: var(--brand-banner-bg, #E9F0FF); height: 240px; }
+  &.banner-chrono { background-color: var(--brand-banner-bg, #E9F0FF); height: 240px; }
 }
 
 /* ==== Coups de cœur ==== */
@@ -145,6 +148,8 @@
   align-items: flex-start;
   position: relative;
   min-height: 200px;
+  background-color: var(--brand-banner-bg, #FFE9E9);
+  border: 1px solid var(--brand-banner-border, transparent);
 
   .feedback-list-wrapper {
     flex: 1;
@@ -154,7 +159,7 @@
     gap: 25px;
     .background-cdc{
       position: absolute;
-      background-color: #FFE9E9;
+      background-color: var(--brand-banner-bg, #FFE9E9);
       width: 100%;
       max-width: 1100px;
       height: 300px;
@@ -214,13 +219,13 @@
   }
 
 
-  &.banner-liked { background-color: #FFE9E9; }
-  &.banner-recent { background-color: #FFE9E9; height: 310px;}
-  &.banner-commented { background-color: #FFE9E9; }
-  &.banner-chrono { background-color: #FFE9E9; height: 270px; }
-  &.banner-all { background-color: #FFE9E9; height: 330px; }
-  &.banner-enflammes { background-color: #FFE9E9; height: 290px; }
-  &.banner-popular { background-color: #FFE9E9; }
+  &.banner-liked { background-color: var(--brand-banner-bg, #FFE9E9); }
+  &.banner-recent { background-color: var(--brand-banner-bg, #FFE9E9); height: 310px;}
+  &.banner-commented { background-color: var(--brand-banner-bg, #FFE9E9); }
+  &.banner-chrono { background-color: var(--brand-banner-bg, #FFE9E9); height: 270px; }
+  &.banner-all { background-color: var(--brand-banner-bg, #FFE9E9); height: 330px; }
+  &.banner-enflammes { background-color: var(--brand-banner-bg, #FFE9E9); height: 290px; }
+  &.banner-popular { background-color: var(--brand-banner-bg, #FFE9E9); }
   .feedback-view-container{
     display: flex;
     flex-direction: row;
@@ -240,7 +245,8 @@
   position: relative;
   min-height: 200px; // ✅ hauteur fixe
 
-  background-color: #F1E9FF; // Bleu clair
+  background-color: var(--suggestion-bg, #F1E9FF); // couleur dynamique
+  border: 1px solid var(--suggestion-border, transparent);
 
   .feedback-list-wrapper {
     flex: 1;
@@ -267,9 +273,9 @@
     }
   }
 
-  &.banner-discussed { background-color: #F1E9FF; }
-  &.banner-recent { background-color: #F1E9FF; }
-  &.banner-liked { background-color: #F1E9FF; }
+  &.banner-discussed { background-color: var(--suggestion-bg, #F1E9FF); }
+  &.banner-recent { background-color: var(--suggestion-bg, #F1E9FF); }
+  &.banner-liked { background-color: var(--suggestion-bg, #F1E9FF); }
 }
 /* ==== Coups de cœur ==== */
 .cdc-banner-container {
@@ -280,7 +286,7 @@
 /* ==== Suggestions ==== */
 .suggestion-banner-container {
   @extend .report-banner-container;
-  background-color: #F1E9FF;
+  background-color: var(--suggestion-bg, #F1E9FF);
   height: 350px;
 }
 

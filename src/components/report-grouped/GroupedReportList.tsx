@@ -13,23 +13,43 @@ const GroupedReportList = ({ grouped, groupOpen, setGroupOpen, renderCard }: Pro
   const [logos, setLogos] = useState<Record<string, string>>({});
 
   useEffect(() => {
+    const brands = Object.keys(grouped);
+    const missing = brands.filter((brand) => !logos[brand]);
+    if (missing.length === 0) {
+      return;
+    }
+
+    let cancelled = false;
+
     const loadBrandLogos = async () => {
       const entries = await Promise.all(
-        Object.keys(grouped).map(async (brand) => {
-          // ✅ On récupère le siteUrl réel pour ce brand
-          const firstCategoryArray = Object.values(grouped[brand])[0]; // GroupedReport[]
-          const firstReport = firstCategoryArray?.[0]; // GroupedReport
-          const siteUrl = firstReport?.siteUrl || undefined; // ex: "adidas.com"
+        missing.map(async (brand) => {
+          const firstCategoryArray = Object.values(grouped[brand])[0];
+          const firstReport = firstCategoryArray?.[0];
+          const siteUrl = firstReport?.siteUrl || undefined;
 
           const logoUrl = await fetchValidBrandLogo(brand, siteUrl);
-          return [brand, logoUrl] as [string, string];
+          return [brand, logoUrl] as const;
         })
       );
-      setLogos(Object.fromEntries(entries));
+
+      if (!cancelled) {
+        setLogos((prev) => {
+          const next = { ...prev };
+          entries.forEach(([brand, logo]) => {
+            next[brand] = logo;
+          });
+          return next;
+        });
+      }
     };
 
     loadBrandLogos();
-  }, [grouped]);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [grouped, logos]);
 
 
   return (
