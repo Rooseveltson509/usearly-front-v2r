@@ -82,6 +82,14 @@
       }
     }
   }
+
+  .filter-container{
+    margin-bottom: 0.75rem;
+  }
+  
+  .active-filters{
+    margin-bottom: 1rem;
+  }
 }
 
 /* ==== Signalements ==== */
@@ -190,6 +198,16 @@
           .feedback-view-wrapper{
             width: 100%;
           }
+        }
+      }
+    }
+  }
+
+  .feedback-list-wrapper{
+    .feedback-view-container{
+      .feedback-view-wrapper{
+        @media screen and (max-width: 1350px) { 
+          width: 100%;
         }
       }
     }
