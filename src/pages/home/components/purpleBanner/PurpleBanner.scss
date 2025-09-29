@@ -83,31 +83,43 @@
 
     .decorative-logos {
       position: relative;
-      top: -4rem;
+      top: 1.75rem;
+      right: -60px;
+      width: clamp(240px, 28vw, 360px);
+      height: clamp(140px, 20vw, 220px);
+      z-index: 1; // float the icons above the banner background
+      pointer-events: none; // keep the logos from catching mouse events
+      opacity: 0.1;
       @media screen and (max-width:750px){
         top: -70px;
+        right: -10px;
+        width: 200px;
+        height: 160px;
       }
-      right: -60px;
 
       .logo {
         position: absolute;
         animation: float 3s ease-in-out infinite;
-        opacity: 0.1;
+        opacity: 0.75;
+        filter: drop-shadow(0 18px 36px rgba(12, 5, 45, 0.45));
 
         &.logo-big {
           top: -75px;
           right: 90px;
+          width: clamp(120px, 11vw, 180px);
         }
 
         &.logo-medium {
-          top: 0px;
-          right: 260px;
+          top: -10px;
+          right: 250px;
+          width: clamp(90px, 9vw, 140px);
           animation-delay: 1s;
         }
 
         &.logo-small {
-          top: 100px;
-          right: 200px;
+          top: 90px;
+          right: 175px;
+          width: clamp(70px, 7vw, 120px);
           animation-delay: 2s;
         }
       }

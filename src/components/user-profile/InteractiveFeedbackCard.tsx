@@ -102,7 +102,7 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
   const textColor = getContrastTextColor(bgColor);
 
   const max = 300;
-  const pct = Math.max(0, Math.min(100, ((votes + 100) / max) * 100));
+  const pct = Math.max(0, Math.min(100, (votes / max) * 100));
 
   return (
     <div className={`feedback-card ${isOpen ? "open" : ""}`}>
@@ -258,12 +258,12 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
               className="vote-progress"
               style={{ ["--pct" as any]: `${pct}%` }}   // variable CSS pour la position
             >
-              <progress className="pg" value={votes + 100} max={max} />
+              <progress className="pg" value={votes} max={max} />
               {/* étoile décorative au bout du remplissage */}
               <span className="pg-thumb" aria-hidden="true">
                 <img src={starProgressBar} alt="" />
               </span>
-              <span className="pg-count">{votes + 100}/{max}</span>
+              <span className="pg-count">{votes}/{max}</span>
             </div>
           </div>
         )}

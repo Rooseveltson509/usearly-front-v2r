@@ -212,6 +212,9 @@
     flex-direction: column;
     gap: 10px;
     width: 240px;
+    @media screen and (max-width: 1350px) {
+      right: 0;
+    }
 
     select {
       padding: 8px 12px;
