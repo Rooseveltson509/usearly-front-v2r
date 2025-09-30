@@ -38,19 +38,43 @@ const FlatReportList = ({
   const [logos, setLogos] = useState<Record<string, string>>({});
 
   useEffect(() => {
+    const missing = grouped
+      .map(([brand]) => brand)
+      .filter((brand) => !logos[brand]);
+
+    if (missing.length === 0) {
+      return;
+    }
+
+    let cancelled = false;
+
     const loadAllLogos = async () => {
       const entries = await Promise.all(
-        grouped.map(async ([brand, reports]) => {
-          // ✅ Récupération du siteUrl depuis le premier report du brand
+        missing.map(async (brand) => {
+          const reports = grouped.find(([b]) => b === brand)?.[1] ?? [];
           const siteUrl = reports?.[0]?.siteUrl || undefined;
           const logoUrl = await fetchValidBrandLogo(brand, siteUrl);
-          return [brand, logoUrl] as [string, string];
+          return [brand, logoUrl] as const;
         })
       );
-      setLogos(Object.fromEntries(entries));
+
+      if (!cancelled) {
+        setLogos((prev) => {
+          const next = { ...prev };
+          entries.forEach(([brand, logo]) => {
+            next[brand] = logo;
+          });
+          return next;
+        });
+      }
     };
+
     loadAllLogos();
-  }, [grouped]);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [grouped, logos]);
 
 
   const handleToggle = (brand: string) => {

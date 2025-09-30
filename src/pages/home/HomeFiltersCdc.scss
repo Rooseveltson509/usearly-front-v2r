@@ -1,1 +1,10 @@
-@use "./FilterBar.scss";
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+
+  > .brand-select {
+    display: none;
+  }
+}

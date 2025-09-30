@@ -79,6 +79,26 @@
           color: #0f0f0f;
         }
       }
+
+      .vote-button {
+        background-color: #000;
+        color: #fff;
+        padding: 0.4rem 0.8rem;
+        border-radius: 6px;
+        font-weight: 500;
+
+        &:hover {
+          color: #fff;
+          background: #333;
+        }
+      }
+      .action-user-buttons{
+        display: flex;
+        flex: 1;
+        gap: 27px;
+        justify-content: flex-start;
+        opacity: 0.7;
+      }
     }
   }
 }

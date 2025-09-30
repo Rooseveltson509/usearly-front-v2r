@@ -9,9 +9,9 @@ import SharedFooterCdcAndSuggest from "../shared/SharedFooterCdcAndSuggest";
 import Avatar from "../shared/Avatar";
 import { brandColors } from "@src/utils/brandColors";
 import { getContrastTextColor } from "@src/utils/colorUtils";
-import { voteForSuggestion } from "@src/services/suggestionService";
 import { apiService } from "@src/services/apiService";
 import { showToast } from "@src/utils/toastUtils";
+import starProgressBar from "/assets/icons/icon-progress-bar.svg";
 
 interface Props {
   item: (CoupDeCoeur | Suggestion) & {
@@ -35,6 +35,20 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
   const [votes, setVotes] = useState(
     (item as Suggestion).votes || 0
   );
+
+  const handleVoteClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    try {
+      const res = await apiService.post(`/suggestions/${item.id}/vote`);
+      setVotes(res.data.votes);
+      showToast("✅ Vote enregistré avec succès", "success");
+    } catch (err: any) {
+      const msg =
+        err.response?.data?.error ||
+        "❌ Vous avez déjà voté pour cette suggestion";
+      showToast(msg, "error");
+    }
+  };
 
 
   if (!userProfile?.id) return null;
@@ -61,14 +75,29 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
   }, [item.id, item.type]);
 
   useEffect(() => {
-    const loadBrandLogo = async () => {
-      if (item.marque) {
-        const logoUrl = await fetchValidBrandLogo(item.marque, item.siteUrl);
-        setLogos({ [item.marque]: logoUrl });
-      }
+    const brandKey = item.marque?.trim();
+    if (!brandKey) return;
+
+    let isMounted = true;
+
+    fetchValidBrandLogo(brandKey, item.siteUrl)
+      .then((logoUrl) => {
+        if (!isMounted) return;
+        setLogos((prev) => {
+          if (prev[brandKey] === logoUrl) {
+            return prev;
+          }
+          return { ...prev, [brandKey]: logoUrl };
+        });
+      })
+      .catch(() => {
+        /* noop */
+      });
+
+    return () => {
+      isMounted = false;
     };
-    loadBrandLogo();
-  }, [item.marque]);
+  }, [item.marque, item.siteUrl]);
 
   useEffect(() => {
     return () => {
@@ -86,6 +115,11 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
   const shouldShowToggle = description.length > DESCRIPTION_LIMIT || item.capture;
   const bgColor = brandColors[item.marque?.toLowerCase()] || brandColors.default;
   const textColor = getContrastTextColor(bgColor);
+  const brandName = item.marque?.trim() ?? "";
+  const brandLogo = brandName ? logos[brandName] : "";
+
+  const max = 300;
+  const pct = Math.max(0, Math.min(100, (votes / max) * 100));
 
   return (
     <div className={`feedback-card ${isOpen ? "open" : ""}`}>
@@ -166,11 +200,11 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
                   type="user"
                   wrapperClassName="user-avatar"
                 />
-                {item.marque && (
+                {brandName && (
                   <div className="brand-overlay">
                     <Avatar
-                      avatar={logos[item.marque] || ""}
-                      pseudo={item.marque}
+                      avatar={brandLogo || ""}
+                      pseudo={brandName}
                       type="brand"
                       wrapperClassName="brand-logo"
                     />
@@ -237,37 +271,17 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
 
         {item.type === "suggestion" && (
           <div className="feedback-footer">
-            <div className="vote-progress">
-              <progress value={votes} max={300}></progress>
-              <span>{votes}/300</span>
-            </div>
-
-            <button
-              className="vote-button"
-              onClick={async (e) => {
-                e.stopPropagation();
-                try {
-                  const res = await apiService.post(`/suggestions/${item.id}/vote`);
-                  setVotes(res.data.votes);
-                  showToast("✅ Vote enregistré avec succès", "success");
-                } catch (err: any) {
-                  const msg =
-                    err.response?.data?.error ||
-                    "❌ Vous avez déjà voté pour cette suggestion";
-                  showToast(msg, "error"); // 🟢 toast fluide
-                }
-              }}
+            <div
+              className="vote-progress"
+              style={{ ["--pct" as any]: `${pct}%` }}   // variable CSS pour la position
             >
-              Voter
-            </button>
-            {/* 🟢 Info doublons */}
-            {typeof item.duplicateCount === "number" && item.duplicateCount > 0 && (
-              <p className="duplicate-info">
-                Déjà rejointe par <strong>{item.duplicateCount}</strong> utilisateur
-                {item.duplicateCount > 1 ? "s" : ""}
-              </p>
-            )}
-
+              <progress className="pg" value={votes} max={max} />
+              {/* étoile décorative au bout du remplissage */}
+              <span className="pg-thumb" aria-hidden="true">
+                <img src={starProgressBar} alt="" />
+              </span>
+              <span className="pg-count">{votes}/{max}</span>
+            </div>
           </div>
         )}
 
@@ -276,6 +290,7 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
           userId={userProfile.id}
           descriptionId={item.id}
           type={item.type}
+          onVoteClick={item.type === "suggestion" ? handleVoteClick : undefined}
           onToggle={onToggle}
         />
       </div>

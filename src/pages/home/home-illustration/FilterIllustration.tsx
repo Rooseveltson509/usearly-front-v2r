@@ -2,16 +2,17 @@ import hotImg from "/assets/filters-reports/hot1.png";
 import rageImg from "/assets/filters-reports/rage1.png";
 import popularImg from "/assets/filters-reports/popular1.png";
 import urgentImg from "/assets/filters-reports/carrying1.png";
-import recentImg from "/assets/filters-reports/recent.png";
+import recentImg from "/assets/filters-reports/recent1.png";
+import recentReportImg from "/assets/img-banner/banner-report-recent.png";
 
 // 🎨 Ajouts spécifiques pour Coup de cœur & Suggestions
-import likedImg from "/assets/filters-cdc/liked-cdc.png";
-import recentCdcImg from "/assets/filters-cdc/recent-cdc.png";
-import commentedImg from "/assets/filters-cdc/commented.png";
+import likedImg from "/assets/img-banner/banner-cdc-pop.png";
+import recentCdcImg from "/assets/img-banner/banner-cdc-recent.png";
+import commentedImg from "/assets/img-banner/banner-cdc-liked.png";
 
-import discussedImg from "/assets/filters-suggestion/discussed.png";
-import recentSuggestionImg from "/assets/filters-suggestion/recentSuggestion.png";
-import likedSuggestionImg from "/assets/filters-suggestion/liked.png";
+import discussedImg from "/assets/img-banner/banner-suggest-liked.png";
+import recentSuggestionImg from "/assets/img-banner/banner-suggest-open-vote.png";
+import likedSuggestionImg from "/assets/img-banner/banner-suggestion-adopt.png";
 
 import { useEffect, useState } from "react";
 import { fetchValidBrandLogo, getBrandLogo } from "@src/utils/brandLogos";
@@ -27,7 +28,7 @@ const illustrationMap = {
   chrono: {
     label: "Les plus récents",
     emoji: "📅",
-    img: recentImg,
+    img: recentReportImg,
   },
   confirmed: {
     label: "Ça chauffe par ici",
@@ -66,13 +67,12 @@ const illustrationMap = {
     emoji: "🥰",
     img: likedImg,
   },
-  
   enflammes: {
     label: "Les plus enflammés",
     emoji: "❤️‍🔥",
     img: commentedImg,
   },
-  commented: {
+  recentcdc: {
     label: "Les plus commentés",
     emoji: "💬",
     img: commentedImg,

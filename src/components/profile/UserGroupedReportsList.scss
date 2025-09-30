@@ -619,6 +619,9 @@
   border-radius: $border-radius-md;
   overflow: hidden;
   transition: box-shadow 0.3s ease;
+  @media screen and (max-width: 1350px) {
+    max-width: none;
+  }
 
   &.open {
     .card-header {

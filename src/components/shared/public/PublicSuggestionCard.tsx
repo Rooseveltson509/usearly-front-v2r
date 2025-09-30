@@ -37,14 +37,29 @@ const PublicSuggestionCard: React.FC<Props> = ({ item }) => {
   };
 
   useEffect(() => {
-    const loadBrandLogo = async () => {
-      if (item.marque) {
-        const logoUrl = await fetchValidBrandLogo(item.marque, item.siteUrl);
-        setLogos({ [item.marque]: logoUrl });
-      }
+    const brandKey = item.marque?.trim();
+    if (!brandKey) return;
+
+    let isMounted = true;
+
+    fetchValidBrandLogo(brandKey, item.siteUrl)
+      .then((logoUrl) => {
+        if (!isMounted) return;
+        setLogos((prev) => {
+          if (prev[brandKey] === logoUrl) {
+            return prev;
+          }
+          return { ...prev, [brandKey]: logoUrl };
+        });
+      })
+      .catch(() => {
+        /* silent */
+      });
+
+    return () => {
+      isMounted = false;
     };
-    loadBrandLogo();
-  }, [item.marque]);
+  }, [item.marque, item.siteUrl]);
 
   useEffect(() => {
     return () => {
@@ -64,6 +79,12 @@ const PublicSuggestionCard: React.FC<Props> = ({ item }) => {
   const bgColor = brandColors[brandKey] || brandColors.default;
 
   const textColor = getContrastTextColor(bgColor);
+  const brandName = item.marque?.trim() ?? "";
+  const brandLogo = brandName ? logos[brandName] : "";
+
+  const votes = item.votes ?? 0;
+  const max = 300;
+  const pct = Math.max(0, Math.min(100, (votes / max) * 100)); // clamp 0–100 
 
   return (
     <div className="feedback-card open">
@@ -125,11 +146,11 @@ const PublicSuggestionCard: React.FC<Props> = ({ item }) => {
                 type="user"
                 wrapperClassName="user-avatar"
               />
-              {item.marque && (
+              {brandName && (
                 <div className="brand-overlay">
                   <Avatar
-                    avatar={logos[item.marque] || ""}
-                    pseudo={item.marque}
+                    avatar={brandLogo || ""}
+                    pseudo={brandName}
                     type="brand"
                     wrapperClassName="brand-logo"
                   />
@@ -179,27 +200,22 @@ const PublicSuggestionCard: React.FC<Props> = ({ item }) => {
 
         {/* Bloc interaction public */}
         <div className="feedback-footer">
-          <div className="vote-progress">
-            <progress value={item.votes || 0} max={300}></progress>
-            <span>{item.votes || 0}/300</span>
+          <div
+            className="vote-progress"
+            style={{ ["--pct" as any]: `${pct}%` }}   // variable CSS pour la position
+          >
+            <progress className="pg" value={votes} max={max} />
+            {/* étoile décorative au bout du remplissage */}
+            <span className="pg-thumb" aria-hidden="true" />
+            <span className="pg-count">{votes}/{max}</span>
           </div>
 
-          {/* Bouton remplacé */}
           <button
             className="vote-button disabled"
             onClick={() => alert("Connectez-vous pour voter")}
           >
             🔒 Connectez-vous pour voter
           </button>
-
-          {/* Info doublons */}
-          {typeof item.duplicateCount === "number" &&
-            item.duplicateCount > 0 && (
-              <p className="duplicate-info">
-                Déjà rejointe par <strong>{item.duplicateCount}</strong>{" "}
-                utilisateur{item.duplicateCount > 1 ? "s" : ""}
-              </p>
-            )}
         </div>
       </div>
 

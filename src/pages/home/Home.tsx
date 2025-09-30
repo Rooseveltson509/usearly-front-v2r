@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import "./Home.scss";
 import FeedbackTabs, { type FeedbackType } from "@src/components/user-profile/FeedbackTabs";
 import UserStatsCard from "@src/components/user-profile/UserStatsCard";
@@ -14,6 +14,9 @@ import SqueletonAnime from "@src/components/loader/SqueletonAnime";
 import { getCoupsDeCoeurByBrand, getSuggestionsByBrand } from "@src/services/coupDeCoeurService";
 import { fetchFeedbackData } from "@src/services/feedbackFetcher";
 import PurpleBanner from "./components/purpleBanner/PurpleBanner";
+import { brandColors } from "@src/utils/brandColors";
+import { hexToRgba } from "@src/utils/colorUtils";
+import { fetchValidBrandLogo } from "@src/utils/brandLogos";
 
 // 🖼️ Assets
 import cdcImgSide from "/assets/img-banner/banner-cdc-pop.png"
@@ -29,6 +32,18 @@ import HomeFiltersCdc from "./HomeFiltersCdc";
 import HomeFiltersSuggestion from "./HomeFiltersSuggestion";
 import FilterIllustration from "./home-illustration/FilterIllustration";
 
+const normalizeText = (value: string) =>
+  value
+    ? value
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[’']/g, "'")
+        .replace(/[^a-z0-9'\s]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim()
+    : "";
+
 function Home() {
   const [activeTab, setActiveTab] = useState<FeedbackType>("report");
   const [feedbackData, setFeedbackData] = useState<(CoupDeCoeur | Suggestion)[]>([]);
@@ -39,6 +54,8 @@ function Home() {
   const [activeFilter, setActiveFilter] = useState("confirmed");
   const [viewMode, setViewMode] = useState<"flat" | "chrono" | "confirmed">("confirmed");
   const [selectedSiteUrl, setSelectedSiteUrl] = useState<string | undefined>();
+  const [suggestionSearch, setSuggestionSearch] = useState("");
+  const [selectedBrandLogo, setSelectedBrandLogo] = useState<string | null>(null);
 
   const [availableFilters, setAvailableFilters] = useState<string[]>([
     "hot", // 👉 affiché en premier
@@ -47,6 +64,131 @@ function Home() {
     "popular",
     "urgent",
   ]);
+
+  const normalizedSelectedBrand = useMemo(() => selectedBrand.trim().toLowerCase(), [selectedBrand]);
+  const selectedBrandBaseColor = useMemo(() => {
+    if (!normalizedSelectedBrand) return null;
+    return brandColors[normalizedSelectedBrand] || brandColors.default;
+  }, [normalizedSelectedBrand]);
+
+  const brandBannerStyle = useMemo(() => {
+    if (!selectedBrandBaseColor) return undefined;
+
+    return {
+      "--brand-banner-bg": hexToRgba(selectedBrandBaseColor, 0.18),
+      "--brand-banner-border": hexToRgba(selectedBrandBaseColor, 0.3),
+      "--brand-banner-accent": selectedBrandBaseColor,
+      "--filtered-banner-bg": hexToRgba(selectedBrandBaseColor, 0.12),
+    } as React.CSSProperties;
+  }, [selectedBrandBaseColor]);
+
+  const handleSuggestionBrandChange = useCallback(
+    (brand: string) => {
+      setSelectedBrand(brand);
+      setSuggestionSearch("");
+
+      if (brand) {
+        setActiveFilter("brandSolo");
+      } else {
+        setActiveFilter("allSuggest");
+      }
+    },
+    [setActiveFilter, setSelectedBrand]
+  );
+
+  useEffect(() => {
+    if (!selectedBrand) {
+      setSuggestionSearch("");
+    }
+  }, [selectedBrand]);
+
+  const suggestionBannerStyle = useMemo(() => {
+    const fallback = "#F1E9FF";
+    if (activeTab !== "suggestion") {
+      return {
+        "--suggestion-bg": hexToRgba(fallback, 1),
+        "--suggestion-border": hexToRgba(fallback, 0),
+        "--suggestion-accent": fallback,
+      } as React.CSSProperties;
+    }
+
+    const firstItem = feedbackData[0];
+    const brandKey = (selectedBrand || firstItem?.marque || "").toLowerCase();
+    const baseColor = brandColors[brandKey] || fallback;
+
+    if(baseColor === fallback) {
+      return {
+        "--suggestion-bg": hexToRgba(baseColor, 1),
+        "--suggestion-border": hexToRgba(baseColor, 0),
+        "--suggestion-accent": baseColor,
+      } as React.CSSProperties;
+    }
+
+    return {
+      "--suggestion-bg": hexToRgba(baseColor, 0.15),
+      "--suggestion-border": hexToRgba(baseColor, 0),
+      "--suggestion-accent": baseColor,
+    } as React.CSSProperties;
+  }, [activeTab, feedbackData, selectedBrand]);
+
+  const selectedBrandSiteUrl = useMemo(() => {
+    if (!selectedBrand) return undefined;
+    if (selectedSiteUrl) return selectedSiteUrl;
+    const normalized = selectedBrand.trim().toLowerCase();
+    for (const item of feedbackData) {
+      const marque = (item as any)?.marque;
+      if (typeof marque === "string" && marque.trim().toLowerCase() === normalized) {
+        const site = (item as any)?.siteUrl;
+        if (typeof site === "string" && site.trim().length > 0) {
+          return site;
+        }
+      }
+    }
+    return undefined;
+  }, [feedbackData, selectedBrand, selectedSiteUrl]);
+
+  useEffect(() => {
+    const brandName = selectedBrand.trim();
+    if (!brandName) {
+      setSelectedBrandLogo(null);
+      return;
+    }
+
+    let cancelled = false;
+
+    fetchValidBrandLogo(brandName, selectedBrandSiteUrl)
+      .then((url) => {
+        if (!cancelled) {
+          setSelectedBrandLogo(url);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setSelectedBrandLogo(null);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedBrand, selectedBrandSiteUrl]);
+
+  const suggestionsForDisplay = useMemo(() => {
+    if (activeTab !== "suggestion") {
+      return feedbackData;
+    }
+
+    const query = normalizeText(suggestionSearch);
+    if (!query) {
+      return feedbackData;
+    }
+
+    return feedbackData.filter((item) => {
+      const suggestion = item as Suggestion;
+      const haystacks = [suggestion.title ?? "", suggestion.description ?? ""];
+      return haystacks.some((text) => normalizeText(text).includes(query));
+    });
+  }, [activeTab, feedbackData, suggestionSearch]);
 
   // ✅ Vérifie si le filtre "hot" est dispo (une seule fois)
   useEffect(() => {
@@ -116,6 +258,11 @@ function Home() {
     };
   }, [activeTab, activeFilter, selectedBrand]);
 
+  const displayedCount = useMemo(
+    () => (activeTab === "suggestion" ? suggestionsForDisplay.length : feedbackData.length),
+    [activeTab, suggestionsForDisplay.length, feedbackData.length]
+  );
+
   return (
     <div className="home-page">
       {/* Bandeau violet haut */}
@@ -132,6 +279,7 @@ function Home() {
             className={`report-banner-container ${selectedBrand || selectedCategory
               ? "banner-filtered"
               : `banner-${activeFilter}`}`}
+            style={selectedBrandBaseColor ? brandBannerStyle : undefined}
           >
             <div className="feedback-list-wrapper">
               {/* @ts-ignore */}
@@ -169,6 +317,7 @@ function Home() {
         {activeTab === "coupdecoeur" && (
           <div
             className={`cdc-banner-container ${selectedBrand ? "banner-filtered" : `banner-${activeFilter}`}`}
+            style={selectedBrandBaseColor ? brandBannerStyle : undefined}
           >
             <div className="feedback-list-wrapper">
               <HomeFiltersCdc
@@ -177,45 +326,35 @@ function Home() {
                 selectedBrand={selectedBrand}
                 setSelectedBrand={setSelectedBrand}
               />
-
-            <div className="cdc-content">
-              <div className="background-cdc" ></div>
-                <div className="feedback-list-section">
-                  {isLoading ? (
-                    <SqueletonAnime
-                      loaderRef={{ current: null }}
-                      loading={true}
-                      hasMore={false}
-                      error={null}
+              {isLoading ? (
+                <SqueletonAnime
+                  loaderRef={{ current: null }}
+                  loading={true}
+                  hasMore={false}
+                  error={null}
+                />
+              ) : (
+                <div className="feedback-view-container">
+                  <div className="feedback-view-wrapper">
+                    <FeedbackView
+                      activeTab={activeTab}
+                      viewMode="flat"
+                      currentState={{ data: feedbackData, loading: isLoading, hasMore: false, error: null }}
+                      openId={null}
+                      setOpenId={() => {}}
+                      groupOpen={{}}
+                      setGroupOpen={() => {}}
+                      selectedBrand={selectedBrand}
+                      selectedCategory=""
+                      renderCard={() => <></>}
                     />
-                  ) : (
-                    <div className="feedback-view-container">
-                      <div className="feedback-view-wrapper">
-                        <FeedbackView
-                          activeTab={activeTab}
-                          viewMode="flat"
-                          currentState={{ data: feedbackData, loading: isLoading, hasMore: false, error: null }}
-                          openId={null}
-                          setOpenId={() => {}}
-                          groupOpen={{}}
-                          setGroupOpen={() => {}}
-                          selectedBrand={selectedBrand}
-                          selectedCategory=""
-                          renderCard={() => <></>}
-                        />
-                      </div>
-                      <aside className="right-panel">
-                        <img src={cdcImgSide} alt="igm" />
-                      </aside>
-                    </div>
-                  )}
+                  </div>
+                  <aside className="right-panel">
+                    <FilterIllustration filter={activeFilter} selectedBrand={selectedBrand} />
+                  </aside>
                 </div>
-              </div>
+              )}
             </div>
-
-            {/* <aside className="right-panel">
-              <FilterIllustration filter={activeFilter} selectedBrand={selectedBrand} />
-            </aside> */}
           </div>
         )}
 
@@ -223,30 +362,50 @@ function Home() {
         {activeTab === "suggestion" && (
           <div
             className={`suggestion-banner-container ${selectedBrand ? "banner-filtered" : `banner-${activeFilter}`}`}
+            style={selectedBrandBaseColor ? { ...suggestionBannerStyle, ...brandBannerStyle } : suggestionBannerStyle}
           >
             <div className="feedback-list-wrapper">
-              <HomeFiltersSuggestion
-                filter={activeFilter}
-                setFilter={setActiveFilter}
-                selectedBrand={selectedBrand}
-                setSelectedBrand={setSelectedBrand}
-              />
+              <div>
+                <HomeFiltersSuggestion
+                  filter={activeFilter}
+                  setFilter={setActiveFilter}
+                  selectedBrand={selectedBrand}
+                  setSelectedBrand={handleSuggestionBrandChange}
+                  searchQuery={suggestionSearch}
+                  onSearchChange={setSuggestionSearch}
+                />
+              </div>
 
               {isLoading ? (
                 <SqueletonAnime loaderRef={{ current: null }} loading={true} hasMore={false} error={null} />
               ) : (
-                <FeedbackView
-                  activeTab={activeTab}
-                  viewMode="flat"
-                  currentState={{ data: feedbackData, loading: isLoading, hasMore: false, error: null }}
-                  openId={null}
-                  setOpenId={() => {}}
-                  groupOpen={{}}
-                  setGroupOpen={() => {}}
-                  selectedBrand={selectedBrand}
-                  selectedCategory=""
-                  renderCard={() => <></>}
-                />
+                <div>
+                  <div className="selected-brand-heading">
+                    {selectedBrand && selectedBrandLogo && (
+                      <img
+                        src={selectedBrandLogo}
+                        alt={`${selectedBrand} logo`}
+                        className="selected-brand-heading__logo"
+                      />
+                    )}
+                    <h1>
+                      {selectedBrand && `${selectedBrand} `}
+                      {displayedCount} signalement{displayedCount > 1 ? "s" : ""}
+                    </h1>
+                  </div>
+                  <FeedbackView
+                    activeTab={activeTab}
+                    viewMode="flat"
+                    currentState={{ data: suggestionsForDisplay, loading: isLoading, hasMore: false, error: null }}
+                    openId={null}
+                    setOpenId={() => {}}
+                    groupOpen={{}}
+                    setGroupOpen={() => {}}
+                    selectedBrand={selectedBrand}
+                    selectedCategory=""
+                    renderCard={() => <></>}
+                  />
+                </div>
               )}
             </div>
 
