@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import "./InteractiveFeedbackCard.scss";
-import { formatDistanceToNowStrict } from 'date-fns';
+import { formatDistanceToNowStrict } from "date-fns";
 import { fr } from "date-fns/locale";
 import type { CoupDeCoeur, Suggestion } from "@src/types/Reports";
 import { useAuth } from "@src/services/AuthContext";
-import { fetchValidBrandLogo } from "@src/utils/brandLogos";
+import { fetchValidBrandLogo, getBrandLogo } from "@src/utils/brandLogos";
 import SharedFooterCdcAndSuggest from "../shared/SharedFooterCdcAndSuggest";
 import Avatar from "../shared/Avatar";
 import { brandColors } from "@src/utils/brandColors";
@@ -31,10 +31,33 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [logos, setLogos] = useState<Record<string, string>>({});
   const { userProfile } = useAuth();
-  const [refresh, setRefresh] = useState(false);
-  const [votes, setVotes] = useState(
-    (item as Suggestion).votes || 0
-  );
+  const [votes, setVotes] = useState((item as Suggestion).votes || 0);
+
+  // --- barre & étoile ---
+  const barRef = useRef<HTMLDivElement>(null);
+  const [thumbLeft, setThumbLeft] = useState(0);
+  const max = 3;
+  const thumbSize = 24; // largeur de l’étoile (doit matcher SCSS)
+
+  useLayoutEffect(() => {
+    const updateThumb = () => {
+      if (barRef.current) {
+        const barWidth = barRef.current.offsetWidth;
+        const raw = (votes / max) * barWidth;
+        const safe = Math.max(
+          thumbSize / 2,
+          Math.min(barWidth - thumbSize / 2, raw)
+        );
+        setThumbLeft(safe);
+      }
+    };
+
+    updateThumb(); // 1er calcul au montage
+
+    window.addEventListener("resize", updateThumb);
+    return () => window.removeEventListener("resize", updateThumb);
+  }, [votes, max]);
+
 
   const handleVoteClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
@@ -49,7 +72,6 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
       showToast(msg, "error");
     }
   };
-
 
   if (!userProfile?.id) return null;
 
@@ -67,10 +89,9 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
     document.body.style.overflow = "auto";
   };
 
-
   useEffect(() => {
     if (item.type === "suggestion") {
-      apiService.get(`/suggestions/${item.id}/votes`).then(res => setVotes(res.data.votes));
+      apiService.get(`/suggestions/${item.id}/votes`).then((res) => setVotes(res.data.votes));
     }
   }, [item.id, item.type]);
 
@@ -90,9 +111,7 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
           return { ...prev, [brandKey]: logoUrl };
         });
       })
-      .catch(() => {
-        /* noop */
-      });
+      .catch(() => { });
 
     return () => {
       isMounted = false;
@@ -108,30 +127,21 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
     };
   }, [selectedImage]);
 
-  const title = item.type === "coupdecoeur" ? "Coup de cœur" : "Suggestion";
   const rawDescription = item.description || "";
   const description = rawDescription.trim();
   const DESCRIPTION_LIMIT = 150;
   const shouldShowToggle = description.length > DESCRIPTION_LIMIT || item.capture;
   const bgColor = brandColors[item.marque?.toLowerCase()] || brandColors.default;
-  const textColor = getContrastTextColor(bgColor);
   const brandName = item.marque?.trim() ?? "";
   const brandLogo = brandName ? logos[brandName] : "";
 
-  const max = 300;
-  const pct = Math.max(0, Math.min(100, (votes / max) * 100));
-
   return (
     <div className={`feedback-card ${isOpen ? "open" : ""}`}>
-      {/* Bloc gauche : icône + titre */}
+      {/* Bloc gauche */}
       <div className="feedback-type">
         {item.title ? (
-          <div
-            className="feedback-left"
-            style={{ backgroundColor: bgColor }}
-          >
+          <div className="feedback-left" style={{ backgroundColor: bgColor }}>
             <div className="feedback-icon">{item.emoji}</div>
-
             <div className="punchlines">
               {item.title ? (
                 item.title.split("\n").map((line, index) => (
@@ -139,7 +149,7 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
                     key={index}
                     className={`bubble ${index === 0 ? "primary" : "secondary"}`}
                     style={{
-                      backgroundColor: index === 0 ? "#fff" : "#fff",
+                      backgroundColor: "#fff",
                       color: index === 0 ? bgColor : "#000",
                       border: `2px solid ${bgColor}`,
                       boxShadow: index === 0 ? "0 2px 6px rgba(0,0,0,0.1)" : "none",
@@ -157,7 +167,6 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
               )}
             </div>
           </div>
-
         ) : (
           <p>
             {item.type === "coupdecoeur" ? (
@@ -175,19 +184,18 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
         )}
       </div>
 
-      {/* Bloc droit : contenu */}
+      {/* Bloc droit */}
       <div className="feedback-right" onClick={() => onToggle(item.id)}>
         <div className="feedback-content">
           <div className="feedback-header">
             <div className="feedback-meta">
               <span className="user-brand">
                 {item.author?.pseudo} × <strong>{item.marque}</strong>
-              </span>⸱
+              </span>
+              ⸱
               {isValidDate(item.createdAt) && (
                 <span className="feedback-date">
-                  {formatDistanceToNowStrict(new Date(item.createdAt), {
-                    locale: fr,
-                  })}
+                  {formatDistanceToNowStrict(new Date(item.createdAt), { locale: fr })}
                 </span>
               )}
             </div>
@@ -203,7 +211,7 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
                 {brandName && (
                   <div className="brand-overlay">
                     <Avatar
-                      avatar={brandLogo || ""}
+                      avatar={getBrandLogo(brandName, item.siteUrl)}
                       pseudo={brandName}
                       type="brand"
                       wrapperClassName="brand-logo"
@@ -245,9 +253,7 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
               </p>
             ) : (
               <>
-                <h2 className="cdc-post-title">
-                  {item.title}
-                </h2>
+                <h2 className="cdc-post-title">{item.title}</h2>
                 <p>
                   {description.length > DESCRIPTION_LIMIT
                     ? `${description.slice(0, DESCRIPTION_LIMIT)}…`
@@ -271,20 +277,17 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
 
         {item.type === "suggestion" && (
           <div className="feedback-footer">
-            <div
-              className="vote-progress"
-              style={{ ["--pct" as any]: `${pct}%` }}   // variable CSS pour la position
-            >
-              <progress className="pg" value={votes} max={max} />
-              {/* étoile décorative au bout du remplissage */}
-              <span className="pg-thumb" aria-hidden="true">
-                <img src={starProgressBar} alt="" />
+            <div className="vote-progress">
+              <div className="pg" ref={barRef}>
+                <div className="pg-fill" style={{ width: `${(votes / max) * 100}%` }} />
+              </div>
+              <span className="pg-thumb" style={{ left: `${thumbLeft}px` }}>
+                <img src={starProgressBar} alt="progress star" />
               </span>
               <span className="pg-count">{votes}/{max}</span>
             </div>
           </div>
         )}
-
 
         <SharedFooterCdcAndSuggest
           userId={userProfile.id}
@@ -297,11 +300,7 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
 
       {selectedImage && (
         <div className="lightbox" onClick={closeLightbox}>
-          <img
-            src={selectedImage}
-            alt="Zoom"
-            onClick={(e) => e.stopPropagation()}
-          />
+          <img src={selectedImage} alt="Zoom" onClick={(e) => e.stopPropagation()} />
         </div>
       )}
     </div>

@@ -3,12 +3,12 @@
 
 .feedback-card {
   display: flex;
-  align-items: stretch;        // étire les enfants sur la même hauteur
+  align-items: stretch; // étire les enfants sur la même hauteur
   background: #fff;
   border-radius: 0px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   margin-bottom: 16px;
-  overflow: visible;           // laisse les popovers (réactions, etc.) s'afficher
+  overflow: hidden; // respecte l’arrondi du parent
   transition: box-shadow 0.3s ease;
   padding: 2px;
 
@@ -17,170 +17,93 @@
   }
 }
 
-  .feedback-footer {
-    margin-top: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+.feedback-footer {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 
-    .vote-progress {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+.vote-progress {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 
-      progress {
-        width: 100%;
-        height: 8px;
-        border-radius: 4px;
-        overflow: hidden;
-      }
+  .pg {
+    position: relative;
+    flex: 1;
+    height: 12px;
+    background: #e5e7eb;
+    border-radius: 999px;
+    overflow: hidden;
+  }
 
-      span {
-        font-size: 0.9rem;
-        color: #555;
-      }
-    }
-    .vote-progress{
-      /* variables de style */
-      --track-h: 12px;     /* hauteur de la barre */
-      --thumb: 28px;       /* taille de l'étoile */
-      --pad: 0px;          /* marge pour ne pas déborder aux extrémités */
-    
-      position: relative;
+  .pg-fill {
+    height: 100%;
+    background: #5d87ff;
+    border-radius: 999px;
+    transition: width 0.25s ease;
+  }
+
+  .pg-thumb {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    transition: left 0.25s ease;
+    width: 24px;
+    height: 24px;
+    pointer-events: none;
+
+    img {
       width: 100%;
-      display: flex;
-      align-items: center;
-      gap: .5rem;
-    
-      .pg{
-        width: 100%;
-        height: var(--track-h);
-        appearance: none;
-        -webkit-appearance: none;
-        border: 0;
-        border-radius: 999px;
-        background: #e5e7eb;     // fallback (Firefox)
-        overflow: hidden;        // garde les coins arrondis
-      }
-      .pg::-webkit-progress-bar{ background:#e5e7eb; }
-      .pg::-webkit-progress-value{
-        background: #5d87ff;     // bleu comme ta capture
-        transition: width .25s ease;
-        border-radius: 999px;
-      }
-      .pg::-moz-progress-bar{
-        background: #5d87ff;
-        border-radius: 999px;
-        transition: width .25s ease;
-      }
-    
-      /* l'étoile au bout de la valeur */
-      .pg-thumb{
-        position: absolute;
-        top: 50%;
-        /* calcule la position horizontale à partir de --pct */
-        left: calc(
-          (var(--pct)) * (100% - 2*var(--pad)) / 100 + var(--pad) - var(--thumb)/2
-        );
-        transform: translateY(-50%);
-        width: var(--thumb);
-        height: var(--thumb);
-        pointer-events: none; // décoratif
-    
-        /* étoile dessinée en pur CSS (emoji + contour via text-shadow) */
-        display: grid;
-        place-items: center;
-        line-height: 1;
-        color: #fff;                // remplissage
-        margin-left: -7px;
-      }
-    
-      .pg-count{
-        min-width: 60px;
-        text-align: center;
-        font-weight: 600;
-        color: #111;
-      }
+      height: auto;
+      object-fit: contain;
+      display: block;
     }
   }
 
-  .vote-error {
+  .pg-count {
+    min-width: 40px;
+    text-align: center;
+    font-weight: 600;
+    color: #111;
+    font-size: 0.9rem;
+  }
+}
+
+}
+
+.vote-error {
   margin-top: 6px;
   font-size: 0.85rem;
   color: #d93025; // rouge Google
 }
 
 
-  .feedback-left {
-    flex: 0 0 200px; // largeur fixe pour garder la colonne gauche
+.feedback-left {
+  flex: 0 0 200px; // largeur fixe pour garder la colonne gauche
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  min-height: 180px; // pour forcer un minimum de hauteur
+  border-radius: 12px 0 0 12px; // arrondi gauche
+
+  .feedback-icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+  }
+
+  .punchlines {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 16px;
-    min-height: 180px; // pour forcer un minimum de hauteur
-    border-radius: 12px 0 0 12px; // arrondi gauche
-
-    .feedback-icon {
-      font-size: 32px;
-      margin-bottom: 12px;
-    }
-
-    .punchlines {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      align-items: flex-start;
-      margin-top: 8px;
-      min-height: 175px;
-      position: relative;
-
-      .bubble {
-        padding: 10px 16px;
-        border-radius: 18px;
-        font-size: 14px;
-        font-weight: 600;
-        line-height: 1.4;
-        max-width: 220px;
-        word-break: break-word;
-        position: relative;
-        opacity: 0;
-        transform: scale(0.9);
-        animation: bubblePop 0.4s ease forwards;
-
-        &.primary {
-          align-self: flex-start;
-          border-radius: 18px 18px 18px 4px;
-          animation-delay: 0.1s;
-        }
-
-        &.secondary {
-          align-self: flex-end;
-          border-radius: 18px 18px 4px 18px;
-          margin-right: 12px;
-          animation-delay: 0.3s;
-        }
-      }
-    }
-
-    @keyframes bubblePop {
-      0% {
-        opacity: 0;
-        transform: scale(0.8) translateY(10px);
-      }
-
-      60% {
-        opacity: 1;
-        transform: scale(1.05) translateY(0);
-      }
-
-      100% {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-      }
-    }
-
+    gap: 10px;
+    align-items: flex-start;
+    margin-top: 8px;
+    min-height: 175px;
+    position: relative;
 
     .bubble {
       padding: 10px 16px;
@@ -188,39 +111,86 @@
       font-size: 14px;
       font-weight: 600;
       line-height: 1.4;
-      max-width: 90%;
+      max-width: 220px;
       word-break: break-word;
+      position: relative;
+      opacity: 0;
+      transform: scale(0.9);
+      animation: bubblePop 0.4s ease forwards;
 
       &.primary {
         align-self: flex-start;
         border-radius: 18px 18px 18px 4px;
+        animation-delay: 0.1s;
       }
 
       &.secondary {
         align-self: flex-end;
         border-radius: 18px 18px 4px 18px;
+        margin-right: 12px;
+        animation-delay: 0.3s;
       }
     }
   }
 
-  .bubble.primary {
-    font-weight: 700;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  @keyframes bubblePop {
+    0% {
+      opacity: 0;
+      transform: scale(0.8) translateY(10px);
+    }
+
+    60% {
+      opacity: 1;
+      transform: scale(1.05) translateY(0);
+    }
+
+    100% {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
   }
 
-  .feedback-right {
-    flex: 1;
-    padding: 16px;
-    cursor: pointer;
+
+  .bubble {
+    padding: 10px 16px;
+    border-radius: 18px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+    max-width: 90%;
+    word-break: break-word;
+
+    &.primary {
+      align-self: flex-start;
+      border-radius: 18px 18px 18px 4px;
+    }
+
+    &.secondary {
+      align-self: flex-end;
+      border-radius: 18px 18px 4px 18px;
+    }
   }
+}
+
+.bubble.primary {
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.feedback-right {
+  flex: 1;
+  padding: 16px;
+  cursor: pointer;
+}
+
 /* Wrapper de la colonne gauche (enfant direct de .feedback-card) */
 .feedback-type {
-  flex: 0 0 200px;             // largeur fixe de la colonne gauche
-  display: flex;               // permet à l’enfant de prendre 100% en hauteur
+  flex: 0 0 200px; // largeur fixe de la colonne gauche
+  display: flex; // permet à l’enfant de prendre 100% en hauteur
 }
 
 /* Colonne gauche colorée */
-.feedback-type > .feedback-left {
+.feedback-type>.feedback-left {
   flex: 1;
   height: 100%;
   display: flex;
@@ -228,7 +198,7 @@
   justify-content: center;
   align-items: center;
   padding: 16px;
-  min-height: 180px;           // plancher visuel
+  min-height: 180px; // plancher visuel
   border-radius: 12px 0 0 12px;
 
   .feedback-icon {
@@ -290,8 +260,9 @@
   padding-left: 5px;
   padding-right: 8px;
 
-  .feedback-content{
+  .feedback-content {
     gap: 22.5px;
+
     .feedback-header {
       display: flex;
       justify-content: space-between;
@@ -341,7 +312,8 @@
         .user-brand {
           font-weight: 500;
           margin-bottom: 4px;
-          strong{
+
+          strong {
             color: $dark;
           }
         }
@@ -384,12 +356,13 @@
         }
       }
 
-      .cdc-post-title{
+      .cdc-post-title {
         color: $dark;
         font-size: 18px;
         font-weight: 700;
       }
-      p{
+
+      p {
         font-size: 13px;
         font-weight: 300;
       }
