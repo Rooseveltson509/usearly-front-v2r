@@ -1,4 +1,4 @@
-﻿import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { SlidersHorizontal } from "lucide-react";
 import SearchBar from "./components/searchBar/SearchBar";
 import BrandSelect from "@src/components/shared/BrandSelect";
@@ -66,7 +66,14 @@ const FilterBar: React.FC<Props> = ({
   searchTerm,
   onSearchTermChange,
 }) => {
+  const [brandSearch, setBrandSearch] = useState("");
   const [categorySearch, setCategorySearch] = useState("");
+
+  const filteredBrands = useMemo(() => {
+    if (!brandSearch.trim()) return availableBrands;
+    const query = normalize(brandSearch);
+    return availableBrands.filter((brand) => normalize(brand).includes(query));
+  }, [availableBrands, brandSearch]);
 
   const normalizedCategories = useMemo(() => {
     if (!categorySearch.trim()) return availableCategories;
@@ -81,6 +88,7 @@ const FilterBar: React.FC<Props> = ({
     if (selectedCategory) {
       setSelectedCategory("");
     }
+    setBrandSearch("");
     setCategorySearch("");
   };
 
@@ -182,14 +190,35 @@ const FilterBar: React.FC<Props> = ({
 
           {isDropdownOpen && (
             <div className="filter-dropdown">
-              <div className="category-search">
+              <div className="brand-search">
                 <input
                   type="text"
-                  value={categorySearch}
-                  onChange={(e) => setCategorySearch(e.target.value)}
-                  placeholder="Rechercher une catégorie..."
-                  disabled={!selectedBrand}
+                  value={brandSearch}
+                  onChange={(e) => setBrandSearch(e.target.value)}
+                  placeholder="Rechercher une marque..."
                 />
+
+                {brandSearch && (
+                  <ul className="autocomplete-list">
+                    {filteredBrands.length > 0 ? (
+                      filteredBrands.map((brand) => (
+                        <li
+                          key={brand}
+                          onClick={() => {
+                            handleBrandSelect(brand);
+                            setBrandSearch("");
+                            setCategorySearch("");
+                            setIsDropdownOpen(false);
+                          }}
+                        >
+                          {brand}
+                        </li>
+                      ))
+                    ) : (
+                      <li className="no-results">Aucune marque trouvée</li>
+                    )}
+                  </ul>
+                )}
               </div>
 
               <select
@@ -203,7 +232,7 @@ const FilterBar: React.FC<Props> = ({
                 }}
                 disabled={!selectedBrand}
               >
-                <option value="">Toutes les catégories</option>
+                <option value="">Type de signalements</option>
                 {normalizedCategories.map((cat) => (
                   <option key={cat} value={cat}>
                     {cat}

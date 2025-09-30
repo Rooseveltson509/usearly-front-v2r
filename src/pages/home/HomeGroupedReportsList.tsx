@@ -232,17 +232,17 @@ const HomeGroupedReportsList = ({
 
   const availableSubCategories = useMemo(() => {
     if (!selectedBrand) {
-      return [];
+      return [] as string[];
     }
 
-    return Array.from(
-      new Set(
-        filteredReports
-          .filter((report) => report.marque === selectedBrand)
-          .map((report) => report.subCategory)
-          .filter(Boolean)
-      )
-    );
+    const subCategories = filteredReports
+      .filter((report) => report.marque === selectedBrand)
+      .map((report) => report.subCategory)
+      .filter((value): value is string => typeof value === "string" && value.trim().length > 0);
+
+    const unique = Array.from(new Set(subCategories));
+
+    return unique.sort((a, b) => a.localeCompare(b, "fr", { sensitivity: "base" }));
   }, [filteredReports, selectedBrand]);
 
   const filteredByCategory = useMemo(() => {

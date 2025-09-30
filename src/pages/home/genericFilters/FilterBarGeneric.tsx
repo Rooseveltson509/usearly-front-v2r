@@ -201,7 +201,6 @@ const FilterBarGeneric: React.FC<Props> = ({
                                         onViewModeChange?.("flat");
                                         setActiveFilter("");
                                     }}
-                                    disabled={!selectedBrand}
                                 >
                                     <option value="">Toutes les catégories</option>
                                     {availableCategories.map((cat) => (

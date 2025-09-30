@@ -9,6 +9,9 @@ interface Props {
   setFilter: (val: string) => void;
   selectedBrand: string;
   setSelectedBrand: (val: string) => void;
+  selectedCategory: string;
+  setSelectedCategory: (val: string) => void;
+  availableCategories: string[];
 }
 
 const HomeFiltersCdc = ({
@@ -16,6 +19,9 @@ const HomeFiltersCdc = ({
   setFilter,
   selectedBrand,
   setSelectedBrand,
+  selectedCategory,
+  setSelectedCategory,
+  availableCategories,
 }: Props) => {
   const [viewMode, setViewMode] = useState<"flat" | "chrono" | "confirmed">("flat");
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -49,6 +55,7 @@ const HomeFiltersCdc = ({
 
   const handleBrandSelect = (brand: string) => {
     setSelectedBrand(brand);
+    setSelectedCategory("");
     setFilter(brand ? "brandSolo" : "all");
   };
 
@@ -60,11 +67,17 @@ const HomeFiltersCdc = ({
         setFilter={setFilter}
         viewMode={viewMode}
         setViewMode={setViewMode}
+        setSelectedBrand={handleBrandSelect}
+        setSelectedCategory={setSelectedCategory}
+        selectedBrand={selectedBrand}
+        selectedCategory={selectedCategory}
+        availableBrands={availableBrands}
+        availableCategories={availableCategories}
         dropdownRef={dropdownRef}
         isDropdownOpen={isDropdownOpen}
         setIsDropdownOpen={setIsDropdownOpen}
-        withBrands={false}
-        withCategories={false}
+        withBrands={true}
+        withCategories={true}
         brandFocusFilter="brandSolo"
         baseFilterValue="all"
       />
