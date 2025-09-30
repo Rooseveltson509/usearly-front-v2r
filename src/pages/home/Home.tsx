@@ -44,6 +44,26 @@ const normalizeText = (value: string) =>
         .trim()
     : "";
 
+const getFeedbackCategory = (item: Partial<Suggestion> & Record<string, any>) => {
+  const categoriesSearch = [
+    item.category,
+    item.categorie,
+    item.categoryName,
+    item["category_name"],
+    item.subCategory,
+    item.subcategory,
+    item.emplacement,
+  ];
+
+  for (const candidate of categoriesSearch) {
+    if (typeof candidate === "string" && candidate.trim().length > 0) {
+      return candidate.trim();
+    }
+  }
+
+  return "";
+};
+
 function Home() {
   const [activeTab, setActiveTab] = useState<FeedbackType>("report");
   const [feedbackData, setFeedbackData] = useState<(CoupDeCoeur | Suggestion)[]>([]);
@@ -85,6 +105,7 @@ function Home() {
   const handleSuggestionBrandChange = useCallback(
     (brand: string) => {
       setSelectedBrand(brand);
+      setSelectedCategory("");
       setSuggestionSearch("");
 
       if (brand) {
@@ -93,7 +114,7 @@ function Home() {
         setActiveFilter("allSuggest");
       }
     },
-    [setActiveFilter, setSelectedBrand]
+    [setActiveFilter, setSelectedBrand, setSelectedCategory]
   );
 
   useEffect(() => {
@@ -130,6 +151,48 @@ function Home() {
       "--suggestion-accent": baseColor,
     } as React.CSSProperties;
   }, [activeTab, feedbackData, selectedBrand]);
+
+  const suggestionCategories = useMemo(() => {
+    if (activeTab !== "suggestion") {
+      return [] as string[];
+    }
+
+    const unique = new Set<string>();
+
+    (feedbackData as (CoupDeCoeur | Suggestion)[]).forEach((item) => {
+      if ((item as any)?.type !== "suggestion") {
+        return;
+      }
+
+      const category = getFeedbackCategory(item as Suggestion);
+      if (category) {
+        unique.add(category);
+      }
+    });
+
+    return Array.from(unique).sort((a, b) => a.localeCompare(b, "fr", { sensitivity: "base" }));
+  }, [activeTab, feedbackData]);
+
+  const coupDeCoeurCategories = useMemo(() => {
+    if (activeTab !== "coupdecoeur") {
+      return [] as string[];
+    }
+
+    const unique = new Set<string>();
+
+    (feedbackData as (CoupDeCoeur | Suggestion)[]).forEach((item) => {
+      if ((item as any)?.type !== "coupdecoeur") {
+        return;
+      }
+
+      const category = getFeedbackCategory(item as CoupDeCoeur);
+      if (category) {
+        unique.add(category);
+      }
+    });
+
+    return Array.from(unique).sort((a, b) => a.localeCompare(b, "fr", { sensitivity: "base" }));
+  }, [activeTab, feedbackData]);
 
   const selectedBrandSiteUrl = useMemo(() => {
     if (!selectedBrand) return undefined;
@@ -178,17 +241,56 @@ function Home() {
       return feedbackData;
     }
 
+    const normalizedCategory = normalizeText(selectedCategory);
     const query = normalizeText(suggestionSearch);
-    if (!query) {
+
+    return feedbackData.filter((item) => {
+      if ((item as any)?.type !== "suggestion") {
+        return true;
+      }
+
+      const suggestion = item as Suggestion;
+      const categoryLabel = getFeedbackCategory(suggestion);
+
+      if (normalizedCategory && normalizeText(categoryLabel) !== normalizedCategory) {
+        return false;
+      }
+
+      if (!query) {
+        return true;
+      }
+
+      const haystacks = [
+        suggestion.title ?? "",
+        suggestion.description ?? "",
+        suggestion.marque ?? "",
+        categoryLabel,
+      ];
+
+      return haystacks.some((text) => normalizeText(text).includes(query));
+    });
+  }, [activeTab, feedbackData, suggestionSearch, selectedCategory]);
+
+  const coupDeCoeursForDisplay = useMemo(() => {
+    if (activeTab !== "coupdecoeur") {
+      return feedbackData;
+    }
+
+    const normalizedCategory = normalizeText(selectedCategory);
+
+    if (!normalizedCategory) {
       return feedbackData;
     }
 
     return feedbackData.filter((item) => {
-      const suggestion = item as Suggestion;
-      const haystacks = [suggestion.title ?? "", suggestion.description ?? ""];
-      return haystacks.some((text) => normalizeText(text).includes(query));
+      if ((item as any)?.type !== "coupdecoeur") {
+        return true;
+      }
+
+      const categoryLabel = getFeedbackCategory(item as CoupDeCoeur);
+      return normalizeText(categoryLabel) === normalizedCategory;
     });
-  }, [activeTab, feedbackData, suggestionSearch]);
+  }, [activeTab, feedbackData, selectedCategory]);
 
   // ✅ Vérifie si le filtre "hot" est dispo (une seule fois)
   useEffect(() => {
@@ -253,7 +355,21 @@ function Home() {
           // 🔹 Cas générique (pas de marque sélectionnée)
           if (activeTab !== "report") {
             const res = await fetchFeedbackData(activeFilter, activeTab);
-            if (isMounted) setFeedbackData(res.data || []);
+            if (isMounted) {
+              let data = res.data || [];
+              if (activeTab === "coupdecoeur") {
+                data = data.map((item: any) => ({
+                  ...item,
+                  type: item.type ?? "coupdecoeur",
+                }));
+              } else if (activeTab === "suggestion") {
+                data = data.map((item: any) => ({
+                  ...item,
+                  type: item.type ?? "suggestion",
+                }));
+              }
+              setFeedbackData(data);
+            }
           }
         }
       } catch (e) {
@@ -270,10 +386,11 @@ function Home() {
     };
   }, [activeTab, activeFilter, selectedBrand]);
 
-  const displayedCount = useMemo(
-    () => (activeTab === "suggestion" ? suggestionsForDisplay.length : feedbackData.length),
-    [activeTab, suggestionsForDisplay.length, feedbackData.length]
-  );
+  const displayedCount = useMemo(() => {
+    if (activeTab === "suggestion") return suggestionsForDisplay.length;
+    if (activeTab === "coupdecoeur") return coupDeCoeursForDisplay.length;
+    return feedbackData.length;
+  }, [activeTab, suggestionsForDisplay.length, coupDeCoeursForDisplay.length, feedbackData.length]);
 
   function firstLetterCapitalized(string: string){
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -341,6 +458,9 @@ function Home() {
                 setFilter={setActiveFilter}
                 selectedBrand={selectedBrand}
                 setSelectedBrand={setSelectedBrand}
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
+                availableCategories={coupDeCoeurCategories}
               />
               {isLoading ? (
                 <SqueletonAnime
@@ -355,18 +475,22 @@ function Home() {
                     <FeedbackView
                       activeTab={activeTab}
                       viewMode="flat"
-                      currentState={{ data: feedbackData, loading: isLoading, hasMore: false, error: null }}
+                      currentState={{ data: coupDeCoeursForDisplay, loading: isLoading, hasMore: false, error: null }}
                       openId={null}
                       setOpenId={() => {}}
                       groupOpen={{}}
                       setGroupOpen={() => {}}
                       selectedBrand={selectedBrand}
-                      selectedCategory=""
+                      selectedCategory={selectedCategory}
                       renderCard={() => <></>}
                     />
                   </div>
                   <aside className="right-panel">
-                    <FilterIllustration filter={activeFilter} selectedBrand={selectedBrand} />
+                    <FilterIllustration
+                      filter={activeFilter}
+                      selectedBrand={selectedBrand}
+                      selectedCategory={selectedCategory}
+                    />
                   </aside>
                 </div>
               )}
@@ -387,6 +511,9 @@ function Home() {
                   setFilter={setActiveFilter}
                   selectedBrand={selectedBrand}
                   setSelectedBrand={handleSuggestionBrandChange}
+                  selectedCategory={selectedCategory}
+                  setSelectedCategory={setSelectedCategory}
+                  availableCategories={suggestionCategories}
                   searchQuery={suggestionSearch}
                   onSearchChange={setSuggestionSearch}
                 />
@@ -422,7 +549,7 @@ function Home() {
                     groupOpen={{}}
                     setGroupOpen={() => {}}
                     selectedBrand={selectedBrand}
-                    selectedCategory=""
+                    selectedCategory={selectedCategory}
                     renderCard={() => <></>}
                   />
                 </div>
@@ -430,7 +557,11 @@ function Home() {
             </div>
 
             <aside className="right-panel">
-              <FilterIllustration filter={activeFilter} selectedBrand={selectedBrand} />
+              <FilterIllustration
+                filter={activeFilter}
+                selectedBrand={selectedBrand}
+                selectedCategory={selectedCategory}
+              />
             </aside>
           </div>
         )}

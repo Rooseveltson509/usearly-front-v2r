@@ -10,6 +10,9 @@ interface Props {
   setFilter: (val: string) => void;
   selectedBrand: string;
   setSelectedBrand: (val: string) => void;
+  selectedCategory: string;
+  setSelectedCategory: (val: string) => void;
+  availableCategories: string[];
   searchQuery: string;
   onSearchChange: (val: string) => void;
 }
@@ -19,6 +22,9 @@ const HomeFiltersSuggestion = ({
   setFilter,
   selectedBrand,
   setSelectedBrand,
+  selectedCategory,
+  setSelectedCategory,
+  availableCategories,
   searchQuery,
   onSearchChange,
 }: Props) => {
@@ -54,6 +60,7 @@ const HomeFiltersSuggestion = ({
 
   const handleBrandSelect = (brand: string) => {
     setSelectedBrand(brand);
+    setSelectedCategory("");
     setFilter(brand ? "brandSolo" : "allSuggest");
     if (!brand) {
       onSearchChange("");
@@ -68,11 +75,17 @@ const HomeFiltersSuggestion = ({
         setFilter={setFilter}
         viewMode={viewMode}
         setViewMode={setViewMode}
+        setSelectedBrand={handleBrandSelect}
+        setSelectedCategory={setSelectedCategory}
+        selectedBrand={selectedBrand}
+        selectedCategory={selectedCategory}
+        availableBrands={availableBrands}
+        availableCategories={availableCategories}
         dropdownRef={dropdownRef}
         isDropdownOpen={isDropdownOpen}
         setIsDropdownOpen={setIsDropdownOpen}
-        withBrands={false}
-        withCategories={false}
+        withBrands={true}
+        withCategories={true}
         brandFocusFilter="brandSolo"
         baseFilterValue="allSuggest"
       />
@@ -92,7 +105,7 @@ const HomeFiltersSuggestion = ({
             type="text"
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="Rechercher par titre ou contenu"
+            placeholder="Rechercher par titre, contenu ou marque"
           />
           {searchQuery && (
             <button
