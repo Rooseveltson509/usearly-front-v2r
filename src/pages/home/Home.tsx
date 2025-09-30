@@ -44,21 +44,18 @@ const normalizeText = (value: string) =>
         .trim()
     : "";
 
-const getFeedbackCategory = (item: Partial<Suggestion> & Record<string, any>) => {
-  const categoriesSearch = [
-    item.category,
-    item.categorie,
-    item.categoryName,
-    item["category_name"],
-    item.subCategory,
-    item.subcategory,
-    item.emplacement,
-  ];
+const getSubCategoryLabel = (item: Partial<Suggestion> & Record<string, any>) => {
+  const raw =
+    item.subCategory ??
+    item.subcategory ??
+    item.category ??
+    item.categorie ??
+    item.categoryName ??
+    item["category_name"] ??
+    "";
 
-  for (const candidate of categoriesSearch) {
-    if (typeof candidate === "string" && candidate.trim().length > 0) {
-      return candidate.trim();
-    }
+  if (typeof raw === "string") {
+    return raw.trim();
   }
 
   return "";
@@ -153,46 +150,60 @@ function Home() {
   }, [activeTab, feedbackData, selectedBrand]);
 
   const suggestionCategories = useMemo(() => {
-    if (activeTab !== "suggestion") {
+    if (activeTab !== "suggestion" || !selectedBrand) {
       return [] as string[];
     }
 
-    const unique = new Set<string>();
+    const unique = new Map<string, string>();
 
-    (feedbackData as (CoupDeCoeur | Suggestion)[]).forEach((item) => {
-      if ((item as any)?.type !== "suggestion") {
-        return;
-      }
+    (feedbackData as (CoupDeCoeur | Suggestion)[])
+      .filter((item) => (item as any)?.type === "suggestion")
+      .forEach((item) => {
+        if ((item as Suggestion).marque?.trim().toLowerCase() !== normalizedSelectedBrand) {
+          return;
+        }
 
-      const category = getFeedbackCategory(item as Suggestion);
-      if (category) {
-        unique.add(category);
-      }
-    });
+        const label = getSubCategoryLabel(item as Suggestion);
+        if (!label) return;
 
-    return Array.from(unique).sort((a, b) => a.localeCompare(b, "fr", { sensitivity: "base" }));
-  }, [activeTab, feedbackData]);
+        const normalized = normalizeText(label);
+        if (!unique.has(normalized)) {
+          unique.set(normalized, label);
+        }
+      });
+
+    return Array.from(unique.values()).sort((a, b) =>
+      a.localeCompare(b, "fr", { sensitivity: "base" })
+    );
+  }, [activeTab, feedbackData, normalizedSelectedBrand, selectedBrand]);
 
   const coupDeCoeurCategories = useMemo(() => {
-    if (activeTab !== "coupdecoeur") {
+    if (activeTab !== "coupdecoeur" || !selectedBrand) {
       return [] as string[];
     }
 
-    const unique = new Set<string>();
+    const unique = new Map<string, string>();
 
-    (feedbackData as (CoupDeCoeur | Suggestion)[]).forEach((item) => {
-      if ((item as any)?.type !== "coupdecoeur") {
-        return;
-      }
+    (feedbackData as (CoupDeCoeur | Suggestion)[])
+      .filter((item) => (item as any)?.type === "coupdecoeur")
+      .forEach((item) => {
+        if ((item as CoupDeCoeur).marque?.trim().toLowerCase() !== normalizedSelectedBrand) {
+          return;
+        }
 
-      const category = getFeedbackCategory(item as CoupDeCoeur);
-      if (category) {
-        unique.add(category);
-      }
-    });
+        const label = getSubCategoryLabel(item as CoupDeCoeur);
+        if (!label) return;
 
-    return Array.from(unique).sort((a, b) => a.localeCompare(b, "fr", { sensitivity: "base" }));
-  }, [activeTab, feedbackData]);
+        const normalized = normalizeText(label);
+        if (!unique.has(normalized)) {
+          unique.set(normalized, label);
+        }
+      });
+
+    return Array.from(unique.values()).sort((a, b) =>
+      a.localeCompare(b, "fr", { sensitivity: "base" })
+    );
+  }, [activeTab, feedbackData, normalizedSelectedBrand, selectedBrand]);
 
   const selectedBrandSiteUrl = useMemo(() => {
     if (!selectedBrand) return undefined;
@@ -250,7 +261,7 @@ function Home() {
       }
 
       const suggestion = item as Suggestion;
-      const categoryLabel = getFeedbackCategory(suggestion);
+      const categoryLabel = getSubCategoryLabel(suggestion);
 
       if (normalizedCategory && normalizeText(categoryLabel) !== normalizedCategory) {
         return false;
@@ -287,7 +298,7 @@ function Home() {
         return true;
       }
 
-      const categoryLabel = getFeedbackCategory(item as CoupDeCoeur);
+      const categoryLabel = getSubCategoryLabel(item as CoupDeCoeur);
       return normalizeText(categoryLabel) === normalizedCategory;
     });
   }, [activeTab, feedbackData, selectedCategory]);

@@ -221,16 +221,6 @@ const FilterBar: React.FC<Props> = ({
                 )}
               </div>
 
-              <div className="category-search">
-                <input
-                  type="text"
-                  value={categorySearch}
-                  onChange={(e) => setCategorySearch(e.target.value)}
-                  placeholder="Rechercher une catégorie..."
-                  disabled={!selectedBrand}
-                />
-              </div>
-
               <select
                 value={selectedCategory}
                 onChange={(e) => {
@@ -242,7 +232,7 @@ const FilterBar: React.FC<Props> = ({
                 }}
                 disabled={!selectedBrand}
               >
-                <option value="">Toutes les catégories</option>
+                <option value="">Type de signalements</option>
                 {normalizedCategories.map((cat) => (
                   <option key={cat} value={cat}>
                     {cat}

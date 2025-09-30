@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo, useCallback } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import type { FeedbackType } from "@src/components/user-profile/FeedbackTabs";
 import { useFetchGroupedReports } from "@src/hooks/useFetchGroupedReports";
 import { usePaginatedGroupedReportsByDate } from "@src/hooks/usePaginatedGroupedReportsByDate";
@@ -230,72 +230,29 @@ const HomeGroupedReportsList = ({
     setSearchTerm("");
   }, [selectedBrand]);
 
-  const extractReportTitles = useCallback((report: FilteredReport): string[] => {
-    if (!Array.isArray(report.descriptions)) {
-      return [];
-    }
-
-    return report.descriptions
-      .map((item) => {
-        if (typeof item === "string") {
-          return item.trim();
-        }
-
-        if (item && typeof item === "object") {
-          const record = item as Record<string, unknown>;
-          const title = record.title;
-          if (typeof title === "string" && title.trim().length > 0) {
-            return title.trim();
-          }
-
-          const description = record.description;
-          if (typeof description === "string" && description.trim().length > 0) {
-            return description.trim();
-          }
-        }
-
-        return "";
-      })
-      .filter((value): value is string => value.length > 0);
-  }, []);
-
   const availableSubCategories = useMemo(() => {
     if (!selectedBrand) {
       return [] as string[];
     }
 
-    const titles = filteredReports
+    const subCategories = filteredReports
       .filter((report) => report.marque === selectedBrand)
-      .flatMap(extractReportTitles)
-      .filter(Boolean);
+      .map((report) => report.subCategory)
+      .filter((value): value is string => typeof value === "string" && value.trim().length > 0);
 
-    const uniqueByNormalized = new Map<string, string>();
+    const unique = Array.from(new Set(subCategories));
 
-    titles.forEach((title) => {
-      const normalized = normalizeText(title);
-      if (!uniqueByNormalized.has(normalized)) {
-        uniqueByNormalized.set(normalized, title);
-      }
-    });
-
-    return Array.from(uniqueByNormalized.values()).sort((a, b) =>
-      a.localeCompare(b, "fr", { sensitivity: "base" })
-    );
-  }, [filteredReports, selectedBrand, extractReportTitles]);
+    return unique.sort((a, b) => a.localeCompare(b, "fr", { sensitivity: "base" }));
+  }, [filteredReports, selectedBrand]);
 
   const filteredByCategory = useMemo(() => {
-    if (!selectedCategory) {
-      return filteredReports;
+    if (selectedCategory) {
+      return filteredReports.filter(
+        (report) => report.subCategory === selectedCategory
+      );
     }
-
-    const normalizedSelected = normalizeText(selectedCategory);
-
-    return filteredReports.filter((report) =>
-      extractReportTitles(report).some(
-        (title) => normalizeText(title) === normalizedSelected
-      )
-    );
-  }, [filteredReports, selectedCategory, extractReportTitles]);
+    return filteredReports;
+  }, [filteredReports, selectedCategory]);
 
   const normalizedSearchTerm = useMemo(() => {
     const trimmed = searchTerm.trim();
