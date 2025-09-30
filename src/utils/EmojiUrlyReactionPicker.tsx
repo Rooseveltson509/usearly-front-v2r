@@ -14,6 +14,10 @@ interface Props {
 const EmojiUrlyReactionPicker: React.FC<Props> = ({ onSelect, type, userId, descriptionId }) => {
   const emojis = getEmojisForType(type);
 
+  if (process.env.NODE_ENV !== "production") {
+    console.debug("Emoji picker type:", type, "emojis count:", emojis.length);
+  }
+
   // Pour gérer le "surbrillance si déjà sélectionné"
   const { getCount, hasReactedWith } = useReactionsForDescription(userId, descriptionId);
 

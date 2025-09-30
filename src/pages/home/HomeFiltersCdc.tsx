@@ -68,14 +68,6 @@ const HomeFiltersCdc = ({
         brandFocusFilter="brandSolo"
         baseFilterValue="all"
       />
-
-      <BrandSelect
-        brands={availableBrands}
-        selectedBrand={selectedBrand}
-        onSelect={(brand) => handleBrandSelect(brand)}
-        onClear={() => handleBrandSelect("")}
-        placeholder="Choisir une marque"
-      />
     </div>
   );
 };
