@@ -44,7 +44,7 @@ const normalizeText = (value: string) =>
         .trim()
     : "";
 
-const getSubCategoryLabel = (item: Partial<Suggestion> & Record<string, any>) => {
+const getSubCategoryLabel = (item: Record<string, any>) => {
   const raw =
     item.subCategory ??
     item.subcategory ??
@@ -430,7 +430,7 @@ function Home() {
               <HomeGroupedReportsList
                 activeTab={activeTab}
                 activeFilter={activeFilter}
-                viewMode={activeFilter === "confirmed" ? "confirmed" : "none" as any}
+                viewMode={activeFilter === "confirmed" ? "confirmed" : "none" as string | any}
                 onViewModeChange={setViewMode}
                 setActiveFilter={setActiveFilter}
                 // Additional props that the component's Props type typically expects:
