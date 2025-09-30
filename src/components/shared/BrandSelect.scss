@@ -1,3 +1,5 @@
+@use "@src/styles/base/variables" as *;
+
 .brand-select {
   position: relative;
   text-wrap: nowrap;
@@ -18,8 +20,8 @@
     &:hover,
     &:focus-visible,
     &--active {
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.12);
+      border-color: $dark;
+      box-shadow: 0 0 0 2px rgba($dark, 0.05);
       outline: none;
     }
 

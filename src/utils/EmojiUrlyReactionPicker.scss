@@ -1,8 +1,5 @@
 .emoji-reaction-picker {
-  position: absolute;
-  bottom: 120%; // ou ajuste selon ton espace
-  left: 130px;
-  transform: translateX(-50%);
+  position: relative;
   display: flex;
   gap: 0.5rem;
   background: white;

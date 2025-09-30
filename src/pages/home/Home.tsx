@@ -232,10 +232,22 @@ function Home() {
           // 🔹 Priorité au filtre par marque
           if (activeTab === "coupdecoeur") {
             result = await getCoupsDeCoeurByBrand(selectedBrand, 1, 50);
-            if (isMounted) setFeedbackData(result?.coupdeCoeurs || []);
+            if (isMounted) {
+              const typed = (result?.coupdeCoeurs || []).map((item: any) => ({
+                ...item,
+                type: item.type ?? "coupdecoeur",
+              }));
+              setFeedbackData(typed);
+            }
           } else if (activeTab === "suggestion") {
             result = await getSuggestionsByBrand(selectedBrand, 1, 50);
-            if (isMounted) setFeedbackData(result?.suggestions || []);
+            if (isMounted) {
+              const typed = (result?.suggestions || []).map((item: any) => ({
+                ...item,
+                type: item.type ?? "suggestion",
+              }));
+              setFeedbackData(typed);
+            }
           }
         } else {
           // 🔹 Cas générique (pas de marque sélectionnée)
@@ -262,6 +274,10 @@ function Home() {
     () => (activeTab === "suggestion" ? suggestionsForDisplay.length : feedbackData.length),
     [activeTab, suggestionsForDisplay.length, feedbackData.length]
   );
+
+  function firstLetterCapitalized(string: string){
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
 
   return (
     <div className="home-page">
@@ -388,10 +404,14 @@ function Home() {
                         className="selected-brand-heading__logo"
                       />
                     )}
-                    <h1>
-                      {selectedBrand && `${selectedBrand} `}
-                      {displayedCount} signalement{displayedCount > 1 ? "s" : ""}
-                    </h1>
+                    {selectedBrand && (
+                      <h1>
+                        <div className="selected-brand-count">
+                          {displayedCount}
+                        </div>
+                        signalement{displayedCount > 1 ? "s" : ""} {selectedCategory && `lié${displayedCount > 1 ? "s" : ""} au ${selectedCategory}`} sur {selectedBrand && firstLetterCapitalized(selectedBrand)+``}
+                      </h1>
+                    )}
                   </div>
                   <FeedbackView
                     activeTab={activeTab}
