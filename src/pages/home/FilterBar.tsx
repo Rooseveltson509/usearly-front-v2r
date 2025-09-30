@@ -173,60 +173,61 @@ const FilterBar: React.FC<Props> = ({
           placeholder="Choisir une marque"
         />
       </div>
+      <div className="secondary-filters-container">
+        <div className="filter-dropdown-wrapper" ref={dropdownRef}>
+          <button className="filter-toggle" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+            <SlidersHorizontal size={18} style={{ marginRight: "6px" }} />
+            Filtrer
+          </button>
 
-      <div className="filter-dropdown-wrapper" ref={dropdownRef}>
-        <button className="filter-toggle" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
-          <SlidersHorizontal size={18} style={{ marginRight: "6px" }} />
-          Filtrer
-        </button>
+          {isDropdownOpen && (
+            <div className="filter-dropdown">
+              <div className="category-search">
+                <input
+                  type="text"
+                  value={categorySearch}
+                  onChange={(e) => setCategorySearch(e.target.value)}
+                  placeholder="Rechercher une catégorie..."
+                  disabled={!selectedBrand}
+                />
+              </div>
 
-        {isDropdownOpen && (
-          <div className="filter-dropdown">
-            <div className="category-search">
-              <input
-                type="text"
-                value={categorySearch}
-                onChange={(e) => setCategorySearch(e.target.value)}
-                placeholder="Rechercher une catégorie..."
-                disabled={!selectedBrand}
-              />
-            </div>
-
-            <select
-              value={selectedCategory}
-              onChange={(e) => {
-                setSelectedCategory(e.target.value);
-                setViewMode("flat");
-                setFilter("");
-                onViewModeChange?.("flat");
-                setActiveFilter("");
-              }}
-              disabled={!selectedBrand}
-            >
-              <option value="">Toutes les catégories</option>
-              {normalizedCategories.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
-
-            {(selectedBrand || selectedCategory) && (
-              <button
-                className="reset"
-                onClick={() => {
-                  clearBrand();
-                  setCategorySearch("");
+              <select
+                value={selectedCategory}
+                onChange={(e) => {
+                  setSelectedCategory(e.target.value);
+                  setViewMode("flat");
+                  setFilter("");
+                  onViewModeChange?.("flat");
+                  setActiveFilter("");
                 }}
+                disabled={!selectedBrand}
               >
-                Réinitialiser
-              </button>
-            )}
-          </div>
-        )}
-      </div>
+                <option value="">Toutes les catégories</option>
+                {normalizedCategories.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
 
-      <SearchBar value={searchTerm} onChange={onSearchTermChange} placeholder="Rechercher un signalement..." />
+              {(selectedBrand || selectedCategory) && (
+                <button
+                  className="reset"
+                  onClick={() => {
+                    clearBrand();
+                    setCategorySearch("");
+                  }}
+                >
+                  Réinitialiser
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+
+        <SearchBar value={searchTerm} onChange={onSearchTermChange} placeholder="Rechercher un signalement..." />
+      </div>
     </div>
   );
 };

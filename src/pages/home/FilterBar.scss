@@ -2,6 +2,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: space-between;
   gap: 16px;
   margin-bottom: 2rem;
 
@@ -9,13 +10,21 @@
     display: flex;
     align-items: center;
     gap: 14px;
+
+    > .brand-select {
+      display: none;
+    }
+  }
+  .secondary-filters-container{
+    display: flex;
+    gap: 8px;
   }
 }
 
 .select-filter-wrapper {
   select {
     padding: 10px 16px;
-    border-radius: 999px;
+    border-radius: 4px;
     border: 1px solid #d6d6d6;
     background: #fff;
     font-size: 14px;
@@ -38,7 +47,7 @@
     align-items: center;
     gap: 6px;
     padding: 10px 18px;
-    border-radius: 999px;
+    border-radius: 4px;
     border: 1px solid #d6d6d6;
     background: #fff;
     cursor: pointer;

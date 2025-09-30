@@ -254,6 +254,30 @@
     z-index: 2;
     margin-top: -70px; // ✅ cartes par-dessus
     gap: 30px;
+
+    .selected-brand-heading {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+
+      &__logo {
+        width: 52px;
+        height: 52px;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.7);
+        border: 1px solid var(--brand-banner-border, rgba(0, 0, 0, 0.08));
+        padding: 8px;
+        object-fit: contain;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: #1f1f1f;
+      }
+    }
   }
 
   .right-panel {

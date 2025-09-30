@@ -16,6 +16,7 @@ import { fetchFeedbackData } from "@src/services/feedbackFetcher";
 import PurpleBanner from "./components/purpleBanner/PurpleBanner";
 import { brandColors } from "@src/utils/brandColors";
 import { hexToRgba } from "@src/utils/colorUtils";
+import { fetchValidBrandLogo } from "@src/utils/brandLogos";
 
 // 🖼️ Assets
 import cdcImgSide from "/assets/img-banner/banner-cdc-pop.png"
@@ -54,6 +55,7 @@ function Home() {
   const [viewMode, setViewMode] = useState<"flat" | "chrono" | "confirmed">("confirmed");
   const [selectedSiteUrl, setSelectedSiteUrl] = useState<string | undefined>();
   const [suggestionSearch, setSuggestionSearch] = useState("");
+  const [selectedBrandLogo, setSelectedBrandLogo] = useState<string | null>(null);
 
   const [availableFilters, setAvailableFilters] = useState<string[]>([
     "hot", // 👉 affiché en premier
@@ -123,11 +125,53 @@ function Home() {
     }
 
     return {
-      "--suggestion-bg": hexToRgba(baseColor, 0.30),
+      "--suggestion-bg": hexToRgba(baseColor, 0.15),
       "--suggestion-border": hexToRgba(baseColor, 0),
       "--suggestion-accent": baseColor,
     } as React.CSSProperties;
   }, [activeTab, feedbackData, selectedBrand]);
+
+  const selectedBrandSiteUrl = useMemo(() => {
+    if (!selectedBrand) return undefined;
+    if (selectedSiteUrl) return selectedSiteUrl;
+    const normalized = selectedBrand.trim().toLowerCase();
+    for (const item of feedbackData) {
+      const marque = (item as any)?.marque;
+      if (typeof marque === "string" && marque.trim().toLowerCase() === normalized) {
+        const site = (item as any)?.siteUrl;
+        if (typeof site === "string" && site.trim().length > 0) {
+          return site;
+        }
+      }
+    }
+    return undefined;
+  }, [feedbackData, selectedBrand, selectedSiteUrl]);
+
+  useEffect(() => {
+    const brandName = selectedBrand.trim();
+    if (!brandName) {
+      setSelectedBrandLogo(null);
+      return;
+    }
+
+    let cancelled = false;
+
+    fetchValidBrandLogo(brandName, selectedBrandSiteUrl)
+      .then((url) => {
+        if (!cancelled) {
+          setSelectedBrandLogo(url);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setSelectedBrandLogo(null);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedBrand, selectedBrandSiteUrl]);
 
   const suggestionsForDisplay = useMemo(() => {
     if (activeTab !== "suggestion") {
@@ -336,7 +380,19 @@ function Home() {
                 <SqueletonAnime loaderRef={{ current: null }} loading={true} hasMore={false} error={null} />
               ) : (
                 <div>
-                  <h1>{selectedBrand}  {displayedCount} signalement{displayedCount > 1 ? "s" : ""}</h1>
+                  <div className="selected-brand-heading">
+                    {selectedBrand && selectedBrandLogo && (
+                      <img
+                        src={selectedBrandLogo}
+                        alt={`${selectedBrand} logo`}
+                        className="selected-brand-heading__logo"
+                      />
+                    )}
+                    <h1>
+                      {selectedBrand && `${selectedBrand} `}
+                      {displayedCount} signalement{displayedCount > 1 ? "s" : ""}
+                    </h1>
+                  </div>
                   <FeedbackView
                     activeTab={activeTab}
                     viewMode="flat"

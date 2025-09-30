@@ -37,14 +37,8 @@ const HomeFiltersSuggestion = ({
   );
 
   const filterOptions = useMemo(() => {
-    if (selectedBrand) {
-      return [
-        { value: "brandSolo", label: `${selectedBrand} • solo` },
-        ...baseOptions,
-      ];
-    }
     return baseOptions;
-  }, [baseOptions, selectedBrand]);
+  }, [baseOptions]);
 
   useEffect(() => {
     const fetchBrands = async () => {
