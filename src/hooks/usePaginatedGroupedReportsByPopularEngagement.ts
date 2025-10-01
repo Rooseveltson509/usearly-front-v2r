@@ -34,14 +34,15 @@ export const usePaginatedGroupedReportsByPopularEngagement = (
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
-  const loadMore = useCallback(() => {
-    if (!loading && hasMore && enabled) {
-      setPage((p) => p + 1);
-    }
-  }, [loading, hasMore, enabled]);
-
+  // ✅ reset automatique quand on désactive le hook
   useEffect(() => {
-    if (enabled) {
+    if (!enabled) {
+      setData([]);
+      setPage(1);
+      setHasMore(true);
+      setLoading(false);
+    } else {
+      // si on réactive → repartir proprement
       setData([]);
       setPage(1);
       setHasMore(true);
@@ -58,7 +59,16 @@ export const usePaginatedGroupedReportsByPopularEngagement = (
 
         if (res.success) {
           const newData: PopularReport[] = res.data || [];
-          setData((prev) => [...prev, ...newData]);
+
+          // 🔑 éviter doublons si l’API renvoie les mêmes
+          setData((prev) => {
+            const map = new Map<string, PopularReport>();
+            [...prev, ...newData].forEach((item) => {
+              map.set(`${item.reportingId}-${item.subCategory}`, item);
+            });
+            return Array.from(map.values());
+          });
+
           setHasMore(page < res.totalPages);
         } else {
           setHasMore(false);
@@ -74,5 +84,17 @@ export const usePaginatedGroupedReportsByPopularEngagement = (
     fetch();
   }, [page, enabled, pageSize]);
 
-  return { data, loading, hasMore, loadMore };
+  const loadMore = useCallback(() => {
+    if (!loading && hasMore && enabled) {
+      setPage((p) => p + 1);
+    }
+  }, [loading, hasMore, enabled]);
+
+  const reset = useCallback(() => {
+    setData([]);
+    setPage(1);
+    setHasMore(true);
+  }, []);
+
+  return { data, loading, hasMore, loadMore, reset };
 };
