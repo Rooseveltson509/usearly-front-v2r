@@ -114,7 +114,13 @@ function Home() {
         setActiveFilter("allSuggest");
       }
     },
-    [setActiveFilter, setSelectedBrand, setSelectedCategory, setBrandSelected, brandSelected]
+    [
+      setActiveFilter,
+      setSelectedBrand,
+      setSelectedCategory,
+      setBrandSelected,
+      brandSelected,
+    ],
   );
 
   useEffect(() => {
@@ -422,10 +428,6 @@ function Home() {
     feedbackData.length,
   ]);
 
-  function firstLetterCapitalized(string: string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
-
   return (
     <div className="home-page">
       {/* Bandeau violet haut */}
@@ -461,15 +463,15 @@ function Home() {
                 totalityCount={displayedCount}
               />
             </div>
-              <aside className="right-panel">
-                <FilterIllustration
-                  filter={activeFilter}
-                  selectedBrand={selectedBrand}
-                  siteUrl={selectedSiteUrl}
-                  selectedCategory={selectedCategory}
-                  onglet="signalement"
-                />
-              </aside>
+            <aside className="right-panel">
+              <FilterIllustration
+                filter={activeFilter}
+                selectedBrand={selectedBrand}
+                siteUrl={selectedSiteUrl}
+                selectedCategory={selectedCategory}
+                onglet="signalement"
+              />
+            </aside>
           </div>
         )}
 
@@ -577,7 +579,12 @@ function Home() {
                         <div className="selected-brand-count">
                           {displayedCount}
                         </div>
-                        signalement{displayedCount > 1 ? "s" : ""} {selectedCategory && `lié${displayedCount > 1 ? "s" : ""} au ${selectedCategory}`} sur {selectedBrand && capitalizeFirstLetter(selectedBrand)+``}
+                        signalement{displayedCount > 1 ? "s" : ""}{" "}
+                        {selectedCategory &&
+                          `lié${displayedCount > 1 ? "s" : ""} au ${selectedCategory}`}{" "}
+                        sur{" "}
+                        {selectedBrand &&
+                          capitalizeFirstLetter(selectedBrand) + ``}
                       </h1>
                     )}
                   </div>

@@ -121,10 +121,9 @@ const FilterIllustration = ({
   siteUrl,
   onglet,
 }: Props) => {
-  const [logoUrl, setLogoUrl] = useState<string | null>(null);
+  const [, setLogoUrl] = useState<string | null>(null);
 
-  const shouldShowCategoryIcon =
-    onglet === "signalement"
+  const shouldShowCategoryIcon = onglet === "signalement";
 
   const categoryIcon = useMemo(() => {
     if (!shouldShowCategoryIcon) return "null";
@@ -156,10 +155,6 @@ const FilterIllustration = ({
 
   // 👉 Cas 1 : filtre marque/catégorie actif
   if (selectedBrand || selectedCategory) {
-    const text =
-      selectedBrand && selectedCategory
-        ? `🔎 Résultats filtrés (${selectedBrand} × ${selectedCategory})`
-        : `🔎 Résultats filtrés (${selectedBrand || selectedCategory})`;
     return (
       <div className="filter-illustration-sidebar filtered">
         <div className="illustration-content">

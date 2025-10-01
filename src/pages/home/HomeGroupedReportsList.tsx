@@ -6,7 +6,6 @@ import { usePaginatedGroupedReportsByPopularEngagement } from "@src/hooks/usePag
 import { usePaginatedGroupedReportsByRage } from "@src/hooks/usePaginatedGroupedReportsByRage";
 import { useConfirmedFlatData } from "@src/hooks/useConfirmedFlatData";
 import SqueletonAnime from "@src/components/loader/SqueletonAnime";
-import ActiveFilterBadges from "./ActiveFilterBadges";
 import FilterBar from "./FilterBar";
 const FilterBarAny = FilterBar as unknown as React.ComponentType<any>;
 import ConfirmedReportsList from "./confirm-reportlist/ConfirmReportsList";
@@ -296,13 +295,6 @@ const HomeGroupedReportsList = ({
         onSearchTermChange={setSearchTerm}
       />
 
-      <ActiveFilterBadges
-        selectedBrand={selectedBrand}
-        selectedCategory={selectedCategory}
-        onClearBrand={() => setSelectedBrand("")}
-        onClearCategory={() => setSelectedCategory("")}
-      />
-
       {/* === données filtrées === */}
       {selectedBrand || selectedCategory ? (
         <div className="grouped-by-category">
@@ -331,45 +323,56 @@ const HomeGroupedReportsList = ({
               ),
             ).map(([category, reports]) => (
               <>
-              {selectedBrand && (
-                <div className="selected-brand-summary">
-                  <div className="selected-brand-summary__brand">
-                    <div className="selected-brand-summary__logo">
-                      <img
-                        src={getBrandLogo(selectedBrand)}
-                        alt={selectedBrand}
-                      />
-                    </div>
-                    <div className="selected-brand-summary__info-container" >
-                      {selectedCategory ? (
-                        <>
-                          <span className="count">{filteredByCategory.length}</span> 
-                          <span className="text">signalement{filteredByCategory.length > 1 ? "s" : ""} lié{filteredByCategory.length > 1 ? "s" : ""} à « <b>{selectedCategory}</b> » sur {` ${capitalizeFirstLetter(selectedBrand)}`}</span>
-                        </>
-                      ) : (
-                        <>
-                          <span className="count">{totalCount}</span>
-                          <span className="text">signalement{totalCount > 1 ? "s" : ""} sur {` ${capitalizeFirstLetter(selectedBrand)}`}</span>
-                        </>
-                      )}
+                {selectedBrand && (
+                  <div className="selected-brand-summary">
+                    <div className="selected-brand-summary__brand">
+                      <div className="selected-brand-summary__logo">
+                        <img
+                          src={getBrandLogo(selectedBrand)}
+                          alt={selectedBrand}
+                        />
+                      </div>
+                      <div className="selected-brand-summary__info-container">
+                        {selectedCategory ? (
+                          <>
+                            <span className="count">
+                              {filteredByCategory.length}
+                            </span>
+                            <span className="text">
+                              signalement
+                              {filteredByCategory.length > 1 ? "s" : ""} lié
+                              {filteredByCategory.length > 1 ? "s" : ""} à «{" "}
+                              <b>{selectedCategory}</b> » sur{" "}
+                              {` ${capitalizeFirstLetter(selectedBrand)}`}
+                            </span>
+                          </>
+                        ) : (
+                          <>
+                            <span className="count">{totalCount}</span>
+                            <span className="text">
+                              signalement{totalCount > 1 ? "s" : ""} sur{" "}
+                              {` ${capitalizeFirstLetter(selectedBrand)}`}
+                            </span>
+                          </>
+                        )}
+                      </div>
                     </div>
                   </div>
+                )}
+                <div key={category} className="category-block">
+                  {reports.map((report, i) => (
+                    <FlatSubcategoryBlock
+                      key={`${report.reportingId}-${report.subCategory}-${i}`}
+                      brand={report.marque}
+                      siteUrl={report.siteUrl}
+                      subcategory={report.subCategory}
+                      descriptions={report.descriptions || []}
+                      brandLogoUrl={getBrandLogo(report.marque, report.siteUrl)}
+                      capture={report.capture}
+                      hideFooter={true}
+                    />
+                  ))}
                 </div>
-              )}
-              <div key={category} className="category-block">
-                {reports.map((report, i) => (
-                  <FlatSubcategoryBlock
-                    key={`${report.reportingId}-${report.subCategory}-${i}`}
-                    brand={report.marque}
-                    siteUrl={report.siteUrl}
-                    subcategory={report.subCategory}
-                    descriptions={report.descriptions || []}
-                    brandLogoUrl={getBrandLogo(report.marque, report.siteUrl)}
-                    capture={report.capture}
-                    hideFooter={true}
-                  />
-                ))}
-              </div>
               </>
             ))
           )}

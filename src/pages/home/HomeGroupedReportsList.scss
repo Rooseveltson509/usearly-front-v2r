@@ -1,4 +1,4 @@
-@use '@src/styles/base/variables' as *;
+@use "@src/styles/base/variables" as *;
 
 .home-grouped-reports-list {
   //margin: 0 0 0 10px;
@@ -36,10 +36,10 @@
       font-weight: 500;
       color: #2563eb;
     }
-    .selected-brand-summary__brand{
+    .selected-brand-summary__brand {
       display: flex;
       align-items: center;
-      .selected-brand-summary__logo{
+      .selected-brand-summary__logo {
         display: flex;
         height: 80px;
         width: 80px;
@@ -49,19 +49,19 @@
         align-items: center;
         justify-content: center;
         padding: 12px;
-        img{
+        img {
           width: 100%;
         }
       }
-      .selected-brand-summary__info-container{
+      .selected-brand-summary__info-container {
         display: flex;
         flex-direction: column;
-        .count{
+        .count {
           font-size: 36px;
           font-weight: 700;
           color: $dark;
         }
-        .text{
+        .text {
           font-size: 14px;
           font-weight: 400;
         }
