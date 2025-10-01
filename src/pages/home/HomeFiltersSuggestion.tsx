@@ -86,10 +86,11 @@ const HomeFiltersSuggestion = ({
         dropdownRef={dropdownRef}
         isDropdownOpen={isDropdownOpen}
         setIsDropdownOpen={setIsDropdownOpen}
-        withBrands={true}
-        withCategories={true}
+        withBrands={!selectedBrand}
+        withCategories={!selectedBrand}
         brandFocusFilter="brandSolo"
         baseFilterValue="allSuggest"
+        hideFilterWhenBrandSelected={true}
       />
 
       <BrandSelect

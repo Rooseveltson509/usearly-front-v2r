@@ -41,6 +41,8 @@ interface Props {
 
   brandFocusFilter?: string;
   baseFilterValue?: string;
+
+  hideFilterWhenBrandSelected?: boolean;
 }
 
 // ✅ fonction de normalisation (mêmes règles que dans HomeGroupedReportsList)

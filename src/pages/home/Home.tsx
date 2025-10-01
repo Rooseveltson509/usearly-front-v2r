@@ -1,3 +1,5 @@
+import { capitalizeFirstLetter } from "@src/utils/stringUtils";
+
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import "./Home.scss";
 import { type FeedbackType } from "@src/components/user-profile/FeedbackTabs";
@@ -59,6 +61,7 @@ function Home() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [selectedBrand, setSelectedBrand] = useState("");
+  const [brandSelected, setBrandSelected] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [activeFilter, setActiveFilter] = useState("confirmed");
   const [, setViewMode] = useState<"flat" | "chrono" | "confirmed">(
@@ -101,6 +104,7 @@ function Home() {
   const handleSuggestionBrandChange = useCallback(
     (brand: string) => {
       setSelectedBrand(brand);
+      setBrandSelected(!brandSelected);
       setSelectedCategory("");
       setSuggestionSearch("");
 
@@ -110,7 +114,13 @@ function Home() {
         setActiveFilter("allSuggest");
       }
     },
-    [setActiveFilter, setSelectedBrand, setSelectedCategory],
+    [
+      setActiveFilter,
+      setSelectedBrand,
+      setSelectedCategory,
+      setBrandSelected,
+      brandSelected,
+    ],
   );
 
   useEffect(() => {
@@ -418,10 +428,6 @@ function Home() {
     feedbackData.length,
   ]);
 
-  function firstLetterCapitalized(string: string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
-
   return (
     <div className="home-page">
       {/* Bandeau violet haut */}
@@ -454,15 +460,16 @@ function Home() {
                 selectedCategory={selectedCategory}
                 setSelectedCategory={setSelectedCategory}
                 setSelectedSiteUrl={setSelectedSiteUrl}
+                totalityCount={displayedCount}
               />
             </div>
-
             <aside className="right-panel">
               <FilterIllustration
                 filter={activeFilter}
                 selectedBrand={selectedBrand}
                 siteUrl={selectedSiteUrl}
                 selectedCategory={selectedCategory}
+                onglet="signalement"
               />
             </aside>
           </div>
@@ -577,7 +584,7 @@ function Home() {
                           `lié${displayedCount > 1 ? "s" : ""} au ${selectedCategory}`}{" "}
                         sur{" "}
                         {selectedBrand &&
-                          firstLetterCapitalized(selectedBrand) + ``}
+                          capitalizeFirstLetter(selectedBrand) + ``}
                       </h1>
                     )}
                   </div>

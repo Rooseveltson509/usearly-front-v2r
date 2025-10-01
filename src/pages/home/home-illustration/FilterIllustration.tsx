@@ -14,8 +14,9 @@ import discussedImg from "/assets/img-banner/banner-suggest-liked.png";
 import recentSuggestionImg from "/assets/img-banner/banner-suggest-open-vote.png";
 import likedSuggestionImg from "/assets/img-banner/banner-suggestion-adopt.png";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { fetchValidBrandLogo, getBrandLogo } from "@src/utils/brandLogos";
+import { getCategoryIconPathFromSubcategory } from "@src/utils/IconsBigUtils";
 import "./FilterIllustration.scss";
 
 const illustrationMap = {
@@ -110,6 +111,7 @@ type Props = {
   selectedBrand?: string;
   selectedCategory?: string;
   siteUrl?: string;
+  onglet?: "signalement" | "cdc" | "suggestions";
 };
 
 const FilterIllustration = ({
@@ -117,8 +119,16 @@ const FilterIllustration = ({
   selectedBrand,
   selectedCategory,
   siteUrl,
+  onglet,
 }: Props) => {
-  const [logoUrl, setLogoUrl] = useState<string | null>(null);
+  const [, setLogoUrl] = useState<string | null>(null);
+
+  const shouldShowCategoryIcon = onglet === "signalement";
+
+  const categoryIcon = useMemo(() => {
+    if (!shouldShowCategoryIcon) return "null";
+    return getCategoryIconPathFromSubcategory(selectedCategory);
+  }, [selectedCategory, shouldShowCategoryIcon]);
 
   useEffect(() => {
     let isMounted = true;
@@ -145,16 +155,22 @@ const FilterIllustration = ({
 
   // 👉 Cas 1 : filtre marque/catégorie actif
   if (selectedBrand || selectedCategory) {
-    const text =
-      selectedBrand && selectedCategory
-        ? `🔎 Résultats filtrés (${selectedBrand} × ${selectedCategory})`
-        : `🔎 Résultats filtrés (${selectedBrand || selectedCategory})`;
-
     return (
       <div className="filter-illustration-sidebar filtered">
         <div className="illustration-content">
-          <p>{text}</p>
-          {logoUrl && (
+          {/* <p>{text}</p> */}
+
+          {shouldShowCategoryIcon && categoryIcon && (
+            <div className="category-icon-wrapper">
+              <img
+                src={categoryIcon}
+                alt={selectedCategory || "Catégorie"}
+                className="category-icon"
+              />
+            </div>
+          )}
+
+          {/* {logoUrl && (
             <div className="brand-watermark-wrapper">
               <img
                 src={logoUrl}
@@ -162,7 +178,7 @@ const FilterIllustration = ({
                 className="brand-watermark"
               />
             </div>
-          )}
+          )} */}
         </div>
       </div>
     );

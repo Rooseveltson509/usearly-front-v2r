@@ -1,7 +1,73 @@
+@use "@src/styles/base/variables" as *;
+
 .home-grouped-reports-list {
   //margin: 0 0 0 10px;
   margin-top: 25px;
   z-index: 1;
+
+  .selected-brand-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 16px;
+    padding: 12px 16px;
+    padding-right: 0px;
+
+    &__brand {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #1f2937;
+
+      &__label {
+        font-size: 18px;
+      }
+
+      .selected-brand-summary__count {
+        font-weight: 500;
+        color: #4b5563;
+      }
+    }
+
+    &__category {
+      font-size: 13px;
+      font-weight: 500;
+      color: #2563eb;
+    }
+    .selected-brand-summary__brand {
+      display: flex;
+      align-items: center;
+      .selected-brand-summary__logo {
+        display: flex;
+        height: 80px;
+        width: 80px;
+        min-width: 80px;
+        border-radius: 999px;
+        background: rgb(255, 255, 255);
+        align-items: center;
+        justify-content: center;
+        padding: 12px;
+        img {
+          width: 100%;
+        }
+      }
+      .selected-brand-summary__info-container {
+        display: flex;
+        flex-direction: column;
+        .count {
+          font-size: 36px;
+          font-weight: 700;
+          color: $dark;
+        }
+        .text {
+          font-size: 14px;
+          font-weight: 400;
+        }
+      }
+    }
+  }
 }
 
 .no-popular-results {
