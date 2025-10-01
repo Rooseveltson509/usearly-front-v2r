@@ -6,15 +6,15 @@ const keywordMap: Record<string, string[]> = {
     "signalementCatPanier.png": [
       "ajout", "retrait", "panier", "vide", "articles", "article", "supprimé", "disparaît"
     ],
-    "damaged-parcel.png": [
-      "endommagé", "détérioré", "cassé", "casse", "abîmé", "défectueux", "réception", "abimé"
-    ],
-    "filter.png": [
-      "filtre", "recherche", "tri", "moteur", "affichage", "trié"
-    ],
-    "connect-bug.png": [
-      "connexion", "login", "identifiant", "mot de passe", "inscription", "compte", "déconnexion"
-    ],
+    // "damaged-parcel.png": [
+    //   "endommagé", "détérioré", "cassé", "casse", "abîmé", "défectueux", "réception", "abimé"
+    // ],
+    // "filter.png": [
+    //   "filtre", "recherche", "tri", "moteur", "affichage", "trié"
+    // ],
+    // "connect-bug.png": [
+    //   "connexion", "login", "identifiant", "mot de passe", "inscription", "compte", "déconnexion"
+    // ],
     "commandeCatSignalement.png": [
       "commande", "suivi", "expédition", "tracking", "statut", "en cours", "colis", "livraison"
     ],
@@ -29,51 +29,51 @@ const keywordMap: Record<string, string[]> = {
       "problème de paiement", "informations bancaires", "problème avec la carte"
     ],
   
-    "loading-page.png": [
-      "chargement", "bug", "réactivité", "lent", "ralenti", "bloque", "plante", "plantage", "lag", "freeze"
-    ],
+    // "loading-page.png": [
+    //   "chargement", "bug", "réactivité", "lent", "ralenti", "bloque", "plante", "plantage", "lag", "freeze"
+    // ],
   
-    "design.png": [
-      "affichage", "interface", "ux", "ui", "visuel", "design", "graphisme", "problème d'affichage"
-    ],
+    // "design.png": [
+    //   "affichage", "interface", "ux", "ui", "visuel", "design", "graphisme", "problème d'affichage"
+    // ],
   
-    "wrong-address.png": [
-      "adresse", "mauvaise", "livraison", "destinataire", "invalide"
-    ],
-    "delay.png": [
-      "retard", "tard", "long", "attente", "temps", "jour", "délai"
-    ],
-    "support.png": [
-      "service client", "conseiller", "support", "contact", "joindre", "assistance",
-      "réponse", "injoignable", "disponible", "indisponible", "tchat", "chat",
-      "pas de réponse", "aucune réponse", "relance"
-    ],
+    // "wrong-address.png": [
+    //   "adresse", "mauvaise", "livraison", "destinataire", "invalide"
+    // ],
+    // "delay.png": [
+    //   "retard", "tard", "long", "attente", "temps", "jour", "délai"
+    // ],
+    // "support.png": [
+    //   "service client", "conseiller", "support", "contact", "joindre", "assistance",
+    //   "réponse", "injoignable", "disponible", "indisponible", "tchat", "chat",
+    //   "pas de réponse", "aucune réponse", "relance"
+    // ],
   
-    "error-message.png": [
-      "popup", "alerte", "message système"
-    ],
-    "restart.png": [
-      "recommencer", "relancer", "retour à zéro", "depuis le début", "réinitialiser"
-    ],
+    // "error-message.png": [
+    //   "popup", "alerte", "message système"
+    // ],
+    // "restart.png": [
+    //   "recommencer", "relancer", "retour à zéro", "depuis le début", "réinitialiser"
+    // ],
     "navigationCatSignalement.png": [
       "trop d'information", "confusion", "illisible", "trop de texte", "compliqué", "incompréhensible"
     ],
-    "size-product.png": [
-      "taille", "dimension", "format", "grande", "petite", "panier"
-    ],
-    "conflicting-information.png": [
-      "incohérence", "contradiction", "incompatibilité", "divergence", "discordance", "différence"
-    ],
+    // "size-product.png": [
+    //   "taille", "dimension", "format", "grande", "petite", "panier"
+    // ],
+    // "conflicting-information.png": [
+    //   "incohérence", "contradiction", "incompatibilité", "divergence", "discordance", "différence"
+    // ],
   
-    "exchange-and-return.png": [
-      "retourner", "échange", "retour", "remboursement", "politique", "procédure"
-    ],
-    "stock.png": [
-      "stock", "indisponible", "rupture", "épuisé"
-    ],
-    "photo-error.png": [
-      "photo", "image", "manquante", "visuel", "aperçu", "miniature"
-    ],
+    // "exchange-and-return.png": [
+    //   "retourner", "échange", "retour", "remboursement", "politique", "procédure"
+    // ],
+    // "stock.png": [
+    //   "stock", "indisponible", "rupture", "épuisé"
+    // ],
+    // "photo-error.png": [
+    //   "photo", "image", "manquante", "visuel", "aperçu", "miniature"
+    // ],
     "other.png": []
   };
   
@@ -90,7 +90,7 @@ const keywordMap: Record<string, string[]> = {
   export const getCategoryIconPathFromSubcategory = (
     subcategory: string | undefined
   ): string => {
-    if (!subcategory) return "/assets/categories-icons/other.png";
+    if (!subcategory) return "/assets/categories-icons/defaultCatSignalement.png";
   
     const clean = normalize(subcategory);
   
@@ -150,5 +150,5 @@ const keywordMap: Record<string, string[]> = {
       return `/assets/categories-icons/${match}.png`;
     }
   
-    return "/assets/categories-icons/other.png"; // fallback final
+    return "/assets/categories-icons/defaultCatSignalement.png"; // fallback final
   };  

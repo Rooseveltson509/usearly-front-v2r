@@ -61,6 +61,7 @@ function Home() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [selectedBrand, setSelectedBrand] = useState("");
+  const [brandSelected, setBrandSelected] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [activeFilter, setActiveFilter] = useState("confirmed");
   const [, setViewMode] = useState<"flat" | "chrono" | "confirmed">(
@@ -103,6 +104,7 @@ function Home() {
   const handleSuggestionBrandChange = useCallback(
     (brand: string) => {
       setSelectedBrand(brand);
+      setBrandSelected(!brandSelected);
       setSelectedCategory("");
       setSuggestionSearch("");
 
@@ -112,7 +114,7 @@ function Home() {
         setActiveFilter("allSuggest");
       }
     },
-    [setActiveFilter, setSelectedBrand, setSelectedCategory],
+    [setActiveFilter, setSelectedBrand, setSelectedCategory, setBrandSelected, brandSelected]
   );
 
   useEffect(() => {
@@ -459,16 +461,15 @@ function Home() {
                 totalityCount={displayedCount}
               />
             </div>
-
-            <aside className="right-panel">
-              <FilterIllustration
-                filter={activeFilter}
-                selectedBrand={selectedBrand}
-                siteUrl={selectedSiteUrl}
-                selectedCategory={selectedCategory}
-                onglet="signalement"
-              />
-            </aside>
+              <aside className="right-panel">
+                <FilterIllustration
+                  filter={activeFilter}
+                  selectedBrand={selectedBrand}
+                  siteUrl={selectedSiteUrl}
+                  selectedCategory={selectedCategory}
+                  onglet="signalement"
+                />
+              </aside>
           </div>
         )}
 

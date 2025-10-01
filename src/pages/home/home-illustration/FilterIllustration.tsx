@@ -124,10 +124,10 @@ const FilterIllustration = ({
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
 
   const shouldShowCategoryIcon =
-    onglet === "signalement" && !!selectedBrand && !!selectedCategory;
+    onglet === "signalement"
 
   const categoryIcon = useMemo(() => {
-    if (!shouldShowCategoryIcon) return null;
+    if (!shouldShowCategoryIcon) return "null";
     return getCategoryIconPathFromSubcategory(selectedCategory);
   }, [selectedCategory, shouldShowCategoryIcon]);
 
