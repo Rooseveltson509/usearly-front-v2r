@@ -10,13 +10,18 @@ export const useHandleAuthRedirect = () => {
 
   const handleAuthRedirect = (
     response: any,
-    { onSuccess }: RedirectOptions = {}
+    { onSuccess }: RedirectOptions = {},
   ) => {
     // ⚠️ Compte non confirmé
     if (response.requiresConfirmation) {
-      showToast("⚠️ Ce compte existe déjà mais n'a pas été confirmé. Vérifie ton email.", "warning");
+      showToast(
+        "⚠️ Ce compte existe déjà mais n'a pas été confirmé. Vérifie ton email.",
+        "warning",
+      );
       if (response.userId && response.email) {
-        navigate(`/confirm?userId=${response.userId}&email=${encodeURIComponent(response.email)}`);
+        navigate(
+          `/confirm?userId=${response.userId}&email=${encodeURIComponent(response.email)}`,
+        );
       }
       return false;
     }

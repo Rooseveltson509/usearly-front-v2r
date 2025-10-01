@@ -1,85 +1,85 @@
-@use "@src/styles/base/variables" as *;
-@use "@src/styles/utils/mixins" as *;
+@use "../../../styles/base/variables" as *;
+@use "../../../styles/utils/mixins" as *;
 
 .select-wrap {
-    position: relative;
-    width: 100%;
-    height: auto;
-    }
+  position: relative;
+  width: 100%;
+  height: auto;
+}
 
-    .select {
-    // cacher le chevron natif
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
+.select {
+  // cacher le chevron natif
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 
-    // espace à droite pour le chevron custom
-    padding-right: 2.5rem;
+  // espace à droite pour le chevron custom
+  padding-right: 2.5rem;
 
-    // optionnel: styles visuels
-    width: 100%;
-    height: 100%;
-    padding: 1.25rem;
-    font-size: 0.875rem;
+  // optionnel: styles visuels
+  width: 100%;
+  height: 100%;
+  padding: 1.25rem;
+  font-size: 0.875rem;
+  color: $dark;
+  border: 0.8px solid $dark;
+  border-radius: 4px;
+  background: white;
+  transition: border 0.3s;
+
+  &::placeholder {
     color: $dark;
-    border: 0.8px solid $dark;
-    border-radius: 4px;
-    background: white;
-    transition: border 0.3s;
+  }
 
-    &::placeholder {
-        color: $dark;
-    }
+  &:focus {
+    border-color: $dark;
+    background-color: #fff;
+    outline: none;
+  }
 
-    &:focus {
-        border-color: $dark;
-        background-color: #fff;
-        outline: none;
-    }
+  &.filled + label,
+  &:focus + label {
+    left: 0.9rem;
+    background-color: #fff;
+    font-size: 0.75rem;
+    color: $dark;
+  }
+}
 
-    &.filled + label,
-    &:focus + label {
-        left: 0.9rem;
-        background-color: #fff;
-        font-size: 0.75rem;
-        color: $dark;
-    }
-    }
+.select::-ms-expand {
+  display: none;
+}
 
-    .select::-ms-expand {
-    display: none;
-    }
+.select-wrap::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;
+  transform: translateY(-50%);
+  width: 0.7rem;
+  height: 0.7rem;
+  pointer-events: none;
 
-    .select-wrap::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    right: 0.75rem;
-    transform: translateY(-50%);
-    width: 0.7rem;
-    height: 0.7rem;
-    pointer-events: none;
-
-    background-image: url("data:image/svg+xml;utf8,\
+  background-image: url("data:image/svg+xml;utf8,\
     <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23111' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    }
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
 
-    .select{
-        padding-right: 2.5rem;
-    }
-    
-    select + label {
-        position: absolute;
-        top: -10px;
-        left: 1rem;
-        font-size: 0.8rem;
-        color: $gray-500;
-        pointer-events: none;
-        background: white;
-        padding: 0.2rem 0.4rem;
-        border-radius: 10px;
-        transition: 0.2s ease all;
-        z-index: 1;
-    }
+.select {
+  padding-right: 2.5rem;
+}
+
+select + label {
+  position: absolute;
+  top: -10px;
+  left: 1rem;
+  font-size: 0.8rem;
+  color: $gray-500;
+  pointer-events: none;
+  background: white;
+  padding: 0.2rem 0.4rem;
+  border-radius: 10px;
+  transition: 0.2s ease all;
+  z-index: 1;
+}

@@ -13,7 +13,6 @@ export interface GetConfirmedResponse {
   data: ConfirmedSubcategoryReport[];
 }
 
-
 export interface User {
   id: string;
   pseudo: string;
@@ -47,8 +46,6 @@ export interface ConfirmedSubcategoryReport {
     };
   }[];
 }
-
-
 
 export type LikeFeedbackType = Exclude<FeedbackType, "report">;
 // équivalent à "coupdecoeur" | "suggestion"
@@ -99,7 +96,6 @@ export interface Suggestion {
   duplicateCount?: number;
 }
 
-
 export interface ApiDescription {
   description: string;
   emoji: string;
@@ -132,7 +128,6 @@ export interface ApiResponse {
   totalReports: number;
   results: ApiReport[];
 }
-
 
 export interface FeedbackDescription {
   id: string;
@@ -168,7 +163,6 @@ export interface SimplifiedFeedbackDescription {
     userIds: string[];
   }[];
 }
-
 
 export interface GroupedReport {
   id: string;
@@ -227,7 +221,7 @@ export interface PopularGroupedReport {
 }
 
 export interface PopularReport {
-  id: string;                // id de la description
+  id: string; // id de la description
   reportingId: string;
   subCategory: string;
   description: string;
@@ -258,7 +252,6 @@ export interface PopularReport {
     totalInteractions: number;
   };
 }
-
 
 /* profile */
 
@@ -331,7 +324,7 @@ export interface PublicGroupedReport {
   reportingId: string;
   category: string;
   marque: string;
-  siteUrl?: string | null;   // ✅ accepte null aussi
+  siteUrl?: string | null; // ✅ accepte null aussi
   totalCount: number;
   subCategories: {
     subCategory: string;
@@ -364,7 +357,6 @@ export type GetGroupedReportsByDateResponse = {
   data: Record<string, PublicGroupedReportFromAPI[]>;
 };
 
-
 export interface PublicGroupedReportFromAPI {
   reportingId: string;
   marque: string;
@@ -374,4 +366,3 @@ export interface PublicGroupedReportFromAPI {
   count: number;
   descriptions: FeedbackDescription[];
 }
-

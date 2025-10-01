@@ -1,6 +1,5 @@
 import "./UserChallenge.scss";
 
-
 interface Friend {
   name: string;
   handle: string;
@@ -29,9 +28,12 @@ const friends: Friend[] = [
     score: 189,
     isUser: true,
   },
-    {
-        name: "Alex", handle: "@alex12", avatar: "/assets/images/profil/Alex.png", 
-    score: 56 },
+  {
+    name: "Alex",
+    handle: "@alex12",
+    avatar: "/assets/images/profil/Alex.png",
+    score: 56,
+  },
 ];
 
 const UserChallenge: React.FC = () => {

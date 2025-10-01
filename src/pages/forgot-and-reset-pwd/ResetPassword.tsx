@@ -66,7 +66,6 @@ const ResetPassword = () => {
         <button type="submit" disabled={loading}>
           {loading ? "Chargement..." : "Mettre à jour"}
         </button>
-
       </form>
       {error && <p className="error">{error}</p>}
     </div>

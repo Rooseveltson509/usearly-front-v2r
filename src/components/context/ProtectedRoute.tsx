@@ -7,7 +7,10 @@ interface ProtectedRouteProps {
   allowedTypes?: ("user" | "brand")[];
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedTypes }) => {
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+  children,
+  allowedTypes,
+}) => {
   const { isAuthenticated, isLoading, userProfile } = useAuth();
 
   if (isLoading) {

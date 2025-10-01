@@ -19,26 +19,27 @@ interface Props {
   isHot?: boolean;
 }
 
-const PopularReportCard: React.FC<Props> = ({ item, isOpen, onToggle, isHot }) => {
+const PopularReportCard: React.FC<Props> = ({
+  item,
+  isOpen,
+  onToggle,
+  isHot,
+}) => {
   const { userProfile } = useAuth();
   const [showComments, setShowComments] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
-  const [localCommentsCounts, setLocalCommentsCounts] = useState<Record<string, number>>({});
+  const [localCommentsCounts, setLocalCommentsCounts] = useState<
+    Record<string, number>
+  >({});
 
   const firstDescription = item.descriptions?.[0];
-  if (!firstDescription) return null;
 
   const descriptionId = firstDescription.id;
-  const { comments, loading } = useCommentsForDescription(descriptionId, "report", refreshKey);
-
-  const handleCommentClick = () => {
-    if (!isOpen) {
-      onToggle();
-      setShowComments(true);
-    } else {
-      setShowComments((prev) => !prev);
-    }
-  };
+  const { comments, loading } = useCommentsForDescription(
+    descriptionId,
+    "report",
+    refreshKey,
+  );
 
   useEffect(() => {
     if (!loading && comments.length > 0) {
@@ -49,13 +50,27 @@ const PopularReportCard: React.FC<Props> = ({ item, isOpen, onToggle, isHot }) =
     }
   }, [comments.length, descriptionId, loading]);
 
+  if (!firstDescription) return null;
+
+  const handleCommentClick = () => {
+    if (!isOpen) {
+      onToggle();
+      setShowComments(true);
+    } else {
+      setShowComments((prev) => !prev);
+    }
+  };
+
   const currentCount = localCommentsCounts[descriptionId] ?? 0;
 
   return (
     <div className={`report-card ${isHot ? "hot-effect" : ""}`}>
       <div className="card-header" onClick={onToggle}>
         <div className="left-icon">
-          <img src={getCategoryIconPathFromSubcategory(item.subCategory)} alt="icon" />
+          <img
+            src={getCategoryIconPathFromSubcategory(item.subCategory)}
+            alt="icon"
+          />
         </div>
 
         <div className="card-title">
@@ -136,7 +151,10 @@ const PopularReportCard: React.FC<Props> = ({ item, isOpen, onToggle, isHot }) =
               forceOpen={true}
               hideFooter={true}
               onCommentCountChange={(count) =>
-                setLocalCommentsCounts((prev) => ({ ...prev, [descriptionId]: count }))
+                setLocalCommentsCounts((prev) => ({
+                  ...prev,
+                  [descriptionId]: count,
+                }))
               }
               onCommentAddedOrDeleted={() => setRefreshKey((prev) => prev + 1)}
             />

@@ -9,11 +9,14 @@ const Layout = ({ children }: { children: ReactNode }) => {
   const [HeaderHeight, setHeaderHeight] = useState<number>(headerheight);
 
   useEffect(() => {
-    const getHeader = () => document.querySelector("header.header") as HTMLElement | null;
+    const getHeader = () =>
+      document.querySelector("header.header") as HTMLElement | null;
 
     const compute = () => {
       const element = getHeader();
-      const newHeight = element ? Math.ceil(element.getBoundingClientRect().height) : 0;
+      const newHeight = element
+        ? Math.ceil(element.getBoundingClientRect().height)
+        : 0;
       headerheight = newHeight;
       setHeaderHeight(newHeight);
     };
@@ -26,7 +29,11 @@ const Layout = ({ children }: { children: ReactNode }) => {
     let mutationObserver: MutationObserver | null = null;
     if (headerElement && typeof MutationObserver !== "undefined") {
       mutationObserver = new MutationObserver(compute);
-      mutationObserver.observe(headerElement, { childList: true, subtree: true, attributes: true });
+      mutationObserver.observe(headerElement, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+      });
     }
 
     return () => {

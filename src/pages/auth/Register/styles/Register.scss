@@ -15,7 +15,7 @@
     margin-bottom: 0.438rem;
   }
 
-  .register-subtitle{
+  .register-subtitle {
     .editable {
       display: inline-block;
       min-width: 2ch;
@@ -34,10 +34,10 @@
     }
   }
 
-  p{
+  p {
     text-align: left;
     margin-bottom: 2.5rem;
-    .modifyLink{
+    .modifyLink {
       color: #585858;
       text-decoration: underline;
       line-height: normal;
@@ -56,7 +56,7 @@
     flex-direction: column;
     gap: 1.2rem;
 
-    div{
+    div {
       position: relative;
       width: 100%;
       .select-wrap {
@@ -86,7 +86,7 @@
         transition: border 0.3s;
 
         &::placeholder {
-            color: $dark;
+          color: $dark;
         }
 
         &:focus {
@@ -124,7 +124,7 @@
         background-size: 100% 100%;
       }
 
-      .select{
+      .select {
         padding-right: 2.5rem;
       }
 
@@ -170,7 +170,7 @@
       }
     }
 
-    .terms-conditions{
+    .terms-conditions {
       display: flex;
       justify-content: left;
 
@@ -178,24 +178,24 @@
         display: flex;
         align-items: flex-start;
         gap: 0.5rem;
-        a{
+        a {
           color: $dark;
           text-decoration: underline !important;
           cursor: pointer;
         }
-        input{
+        input {
           margin-top: 0.165rem;
           width: auto;
           height: auto;
         }
-        p{
+        p {
           font-size: 0.8rem;
           text-align: left;
           font-weight: 400;
           margin-bottom: 0;
         }
         @media screen and (min-width: 570px) {
-          p{
+          p {
             font-size: 0.9rem;
           }
         }

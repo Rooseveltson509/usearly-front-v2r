@@ -1,7 +1,6 @@
 import React from "react";
 import "./UserImpact.scss";
 
-
 const UserImpact: React.FC = () => {
   return (
     <div className="user-impact-card">

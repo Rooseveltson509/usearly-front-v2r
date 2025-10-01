@@ -1,9 +1,10 @@
 import axios from "axios";
 import type { RegisterData } from "@src/types/RegisterData";
 import { refreshToken } from "./refreshToken";
-import { getAccessToken, isTokenExpired, storeTokenInCurrentStorage } from "./tokenStorage";
+import { getAccessToken, storeTokenInCurrentStorage } from "./tokenStorage";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
 const API_VERSION = import.meta.env.VITE_API_VERSION || "api/v1";
 
 export const apiService = axios.create({
@@ -15,16 +16,15 @@ export const apiService = axios.create({
 });
 
 export interface RegisterResponse {
-  userId?: string;   // optionnel car si compte expiré, on ne renvoie pas toujours un ID
-  email?: string;    // pareil : parfois c'est juste un message
+  userId?: string; // optionnel car si compte expiré, on ne renvoie pas toujours un ID
+  email?: string; // pareil : parfois c'est juste un message
   message?: string;
   code?: string;
 
   requiresConfirmation?: boolean; // ⚠️ compte déjà créé mais non confirmé
-  expired?: boolean;              // ⚠️ compte supprimé car délai dépassé
-  success?: boolean;              // homogénéité avec login
+  expired?: boolean; // ⚠️ compte supprimé car délai dépassé
+  success?: boolean; // homogénéité avec login
 }
-
 
 export interface LoginResponse {
   success?: boolean;
@@ -40,7 +40,7 @@ export interface LoginResponse {
   };
 
   requiresConfirmation?: boolean; // ⚠️ compte pas confirmé
-  expired?: boolean;              // ⚠️ compte supprimé car délai dépassé
+  expired?: boolean; // ⚠️ compte supprimé car délai dépassé
 }
 
 export const loginUser = async ({
@@ -72,7 +72,9 @@ export const loginUser = async ({
         return data;
       }
 
-      throw new Error(data.message || "Erreur lors de la connexion utilisateur.");
+      throw new Error(
+        data.message || "Erreur lors de la connexion utilisateur.",
+      );
     }
 
     if (error instanceof Error) {
@@ -82,7 +84,6 @@ export const loginUser = async ({
     throw new Error("Erreur inconnue lors de la connexion utilisateur.");
   }
 };
-
 
 export const loginBrand = async ({
   email,
@@ -109,12 +110,12 @@ export const loginBrand = async ({
 };
 
 export const registerUser = async (
-  data: RegisterData
+  data: RegisterData,
 ): Promise<RegisterResponse> => {
   try {
     const { data: response } = await apiService.post<RegisterResponse>(
       "/user/register",
-      data
+      data,
     );
     return response;
   } catch (error: any) {
@@ -162,7 +163,7 @@ apiService.interceptors.request.use(
 
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 // ✅ Intercepteur de réponse – gère les 401 et rafraîchit si besoin
@@ -203,16 +204,21 @@ apiService.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
-export const confirmEmailRequest = async (data: { userId: string; token: string }) => {
+export const confirmEmailRequest = async (data: {
+  userId: string;
+  token: string;
+}) => {
   const response = await apiService.post("/user/confirm", data);
   return response.data;
 };
 
 export const resendConfirmationCode = async (email: string) => {
-  const response = await apiService.post("/user/resend-confirmation", { email });
+  const response = await apiService.post("/user/resend-confirmation", {
+    email,
+  });
   return response.data;
 };
 export const requestResetPassword = async (email: string) => {
@@ -247,7 +253,8 @@ export const updateUserProfile = async (formData: FormData) => {
     });
     return response.data.user;
   } catch (error: any) {
-    const msg = error.response?.data?.error || "Erreur lors de la mise à jour du profil.";
+    const msg =
+      error.response?.data?.error || "Erreur lors de la mise à jour du profil.";
     throw new Error(msg);
   }
 };
@@ -270,7 +277,8 @@ export const updatePassword = async ({
     return response.data;
   } catch (error: any) {
     const msg =
-      error.response?.data?.error || "Erreur lors de la mise à jour du mot de passe.";
+      error.response?.data?.error ||
+      "Erreur lors de la mise à jour du mot de passe.";
     throw new Error(msg);
   }
 };
@@ -288,12 +296,15 @@ export const deleteUserProfile = async () => {
     const response = await apiService.delete("/user/profile");
     return response.data;
   } catch (error: any) {
-    const msg = error.response?.data?.error || "Erreur lors de la suppression du compte.";
+    const msg =
+      error.response?.data?.error || "Erreur lors de la suppression du compte.";
     throw new Error(msg);
   }
 };
 
-export const checkMailExists = async (email: string): Promise<{ exists: boolean }> => {
+export const checkMailExists = async (
+  email: string,
+): Promise<{ exists: boolean }> => {
   try {
     const response = await apiService.post("/check-email", { email });
     return response.data;

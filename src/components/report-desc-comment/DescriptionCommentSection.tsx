@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./DescriptionCommentSection.scss";
 import { MessageCircleMore, Share2 } from "lucide-react";
-import { useAuth } from "@src/services/AuthContext";
 import CommentSection from "@src/components/comments/CommentSection";
 import DescriptionReactionSelector from "@src/utils/DescriptionReactionSelector";
 import { useCommentsForDescription } from "@src/hooks/useCommentsForDescription";
@@ -33,20 +32,23 @@ const DescriptionCommentSection: React.FC<Props> = ({
   onOpenSimilarReports,
   forceClose = false,
   onOpen,
-  autoOpenIfComments = false,
+  /* autoOpenIfComments = false, */
   hideFooter = false,
   refreshKey,
   forceOpen = false,
   onCommentCountChange,
-  onCommentAddedOrDeleted,
+  /* onCommentAddedOrDeleted, */
   onCommentsUpdate,
 }) => {
-  const { userProfile } = useAuth();
   const [localRefreshKey, setLocalRefreshKey] = useState(0);
   // Choix entre prop et état local
   const effectiveRefreshKey = refreshKey ?? localRefreshKey;
 
-  const { comments } = useCommentsForDescription(descriptionId, type, effectiveRefreshKey);
+  const { comments } = useCommentsForDescription(
+    descriptionId,
+    type,
+    effectiveRefreshKey,
+  );
   const [showComments, setShowComments] = useState(false);
 
   useEffect(() => {
@@ -74,8 +76,6 @@ const DescriptionCommentSection: React.FC<Props> = ({
     }
   }, [forceOpen]);
 
-
-
   useEffect(() => {
     const handleExternalToggle = () => {
       setShowComments(true);
@@ -86,10 +86,12 @@ const DescriptionCommentSection: React.FC<Props> = ({
     window.addEventListener("usearly-toggle-comments", handleExternalToggle);
 
     return () => {
-      window.removeEventListener("usearly-toggle-comments", handleExternalToggle);
+      window.removeEventListener(
+        "usearly-toggle-comments",
+        handleExternalToggle,
+      );
     };
   }, []);
-
 
   useEffect(() => {
     if (forceClose && showComments) {
@@ -98,7 +100,9 @@ const DescriptionCommentSection: React.FC<Props> = ({
   }, [forceClose]);
 
   return (
-    <div className={`description-comment-section ${modeCompact ? "compact" : ""}`}>
+    <div
+      className={`description-comment-section ${modeCompact ? "compact" : ""}`}
+    >
       {!hideFooter && (
         <div className="feedback-footer">
           {triggerType === "text" ? (
@@ -114,7 +118,8 @@ const DescriptionCommentSection: React.FC<Props> = ({
                 Répondre
                 {comments.length > 0 && (
                   <span className="comment-count">
-                    {comments.length} {comments.length === 1 ? "réponse" : "réponses"}
+                    {comments.length}{" "}
+                    {comments.length === 1 ? "réponse" : "réponses"}
                   </span>
                 )}
               </button>

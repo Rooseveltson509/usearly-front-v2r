@@ -1,5 +1,5 @@
 // /* UsearlyDraw.css */
- @use "@styles/base/variables" as *;
+@use "@styles/base/variables" as *;
 
 /* UsearlyDraw.scss */
 .usearly-wrap {
@@ -12,14 +12,14 @@
 }
 
 .usearly-svg {
-    position: absolute;
-    width: 90%;
-    height: 405px;          /* responsive */
-    overflow: visible;     /* ne coupe pas les bords */
+  position: absolute;
+  width: 90%;
+  height: 405px; /* responsive */
+  overflow: visible; /* ne coupe pas les bords */
 }
 
 .usearly-path {
-  fill: transparent;                /* contour uniquement */
+  fill: transparent; /* contour uniquement */
   stroke: currentColor;
   stroke-width: 1;
   vector-effect: non-scaling-stroke; /* épaisseur stable au scaling */
@@ -27,14 +27,16 @@
   stroke-linejoin: round;
 
   /* Animation “dessin” */
-  stroke-dasharray: 1;   /* 100% de la longueur (grâce à pathLength="1") */
-  stroke-dashoffset: 1;  /* caché au départ */
+  stroke-dasharray: 1; /* 100% de la longueur (grâce à pathLength="1") */
+  stroke-dashoffset: 1; /* caché au départ */
   animation: usearly-draw 45s ease-out forwards;
   will-change: stroke-dashoffset;
 }
 
 @keyframes usearly-draw {
-  to { stroke-dashoffset: 0; }
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 
 /* Accessibilité : pas d’anim si l’utilisateur préfère réduire les motions */
@@ -44,4 +46,3 @@
     stroke-dashoffset: 0;
   }
 }
-

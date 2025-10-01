@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import FilterBarGeneric from "./genericFilters/FilterBarGeneric";
 import { getAllBrands } from "@src/services/coupDeCoeurService";
-import BrandSelect from "@src/components/shared/BrandSelect";
 import "./HomeFiltersCdc.scss";
 
 interface Props {
@@ -23,7 +22,9 @@ const HomeFiltersCdc = ({
   setSelectedCategory,
   availableCategories,
 }: Props) => {
-  const [viewMode, setViewMode] = useState<"flat" | "chrono" | "confirmed">("flat");
+  const [viewMode, setViewMode] = useState<"flat" | "chrono" | "confirmed">(
+    "flat",
+  );
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [availableBrands, setAvailableBrands] = useState<string[]>([]);
@@ -34,7 +35,7 @@ const HomeFiltersCdc = ({
       { value: "enflammes", label: "❤️‍🔥 Coups de cœur les plus enflammés" },
       { value: "recent", label: "💌 Coups de cœur les plus récents" },
     ],
-    []
+    [],
   );
 
   const options = useMemo(() => {

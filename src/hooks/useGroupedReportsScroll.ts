@@ -41,13 +41,27 @@ export const useGroupedReportsScroll = ({
     const observer = new IntersectionObserver((entries) => {
       if (!entries[0].isIntersecting) return;
 
-      if (filter === "popular" && hasMorePopularEngagement && !loadingPopularEngagement) {
+      if (
+        filter === "popular" &&
+        hasMorePopularEngagement &&
+        !loadingPopularEngagement
+      ) {
         loadMorePopularEngagement();
       } else if (filter !== "" && hasMorePopular && !loadingPopular) {
         loadMorePopular();
-      } else if (viewMode === "chrono" && filter === "" && hasMoreChrono && !loadingChrono) {
+      } else if (
+        viewMode === "chrono" &&
+        filter === "" &&
+        hasMoreChrono &&
+        !loadingChrono
+      ) {
         loadMoreChrono();
-      } else if (viewMode === "flat" && filter === "" && hasMoreFlat && !loadingFlat) {
+      } else if (
+        viewMode === "flat" &&
+        filter === "" &&
+        hasMoreFlat &&
+        !loadingFlat
+      ) {
         loadMoreFlat();
       }
     });

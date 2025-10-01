@@ -8,9 +8,9 @@
     text-decoration: none !important;
   }
 }
-.icon-statut{
-  width:20px;
-  }
+.icon-statut {
+  width: 20px;
+}
 .count-right {
   display: flex;
   align-items: center;
@@ -41,7 +41,6 @@
     margin: 0 2px;
   }
 }
-
 
 .report-actions-bar {
   width: 100%;
@@ -122,8 +121,7 @@
         font-size: 14px;
         padding: 0;
         transition: color 0.2s;
-        color:#535353;
-
+        color: #535353;
 
         &:hover {
           color: #111827;
@@ -136,7 +134,7 @@
     }
 
     .status-right {
-      font-family:"inter";
+      font-family: "inter";
       display: flex;
       align-items: center;
       width: max-content;

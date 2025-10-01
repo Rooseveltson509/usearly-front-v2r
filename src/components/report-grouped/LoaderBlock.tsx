@@ -19,7 +19,9 @@ const LoaderBlock = ({ loading, hasMore, error, loaderRef }: Props) => {
           <span>Chargement en cours...</span>
         </div>
       )}
-      {!hasMore && !loading && <div className="end-message">Fin des résultats</div>}
+      {!hasMore && !loading && (
+        <div className="end-message">Fin des résultats</div>
+      )}
       {error && <div className="erreur">{error}</div>}
     </div>
   );

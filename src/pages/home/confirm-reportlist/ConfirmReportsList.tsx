@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useConfirmedFlatData } from "@src/hooks/useConfirmedFlatData";
 import type { ExplodedGroupedReport } from "@src/types/Reports";
 import ReportListView from "../ReportListView";
@@ -14,7 +14,7 @@ const ConfirmedReportsList = ({
   searchTerm?: string;
   onClearSearchTerm?: () => void;
 }) => {
-  const { data, loading } = useConfirmedFlatData();
+  const { data } = useConfirmedFlatData();
 
   const explodedData: ExplodedGroupedReport[] = data.flatMap((group) =>
     group.subCategories.map((subCategory) => ({
@@ -27,7 +27,7 @@ const ConfirmedReportsList = ({
       reactions: group.reactions,
       subCategory, // 👈 nouvelle clé : l'unique sous-catégorie à afficher
       subCategories: [subCategory], // 👈 requis pour compatibilité avec GroupedReport
-    }))
+    })),
   );
 
   return (

@@ -7,15 +7,27 @@
 @use "components/header";
 
 /* Empêche le défilement horizontal */
-html, body {
-    width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 /* Évite les débordements involontaires */
-*, *::before, *::after { box-sizing: border-box; }
-img, video, canvas, iframe { max-width: 100%; height: auto; display: block; }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+img,
+video,
+canvas,
+iframe {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
 
 /* Si tu as de très longs mots/URLs */
 // :where(p, li, a, span, h1, h2, h3, h4, h5, h6) { overflow-wrap: anywhere; }

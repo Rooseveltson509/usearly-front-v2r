@@ -1,4 +1,4 @@
-import "./UserAccountInformations.scss"; 
+import "./UserAccountInformations.scss";
 import React, { useEffect, useState } from "react";
 import {
   updateUserProfile,
@@ -12,7 +12,6 @@ import { getFullAvatarUrl } from "@src/utils/avatarUtils";
 import Avatar from "../../../components/shared/Avatar";
 import { useNavigate } from "react-router-dom";
 import InputText from "@src/components/inputs/inputsGlobal/InputText";
-import SelectGlobal from "@src/components/inputs/selectGlobal/SelectGlobal";
 import PenModifyIcon from "@src/assets/images/pen-modify-circle.svg";
 import InputTextAccount from "@src/components/inputs/inputsGlobal/InputTextAccount";
 import SelectAccount from "@src/components/inputs/selectGlobal/SelectAccount";
@@ -47,13 +46,13 @@ function toFRDateForApi(inputVal: string): string {
 function UserAccountInformations() {
   const { userProfile, fetchUserProfile, logout } = useAuth();
   const [avatarPreview, setAvatarPreview] = useState<string | null>(
-    userProfile?.avatar || null
+    userProfile?.avatar || null,
   );
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [pseudo, setPseudo] = useState("");
   const [email, setEmail] = useState("");
   const [birthdate, setBirthdate] = useState(""); // valeur POUR l’input: YYYY-MM-DD
-  const [gender, setGender] = useState("");
+  const [, setGender] = useState("");
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -144,8 +143,17 @@ function UserAccountInformations() {
             <>
               <h2>Photo actuelle</h2>
               <div>
-                <img src={avatarPreview} alt="Preview" className="preview-img" />
-                <img src={PenModifyIcon} alt="Modifier" onClick={avatarImgClick} className="modify-icon with-img" />
+                <img
+                  src={avatarPreview}
+                  alt="Preview"
+                  className="preview-img"
+                />
+                <img
+                  src={PenModifyIcon}
+                  alt="Modifier"
+                  onClick={avatarImgClick}
+                  className="modify-icon with-img"
+                />
               </div>
             </>
           ) : (
@@ -157,13 +165,23 @@ function UserAccountInformations() {
                   pseudo={pseudo || userProfile?.pseudo || "?"}
                   className="large-avatar"
                 />
-                <img src={PenModifyIcon} alt="Modifier" onClick={avatarImgClick} className="modify-icon" />
+                <img
+                  src={PenModifyIcon}
+                  alt="Modifier"
+                  onClick={avatarImgClick}
+                  className="modify-icon"
+                />
               </div>
             </>
           )}
         </div>
 
-        <input id="avatarImg" type="file" accept="image/*" onChange={handleAvatarChange} />
+        <input
+          id="avatarImg"
+          type="file"
+          accept="image/*"
+          onChange={handleAvatarChange}
+        />
 
         <div className="form-group">
           <InputTextAccount
@@ -176,7 +194,13 @@ function UserAccountInformations() {
         </div>
 
         <div className="form-group">
-          <InputTextAccount id="email" label="Email" type="email" value={email} disabled={true} />
+          <InputTextAccount
+            id="email"
+            label="Email"
+            type="email"
+            value={email}
+            disabled={true}
+          />
         </div>
 
         <div className="form-group">
@@ -208,16 +232,37 @@ function UserAccountInformations() {
         <h2>Changer le mot de passe</h2>
 
         <div className="form-group">
-          <InputText id="oldPassword" label="Mot de passe actuel" type="password" value={oldPassword} onChange={(e) => setOldPassword(e.target.value)} />
+          <InputText
+            id="oldPassword"
+            label="Mot de passe actuel"
+            type="password"
+            value={oldPassword}
+            onChange={(e) => setOldPassword(e.target.value)}
+          />
         </div>
         <div className="form-group">
-          <InputText id="newPassword" label="Nouveau mot de passe" type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
+          <InputText
+            id="newPassword"
+            label="Nouveau mot de passe"
+            type="password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+          />
         </div>
         <div className="form-group">
-          <InputText id="confirmPassword" label="Confirmer le mot de passe" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+          <InputText
+            id="confirmPassword"
+            label="Confirmer le mot de passe"
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
         </div>
         <div className="form-group submit-group">
-          <Buttons title="Mettre à jour le mot de passe" onClick={handlePasswordUpdate} />
+          <Buttons
+            title="Mettre à jour le mot de passe"
+            onClick={handlePasswordUpdate}
+          />
         </div>
       </div>
 

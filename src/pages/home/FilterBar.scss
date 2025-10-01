@@ -15,7 +15,7 @@
       display: none;
     }
   }
-  .secondary-filters-container{
+  .secondary-filters-container {
     display: flex;
     gap: 8px;
   }
@@ -29,7 +29,9 @@
     background: #fff;
     font-size: 14px;
     cursor: pointer;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
 
     &:focus {
       border-color: #3b82f6;
@@ -52,7 +54,9 @@
     background: #fff;
     cursor: pointer;
     font-size: 14px;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
 
     &:hover,
     &:focus-visible {
@@ -85,7 +89,9 @@
       border: 1px solid #ccc;
       border-radius: 8px;
       background: #fafafa;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
 
       &:focus {
         border-color: #3b82f6;
@@ -150,7 +156,7 @@
       }
     }
 
-    ul{
+    ul {
       list-style: none;
     }
   }

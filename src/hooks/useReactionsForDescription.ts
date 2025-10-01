@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 export const useReactionsForDescription = (
   userId: string,
   id: string,
-  type?: "coupdecoeur" | "suggestion"
+  type?: "coupdecoeur" | "suggestion",
 ) => {
   const [reactions, setReactions] = useState<UserReaction[]>([]);
 
@@ -58,4 +58,3 @@ export const useReactionsForDescription = (
     handleReact,
   };
 };
-

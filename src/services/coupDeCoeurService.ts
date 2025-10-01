@@ -9,7 +9,7 @@ const getAuthToken = () =>
  */
 export const getPopularCoupsDeCoeur = async (
   page = 1,
-  limit = 10
+  limit = 10,
 ): Promise<{
   totalCoupsdeCoeur: number;
   currentPage: number;
@@ -28,7 +28,7 @@ export const getPopularCoupsDeCoeur = async (
  */
 export const getEnflammesCoupsDeCoeur = async (
   page = 1,
-  limit = 10
+  limit = 10,
 ): Promise<{
   totalCoupsdeCoeur: number;
   currentPage: number;
@@ -52,15 +52,22 @@ export const getPublicCoupsDeCoeur = async (page = 1, limit = 10) => {
   return data;
 };
 
-
-export const getCoupsDeCoeurByBrand = async (brand: string, page = 1, limit = 10) => {
+export const getCoupsDeCoeurByBrand = async (
+  brand: string,
+  page = 1,
+  limit = 10,
+) => {
   const { data } = await apiService.get(`/coupdecoeurs/by-brand`, {
     params: { brand, page, limit },
   });
   return data;
 };
 
-export const getSuggestionsByBrand = async (brand: string, page = 1, limit = 10) => {
+export const getSuggestionsByBrand = async (
+  brand: string,
+  page = 1,
+  limit = 10,
+) => {
   const { data } = await apiService.get(`/suggestions/by-brand`, {
     params: { brand, page, limit },
   });

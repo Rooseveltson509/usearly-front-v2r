@@ -4,7 +4,8 @@ import { fetchValidBrandLogo } from "@src/utils/brandLogos";
 import { parseISO, formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 import "./FlatReportList.scss";
-import { X, ChevronDown } from "lucide-react";
+import { ChevronDown } from "lucide-react";
+import { Virtuoso } from "react-virtuoso";
 
 interface Props {
   grouped: [string, GroupedReport[]][];
@@ -18,8 +19,8 @@ const getLatestDateLabel = (reports: GroupedReport[]) => {
     .flatMap(
       (r) =>
         r.subCategories?.flatMap(
-          (sub) => sub.descriptions?.map((d) => d.createdAt) || []
-        ) || []
+          (sub) => sub.descriptions?.map((d) => d.createdAt) || [],
+        ) || [],
     )
     .filter(Boolean)
     .map((date) => parseISO(date as string));
@@ -55,7 +56,7 @@ const FlatReportList = ({
           const siteUrl = reports?.[0]?.siteUrl || undefined;
           const logoUrl = await fetchValidBrandLogo(brand, siteUrl);
           return [brand, logoUrl] as const;
-        })
+        }),
       );
 
       if (!cancelled) {
@@ -75,7 +76,6 @@ const FlatReportList = ({
       cancelled = true;
     };
   }, [grouped, logos]);
-
 
   const handleToggle = (brand: string) => {
     setGroupOpen((prev) => {
@@ -151,17 +151,11 @@ const FlatReportList = ({
 
             {isOpen && (
               <div className="report-list">
-                {reports.map((report, index) => (
-                  <div
-                    key={`${brand}-${index}`}
-                    className="report-item"
-                    style={{
-                      animationDelay: `${index * 50}ms`,
-                    }}
-                  >
-                    {renderCard(report, index)}
-                  </div>
-                ))}
+                <Virtuoso
+                  style={{ height: 600 }}
+                  totalCount={reports.length}
+                  itemContent={(index) => renderCard(reports[index], index)}
+                />
               </div>
             )}
           </div>

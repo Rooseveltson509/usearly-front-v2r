@@ -20,8 +20,8 @@ const SharedFooterCdcAndSuggest: React.FC<Props> = ({
   userId,
   descriptionId,
   type,
-  onToggle,
-  statusLabel = "En cours de correction",
+  /*   onToggle,
+  statusLabel = "En cours de correction", */
   onVoteClick,
 }) => {
   const emojis = getEmojisForType(type);
@@ -31,10 +31,10 @@ const SharedFooterCdcAndSuggest: React.FC<Props> = ({
   const [showShareModal, setShowShareModal] = useState(false);
   let hoverTimeout: NodeJS.Timeout;
 
-  const { reactions, getCount, handleReact } = useReactionsForDescription(
+  const { getCount, handleReact } = useReactionsForDescription(
     userId,
     descriptionId,
-    type
+    type,
   );
 
   const allReactions = emojis
@@ -123,7 +123,8 @@ const SharedFooterCdcAndSuggest: React.FC<Props> = ({
 
             {/* Commenter */}
             <button className="comment-toggle-btn" onClick={toggleComments}>
-              <MessageCircle size={16} /> {type === "coupdecoeur" && "Commenter"}
+              <MessageCircle size={16} />{" "}
+              {type === "coupdecoeur" && "Commenter"}
             </button>
 
             {/* Partager */}
@@ -153,7 +154,6 @@ const SharedFooterCdcAndSuggest: React.FC<Props> = ({
               onClose={() => setShowShareModal(false)}
             />
           )}
-
         </div>
 
         <div className="comments-section">

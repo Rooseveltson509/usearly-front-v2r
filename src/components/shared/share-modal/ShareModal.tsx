@@ -14,7 +14,7 @@ interface Props {
 const ShareModal: React.FC<Props> = ({ suggestionId, onClose }) => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [, setLoading] = useState(false);
   const [selected, setSelected] = useState<any | null>(null);
 
   // 🔎 recherche utilisateurs avec debounce
@@ -28,7 +28,7 @@ const ShareModal: React.FC<Props> = ({ suggestionId, onClose }) => {
       setLoading(true);
       try {
         const res = await apiService.get(
-          `/users/search?q=${encodeURIComponent(query)}`
+          `/users/search?q=${encodeURIComponent(query)}`,
         );
         setResults(res.data.users || res.data || []);
       } catch (err) {
@@ -50,7 +50,7 @@ const ShareModal: React.FC<Props> = ({ suggestionId, onClose }) => {
 
       const res = await apiService.post(
         `/share/suggestion/${suggestionId}`,
-        payload
+        payload,
       );
 
       const sharedId = res.data.sharedId;
@@ -58,9 +58,15 @@ const ShareModal: React.FC<Props> = ({ suggestionId, onClose }) => {
 
       try {
         await navigator.clipboard.writeText(url);
-        showToast("✅ Suggestion partagée ! Lien copié dans le presse-papier", "success");
+        showToast(
+          "✅ Suggestion partagée ! Lien copié dans le presse-papier",
+          "success",
+        );
       } catch {
-        showToast("✅ Suggestion partagée ! Mais impossible de copier le lien automatiquement", "warning");
+        showToast(
+          "✅ Suggestion partagée ! Mais impossible de copier le lien automatiquement",
+          "warning",
+        );
         console.log("👉 Lien à partager :", url);
       }
 
@@ -72,10 +78,14 @@ const ShareModal: React.FC<Props> = ({ suggestionId, onClose }) => {
   };
 
   // ✅ Partage social
-  const handleShareSocial = async (network: "whatsapp" | "facebook" | "linkedin" | "twitter") => {
+  const handleShareSocial = async (
+    network: "whatsapp" | "facebook" | "linkedin" | "twitter",
+  ) => {
     try {
       // Appel backend qui génère l'image + renvoie publicUrl
-      const res = await apiService.post(`/share/suggestion/${suggestionId}/social`);
+      const res = await apiService.post(
+        `/share/suggestion/${suggestionId}/social`,
+      );
       const { publicUrl } = res.data;
 
       let url = "";
@@ -120,7 +130,11 @@ const ShareModal: React.FC<Props> = ({ suggestionId, onClose }) => {
 
           {selected ? (
             <div className="selected-user">
-              <Avatar avatar={selected.avatar} pseudo={selected.pseudo} type="user" />
+              <Avatar
+                avatar={selected.avatar}
+                pseudo={selected.pseudo}
+                type="user"
+              />
               <span>{selected.pseudo}</span>
               <button onClick={() => setSelected(null)}>×</button>
             </div>
@@ -163,16 +177,28 @@ const ShareModal: React.FC<Props> = ({ suggestionId, onClose }) => {
         <div className="social-share">
           <p>Partager sur :</p>
           <div className="social-buttons">
-            <button onClick={() => handleShareSocial("whatsapp")} className="whatsapp">
+            <button
+              onClick={() => handleShareSocial("whatsapp")}
+              className="whatsapp"
+            >
               <FaWhatsapp size={18} /> WhatsApp
             </button>
-            <button onClick={() => handleShareSocial("facebook")} className="facebook">
+            <button
+              onClick={() => handleShareSocial("facebook")}
+              className="facebook"
+            >
               <FaFacebook size={18} /> Facebook
             </button>
-            <button onClick={() => handleShareSocial("linkedin")} className="linkedin">
+            <button
+              onClick={() => handleShareSocial("linkedin")}
+              className="linkedin"
+            >
               <FaLinkedin size={18} /> LinkedIn
             </button>
-            <button onClick={() => handleShareSocial("twitter")} className="twitter">
+            <button
+              onClick={() => handleShareSocial("twitter")}
+              className="twitter"
+            >
               <FaTwitter size={18} /> Twitter/X
             </button>
           </div>

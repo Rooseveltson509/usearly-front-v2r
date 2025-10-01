@@ -21,7 +21,8 @@ const RequestResetPassword = () => {
       setMessage(msg);
       showToast(msg, "success");
     } catch (err: any) {
-      const errMsg = err.response?.data?.error || err.message || "Erreur inattendue";
+      const errMsg =
+        err.response?.data?.error || err.message || "Erreur inattendue";
       setError(errMsg);
       showToast(errMsg, "error");
     } finally {

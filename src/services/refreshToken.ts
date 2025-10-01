@@ -4,7 +4,9 @@ import { storeTokenInCurrentStorage } from "./tokenStorage";
 export const refreshToken = async (): Promise<string> => {
   try {
     // 1️⃣ Récupérer le CSRF token
-    const csrfRes = await apiService.get("/csrf-token", { withCredentials: true });
+    const csrfRes = await apiService.get("/csrf-token", {
+      withCredentials: true,
+    });
     const csrfToken = csrfRes.data.csrfToken;
 
     if (!csrfToken) throw new Error("CSRF Token non reçu");
@@ -18,7 +20,7 @@ export const refreshToken = async (): Promise<string> => {
         headers: {
           "X-CSRF-Token": csrfToken,
         },
-      }
+      },
     );
 
     const newToken = response.data.accessToken;

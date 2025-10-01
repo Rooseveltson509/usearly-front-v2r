@@ -1,54 +1,53 @@
 .chronological-report-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 0;
+  margin-top: 30px;
+
+  .date-group {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    padding:0;
-    margin-top:30px;
+    gap: 0.2rem;
 
-    .date-group {
-        display: flex;
-        flex-direction: column;
-        gap: 0.2rem;
+    .date-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.25rem 0;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
 
-        .date-header {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.25rem 0;
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--text-primary);
+      .calendar-icon {
+        width: 18px;
+        height: 18px;
+        display: block;
+        color: #c4c6d3;
+      }
 
-            .calendar-icon {
-                width: 18px;
-                height: 18px;
-                display:block;
-                color:#c4c6d3;
-            }
-
-            .date-title {
-                margin: 0;
-                font-size: 13px;
-                color: #626469;
-                font-family: "Inter";
-                font-weight: 400;
-            
-            }
-        }
-
-        .report-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
+      .date-title {
+        margin: 0;
+        font-size: 13px;
+        color: #626469;
+        font-family: "Inter";
+        font-weight: 400;
+      }
     }
+
+    .report-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  }
 }
 
 .chrono-empty {
-    padding: 2rem;
-    text-align: center;
-    color: var(--text-secondary);
-    font-size: 0.9rem;
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
 }
 .report-card:hover {
   transform: translateY(-1px);

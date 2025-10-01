@@ -9,7 +9,12 @@ interface Props {
   renderCard: (item: any, index: number) => React.ReactNode;
 }
 
-const GroupedReportList = ({ grouped, groupOpen, setGroupOpen, renderCard }: Props) => {
+const GroupedReportList = ({
+  grouped,
+  groupOpen,
+  setGroupOpen,
+  renderCard,
+}: Props) => {
   const [logos, setLogos] = useState<Record<string, string>>({});
 
   useEffect(() => {
@@ -30,7 +35,7 @@ const GroupedReportList = ({ grouped, groupOpen, setGroupOpen, renderCard }: Pro
 
           const logoUrl = await fetchValidBrandLogo(brand, siteUrl);
           return [brand, logoUrl] as const;
-        })
+        }),
       );
 
       if (!cancelled) {
@@ -51,7 +56,6 @@ const GroupedReportList = ({ grouped, groupOpen, setGroupOpen, renderCard }: Pro
     };
   }, [grouped, logos]);
 
-
   return (
     <>
       {Object.entries(grouped).map(([brand, categories]) => (
@@ -66,10 +70,18 @@ const GroupedReportList = ({ grouped, groupOpen, setGroupOpen, renderCard }: Pro
               const isOpen = groupOpen[catId];
 
               return (
-                <div key={catId} className={`category-block ${isOpen ? "open" : ""}`}>
+                <div
+                  key={catId}
+                  className={`category-block ${isOpen ? "open" : ""}`}
+                >
                   <div
                     className="category-header clickable"
-                    onClick={() => setGroupOpen((prev) => ({ ...prev, [catId]: !prev[catId] }))}
+                    onClick={() =>
+                      setGroupOpen((prev) => ({
+                        ...prev,
+                        [catId]: !prev[catId],
+                      }))
+                    }
                   >
                     <div className="left">
                       <span className="chevron">{isOpen ? "▼" : "▶"}</span>

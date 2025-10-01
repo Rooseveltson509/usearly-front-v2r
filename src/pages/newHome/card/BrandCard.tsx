@@ -35,7 +35,7 @@ const BrandCard: React.FC = () => {
         brands.map(async (brand) => {
           const logoUrl = await fetchValidBrandLogo(brand);
           return [brand, logoUrl] as [string, string];
-        })
+        }),
       );
       setLogos(Object.fromEntries(entries));
     };

@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import UserStatsCard from "./UserStatsCard";
 import ContributionsOverview from "./ContributionsOverview";
 import FeedbackTabs, { type FeedbackType } from "./FeedbackTabs";
-import UserSidebarStats from "./UserSidebarStats";
 import "./UserProfilePage.scss";
 import big from "/assets/images/big.svg";
 import medium from "/assets/images/medium.svg";
@@ -13,7 +12,6 @@ import UserGroupedReportsList from "../profile/UserGroupedReportsList";
 import UserFeedbackView from "../profile/UserFeedbackView";
 import UserChallenge from "../user-profile/UserChallenge";
 import UserImpact from "./UserImpact";
-
 
 const UserProfilePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<FeedbackType>("report");
@@ -33,10 +31,7 @@ const UserProfilePage: React.FC = () => {
           <FeedbackTabs activeTab={activeTab} onTabChange={setActiveTab} />
         </div>
         <div className="left">
-          <img
-            className="chat"
-            src={decoBanner}
-          />
+          <img className="chat" src={decoBanner} />
         </div>
         {/* zone droite – pastilles statistiques*/}
         <div className="right">

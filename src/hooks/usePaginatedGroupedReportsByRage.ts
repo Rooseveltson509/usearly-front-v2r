@@ -4,7 +4,7 @@ import type { ConfirmedSubcategoryReport } from "@src/types/Reports";
 
 export const usePaginatedGroupedReportsByRage = (
   active: boolean,
-  pageSize = 10
+  pageSize = 10,
 ) => {
   const [data, setData] = useState<ConfirmedSubcategoryReport[]>([]);
   const [page, setPage] = useState(1);

@@ -1,5 +1,4 @@
 import { useUserStatsSummary } from "@src/hooks/useUserStatsSummary";
-import defaultAvatar from "/assets/images/user.png";
 import badge from "/assets/icons/Little-badge.png";
 import Uicon from "/assets/U-score-icon.svg";
 import { useState } from "react";
@@ -7,8 +6,6 @@ import { getDisplayName } from "@src/utils/avatarUtils";
 import "./UserStatsCard.scss";
 import Avatar from "../shared/Avatar";
 import { useAuth } from "@src/services/AuthContext";
-
-
 
 const UserStatsCard = () => {
   const { userProfile } = useAuth();
@@ -19,12 +16,12 @@ const UserStatsCard = () => {
 
   return (
     <div className="user-stats-card v2">
-          <Avatar
-          avatar={userProfile.avatar}
-          pseudo={getDisplayName(userProfile.pseudo, userProfile.email)}
-          className="avatar" // classe appliquée à l’image OU au fallback
-          wrapperClassName="avatar-wrapper" // classe appliquée à la div parent
-        />
+      <Avatar
+        avatar={userProfile.avatar}
+        pseudo={getDisplayName(userProfile.pseudo, userProfile.email)}
+        className="avatar" // classe appliquée à l’image OU au fallback
+        wrapperClassName="avatar-wrapper" // classe appliquée à la div parent
+      />
 
       <h2 className="username">{userProfile.pseudo}</h2>
       <div className="user-level">Usear Niveau 1</div>
@@ -32,19 +29,19 @@ const UserStatsCard = () => {
       <div className="feedback-stats">
         <div className="stat-item">
           <span className="value">
-            {loading ? "..." : stats?.totalReports ?? 0}
+            {loading ? "..." : (stats?.totalReports ?? 0)}
           </span>
           <span className="label">Signalement</span>
         </div>
         <div className="stat-item large-item">
           <span className="value">
-            {loading ? "..." : stats?.totalCoupsDeCoeur ?? 0}
+            {loading ? "..." : (stats?.totalCoupsDeCoeur ?? 0)}
           </span>
           <span className="label">Coup de cœur</span>
         </div>
         <div className="stat-item">
           <span className="value">
-            {loading ? "..." : stats?.totalSuggestions ?? 0}
+            {loading ? "..." : (stats?.totalSuggestions ?? 0)}
           </span>
           <span className="label">Suggestion</span>
         </div>

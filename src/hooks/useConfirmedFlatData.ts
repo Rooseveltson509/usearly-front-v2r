@@ -17,22 +17,24 @@ export const useConfirmedFlatData = () => {
         const res = await getConfirmedSubcategoryReports(1, 100); // page 1, 100 éléments
 
         const formatted: ExplodedGroupedReport[] = res.data.map(
-          (item: ConfirmedSubcategoryReport, index) => {
-            const descriptions: FeedbackDescription[] = item.descriptions.map((desc, i) => ({
-              id: String(desc.id),
-              reportingId: String(item.reportingId),
-              description: desc.description,
-              emoji: desc.emoji ?? "",
-              createdAt: desc.createdAt,
-              user: {
-                id: String(desc.user.id),
-                pseudo: desc.user.pseudo,
-                avatar: desc.user.avatar ?? null,
-              },
-              capture: i === 0 ? item.capture : null,
-              marque: item.marque,
-              reactions: [],
-            }));
+          (item: ConfirmedSubcategoryReport) => {
+            const descriptions: FeedbackDescription[] = item.descriptions.map(
+              (desc, i) => ({
+                id: String(desc.id),
+                reportingId: String(item.reportingId),
+                description: desc.description,
+                emoji: desc.emoji ?? "",
+                createdAt: desc.createdAt,
+                user: {
+                  id: String(desc.user.id),
+                  pseudo: desc.user.pseudo,
+                  avatar: desc.user.avatar ?? null,
+                },
+                capture: i === 0 ? item.capture : null,
+                marque: item.marque,
+                reactions: [],
+              }),
+            );
 
             const explodedItem: ExplodedGroupedReport = {
               id: String(item.reportingId), // 🔁 requis par GroupedReport
@@ -60,9 +62,8 @@ export const useConfirmedFlatData = () => {
               },
             };
 
-
             return explodedItem;
-          }
+          },
         );
 
         setData(formatted);

@@ -104,7 +104,7 @@
 .share-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.4);
+  background: rgba(0, 0, 0, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -117,14 +117,14 @@
   padding: 20px;
   width: 400px;
   max-width: 90%;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  h3{
+  h3 {
     color: $dark;
   }
 }
@@ -158,7 +158,7 @@
   gap: 10px;
 
   .share-btn {
-    background-color: #90EE90 !important;
+    background-color: #90ee90 !important;
     color: #fff;
     border-radius: 6px;
     padding: 6px 12px;
@@ -244,7 +244,9 @@
         font-weight: 500;
         cursor: pointer;
         font-size: 14px;
-        transition: transform 0.2s ease, opacity 0.2s ease;
+        transition:
+          transform 0.2s ease,
+          opacity 0.2s ease;
 
         svg {
           flex-shrink: 0;
@@ -275,7 +277,7 @@
   }
 }
 
-.share-modal.avatar-fallback-custom{
+.share-modal.avatar-fallback-custom {
   width: 24px;
   height: 24px;
 }

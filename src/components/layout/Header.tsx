@@ -4,8 +4,10 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./Header.scss";
 import Logo from "@src/assets/logo.svg";
 import { useAuth } from "@src/services/AuthContext";
-import axios from "axios";
-import { getNotifications, markNotificationAsRead } from "@src/services/notificationService";
+import {
+  getNotifications,
+  markNotificationAsRead,
+} from "@src/services/notificationService";
 
 const Header = () => {
   const { isAuthenticated, userProfile, logout } = useAuth();
@@ -47,13 +49,12 @@ const Header = () => {
     try {
       await markNotificationAsRead(id);
       setNotifications((prev) =>
-        prev.map((n) => (n.id === id ? { ...n, read: true } : n))
+        prev.map((n) => (n.id === id ? { ...n, read: true } : n)),
       );
     } catch (err) {
       console.error("❌ Erreur markAsRead:", err);
     }
   };
-
 
   // 🔹 Charger notifs au mount + refresh auto toutes les 10s
   useEffect(() => {
@@ -63,8 +64,6 @@ const Header = () => {
       return () => clearInterval(interval);
     }
   }, [isAuthenticated]);
-
-
 
   const handleLogout = () => {
     logout();
@@ -111,12 +110,12 @@ const Header = () => {
               }}
             >
               <i className="fa fa-bell" />
-              {Array.isArray(notifications) && notifications.filter((n) => !n.read).length > 0 && (
-                <span className="notif-count">
-                  {notifications.filter((n) => !n.read).length}
-                </span>
-              )}
-
+              {Array.isArray(notifications) &&
+                notifications.filter((n) => !n.read).length > 0 && (
+                  <span className="notif-count">
+                    {notifications.filter((n) => !n.read).length}
+                  </span>
+                )}
 
               {notifOpen && (
                 <div className="notif-dropdown">
@@ -156,8 +155,6 @@ const Header = () => {
                   )}
                 </div>
               )}
-
-
             </div>
           )}
 

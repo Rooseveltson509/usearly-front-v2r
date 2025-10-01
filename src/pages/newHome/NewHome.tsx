@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import "./NewHome.scss";
 import MainTopBarHome from "./card/MainTopBarHome";
 import SignalCard from "./card/SignalCard";

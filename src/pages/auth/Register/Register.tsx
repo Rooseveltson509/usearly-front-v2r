@@ -45,9 +45,8 @@ const Register = () => {
   const [mailUser, setMailUser] = useState(initialEmail);
   const [mailContentEditable, setMailContentEditable] = useState(false);
   const emailSpanRef = useRef<HTMLSpanElement | null>(null);
-  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
 
-  const [validations, setValidations] = useState({
+  const [, setValidations] = useState({
     length: false,
     lowercase: false,
     uppercase: false,
@@ -93,7 +92,7 @@ const Register = () => {
   const handleSpanKeyDown = (e: React.KeyboardEvent<HTMLSpanElement>) => {
     const text = (emailSpanRef.current?.textContent ?? "").replace(
       new RegExp(ZWS, "g"),
-      ""
+      "",
     );
     if ((e.key === "Backspace" || e.key === "Delete") && text.length === 0) {
       e.preventDefault();
@@ -119,11 +118,11 @@ const Register = () => {
       if (response.code === "CONFIRMATION_REQUIRED") {
         if (response.userId && response.email) {
           const url = `/confirm?userId=${response.userId}&email=${encodeURIComponent(
-            response.email
+            response.email,
           )}`;
           showToast(
             `📧 ${response.email} existe déjà. Confirme ton compte pour continuer.`,
-            "info"
+            "info",
           );
           navigate(url, { replace: true });
         }
@@ -137,8 +136,8 @@ const Register = () => {
           if (response.userId && response.email) {
             navigate(
               `/confirm?userId=${response.userId}&email=${encodeURIComponent(
-                response.email
-              )}`
+                response.email,
+              )}`,
             );
           }
         },
@@ -155,7 +154,6 @@ const Register = () => {
       showToast(message, "error");
     }
   };
-
 
   const editableProps = mailContentEditable
     ? ({ contentEditable: true, suppressContentEditableWarning: true } as const)
@@ -221,25 +219,6 @@ const Register = () => {
           />
         )}
 
-        {/* Champ mot de passe */}
-        {/*         <div>
-          <InputText
-            registration={register("password", { required: true })}
-            id="password"
-            type="password"
-            placeholder="Mot de passe*"
-            required
-            onFocus={() => setIsPasswordFocused(true)}
-            onBlur={() => setIsPasswordFocused(false)}
-          />
-          {(isPasswordFocused || password) && (
-            <PasswordRules
-              value={password}
-              enabled={["length", "lowercase", "uppercase", "number", "special"]}
-              className="input-rules"
-            />
-          )}
-        </div> */}
         <div>
           <InputText
             registration={register("password", { required: true })}
@@ -253,7 +232,13 @@ const Register = () => {
           {password && (
             <PasswordRules
               value={password}
-              enabled={["length", "lowercase", "uppercase", "number", "special"]}
+              enabled={[
+                "length",
+                "lowercase",
+                "uppercase",
+                "number",
+                "special",
+              ]}
               className="input-rules"
             />
           )}

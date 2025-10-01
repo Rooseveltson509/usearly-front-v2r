@@ -8,7 +8,6 @@ import { fetchValidBrandLogo, getBrandLogo } from "@src/utils/brandLogos";
 import SharedFooterCdcAndSuggest from "../shared/SharedFooterCdcAndSuggest";
 import Avatar from "../shared/Avatar";
 import { brandColors } from "@src/utils/brandColors";
-import { getContrastTextColor } from "@src/utils/colorUtils";
 import { apiService } from "@src/services/apiService";
 import { showToast } from "@src/utils/toastUtils";
 import starProgressBar from "/assets/icons/icon-progress-bar.svg";
@@ -26,17 +25,21 @@ const isValidDate = (value: any) => {
   return !isNaN(d.getTime());
 };
 
-const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) => {
+const InteractiveFeedbackCard: React.FC<Props> = ({
+  item,
+  isOpen,
+  onToggle,
+}) => {
   const [showFullText, setShowFullText] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [logos, setLogos] = useState<Record<string, string>>({});
+  const [, setLogos] = useState<Record<string, string>>({});
   const { userProfile } = useAuth();
   const [votes, setVotes] = useState((item as Suggestion).votes || 0);
 
   // --- barre & étoile ---
   const barRef = useRef<HTMLDivElement>(null);
   const [thumbLeft, setThumbLeft] = useState(0);
-  const max = 3;
+  const max = 300;
   const thumbSize = 24; // largeur de l’étoile (doit matcher SCSS)
 
   useLayoutEffect(() => {
@@ -46,7 +49,7 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
         const raw = (votes / max) * barWidth;
         const safe = Math.max(
           thumbSize / 2,
-          Math.min(barWidth - thumbSize / 2, raw)
+          Math.min(barWidth - thumbSize / 2, raw),
         );
         setThumbLeft(safe);
       }
@@ -58,6 +61,45 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
     return () => window.removeEventListener("resize", updateThumb);
   }, [votes, max]);
 
+  useEffect(() => {
+    if (item.type === "suggestion") {
+      apiService
+        .get(`/suggestions/${item.id}/votes`)
+        .then((res) => setVotes(res.data.votes));
+    }
+  }, [item.id, item.type]);
+
+  useEffect(() => {
+    const brandKey = item.marque?.trim();
+    if (!brandKey) return;
+
+    let isMounted = true;
+
+    fetchValidBrandLogo(brandKey, item.siteUrl)
+      .then((logoUrl) => {
+        if (!isMounted) return;
+        setLogos((prev) => {
+          if (prev[brandKey] === logoUrl) {
+            return prev;
+          }
+          return { ...prev, [brandKey]: logoUrl };
+        });
+      })
+      .catch(() => {});
+
+    return () => {
+      isMounted = false;
+    };
+  }, [item.marque, item.siteUrl]);
+
+  useEffect(() => {
+    return () => {
+      if (selectedImage) {
+        document.body.classList.remove("lightbox-open");
+        document.body.style.overflow = "auto";
+      }
+    };
+  }, [selectedImage]);
 
   const handleVoteClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
@@ -89,51 +131,14 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
     document.body.style.overflow = "auto";
   };
 
-  useEffect(() => {
-    if (item.type === "suggestion") {
-      apiService.get(`/suggestions/${item.id}/votes`).then((res) => setVotes(res.data.votes));
-    }
-  }, [item.id, item.type]);
-
-  useEffect(() => {
-    const brandKey = item.marque?.trim();
-    if (!brandKey) return;
-
-    let isMounted = true;
-
-    fetchValidBrandLogo(brandKey, item.siteUrl)
-      .then((logoUrl) => {
-        if (!isMounted) return;
-        setLogos((prev) => {
-          if (prev[brandKey] === logoUrl) {
-            return prev;
-          }
-          return { ...prev, [brandKey]: logoUrl };
-        });
-      })
-      .catch(() => { });
-
-    return () => {
-      isMounted = false;
-    };
-  }, [item.marque, item.siteUrl]);
-
-  useEffect(() => {
-    return () => {
-      if (selectedImage) {
-        document.body.classList.remove("lightbox-open");
-        document.body.style.overflow = "auto";
-      }
-    };
-  }, [selectedImage]);
-
   const rawDescription = item.description || "";
   const description = rawDescription.trim();
   const DESCRIPTION_LIMIT = 150;
-  const shouldShowToggle = description.length > DESCRIPTION_LIMIT || item.capture;
-  const bgColor = brandColors[item.marque?.toLowerCase()] || brandColors.default;
+  const shouldShowToggle =
+    description.length > DESCRIPTION_LIMIT || item.capture;
+  const bgColor =
+    brandColors[item.marque?.toLowerCase()] || brandColors.default;
   const brandName = item.marque?.trim() ?? "";
-  const brandLogo = brandName ? logos[brandName] : "";
 
   return (
     <div className={`feedback-card ${isOpen ? "open" : ""}`}>
@@ -152,7 +157,8 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
                       backgroundColor: "#fff",
                       color: index === 0 ? bgColor : "#000",
                       border: `2px solid ${bgColor}`,
-                      boxShadow: index === 0 ? "0 2px 6px rgba(0,0,0,0.1)" : "none",
+                      boxShadow:
+                        index === 0 ? "0 2px 6px rgba(0,0,0,0.1)" : "none",
                     }}
                   >
                     {line}
@@ -195,7 +201,9 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
               ⸱
               {isValidDate(item.createdAt) && (
                 <span className="feedback-date">
-                  {formatDistanceToNowStrict(new Date(item.createdAt), { locale: fr })}
+                  {formatDistanceToNowStrict(new Date(item.createdAt), {
+                    locale: fr,
+                  })}
                 </span>
               )}
             </div>
@@ -279,12 +287,17 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
           <div className="feedback-footer">
             <div className="vote-progress">
               <div className="pg" ref={barRef}>
-                <div className="pg-fill" style={{ width: `${(votes / max) * 100}%` }} />
+                <div
+                  className="pg-fill"
+                  style={{ width: `${(votes / max) * 100}%` }}
+                />
               </div>
               <span className="pg-thumb" style={{ left: `${thumbLeft}px` }}>
                 <img src={starProgressBar} alt="progress star" />
               </span>
-              <span className="pg-count">{votes}/{max}</span>
+              <span className="pg-count">
+                {votes}/{max}
+              </span>
             </div>
           </div>
         )}
@@ -300,7 +313,11 @@ const InteractiveFeedbackCard: React.FC<Props> = ({ item, isOpen, onToggle }) =>
 
       {selectedImage && (
         <div className="lightbox" onClick={closeLightbox}>
-          <img src={selectedImage} alt="Zoom" onClick={(e) => e.stopPropagation()} />
+          <img
+            src={selectedImage}
+            alt="Zoom"
+            onClick={(e) => e.stopPropagation()}
+          />
         </div>
       )}
     </div>

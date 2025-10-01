@@ -20,7 +20,6 @@ interface Props {
 }
 
 const ReportActionsWithCommentsBlock: React.FC<Props> = ({
-  subCategory,
   userId,
   descriptionId,
   reportsCount,

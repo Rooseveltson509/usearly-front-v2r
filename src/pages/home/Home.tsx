@@ -1,31 +1,21 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import "./Home.scss";
-import FeedbackTabs, { type FeedbackType } from "@src/components/user-profile/FeedbackTabs";
+import { type FeedbackType } from "@src/components/user-profile/FeedbackTabs";
 import UserStatsCard from "@src/components/user-profile/UserStatsCard";
 import HomeGroupedReportsList from "./HomeGroupedReportsList";
 import FeedbackView from "@src/components/feedbacks/FeedbackView";
-import {
-  getGroupedReportsByHot,
-  getPublicCoupsDeCoeur,
-  getPublicSuggestions,
-} from "@src/services/feedbackService";
+import { getGroupedReportsByHot } from "@src/services/feedbackService";
 import type { CoupDeCoeur, Suggestion } from "@src/types/Reports";
 import SqueletonAnime from "@src/components/loader/SqueletonAnime";
-import { getCoupsDeCoeurByBrand, getSuggestionsByBrand } from "@src/services/coupDeCoeurService";
+import {
+  getCoupsDeCoeurByBrand,
+  getSuggestionsByBrand,
+} from "@src/services/coupDeCoeurService";
 import { fetchFeedbackData } from "@src/services/feedbackFetcher";
 import PurpleBanner from "./components/purpleBanner/PurpleBanner";
 import { brandColors } from "@src/utils/brandColors";
 import { hexToRgba } from "@src/utils/colorUtils";
 import { fetchValidBrandLogo } from "@src/utils/brandLogos";
-
-// 🖼️ Assets
-import cdcImgSide from "/assets/img-banner/banner-cdc-pop.png"
-import bulleIcon from "/assets/images/bulle-top-bar.png";
-import emojiIcon from "/assets/images/emoji-top-bar.png";
-import chatIcon from "/assets/images/chat-top-bar.svg";
-import big from "/assets/images/big.svg";
-import medium from "/assets/images/medium.svg";
-import small from "/assets/images/small.svg";
 
 // 🧩 Composants spécifiques
 import HomeFiltersCdc from "./HomeFiltersCdc";
@@ -63,16 +53,22 @@ const getSubCategoryLabel = (item: Record<string, any>) => {
 
 function Home() {
   const [activeTab, setActiveTab] = useState<FeedbackType>("report");
-  const [feedbackData, setFeedbackData] = useState<(CoupDeCoeur | Suggestion)[]>([]);
+  const [feedbackData, setFeedbackData] = useState<
+    (CoupDeCoeur | Suggestion)[]
+  >([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [selectedBrand, setSelectedBrand] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [activeFilter, setActiveFilter] = useState("confirmed");
-  const [viewMode, setViewMode] = useState<"flat" | "chrono" | "confirmed">("confirmed");
+  const [, setViewMode] = useState<"flat" | "chrono" | "confirmed">(
+    "confirmed",
+  );
   const [selectedSiteUrl, setSelectedSiteUrl] = useState<string | undefined>();
   const [suggestionSearch, setSuggestionSearch] = useState("");
-  const [selectedBrandLogo, setSelectedBrandLogo] = useState<string | null>(null);
+  const [selectedBrandLogo, setSelectedBrandLogo] = useState<string | null>(
+    null,
+  );
 
   const [availableFilters, setAvailableFilters] = useState<string[]>([
     "hot", // 👉 affiché en premier
@@ -82,7 +78,10 @@ function Home() {
     "urgent",
   ]);
 
-  const normalizedSelectedBrand = useMemo(() => selectedBrand.trim().toLowerCase(), [selectedBrand]);
+  const normalizedSelectedBrand = useMemo(
+    () => selectedBrand.trim().toLowerCase(),
+    [selectedBrand],
+  );
   const selectedBrandBaseColor = useMemo(() => {
     if (!normalizedSelectedBrand) return null;
     return brandColors[normalizedSelectedBrand] || brandColors.default;
@@ -111,7 +110,7 @@ function Home() {
         setActiveFilter("allSuggest");
       }
     },
-    [setActiveFilter, setSelectedBrand, setSelectedCategory]
+    [setActiveFilter, setSelectedBrand, setSelectedCategory],
   );
 
   useEffect(() => {
@@ -134,7 +133,7 @@ function Home() {
     const brandKey = (selectedBrand || firstItem?.marque || "").toLowerCase();
     const baseColor = brandColors[brandKey] || fallback;
 
-    if(baseColor === fallback) {
+    if (baseColor === fallback) {
       return {
         "--suggestion-bg": hexToRgba(baseColor, 1),
         "--suggestion-border": hexToRgba(baseColor, 0),
@@ -159,7 +158,10 @@ function Home() {
     (feedbackData as (CoupDeCoeur | Suggestion)[])
       .filter((item) => (item as any)?.type === "suggestion")
       .forEach((item) => {
-        if ((item as Suggestion).marque?.trim().toLowerCase() !== normalizedSelectedBrand) {
+        if (
+          (item as Suggestion).marque?.trim().toLowerCase() !==
+          normalizedSelectedBrand
+        ) {
           return;
         }
 
@@ -173,7 +175,7 @@ function Home() {
       });
 
     return Array.from(unique.values()).sort((a, b) =>
-      a.localeCompare(b, "fr", { sensitivity: "base" })
+      a.localeCompare(b, "fr", { sensitivity: "base" }),
     );
   }, [activeTab, feedbackData, normalizedSelectedBrand, selectedBrand]);
 
@@ -187,7 +189,10 @@ function Home() {
     (feedbackData as (CoupDeCoeur | Suggestion)[])
       .filter((item) => (item as any)?.type === "coupdecoeur")
       .forEach((item) => {
-        if ((item as CoupDeCoeur).marque?.trim().toLowerCase() !== normalizedSelectedBrand) {
+        if (
+          (item as CoupDeCoeur).marque?.trim().toLowerCase() !==
+          normalizedSelectedBrand
+        ) {
           return;
         }
 
@@ -201,7 +206,7 @@ function Home() {
       });
 
     return Array.from(unique.values()).sort((a, b) =>
-      a.localeCompare(b, "fr", { sensitivity: "base" })
+      a.localeCompare(b, "fr", { sensitivity: "base" }),
     );
   }, [activeTab, feedbackData, normalizedSelectedBrand, selectedBrand]);
 
@@ -211,7 +216,10 @@ function Home() {
     const normalized = selectedBrand.trim().toLowerCase();
     for (const item of feedbackData) {
       const marque = (item as any)?.marque;
-      if (typeof marque === "string" && marque.trim().toLowerCase() === normalized) {
+      if (
+        typeof marque === "string" &&
+        marque.trim().toLowerCase() === normalized
+      ) {
         const site = (item as any)?.siteUrl;
         if (typeof site === "string" && site.trim().length > 0) {
           return site;
@@ -263,7 +271,10 @@ function Home() {
       const suggestion = item as Suggestion;
       const categoryLabel = getSubCategoryLabel(suggestion);
 
-      if (normalizedCategory && normalizeText(categoryLabel) !== normalizedCategory) {
+      if (
+        normalizedCategory &&
+        normalizeText(categoryLabel) !== normalizedCategory
+      ) {
         return false;
       }
 
@@ -318,7 +329,6 @@ function Home() {
       }
     };
     checkHotFilter();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 🟢 Reset du filtre par défaut quand l’onglet change (si pas de marque sélectionnée)
@@ -401,9 +411,14 @@ function Home() {
     if (activeTab === "suggestion") return suggestionsForDisplay.length;
     if (activeTab === "coupdecoeur") return coupDeCoeursForDisplay.length;
     return feedbackData.length;
-  }, [activeTab, suggestionsForDisplay.length, coupDeCoeursForDisplay.length, feedbackData.length]);
+  }, [
+    activeTab,
+    suggestionsForDisplay.length,
+    coupDeCoeursForDisplay.length,
+    feedbackData.length,
+  ]);
 
-  function firstLetterCapitalized(string: string){
+  function firstLetterCapitalized(string: string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
@@ -420,29 +435,25 @@ function Home() {
         {/* === Onglet Signalements === */}
         {activeTab === "report" && (
           <div
-            className={`report-banner-container ${selectedBrand || selectedCategory
-              ? "banner-filtered"
-              : `banner-${activeFilter}`}`}
+            className={`report-banner-container ${
+              selectedBrand || selectedCategory
+                ? "banner-filtered"
+                : `banner-${activeFilter}`
+            }`}
             style={selectedBrandBaseColor ? brandBannerStyle : undefined}
           >
             <div className="feedback-list-wrapper">
-              {/* @ts-ignore */}
               <HomeGroupedReportsList
                 activeTab={activeTab}
                 activeFilter={activeFilter}
-                viewMode={activeFilter === "confirmed" ? "confirmed" : "none" as string | any}
-                onViewModeChange={setViewMode}
                 setActiveFilter={setActiveFilter}
-                // Additional props that the component's Props type typically expects:
-                filter={activeFilter}
-                setFilter={setActiveFilter}
-                setViewMode={setViewMode}
-                isHotFilterAvailable={availableFilters.includes("hot")}
+                viewMode={activeFilter === "confirmed" ? "confirmed" : "flat"}
+                onViewModeChange={setViewMode}
                 selectedBrand={selectedBrand}
                 setSelectedBrand={setSelectedBrand}
-                setSelectedSiteUrl={setSelectedSiteUrl}
                 selectedCategory={selectedCategory}
                 setSelectedCategory={setSelectedCategory}
+                setSelectedSiteUrl={setSelectedSiteUrl}
               />
             </div>
 
@@ -486,7 +497,12 @@ function Home() {
                     <FeedbackView
                       activeTab={activeTab}
                       viewMode="flat"
-                      currentState={{ data: coupDeCoeursForDisplay, loading: isLoading, hasMore: false, error: null }}
+                      currentState={{
+                        data: coupDeCoeursForDisplay,
+                        loading: isLoading,
+                        hasMore: false,
+                        error: null,
+                      }}
                       openId={null}
                       setOpenId={() => {}}
                       groupOpen={{}}
@@ -513,7 +529,11 @@ function Home() {
         {activeTab === "suggestion" && (
           <div
             className={`suggestion-banner-container ${selectedBrand ? "banner-filtered" : `banner-${activeFilter}`}`}
-            style={selectedBrandBaseColor ? { ...suggestionBannerStyle, ...brandBannerStyle } : suggestionBannerStyle}
+            style={
+              selectedBrandBaseColor
+                ? { ...suggestionBannerStyle, ...brandBannerStyle }
+                : suggestionBannerStyle
+            }
           >
             <div className="feedback-list-wrapper">
               <div>
@@ -531,7 +551,12 @@ function Home() {
               </div>
 
               {isLoading ? (
-                <SqueletonAnime loaderRef={{ current: null }} loading={true} hasMore={false} error={null} />
+                <SqueletonAnime
+                  loaderRef={{ current: null }}
+                  loading={true}
+                  hasMore={false}
+                  error={null}
+                />
               ) : (
                 <div>
                   <div className="selected-brand-heading">
@@ -547,14 +572,24 @@ function Home() {
                         <div className="selected-brand-count">
                           {displayedCount}
                         </div>
-                        signalement{displayedCount > 1 ? "s" : ""} {selectedCategory && `lié${displayedCount > 1 ? "s" : ""} au ${selectedCategory}`} sur {selectedBrand && firstLetterCapitalized(selectedBrand)+``}
+                        signalement{displayedCount > 1 ? "s" : ""}{" "}
+                        {selectedCategory &&
+                          `lié${displayedCount > 1 ? "s" : ""} au ${selectedCategory}`}{" "}
+                        sur{" "}
+                        {selectedBrand &&
+                          firstLetterCapitalized(selectedBrand) + ``}
                       </h1>
                     )}
                   </div>
                   <FeedbackView
                     activeTab={activeTab}
                     viewMode="flat"
-                    currentState={{ data: suggestionsForDisplay, loading: isLoading, hasMore: false, error: null }}
+                    currentState={{
+                      data: suggestionsForDisplay,
+                      loading: isLoading,
+                      hasMore: false,
+                      error: null,
+                    }}
                     openId={null}
                     setOpenId={() => {}}
                     groupOpen={{}}

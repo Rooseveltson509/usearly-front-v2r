@@ -1,7 +1,4 @@
-@use "@styles/base/_variables" as *;
-
-
-
+@use "../../../styles/base/_variables" as *;
 
 .floating-group {
   position: relative;
@@ -15,7 +12,6 @@
     border-radius: 6px;
     background: white;
     transition: border-color 0.3s;
-
 
     &:focus {
       outline: none;
@@ -64,7 +60,7 @@
   }
 }
 
-.error-message{
+.error-message {
   margin-top: 5px;
   margin-left: 2.5px;
   text-align: left;

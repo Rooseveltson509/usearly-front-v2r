@@ -1,4 +1,7 @@
-import type { UserGroupedReportDescription, UserGroupedReport } from "@src/types/Reports";
+import type {
+  UserGroupedReportDescription,
+  UserGroupedReport,
+} from "@src/types/Reports";
 
 interface GroupedBrandReports {
   marque: string;
@@ -13,7 +16,7 @@ interface GroupedBrandReports {
 }
 
 export function groupReportsByBrand(
-  reports: UserGroupedReport[]
+  reports: UserGroupedReport[],
 ): GroupedBrandReports[] {
   const map = new Map<string, GroupedBrandReports>();
 
@@ -31,10 +34,15 @@ export function groupReportsByBrand(
     grouped.totalCount += report.count;
 
     // Dernière date de signalement
-    const latestDesc = report.descriptions.reduce((latest, desc) =>
-      new Date(desc.createdAt) > new Date(latest.createdAt) ? desc : latest,
-    report.descriptions[0]);
-    if (latestDesc && new Date(latestDesc.createdAt) > new Date(grouped.lastDate)) {
+    const latestDesc = report.descriptions.reduce(
+      (latest, desc) =>
+        new Date(desc.createdAt) > new Date(latest.createdAt) ? desc : latest,
+      report.descriptions[0],
+    );
+    if (
+      latestDesc &&
+      new Date(latestDesc.createdAt) > new Date(grouped.lastDate)
+    ) {
       grouped.lastDate = latestDesc.createdAt;
     }
 

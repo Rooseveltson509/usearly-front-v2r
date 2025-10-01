@@ -6,9 +6,15 @@ import GuestRoute from "@src/components/context/GuestRoute";
 // ✅ Lazy imports
 const Register = lazy(() => import("@src/pages/auth/Register/Register"));
 const Login = lazy(() => import("@src/pages/auth/Login/Login"));
-const ConfirmAccount = lazy(() => import("@src/components/confirm-account/ConfirmAccount"));
-const RequestResetPassword = lazy(() => import("@src/pages/forgot-and-reset-pwd/RequestResetPassword"));
-const ResetPassword = lazy(() => import("@src/pages/forgot-and-reset-pwd/ResetPassword"));
+const ConfirmAccount = lazy(
+  () => import("@src/components/confirm-account/ConfirmAccount"),
+);
+const RequestResetPassword = lazy(
+  () => import("@src/pages/forgot-and-reset-pwd/RequestResetPassword"),
+);
+const ResetPassword = lazy(
+  () => import("@src/pages/forgot-and-reset-pwd/ResetPassword"),
+);
 
 export const authRoutes: RouteObject[] = [
   {

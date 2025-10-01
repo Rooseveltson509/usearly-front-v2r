@@ -63,7 +63,8 @@ const illustrationMap = {
     img: recentCdcImg,
   },
   all: {
-    label: "Simple mais génial : tu quittes un épisode, tu reprends exactement là où tu t’étais arrêté, sans perdre le fil de ton film ou ta série.",
+    label:
+      "Simple mais génial : tu quittes un épisode, tu reprends exactement là où tu t’étais arrêté, sans perdre le fil de ton film ou ta série.",
     emoji: "🥰",
     img: likedImg,
   },
@@ -85,16 +86,18 @@ const illustrationMap = {
     img: discussedImg,
   },
   recentSuggestion: {
-    label: "Spotify est top mais j’aimerais avoir un meilleur système de tri dans mes playlists, par exemple pouvoir classer facilement par humeur ou moment de la…",
+    label:
+      "Spotify est top mais j’aimerais avoir un meilleur système de tri dans mes playlists, par exemple pouvoir classer facilement par humeur ou moment de la…",
     emoji: "😎",
     img: recentSuggestionImg,
   },
   allSuggest: {
-    label: "Spotify est top mais j’aimerais avoir un meilleur système de tri dans mes playlists, par exemple pouvoir classer facilement par humeur ou moment de la…",
+    label:
+      "Spotify est top mais j’aimerais avoir un meilleur système de tri dans mes playlists, par exemple pouvoir classer facilement par humeur ou moment de la…",
     emoji: "🥱",
     img: discussedImg,
   },
-  
+
   likedSuggestion: {
     label: "Les plus likés",
     emoji: "🥰",
@@ -166,7 +169,8 @@ const FilterIllustration = ({
   }
 
   // 👉 Cas 2 : filtres globaux (reports, cdc, suggestions)
-  const key = filter === "" ? "default" : (filter as keyof typeof illustrationMap);
+  const key =
+    filter === "" ? "default" : (filter as keyof typeof illustrationMap);
   const data = illustrationMap[key];
   if (!data) return null;
 

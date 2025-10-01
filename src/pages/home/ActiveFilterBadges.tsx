@@ -19,14 +19,18 @@ const ActiveFilterBadges: React.FC<Props> = ({
         <span className="active-filter-badge">
           <Tag size={14} style={{ marginRight: "4px" }} />
           {selectedBrand}
-          <span className="close-icon" onClick={onClearBrand}>×</span>
+          <span className="close-icon" onClick={onClearBrand}>
+            ×
+          </span>
         </span>
       )}
       {selectedCategory && (
         <span className="active-filter-badge">
           <Folder size={14} style={{ marginRight: "4px" }} />
           {selectedCategory}
-          <span className="close-icon" onClick={onClearCategory}>×</span>
+          <span className="close-icon" onClick={onClearCategory}>
+            ×
+          </span>
         </span>
       )}
     </div>

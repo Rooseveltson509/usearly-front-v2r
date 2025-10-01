@@ -13,7 +13,6 @@ const UserFeedbackView: React.FC<Props> = ({ activeTab }) => {
   const { data, loading } = useFetchUserFeedback(activeTab);
   const [openId, setOpenId] = useState<string | null>(null);
 
-
   if (loading) {
     return (
       <SqueletonAnime
@@ -46,7 +45,6 @@ const UserFeedbackView: React.FC<Props> = ({ activeTab }) => {
             }
           />
         ))}
-
       </>
     );
   }
@@ -64,7 +62,6 @@ const UserFeedbackView: React.FC<Props> = ({ activeTab }) => {
             }
           />
         ))}
-
       </>
     );
   }
