@@ -1,3 +1,5 @@
+import { capitalizeFirstLetter } from "@src/utils/stringUtils";
+
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import "./Home.scss";
 import { type FeedbackType } from "@src/components/user-profile/FeedbackTabs";
@@ -454,6 +456,7 @@ function Home() {
                 selectedCategory={selectedCategory}
                 setSelectedCategory={setSelectedCategory}
                 setSelectedSiteUrl={setSelectedSiteUrl}
+                totalityCount={displayedCount}
               />
             </div>
 
@@ -463,6 +466,7 @@ function Home() {
                 selectedBrand={selectedBrand}
                 siteUrl={selectedSiteUrl}
                 selectedCategory={selectedCategory}
+                onglet="signalement"
               />
             </aside>
           </div>
@@ -572,12 +576,7 @@ function Home() {
                         <div className="selected-brand-count">
                           {displayedCount}
                         </div>
-                        signalement{displayedCount > 1 ? "s" : ""}{" "}
-                        {selectedCategory &&
-                          `lié${displayedCount > 1 ? "s" : ""} au ${selectedCategory}`}{" "}
-                        sur{" "}
-                        {selectedBrand &&
-                          firstLetterCapitalized(selectedBrand) + ``}
+                        signalement{displayedCount > 1 ? "s" : ""} {selectedCategory && `lié${displayedCount > 1 ? "s" : ""} au ${selectedCategory}`} sur {selectedBrand && capitalizeFirstLetter(selectedBrand)+``}
                       </h1>
                     )}
                   </div>

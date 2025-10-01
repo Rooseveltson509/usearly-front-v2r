@@ -71,26 +71,27 @@ const HomeFiltersSuggestion = ({
 
   return (
     <div className="controls">
-      <FilterBarGeneric
-        options={filterOptions}
-        filter={filter}
-        setFilter={setFilter}
-        viewMode={viewMode}
-        setViewMode={setViewMode}
-        setSelectedBrand={handleBrandSelect}
-        setSelectedCategory={setSelectedCategory}
-        selectedBrand={selectedBrand}
-        selectedCategory={selectedCategory}
-        availableBrands={availableBrands}
-        availableCategories={availableCategories}
-        dropdownRef={dropdownRef}
-        isDropdownOpen={isDropdownOpen}
-        setIsDropdownOpen={setIsDropdownOpen}
-        withBrands={true}
-        withCategories={true}
-        brandFocusFilter="brandSolo"
-        baseFilterValue="allSuggest"
-      />
+        <FilterBarGeneric
+          options={filterOptions}
+          filter={filter}
+          setFilter={setFilter}
+          viewMode={viewMode}
+          setViewMode={setViewMode}
+          setSelectedBrand={handleBrandSelect}
+          setSelectedCategory={setSelectedCategory}
+          selectedBrand={selectedBrand}
+          selectedCategory={selectedCategory}
+          availableBrands={availableBrands}
+          availableCategories={availableCategories}
+          dropdownRef={dropdownRef}
+          isDropdownOpen={isDropdownOpen}
+          setIsDropdownOpen={setIsDropdownOpen}
+          withBrands={!selectedBrand}
+          withCategories={!selectedBrand}
+          brandFocusFilter="brandSolo"
+          baseFilterValue="allSuggest"
+          hideFilterWhenBrandSelected={true}
+        />
 
       <BrandSelect
         brands={availableBrands}

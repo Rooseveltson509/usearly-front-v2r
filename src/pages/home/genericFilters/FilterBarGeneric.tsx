@@ -39,8 +39,10 @@ interface Props {
   labelOverride?: string;
   locationInfo?: string | null;
 
-  brandFocusFilter?: string;
-  baseFilterValue?: string;
+    brandFocusFilter?: string;
+    baseFilterValue?: string;
+
+    hideFilterWhenBrandSelected?: boolean;
 }
 
 // ✅ fonction de normalisation (mêmes règles que dans HomeGroupedReportsList)
@@ -74,6 +76,7 @@ const FilterBarGeneric: React.FC<Props> = ({
   locationInfo = null,
   brandFocusFilter = "",
   baseFilterValue,
+  hideFilterWhenBrandSelected = false,
 }) => {
   const [search, setSearch] = useState("");
 
@@ -213,6 +216,87 @@ const FilterBarGeneric: React.FC<Props> = ({
               )}
             </div>
           )}
+
+            {/* 🔧 Deuxième filtre : input + catégories (optionnel) */}
+            {(withBrands || withCategories) && (
+                <>
+                    <div className="filter-dropdown-wrapper" ref={dropdownRef}>
+                        <button
+                            className="filter-toggle"
+                            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                        >
+                            <SlidersHorizontal size={18} style={{ marginRight: "6px" }} />
+                            Filtrer
+                        </button>
+
+                        {isDropdownOpen && (
+                            <div className="filter-dropdown">
+                                {/* 🔍 Recherche marque */}
+                                {withBrands && (
+                                    <>
+                                        <input
+                                            type="text"
+                                            value={search || selectedBrand}
+                                            onChange={(e) => setSearch(e.target.value)}
+                                            placeholder="Rechercher une marque..."
+                                        />
+
+                                        {search && (
+                                            <ul className="autocomplete-list">
+                                                {filteredBrands.length > 0 ? (
+                                                    filteredBrands.map((brand) => (
+                                                        <li
+                                                            key={brand}
+                                                            onClick={() => {
+                                                                setSelectedBrand(brand);
+                                                                setSelectedCategory("");
+                                                                setSearch("");
+                                                                setIsDropdownOpen(false);
+
+                                                                const focusedFilter = brandFocusFilter ?? "";
+                                                                // 👉 Mode recherche (filtre solo marque)
+                                                                setViewMode("flat");
+                                                                setFilter(focusedFilter);
+                                                                onViewModeChange?.("flat");
+                                                                setActiveFilter(focusedFilter);
+                                                            }}
+                                                        >
+                                                            {brand}
+                                                        </li>
+                                                    ))
+                                                ) : (
+                                                    <li className="no-results">Aucune marque trouvée</li>
+                                                )}
+                                            </ul>
+                                        )}
+                                    </>
+                                )}
+
+                                {(selectedBrand || selectedCategory) && (
+                                    <button
+                                        className="reset"
+                                        onClick={() => {
+                                            setSelectedBrand("");
+                                            setSelectedCategory("");
+                                            setSearch("");
+
+                                            // 👉 retour au comportement par défaut
+                                            setViewMode("chrono");
+                                            const fallbackFilter =
+                                                baseFilterValue ?? options.find((opt) => opt.value !== brandFocusFilter)?.value ?? options[0]?.value ?? "";
+                                            setFilter(fallbackFilter);
+                                            onViewModeChange?.("chrono");
+                                            setActiveFilter(fallbackFilter);
+                                        }}
+                                    >
+                                        Réinitialiser
+                                    </button>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                </>
+            )}
         </div>
       )}
     </div>

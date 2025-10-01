@@ -18,6 +18,7 @@ import FlatSubcategoryBlock from "./confirm-reportlist/FlatSubcategoryBlock";
 import { getBrandLogo } from "@src/utils/brandLogos";
 import { useBrands } from "@src/hooks/useBrands";
 import { apiService } from "@src/services/apiService";
+import { capitalizeFirstLetter } from "@src/utils/stringUtils";
 
 type ViewMode = "flat" | "chrono" | "confirmed";
 
@@ -40,6 +41,7 @@ interface Props {
   setSelectedCategory: (val: string) => void;
 
   setSelectedSiteUrl: (val: string | undefined) => void;
+  totalityCount: number;
 }
 
 type ReportDescription = {
@@ -102,6 +104,7 @@ const HomeGroupedReportsList = ({
   setSelectedSiteUrl,
   selectedCategory,
   setSelectedCategory,
+  totalityCount,
 }: Props) => {
   const [filter, setFilter] = useState<FilterType>("");
   const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>(
@@ -114,6 +117,7 @@ const HomeGroupedReportsList = ({
   const [loadingFiltered, setLoadingFiltered] = useState(false);
   const [initializing, setInitializing] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [totalCount, setTotalCount] = useState(totalityCount);
 
   const isChronoView =
     viewMode === "chrono" && (filter === undefined || filter === "chrono");
@@ -188,7 +192,8 @@ const HomeGroupedReportsList = ({
         const { data } = await apiService.get("/reports", {
           params: { brand: selectedBrand, page: 1, limit: 20 },
         });
-        setFilteredReports(data.data ?? []);
+        setFilteredReports(data.data);
+        setTotalCount(data.data.length);
       } catch (err) {
         console.error("Erreur fetch reports filtrés:", err);
         setFilteredReports([]);
@@ -234,6 +239,7 @@ const HomeGroupedReportsList = ({
     if (!normalizedSearchTerm) return filteredByCategory;
     return filteredByCategory.filter((report) => {
       const searchableValues = getSearchableStrings(report);
+      console.log("searchableValues", searchableValues);
       return searchableValues.some((value) =>
         normalizeText(value).includes(normalizedSearchTerm),
       );
@@ -324,6 +330,32 @@ const HomeGroupedReportsList = ({
                 {},
               ),
             ).map(([category, reports]) => (
+              <>
+              {selectedBrand && (
+                <div className="selected-brand-summary">
+                  <div className="selected-brand-summary__brand">
+                    <div className="selected-brand-summary__logo">
+                      <img
+                        src={getBrandLogo(selectedBrand)}
+                        alt={selectedBrand}
+                      />
+                    </div>
+                    <div className="selected-brand-summary__info-container" >
+                      {selectedCategory ? (
+                        <>
+                          <span className="count">{filteredByCategory.length}</span> 
+                          <span className="text">signalement{filteredByCategory.length > 1 ? "s" : ""} lié{filteredByCategory.length > 1 ? "s" : ""} à « <b>{selectedCategory}</b> » sur {` ${capitalizeFirstLetter(selectedBrand)}`}</span>
+                        </>
+                      ) : (
+                        <>
+                          <span className="count">{totalCount}</span>
+                          <span className="text">signalement{totalCount > 1 ? "s" : ""} sur {` ${capitalizeFirstLetter(selectedBrand)}`}</span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
               <div key={category} className="category-block">
                 {reports.map((report, i) => (
                   <FlatSubcategoryBlock
@@ -338,6 +370,7 @@ const HomeGroupedReportsList = ({
                   />
                 ))}
               </div>
+              </>
             ))
           )}
         </div>
