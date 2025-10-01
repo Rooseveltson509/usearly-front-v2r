@@ -6,7 +6,7 @@ type FeedbackType = "report" | "suggestion" | "coupdecoeur";
 // ✅ Obtenir les réactions pour une description spécifique
 export const fetchReactionsByDescription = async (
   descriptionId: string,
-  type: FeedbackType
+  type: FeedbackType,
 ) => {
   const endpoint =
     type === "report"
@@ -21,7 +21,7 @@ export const fetchReactionsByDescription = async (
 export const sendReactionByDescription = async (
   descriptionId: string,
   emoji: string,
-  type: FeedbackType
+  type: FeedbackType,
 ) => {
   const endpoint =
     type === "report"
@@ -32,36 +32,52 @@ export const sendReactionByDescription = async (
   return response.data; // contient { success, reactions }
 };
 
-
 export const fetchReactions = async (reportId: string) => {
   const response = await apiService.get(`/reports/${reportId}/reactions`);
   return response.data.reactions;
 };
 
 export const sendReaction = async (reportId: string, emoji: string) => {
-  const response = await apiService.put(`/reports/${reportId}/reactions`, { emoji });
+  const response = await apiService.put(`/reports/${reportId}/reactions`, {
+    emoji,
+  });
   return response.data; // contient { success, reactions, counts }
 };
 
 // ✅ Suggestion
 export const fetchSuggestionReactions = async (suggestionId: string) => {
-  const response = await apiService.get(`/suggestions/${suggestionId}/reactions`);
+  const response = await apiService.get(
+    `/suggestions/${suggestionId}/reactions`,
+  );
   return response.data.reactions;
 };
 
-export const sendSuggestionReaction = async (suggestionId: string, emoji: string) => {
-  const response = await apiService.put(`/suggestions/${suggestionId}/reactions`, { emoji });
+export const sendSuggestionReaction = async (
+  suggestionId: string,
+  emoji: string,
+) => {
+  const response = await apiService.put(
+    `/suggestions/${suggestionId}/reactions`,
+    { emoji },
+  );
   return response.data;
 };
 
 // ✅ Coup de cœur
 export const fetchCoupDeCoeurReactions = async (coupDeCoeurId: string) => {
-  const response = await apiService.get(`/coupdecoeurs/${coupDeCoeurId}/reactions`);
+  const response = await apiService.get(
+    `/coupdecoeurs/${coupDeCoeurId}/reactions`,
+  );
   return response.data.reactions;
 };
 
-export const sendCoupDeCoeurReaction = async (coupDeCoeurId: string, emoji: string) => {
-  const response = await apiService.put(`/coupdecoeurs/${coupDeCoeurId}/reactions`, { emoji });
+export const sendCoupDeCoeurReaction = async (
+  coupDeCoeurId: string,
+  emoji: string,
+) => {
+  const response = await apiService.put(
+    `/coupdecoeurs/${coupDeCoeurId}/reactions`,
+    { emoji },
+  );
   return response.data;
 };
-

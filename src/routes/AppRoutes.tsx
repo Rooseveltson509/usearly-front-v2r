@@ -6,13 +6,15 @@ import { commonRoutes } from "./commonRoutes";
 
 // Skeleton global
 const Fallback = () => (
-  <div style={{
-    minHeight: "60vh",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    fontSize: "18px",
-  }}>
+  <div
+    style={{
+      minHeight: "60vh",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      fontSize: "18px",
+    }}
+  >
     Chargement...
   </div>
 );

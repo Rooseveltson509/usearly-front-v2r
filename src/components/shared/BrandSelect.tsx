@@ -44,7 +44,9 @@ export const BrandSelect = ({
 
     if (query.trim()) {
       const normalizedQuery = normalize(query);
-      return unique.filter((brand) => normalize(brand).includes(normalizedQuery));
+      return unique.filter((brand) =>
+        normalize(brand).includes(normalizedQuery),
+      );
     }
 
     return unique;
@@ -54,7 +56,10 @@ export const BrandSelect = ({
     if (!open) return;
 
     const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
         setOpen(false);
       }
     };
@@ -76,7 +81,11 @@ export const BrandSelect = ({
       return <img src={logo} alt="" />;
     }
 
-    return <span className="brand-badge__initial">{lookup.slice(0, 2).toUpperCase()}</span>;
+    return (
+      <span className="brand-badge__initial">
+        {lookup.slice(0, 2).toUpperCase()}
+      </span>
+    );
   };
 
   const rootClassName = ["brand-select", className].filter(Boolean).join(" ");
@@ -95,7 +104,9 @@ export const BrandSelect = ({
         onClick={() => setOpen((prev) => !prev)}
       >
         <span className="brand-badge">{renderBadge(selectedBrand)}</span>
-        <span className="brand-select__label">{selectedBrand || placeholder}</span>
+        <span className="brand-select__label">
+          {selectedBrand || placeholder}
+        </span>
         <ChevronDown size={16} />
       </button>
 
@@ -109,7 +120,11 @@ export const BrandSelect = ({
               placeholder={searchPlaceholder}
             />
             {query && (
-              <button type="button" className="brand-select__search-clear" onClick={() => setQuery("")}>
+              <button
+                type="button"
+                className="brand-select__search-clear"
+                onClick={() => setQuery("")}
+              >
                 <X size={14} />
               </button>
             )}

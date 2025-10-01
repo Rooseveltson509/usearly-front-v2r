@@ -1,5 +1,14 @@
 import { apiService } from "./apiService";
-import type { BrandWithSubCategories, ConfirmedSubcategoryReport, CoupDeCoeur, GetConfirmedResponse, GroupedReport, GroupedReportResponse, Suggestion, UserGroupedReportResponse, UserStatsSummary } from "@src/types/Reports";
+import type {
+  BrandWithSubCategories,
+  CoupDeCoeur,
+  GetConfirmedResponse,
+  GroupedReport,
+  GroupedReportResponse,
+  Suggestion,
+  UserGroupedReportResponse,
+  UserStatsSummary,
+} from "@src/types/Reports";
 
 const getAuthToken = () =>
   localStorage.getItem("accessToken") || sessionStorage.getItem("accessToken");
@@ -9,10 +18,12 @@ const getAuthToken = () =>
  */
 export const getGroupedReportsByUser = async (
   page = 1,
-  limit = 10
+  limit = 10,
 ): Promise<GroupedReportResponse> => {
   try {
-    const token = localStorage.getItem("accessToken") || sessionStorage.getItem("accessToken");
+    const token =
+      localStorage.getItem("accessToken") ||
+      sessionStorage.getItem("accessToken");
 
     const { data } = await apiService.get<GroupedReportResponse>(
       `/reportings/grouped-by-category?page=${page}&limit=${limit}`,
@@ -20,13 +31,14 @@ export const getGroupedReportsByUser = async (
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
 
     return data;
   } catch (error: any) {
     const msg =
-      error.response?.data?.message || "Erreur lors du chargement des signalements groupés.";
+      error.response?.data?.message ||
+      "Erreur lors du chargement des signalements groupés.";
     throw new Error(msg);
   }
 };
@@ -35,7 +47,7 @@ export const getGroupedReportsByUser = async (
  */
 export const getUserCoupsDeCoeur = async (
   page = 1,
-  limit = 10
+  limit = 10,
 ): Promise<{
   totalCoupsdeCoeur: number;
   currentPage: number;
@@ -59,7 +71,7 @@ export const getUserCoupsDeCoeur = async (
  */
 export const getUserSuggestions = async (
   page = 1,
-  limit = 10
+  limit = 10,
 ): Promise<{
   totalSuggestions: number;
   currentPage: number;
@@ -80,10 +92,12 @@ export const getUserSuggestions = async (
 
 export const getUserProfileGroupedReports = async (
   page = 1,
-  limit = 10
+  limit = 10,
 ): Promise<UserGroupedReportResponse> => {
   try {
-    const token = localStorage.getItem("accessToken") || sessionStorage.getItem("accessToken");
+    const token =
+      localStorage.getItem("accessToken") ||
+      sessionStorage.getItem("accessToken");
 
     const { data } = await apiService.get<UserGroupedReportResponse>(
       `/reportings/grouped-by-category?page=${page}&limit=${limit}`,
@@ -91,13 +105,14 @@ export const getUserProfileGroupedReports = async (
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
 
     return data;
   } catch (error: any) {
     const msg =
-      error.response?.data?.message || "Erreur lors du chargement des signalements groupés (profil).";
+      error.response?.data?.message ||
+      "Erreur lors du chargement des signalements groupés (profil).";
     throw new Error(msg);
   }
 };
@@ -114,39 +129,51 @@ export const getUserStatsSummary = async (): Promise<UserStatsSummary> => {
 };
 
 export const getGroupedReportsPublic = async (page: number, limit: number) => {
-  const response = await apiService.get(`/reportings/public-grouped-by-category`, {
-    params: { page, limit },
-  });
+  const response = await apiService.get(
+    `/reportings/public-grouped-by-category`,
+    {
+      params: { page, limit },
+    },
+  );
   return response.data;
 };
 
 export const getAllPublicGroupedReports = async (page = 1, limit = 10) => {
   try {
-    const response = await apiService.get(`/reportings/public-grouped-by-category`, {
-      params: { page, limit },
-    });
+    const response = await apiService.get(
+      `/reportings/public-grouped-by-category`,
+      {
+        params: { page, limit },
+      },
+    );
     return response.data;
   } catch (error) {
-    console.error("❌ Erreur lors du chargement des signalements publics groupés :", error);
+    console.error(
+      "❌ Erreur lors du chargement des signalements publics groupés :",
+      error,
+    );
     throw error;
   }
 };
 
-
 export const getPublicCoupsDeCoeur = async (page: number, limit: number) => {
-  const res = await apiService.get(`/public/user/coupsdecoeurs?page=${page}&limit=${limit}`);
+  const res = await apiService.get(
+    `/public/user/coupsdecoeurs?page=${page}&limit=${limit}`,
+  );
   return res.data;
 };
 
 export const getPublicSuggestions = async (page: number, limit: number) => {
-  const res = await apiService.get(`/public/user/suggestions?page=${page}&limit=${limit}`);
+  const res = await apiService.get(
+    `/public/user/suggestions?page=${page}&limit=${limit}`,
+  );
   return res.data;
 };
 export const getFilteredReportDescriptions = async (
   brand: string,
   category: string,
   page = 1,
-  limit = 10
+  limit = 10,
 ) => {
   const response = await apiService.get("/descriptions/filtery", {
     params: { brand, category, page, limit },
@@ -165,13 +192,21 @@ export const getGroupedReportsByDate = async (page = 1, limit = 15) => {
   return response.data;
 };
 
-
-export const getUserReportsGroupedByDate = async (page: number, limit: number) => {
-  const res = await apiService.get(`/user/grouped-by-date?page=${page}&limit=${limit}`);
+export const getUserReportsGroupedByDate = async (
+  page: number,
+  limit: number,
+) => {
+  const res = await apiService.get(
+    `/user/grouped-by-date?page=${page}&limit=${limit}`,
+  );
   return res.data;
 };
 
-export const getGroupedReportsByHot = async (page = 1, limit = 15, filter?: string) => {
+export const getGroupedReportsByHot = async (
+  page = 1,
+  limit = 15,
+  filter?: string,
+) => {
   const token = localStorage.getItem("accessToken");
 
   const response = await apiService.get("/reportings/grouped-by-hot", {
@@ -181,28 +216,30 @@ export const getGroupedReportsByHot = async (page = 1, limit = 15, filter?: stri
     },
   });
 
-  console.log("data: ", response.data)
+  console.log("data: ", response.data);
   return response.data;
 };
 
-
-export const getGroupedReportsByPopularEngagement = async (page = 1, limit = 15) => {
+export const getGroupedReportsByPopularEngagement = async (
+  page = 1,
+  limit = 15,
+) => {
   const token = localStorage.getItem("accessToken");
 
-  const response = await apiService.get("/reportings/grouped-by-popular-engagement", {
-    params: { page, limit },
-    headers: {
-      Authorization: `Bearer ${token}`,
+  const response = await apiService.get(
+    "/reportings/grouped-by-popular-engagement",
+    {
+      params: { page, limit },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     },
-  });
+  );
 
   return response.data;
 };
 
-export const getPopularReports = async (
-  page = 1,
-  limit = 15
-): Promise<any> => {
+export const getPopularReports = async (page = 1, limit = 15): Promise<any> => {
   const token = localStorage.getItem("accessToken");
 
   const response = await apiService.get<any>(
@@ -212,7 +249,7 @@ export const getPopularReports = async (
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
 
   return response.data;
@@ -220,7 +257,7 @@ export const getPopularReports = async (
 
 export const getConfirmedSubcategoryReports = async (
   page = 1,
-  limit = 15
+  limit = 15,
 ): Promise<GetConfirmedResponse> => {
   const token = localStorage.getItem("accessToken");
 
@@ -231,7 +268,7 @@ export const getConfirmedSubcategoryReports = async (
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
 
   return response.data;
@@ -239,7 +276,7 @@ export const getConfirmedSubcategoryReports = async (
 
 export const getRageReports = async (
   page = 1,
-  limit = 15
+  limit = 15,
 ): Promise<GetConfirmedResponse> => {
   const token = localStorage.getItem("accessToken");
 
@@ -250,7 +287,7 @@ export const getRageReports = async (
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
 
   return response.data;

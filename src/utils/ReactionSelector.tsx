@@ -13,7 +13,10 @@ const ReactionSelector: React.FC<Props> = ({ userId, targetId }) => {
   const [isOpen, setIsOpen] = useState(false);
   const popupTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const { getCount, hasReactedWith, handleReact } = useReactions(userId, targetId);
+  const { getCount, hasReactedWith, handleReact } = useReactions(
+    userId,
+    targetId,
+  );
 
   const selected = emojiOptions.find(hasReactedWith);
 

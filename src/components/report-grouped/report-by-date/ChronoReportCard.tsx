@@ -21,12 +21,18 @@ const ChronoReportCard: React.FC<Props> = ({ item, isOpen, onToggle }) => {
   const { userProfile } = useAuth();
   const [showComments, setShowComments] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
-  const [localCommentsCounts, setLocalCommentsCounts] = useState<Record<string, number>>({});
+  const [localCommentsCounts, setLocalCommentsCounts] = useState<
+    Record<string, number>
+  >({});
 
   const firstDescription = item.subCategory.descriptions[0];
   const descriptionId = firstDescription.id;
 
-  const { comments, loading } = useCommentsForDescription(descriptionId, "report", refreshKey);
+  const { comments, loading } = useCommentsForDescription(
+    descriptionId,
+    "report",
+    refreshKey,
+  );
 
   const handleCommentClick = () => {
     if (!isOpen) {
@@ -53,7 +59,9 @@ const ChronoReportCard: React.FC<Props> = ({ item, isOpen, onToggle }) => {
       <div className="card-header" onClick={onToggle}>
         <div className="left-icon">
           <img
-            src={getCategoryIconPathFromSubcategory(item.subCategory.subCategory)}
+            src={getCategoryIconPathFromSubcategory(
+              item.subCategory.subCategory,
+            )}
             alt="icon catégorie"
           />
         </div>

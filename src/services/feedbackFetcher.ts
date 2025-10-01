@@ -1,7 +1,7 @@
-import { 
-  getPopularCoupsDeCoeur, 
-  getEnflammesCoupsDeCoeur
-} from "./coupDeCoeurService"; 
+import {
+  getPopularCoupsDeCoeur,
+  getEnflammesCoupsDeCoeur,
+} from "./coupDeCoeurService";
 import {
   getPublicCoupsDeCoeur,
   getPublicSuggestions,
@@ -14,7 +14,7 @@ type FetchResult = {
 
 export const fetchFeedbackData = async (
   filter: string,
-  tab: FeedbackType
+  tab: FeedbackType,
 ): Promise<FetchResult> => {
   let res;
 

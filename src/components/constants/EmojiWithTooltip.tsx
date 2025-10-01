@@ -9,7 +9,13 @@ interface Props {
   isSelected?: boolean;
 }
 
-const EmojiWithTooltip: React.FC<Props> = ({ emoji, label, onClick, count, isSelected }) => {
+const EmojiWithTooltip: React.FC<Props> = ({
+  emoji,
+  label,
+  onClick,
+  count,
+  isSelected,
+}) => {
   return (
     <div className="emoji-tooltip-wrapper">
       <button
@@ -17,7 +23,9 @@ const EmojiWithTooltip: React.FC<Props> = ({ emoji, label, onClick, count, isSel
         onClick={onClick}
       >
         <span className="emoji">{emoji}</span>
-        {count !== undefined && count > 0 && <span className="count">{count}</span>}
+        {count !== undefined && count > 0 && (
+          <span className="count">{count}</span>
+        )}
         <span className="custom-tooltip">{label}</span>
       </button>
     </div>

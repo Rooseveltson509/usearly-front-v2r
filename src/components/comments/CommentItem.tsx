@@ -15,7 +15,13 @@ interface CommentItemProps {
   onDelete: () => void;
 }
 
-const CommentItem: React.FC<CommentItemProps> = ({ comment, avatarUrl, dateLabel, isAuthor, onDelete }) => {
+const CommentItem: React.FC<CommentItemProps> = ({
+  comment,
+  avatarUrl,
+  dateLabel,
+  isAuthor,
+  onDelete,
+}) => {
   return (
     <li className="comment-item">
       <Avatar

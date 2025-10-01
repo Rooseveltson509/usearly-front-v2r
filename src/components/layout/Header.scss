@@ -1,4 +1,4 @@
-@use "@src/styles/base/variables" as *;
+@use "../../styles/base/variables" as *;
 
 .header {
   background: white;
@@ -212,7 +212,6 @@
     cursor: pointer;
   }
 
-
   .notif-dropdown {
     max-height: 400px; // pour éviter que ça déborde
     overflow-y: auto;
@@ -231,5 +230,4 @@
       }
     }
   }
-
 }

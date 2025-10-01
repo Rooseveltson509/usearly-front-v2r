@@ -1,19 +1,17 @@
 import { useState } from "react";
-import { useLocation, useNavigate, Link } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { loginUser, loginBrand } from "@src/services/apiService";
 import { showToast } from "@src/utils/toastUtils";
 import { useAuth } from "@src/services/AuthContext";
 import "./styles/Login.scss";
 import iconEye from "../../../assets/images/eye-password-logo.svg";
 import UsearlyDraw from "../../../components/background/Usearly";
-import Buttons from "@src/components/buttons/Buttons";
 import { useHandleAuthRedirect } from "@src/hooks/useHandleAuthRedirect";
 import InputText from "@src/components/inputs/inputsGlobal/InputText";
 
 const Login = () => {
   const { login } = useAuth();
   const location = useLocation();
-  const navigate = useNavigate();
   const { handleAuthRedirect } = useHandleAuthRedirect();
 
   const initialEmail = (location.state as any)?.email ?? "";
@@ -34,7 +32,11 @@ const Login = () => {
     try {
       let response;
       if (loginInput.includes("@brand.") || loginInput.includes("@marque.")) {
-        response = await loginBrand({ email: loginInput, mdp: password, rememberMe });
+        response = await loginBrand({
+          email: loginInput,
+          mdp: password,
+          rememberMe,
+        });
       } else {
         response = await loginUser({
           email: isEmail(loginInput) ? loginInput : undefined,
@@ -80,7 +82,9 @@ const Login = () => {
       {step === 1 ? (
         <>
           <h2>Ravi de te revoir !</h2>
-          <p className="login-subtitle">Entre ton adresse e-mail et ton mot de passe pour te connecter</p>
+          <p className="login-subtitle">
+            Entre ton adresse e-mail et ton mot de passe pour te connecter
+          </p>
         </>
       ) : (
         <>
@@ -107,8 +111,8 @@ const Login = () => {
             <div className="info-text">
               <p>
                 En continuant, tu acceptes les{" "}
-                <a href="#">conditions d'utilisation</a> et tu confirmes avoir lu la{" "}
-                <a href="#">politique de confidentialité</a> de Usearly.
+                <a href="#">conditions d'utilisation</a> et tu confirmes avoir
+                lu la <a href="#">politique de confidentialité</a> de Usearly.
               </p>
             </div>
           </>
@@ -127,10 +131,18 @@ const Login = () => {
               <button
                 type="button"
                 className="eye-btn"
-                aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
+                aria-label={
+                  showPassword
+                    ? "Masquer le mot de passe"
+                    : "Afficher le mot de passe"
+                }
                 onClick={() => setShowPassword((value) => !value)}
               >
-                <img src={iconEye} alt="toggle visibility" className="eye-icon" />
+                <img
+                  src={iconEye}
+                  alt="toggle visibility"
+                  className="eye-icon"
+                />
               </button>
             </div>
             {error && <p className="error-message">{error}</p>}

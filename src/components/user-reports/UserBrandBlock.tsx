@@ -13,7 +13,6 @@ import CommentSection from "../comments/CommentSection";
 import { parseISO, isAfter } from "date-fns";
 import Avatar from "../shared/Avatar";
 
-
 interface Props {
   brand: string;
   siteUrl: string;
@@ -23,18 +22,34 @@ interface Props {
   onToggle: () => void;
 }
 
-const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, onToggle, siteUrl }) => {
+const UserBrandBlock: React.FC<Props> = ({
+  brand,
+  reports,
+  userProfile,
+  isOpen,
+  onToggle,
+  siteUrl,
+}) => {
   const [expandedSub, setExpandedSub] = useState<string | null>(null);
-  const [expandedOthers, setExpandedOthers] = useState<Record<string, boolean>>({});
+  const [expandedOthers, setExpandedOthers] = useState<Record<string, boolean>>(
+    {},
+  );
   const [showAll, setShowAll] = useState<Record<string, boolean>>({});
   const [modalImage, setModalImage] = useState<string | null>(null);
   const [showComments, setShowComments] = useState<Record<string, boolean>>({});
-  const [showReactions, setShowReactions] = useState<Record<string, boolean>>({});
-  const [commentsCounts, setCommentsCounts] = useState<Record<string, number>>({});
-  const [localCommentsCounts, setLocalCommentsCounts] = useState<Record<string, number>>({});
-  const [refreshCommentsKeys, setRefreshCommentsKeys] = useState<Record<string, number>>({});
-  const [signalementFilters, setSignalementFilters] = useState<Record<string, "pertinent" | "recents" | "anciens">>({});
-
+  const [showReactions, setShowReactions] = useState<Record<string, boolean>>(
+    {},
+  );
+  const [, setCommentsCounts] = useState<Record<string, number>>({});
+  const [localCommentsCounts, setLocalCommentsCounts] = useState<
+    Record<string, number>
+  >({});
+  const [refreshCommentsKeys, setRefreshCommentsKeys] = useState<
+    Record<string, number>
+  >({});
+  const [signalementFilters, setSignalementFilters] = useState<
+    Record<string, "pertinent" | "recents" | "anciens">
+  >({});
 
   useEffect(() => {
     const fetchAllCounts = async () => {
@@ -55,7 +70,6 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
     };
     fetchAllCounts();
   }, [reports]);
-
 
   const getMostRecentDate = () => {
     let latest: Date | null = null;
@@ -78,15 +92,15 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
     <div className={`brand-block ${isOpen ? "open" : "close"}`}>
       <div className="brand-header" onClick={onToggle}>
         <p className="brand-reports-count">
-          <strong>{reports.length}</strong> signalement{reports.length > 1 ? "s" : ""} sur{" "}
-          <strong>{brand}</strong>
+          <strong>{reports.length}</strong> signalement
+          {reports.length > 1 ? "s" : ""} sur <strong>{brand}</strong>
         </p>
         <p className="date-card">
           {mostRecentDate
             ? `Il y a ${formatDistance(mostRecentDate, new Date(), {
-              locale: fr,
-              includeSeconds: true,
-            }).replace("environ ", "")}`
+                locale: fr,
+                includeSeconds: true,
+              }).replace("environ ", "")}`
             : "Date inconnue"}
         </p>
 
@@ -100,7 +114,7 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
 
       {isOpen && (
         <div className="subcategories-list">
-          {reports.map((sub, i) => {
+          {reports.map((sub) => {
             const initialDescription = sub.descriptions[0];
             const currentCount =
               localCommentsCounts[initialDescription.id] ?? 0;
@@ -122,7 +136,7 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                     new Date(b.createdAt).getTime()
                   );
                 return 0;
-              }
+              },
             );
 
             const displayedDescriptions = expandedOthers[sub.subCategory]
@@ -134,14 +148,15 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
             return (
               <div
                 key={sub.subCategory}
-                className={`subcategory-block ${expandedSub === sub.subCategory ? "open" : ""
-                  }`}
+                className={`subcategory-block ${
+                  expandedSub === sub.subCategory ? "open" : ""
+                }`}
               >
                 <div
                   className="subcategory-header"
                   onClick={() =>
                     setExpandedSub((prev) =>
-                      prev === sub.subCategory ? null : sub.subCategory
+                      prev === sub.subCategory ? null : sub.subCategory,
                     )
                   }
                 >
@@ -154,7 +169,6 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                     <h4>{sub.subCategory}</h4>
                   </div>
                   <div className="subcategory-right">
-
                     {expandedSub !== sub.subCategory && (
                       <div className="badge-count">{sub.count}</div>
                     )}
@@ -165,7 +179,7 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                           {
                             locale: fr,
                             addSuffix: true,
-                          }
+                          },
                         ).replace("environ ", "")}
                       </span>
                     )}
@@ -174,7 +188,9 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                         <div className="avatars-row">
                           <Avatar
                             avatar={initialDescription.user.avatar}
-                            pseudo={initialDescription.user.pseudo || "Utilisateur"}
+                            pseudo={
+                              initialDescription.user.pseudo || "Utilisateur"
+                            }
                             type="user"
                             wrapperClassName="avatar user-avatar"
                           />
@@ -186,12 +202,11 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                           />
                         </div>
                         <div className="user-brand-names">
-                          {initialDescription.user.pseudo} <span className="x">×</span>{" "}
-                          <strong>{brand}</strong>
+                          {initialDescription.user.pseudo}{" "}
+                          <span className="x">×</span> <strong>{brand}</strong>
                         </div>
                       </div>
                     )}
-
 
                     {expandedSub === sub.subCategory ? (
                       <ChevronUp size={16} />
@@ -286,7 +301,7 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                               ...prev,
                               [initialDescription.id]: Math.max(
                                 (prev[initialDescription.id] ?? 1) - 1,
-                                0
+                                0,
                               ),
                             }));
                             setRefreshCommentsKeys((prev) => ({
@@ -384,7 +399,7 @@ const UserBrandBlock: React.FC<Props> = ({ brand, reports, userProfile, isOpen, 
                                     ·{" "}
                                     {formatDistanceToNow(
                                       new Date(desc.createdAt),
-                                      { locale: fr, addSuffix: true }
+                                      { locale: fr, addSuffix: true },
                                     )}
                                   </span>
                                 </div>

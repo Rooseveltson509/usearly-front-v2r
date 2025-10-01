@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
-import { getAllNotifications, markNotificationAsRead } from "@src/services/notificationService";
+import {
+  getAllNotifications,
+  markNotificationAsRead,
+} from "@src/services/notificationService";
 import { useNavigate } from "react-router-dom";
 import "./NotificationsPage.scss";
 
@@ -70,10 +73,7 @@ const NotificationsPage = () => {
 
       {/* Pagination */}
       <div className="pagination">
-        <button
-          disabled={page === 1}
-          onClick={() => setPage((p) => p - 1)}
-        >
+        <button disabled={page === 1} onClick={() => setPage((p) => p - 1)}>
           Précédent
         </button>
         <span>

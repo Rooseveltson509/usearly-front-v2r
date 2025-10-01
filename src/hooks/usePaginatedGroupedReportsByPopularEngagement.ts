@@ -25,7 +25,10 @@ interface PopularReport {
   };
 }
 
-export const usePaginatedGroupedReportsByPopularEngagement = (enabled: boolean, pageSize = 20) => {
+export const usePaginatedGroupedReportsByPopularEngagement = (
+  enabled: boolean,
+  pageSize = 20,
+) => {
   const [data, setData] = useState<PopularReport[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);

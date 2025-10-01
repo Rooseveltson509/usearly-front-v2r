@@ -30,7 +30,9 @@
       height: 45px;
       border: 1px solid #d6d6d6;
       background: #fff;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
 
       &:focus {
         border-color: #3b82f6;
@@ -47,7 +49,9 @@
       color: #444;
       font-size: 13px;
       cursor: pointer;
-      transition: background 0.2s ease, color 0.2s ease;
+      transition:
+        background 0.2s ease,
+        color 0.2s ease;
 
       &:hover {
         background: #e0e7ff;
@@ -61,16 +65,15 @@
   }
 }
 
-
-.feedback-list-wrapper{
-  div{
-    .controls{
+.feedback-list-wrapper {
+  div {
+    .controls {
       display: flex;
       flex-wrap: nowrap;
-      .brand-select{
+      .brand-select {
         text-wrap: nowrap;
-        .brand-select__trigger{
-          .brand-badge{
+        .brand-select__trigger {
+          .brand-badge {
             flex-grow: 0;
           }
         }

@@ -7,7 +7,7 @@ export interface PublicSuggestion {
   siteUrl?: string;
   createdAt?: string | null;
   votes?: number;
-  capture?: string | null;   // ✅ ajouté
+  capture?: string | null; // ✅ ajouté
   duplicateCount?: number;
   author?: {
     id: string;

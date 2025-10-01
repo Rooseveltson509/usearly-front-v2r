@@ -224,7 +224,7 @@
       font-size: 15px;
     }
 
-/*     .reset {
+    /*     .reset {
       margin-top: 8px;
       padding: 8px 12px;
       background-color: #f8f8f8;
@@ -298,7 +298,6 @@
 }
 
 @keyframes flame-wiggle {
-
   0%,
   100% {
     transform: rotate(0deg) scale(1);
@@ -342,7 +341,6 @@
 }
 
 @keyframes wiggle {
-
   0%,
   100% {
     transform: translateY(-50%) rotate(0deg);
@@ -360,7 +358,6 @@
     transform: translateY(-50%) rotate(-5deg);
   }
 }
-
 
 .confirmed-view-btn {
   margin-top: 8px;
@@ -382,7 +379,6 @@
     background-color: #e0f2f1;
   }
 }
-
 
 .filter-bar-wrapper {
   position: relative;

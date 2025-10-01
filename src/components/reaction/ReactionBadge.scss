@@ -1,61 +1,60 @@
 .reaction-badge {
-    display: flex;
-    gap: 8px;
-    margin-top: 0.5rem;
-    font-size: 1rem;
-    color: #444;
+  display: flex;
+  gap: 8px;
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  color: #444;
+  position: relative;
+
+  .emoji-count {
     position: relative;
+    background: #f2f2f2;
+    padding: 4px 10px;
+    border-radius: 20px;
+    cursor: default;
+    font-weight: 500;
+    transition: background 0.2s;
 
-    .emoji-count {
-        position: relative;
-        background: #f2f2f2;
-        padding: 4px 10px;
-        border-radius: 20px;
-        cursor: default;
-        font-weight: 500;
-        transition: background 0.2s;
+    &:hover {
+      background: #e6e6e6;
+    }
 
-        &:hover {
-            background: #e6e6e6;
+    .reaction-popup {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      background: white;
+      border: 1px solid #ddd;
+      padding: 0.5rem;
+      border-radius: 8px;
+      z-index: 10;
+      top: 100%;
+      left: 0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: opacity 0.2s ease;
+      opacity: 0.95;
+
+      .reaction-user {
+        display: flex;
+        align-items: center;
+        margin-bottom: 4px;
+
+        .reaction-avatar {
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          margin-right: 8px;
+          object-fit: cover;
         }
 
-        .reaction-popup {
-            display: flex;
-            flex-direction: column;
-            position: absolute;
-            background: white;
-            border: 1px solid #ddd;
-            padding: 0.5rem;
-            border-radius: 8px;
-            z-index: 10;
-            top: 100%;
-            left: 0;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            transition: opacity 0.2s ease;
-            opacity: 0.95;
-
-
-            .reaction-user {
-                display: flex;
-                align-items: center;
-                margin-bottom: 4px;
-
-                .reaction-avatar {
-                    width: 24px;
-                    height: 24px;
-                    border-radius: 50%;
-                    margin-right: 8px;
-                    object-fit: cover;
-                }
-
-                .reaction-name {
-                    font-size: 0.85rem;
-                    color: #333;
-                }
-            }
+        .reaction-name {
+          font-size: 0.85rem;
+          color: #333;
         }
+      }
+    }
 
-        /*     .reaction-popup {
+    /*     .reaction-popup {
       position: absolute;
       bottom: 120%;
       left: 50%;
@@ -85,5 +84,5 @@
         }
       }
     } */
-    }
+  }
 }

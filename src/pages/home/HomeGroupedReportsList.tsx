@@ -8,7 +8,7 @@ import { useConfirmedFlatData } from "@src/hooks/useConfirmedFlatData";
 import SqueletonAnime from "@src/components/loader/SqueletonAnime";
 import ActiveFilterBadges from "./ActiveFilterBadges";
 import FilterBar from "./FilterBar";
-const FilterBarAny = (FilterBar as unknown) as React.ComponentType<any>;
+const FilterBarAny = FilterBar as unknown as React.ComponentType<any>;
 import ConfirmedReportsList from "./confirm-reportlist/ConfirmReportsList";
 import type { FilterType } from "@src/types/Filters";
 import "./HomeGroupedReportsList.scss";
@@ -19,27 +19,26 @@ import { getBrandLogo } from "@src/utils/brandLogos";
 import { useBrands } from "@src/hooks/useBrands";
 import { apiService } from "@src/services/apiService";
 
+type ViewMode = "flat" | "chrono" | "confirmed";
+
 interface Props {
-  filter: any;
-  setFilter: (val: FilterType) => void;
-  viewMode: "flat" | "chrono" | "confirmed";
-  setViewMode: (mode: "flat" | "chrono" | "confirmed") => void;
-  setSelectedBrand: (val: string) => void;
-  setSelectedCategory: (val: string) => void;
-  setActiveFilter: (val: string) => void;
-  onViewModeChange: (mode: "flat" | "chrono" | "confirmed") => void;
-  isHotFilterAvailable: boolean;
-  dropdownRef: React.RefObject<HTMLDivElement>;
-  isDropdownOpen: boolean;
-  setIsDropdownOpen: (val: boolean) => void;
-  selectedBrand: string;
-  selectedCategory: string;
-  availableBrands: string[];
-  availableCategories: string[];
-  searchTerm: string;
-  onSearchTermChange: (val: string) => void;
   activeTab: FeedbackType;
+
+  // Gestion du filtre actif
   activeFilter: string;
+  setActiveFilter: (val: string) => void;
+
+  // Gestion du mode d’affichage
+  viewMode: ViewMode;
+  onViewModeChange: (mode: ViewMode) => void;
+
+  // Sélections
+  selectedBrand: string;
+  setSelectedBrand: (val: string) => void;
+
+  selectedCategory: string;
+  setSelectedCategory: (val: string) => void;
+
   setSelectedSiteUrl: (val: string | undefined) => void;
 }
 
@@ -61,6 +60,7 @@ type FilteredReport = {
   siteUrl?: string;
 };
 
+// ---------------- Utils ----------------
 const normalizeText = (value: string) =>
   value
     .toLowerCase()
@@ -70,36 +70,20 @@ const normalizeText = (value: string) =>
 
 const getSearchableStrings = (report: FilteredReport) => {
   const values: string[] = [];
-
-  if (report.subCategory) {
-    values.push(report.subCategory);
-  }
-
-  if (report.category) {
-    values.push(report.category);
-  }
+  if (report.subCategory) values.push(report.subCategory);
+  if (report.category) values.push(report.category);
 
   if (Array.isArray(report.descriptions)) {
     report.descriptions.forEach((item) => {
       if (typeof item === "string") {
         values.push(item);
-        return;
-      }
-
-      if (item && typeof item === "object") {
-        const record = item as Record<string, unknown>;
-        const description = record.description;
-        if (typeof description === "string") {
-          values.push(description);
-        }
-        const title = record.title;
-        if (typeof title === "string") {
-          values.push(title);
-        }
-        const text = record.text;
-        if (typeof text === "string") {
-          values.push(text);
-        }
+      } else if (item && typeof item === "object") {
+        const description = (item as any).description;
+        if (typeof description === "string") values.push(description);
+        const title = (item as any).title;
+        if (typeof title === "string") values.push(title);
+        const text = (item as any).text;
+        if (typeof text === "string") values.push(text);
       }
     });
   }
@@ -107,9 +91,9 @@ const getSearchableStrings = (report: FilteredReport) => {
   return values;
 };
 
+// ---------------- Component ----------------
 const HomeGroupedReportsList = ({
   activeTab,
-  activeFilter,
   onViewModeChange,
   setActiveFilter,
   viewMode,
@@ -120,7 +104,9 @@ const HomeGroupedReportsList = ({
   setSelectedCategory,
 }: Props) => {
   const [filter, setFilter] = useState<FilterType>("");
-  const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
+  const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>(
+    {},
+  );
   const loaderRef = useRef<HTMLDivElement | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -133,54 +119,42 @@ const HomeGroupedReportsList = ({
     viewMode === "chrono" && (filter === undefined || filter === "chrono");
 
   const { brands } = useBrands();
-  const availableBrands = useMemo(
-    () => brands.map((b) => b.marque),
-    [brands]
+  const availableBrands = useMemo(() => brands.map((b) => b.marque), [brands]);
+
+  // ---------------- Data hooks (toujours appelés) ----------------
+  const flatData = useFetchGroupedReports(activeTab);
+  const chronoData = usePaginatedGroupedReportsByDate(isChronoView);
+  const popularEngagementData = usePaginatedGroupedReportsByPopularEngagement(
+    filter === "popular",
   );
+  const rageData = usePaginatedGroupedReportsByRage(filter === "rage");
+  const confirmedData = useConfirmedFlatData();
 
-  // === HOOKS data ===
-  const { data: flatData, loading: loadingFlat, hasMore: hasMoreFlat } =
-    useFetchGroupedReports(activeTab);
-
-  const {
-    data: chronoData,
-    loading: loadingChrono,
-    hasMore: hasMoreChrono,
-  } = usePaginatedGroupedReportsByDate(isChronoView);
-
-  const {
-    data: popularEngagementData,
-    loading: loadingPopularEngagement,
-    hasMore: hasMorePopularEngagement,
-  } = usePaginatedGroupedReportsByPopularEngagement(filter === "popular");
-
-  const {
-    data: rageData,
-    loading: loadingRage,
-    hasMore: hasMoreRage,
-  } = usePaginatedGroupedReportsByRage(filter === "rage");
-
-  const { data: confirmedData, loading: loadingConfirmed } =
-    useConfirmedFlatData();
-
-  // === auto sélection du filtre par défaut ===
-
+  // ---------------- Initial filter selection ----------------
   useEffect(() => {
     if (!initializing) return;
 
-    // on attend que tous les chargements initiaux soient finis
-    if (loadingConfirmed || loadingRage || loadingPopularEngagement || loadingChrono) return;
+    if (
+      confirmedData.loading ||
+      rageData.loading ||
+      popularEngagementData.loading ||
+      chronoData.loading
+    )
+      return;
 
-    if (confirmedData && confirmedData.length > 0) {
+    if ((confirmedData.data ?? []).length > 0) {
       setFilter("confirmed");
       setActiveFilter("confirmed");
-    } else if (rageData && Object.keys(rageData || {}).length > 0) {
+    } else if (rageData.data && Object.keys(rageData.data).length > 0) {
       setFilter("rage");
       setActiveFilter("rage");
-    } else if (popularEngagementData && Object.keys(popularEngagementData || {}).length > 0) {
+    } else if (
+      popularEngagementData.data &&
+      (popularEngagementData.data ?? []).length > 0
+    ) {
       setFilter("popular");
       setActiveFilter("popular");
-    } else if (chronoData && Object.keys(chronoData || {}).length > 0) {
+    } else if (chronoData.data && Object.keys(chronoData.data).length > 0) {
       setFilter("chrono");
       setActiveFilter("chrono");
     } else {
@@ -188,21 +162,21 @@ const HomeGroupedReportsList = ({
       setActiveFilter("");
     }
 
-    setInitializing(false); // ✅ stoppe l’état initial
+    setInitializing(false);
   }, [
     initializing,
-    loadingConfirmed,
-    loadingRage,
-    loadingPopularEngagement,
-    loadingChrono,
-    confirmedData,
-    rageData,
-    popularEngagementData,
-    chronoData,
+    confirmedData.loading,
+    rageData.loading,
+    popularEngagementData.loading,
+    chronoData.loading,
+    confirmedData.data,
+    rageData.data,
+    popularEngagementData.data,
+    chronoData.data,
     setActiveFilter,
   ]);
 
-  // === fetch reports filtrés ===
+  // ---------------- Fetch filtered reports by brand ----------------
   useEffect(() => {
     const fetchFilteredReports = async () => {
       if (!selectedBrand) {
@@ -214,7 +188,7 @@ const HomeGroupedReportsList = ({
         const { data } = await apiService.get("/reports", {
           params: { brand: selectedBrand, page: 1, limit: 20 },
         });
-        setFilteredReports(data.data);
+        setFilteredReports(data.data ?? []);
       } catch (err) {
         console.error("Erreur fetch reports filtrés:", err);
         setFilteredReports([]);
@@ -226,126 +200,134 @@ const HomeGroupedReportsList = ({
     fetchFilteredReports();
   }, [selectedBrand]);
 
+  // ---------------- Search & filters ----------------
   useEffect(() => {
     setSearchTerm("");
   }, [selectedBrand]);
 
   const availableSubCategories = useMemo(() => {
-    if (!selectedBrand) {
-      return [] as string[];
-    }
-
+    if (!selectedBrand) return [];
     const subCategories = filteredReports
       .filter((report) => report.marque === selectedBrand)
       .map((report) => report.subCategory)
-      .filter((value): value is string => typeof value === "string" && value.trim().length > 0);
-
-    const unique = Array.from(new Set(subCategories));
-
-    return unique.sort((a, b) => a.localeCompare(b, "fr", { sensitivity: "base" }));
+      .filter((v): v is string => typeof v === "string" && v.trim().length > 0);
+    return Array.from(new Set(subCategories)).sort((a, b) =>
+      a.localeCompare(b, "fr", { sensitivity: "base" }),
+    );
   }, [filteredReports, selectedBrand]);
 
   const filteredByCategory = useMemo(() => {
     if (selectedCategory) {
       return filteredReports.filter(
-        (report) => report.subCategory === selectedCategory
+        (report) => report.subCategory === selectedCategory,
       );
     }
     return filteredReports;
   }, [filteredReports, selectedCategory]);
 
-  const normalizedSearchTerm = useMemo(() => {
-    const trimmed = searchTerm.trim();
-    return trimmed ? normalizeText(trimmed) : "";
-  }, [searchTerm]);
+  const normalizedSearchTerm = useMemo(
+    () => (searchTerm.trim() ? normalizeText(searchTerm) : ""),
+    [searchTerm],
+  );
 
   const reportsToDisplay = useMemo(() => {
-    if (!normalizedSearchTerm) {
-      return filteredByCategory;
-    }
-
+    if (!normalizedSearchTerm) return filteredByCategory;
     return filteredByCategory.filter((report) => {
       const searchableValues = getSearchableStrings(report);
       return searchableValues.some((value) =>
-        normalizeText(value).includes(normalizedSearchTerm)
+        normalizeText(value).includes(normalizedSearchTerm),
       );
     });
   }, [filteredByCategory, normalizedSearchTerm]);
+
+  // ---------------- Update selected siteUrl ----------------
   useEffect(() => {
     if (!selectedBrand && !selectedCategory) {
       setSelectedSiteUrl(undefined);
       return;
     }
-
-    if (reportsToDisplay.length === 0) {
+    if ((reportsToDisplay ?? []).length === 0) {
       setSelectedSiteUrl(undefined);
       return;
     }
-
-    setSelectedSiteUrl(reportsToDisplay[0].siteUrl);
+    setSelectedSiteUrl(reportsToDisplay[0]?.siteUrl);
   }, [reportsToDisplay, selectedBrand, selectedCategory, setSelectedSiteUrl]);
 
-  // === rendu initial (skeleton si initializing) ===
+  // ---------------- Render ----------------
   if (initializing) {
     return (
       <div className="home-grouped-reports-list">
-        <SqueletonAnime loaderRef={loaderRef} loading={true} hasMore={false} error={null} />
+        <SqueletonAnime
+          loaderRef={loaderRef}
+          loading={true}
+          hasMore={false}
+          error={null}
+        />
       </div>
     );
   }
-  // === rendu ===
+
   return (
     <div className="home-grouped-reports-list">
-        <FilterBarAny
-          filter={filter || ""}
-          setFilter={setFilter}
-          viewMode={viewMode}
-          setViewMode={onViewModeChange}
-          setSelectedBrand={setSelectedBrand}
-          setSelectedCategory={setSelectedCategory}
-          setActiveFilter={setActiveFilter}
-          onViewModeChange={onViewModeChange}
-          isHotFilterAvailable={true}
-          dropdownRef={dropdownRef}
-          isDropdownOpen={isDropdownOpen}
-          setIsDropdownOpen={setIsDropdownOpen}
-          selectedBrand={selectedBrand}
-          selectedCategory={selectedCategory}
-          availableBrands={availableBrands}
-          availableCategories={availableSubCategories}
-          searchTerm={searchTerm}
-          onSearchTermChange={setSearchTerm}
-        />
-        
+      <FilterBarAny
+        filter={filter || ""}
+        setFilter={setFilter}
+        viewMode={viewMode}
+        setViewMode={onViewModeChange}
+        setSelectedBrand={setSelectedBrand}
+        setSelectedCategory={setSelectedCategory}
+        setActiveFilter={setActiveFilter}
+        onViewModeChange={onViewModeChange}
+        isHotFilterAvailable={true}
+        dropdownRef={dropdownRef}
+        isDropdownOpen={isDropdownOpen}
+        setIsDropdownOpen={setIsDropdownOpen}
+        selectedBrand={selectedBrand}
+        selectedCategory={selectedCategory}
+        availableBrands={availableBrands}
+        availableCategories={availableSubCategories}
+        searchTerm={searchTerm}
+        onSearchTermChange={setSearchTerm}
+      />
 
-        <ActiveFilterBadges
-          selectedBrand={selectedBrand}
-          selectedCategory={selectedCategory}
-          onClearBrand={() => setSelectedBrand("")}
-          onClearCategory={() => setSelectedCategory("")}
-        />
+      <ActiveFilterBadges
+        selectedBrand={selectedBrand}
+        selectedCategory={selectedCategory}
+        onClearBrand={() => setSelectedBrand("")}
+        onClearCategory={() => setSelectedCategory("")}
+      />
 
       {/* === données filtrées === */}
       {selectedBrand || selectedCategory ? (
         <div className="grouped-by-category">
           {loadingFiltered ? (
-            <SqueletonAnime loaderRef={loaderRef} loading={true} hasMore={false} error={null} />
+            <SqueletonAnime
+              loaderRef={loaderRef}
+              loading={true}
+              hasMore={false}
+              error={null}
+            />
           ) : reportsToDisplay.length === 0 ? (
-            <div style={{ padding: "20px", textAlign: "center", color: "#888" }}>
+            <div
+              style={{ padding: "20px", textAlign: "center", color: "#888" }}
+            >
               Aucun signalement trouvé pour ces filtres...
             </div>
           ) : (
             Object.entries(
-              reportsToDisplay.reduce((acc: Record<string, FilteredReport[]>, report) => {
-                if (!acc[report.category]) acc[report.category] = [];
-                acc[report.category].push(report);
-                return acc;
-              }, {})
+              reportsToDisplay.reduce(
+                (acc: Record<string, FilteredReport[]>, report) => {
+                  if (!acc[report.category]) acc[report.category] = [];
+                  acc[report.category].push(report);
+                  return acc;
+                },
+                {},
+              ),
             ).map(([category, reports]) => (
               <div key={category} className="category-block">
-                {reports.map((report) => (
+                {reports.map((report, i) => (
                   <FlatSubcategoryBlock
-                    key={`${report.reportingId}-${report.subCategory}`}
+                    key={`${report.reportingId}-${report.subCategory}-${i}`}
                     brand={report.marque}
                     siteUrl={report.siteUrl}
                     subcategory={report.subCategory}
@@ -360,9 +342,14 @@ const HomeGroupedReportsList = ({
           )}
         </div>
       ) : filter === "confirmed" ? (
-        loadingConfirmed ? (
-          <SqueletonAnime loaderRef={loaderRef} loading={true} hasMore={false} error={null} />
-        ) : confirmedData.length === 0 ? (
+        confirmedData.loading ? (
+          <SqueletonAnime
+            loaderRef={loaderRef}
+            loading={true}
+            hasMore={false}
+            error={null}
+          />
+        ) : (confirmedData.data ?? []).length === 0 ? (
           <div style={{ padding: "20px", textAlign: "center", color: "#888" }}>
             Aucun signalement confirmé pour le moment.
           </div>
@@ -377,9 +364,14 @@ const HomeGroupedReportsList = ({
           />
         )
       ) : filter === "rage" ? (
-        loadingRage ? (
-          <SqueletonAnime loaderRef={loaderRef} loading={true} hasMore={false} error={null} />
-        ) : rageData && Object.keys(rageData).length === 0 ? (
+        rageData.loading ? (
+          <SqueletonAnime
+            loaderRef={loaderRef}
+            loading={true}
+            hasMore={false}
+            error={null}
+          />
+        ) : rageData.data && Object.keys(rageData.data).length === 0 ? (
           <div style={{ padding: "20px", textAlign: "center", color: "#888" }}>
             Aucun signalement rageux trouvé.
           </div>
@@ -394,26 +386,36 @@ const HomeGroupedReportsList = ({
           />
         )
       ) : filter === "popular" ? (
-        loadingPopularEngagement ? (
-          <SqueletonAnime loaderRef={loaderRef} loading={true} hasMore={false} error={null} />
-        ) : popularEngagementData && Object.keys(popularEngagementData).length === 0 ? (
+        popularEngagementData.loading ? (
+          <SqueletonAnime
+            loaderRef={loaderRef}
+            loading={true}
+            hasMore={false}
+            error={null}
+          />
+        ) : (popularEngagementData.data ?? []).length === 0 ? (
           <div style={{ padding: "20px", textAlign: "center", color: "#888" }}>
             Aucun signalement populaire pour le moment.
           </div>
         ) : (
           <PopularReportList
-            data={popularEngagementData}
+            data={popularEngagementData.data}
             expandedItems={expandedItems}
             handleToggle={(key) =>
               setExpandedItems((prev) => ({ ...prev, [key]: !prev[key] }))
             }
-            loading={loadingPopularEngagement}
+            loading={popularEngagementData.loading}
           />
         )
       ) : filter === "chrono" ? (
-        loadingChrono ? (
-          <SqueletonAnime loaderRef={loaderRef} loading={true} hasMore={false} error={null} />
-        ) : chronoData && Object.keys(chronoData).length === 0 ? (
+        chronoData.loading ? (
+          <SqueletonAnime
+            loaderRef={loaderRef}
+            loading={true}
+            hasMore={false}
+            error={null}
+          />
+        ) : chronoData.data && Object.keys(chronoData.data).length === 0 ? (
           <div style={{ padding: "20px", textAlign: "center", color: "#888" }}>
             Aucun signalement récent disponible.
           </div>
@@ -433,14 +435,14 @@ const HomeGroupedReportsList = ({
         <SqueletonAnime
           loaderRef={loaderRef}
           loading={
-            (filter === "chrono" && loadingChrono) ||
-            (filter === "popular" && loadingPopularEngagement) ||
-            (!filter && loadingFlat)
+            (filter === "chrono" && chronoData.loading) ||
+            (filter === "popular" && popularEngagementData.loading) ||
+            (!filter && flatData.loading)
           }
           hasMore={
-            (filter === "chrono" && hasMoreChrono) ||
-            (filter === "popular" && hasMorePopularEngagement) ||
-            (!filter && hasMoreFlat) ||
+            (filter === "chrono" && chronoData.hasMore) ||
+            (filter === "popular" && popularEngagementData.hasMore) ||
+            (!filter && flatData.hasMore) ||
             false
           }
           error={null}

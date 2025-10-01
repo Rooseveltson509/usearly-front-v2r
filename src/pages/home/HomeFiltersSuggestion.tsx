@@ -28,7 +28,9 @@ const HomeFiltersSuggestion = ({
   searchQuery,
   onSearchChange,
 }: Props) => {
-  const [viewMode, setViewMode] = useState<"flat" | "chrono" | "confirmed">("flat");
+  const [viewMode, setViewMode] = useState<"flat" | "chrono" | "confirmed">(
+    "flat",
+  );
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [availableBrands, setAvailableBrands] = useState<string[]>([]);
@@ -39,7 +41,7 @@ const HomeFiltersSuggestion = ({
       { value: "recentSuggestion", label: "🪄 Suggestions ouvertes aux votes" },
       { value: "likedSuggestion", label: "🙌 Suggestions adoptées" },
     ],
-    []
+    [],
   );
 
   const filterOptions = useMemo(() => {

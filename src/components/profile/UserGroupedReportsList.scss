@@ -164,7 +164,11 @@
   border-radius: 6px;
   transition: all 0.2s ease;
   font-size: 14px;
-  font-family: Inter, -apple-system, system-ui, sans-serif;
+  font-family:
+    Inter,
+    -apple-system,
+    system-ui,
+    sans-serif;
 
   &:hover {
     background-color: #e5f0fc;
@@ -298,7 +302,7 @@
     }
     .subcategory-block {
       border: 1px solid #ffffff;
-      padding:8px 16px 16px 16px;
+      padding: 8px 16px 16px 16px;
       margin: 4px 8px;
       border-radius: 8px;
       overflow: hidden;

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ThumbsUp, MessageCircle, Share2, CheckCircle } from "lucide-react";
+import { ThumbsUp, MessageCircle, Share2 } from "lucide-react";
 import { useReactionsForDescription } from "@src/hooks/useReactionsForDescription";
 import { getEmojisForType } from "@src/components/constants/emojiMapByType";
 import "./ReportActionsBar.scss";
@@ -11,7 +11,7 @@ interface Props {
   descriptionId: string;
   reportsCount: number;
   commentsCount: number;
-  reactions?: any[]; 
+  reactions?: any[];
   onReactClick: () => void;
   onCommentClick: () => void;
   onToggleSimilarReports?: () => void;
@@ -22,13 +22,13 @@ const ReportActionsBarWithReactions: React.FC<Props> = ({
   descriptionId,
   reportsCount,
   commentsCount,
-  reactions,
+  /* reactions, */
   onCommentClick,
   onToggleSimilarReports,
 }) => {
   const { getCount, handleReact } = useReactionsForDescription(
     userId,
-    descriptionId
+    descriptionId,
   );
   const emojis = getEmojisForType("report");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -73,7 +73,8 @@ const ReportActionsBarWithReactions: React.FC<Props> = ({
           {commentsCount > 0 && (
             <>
               <span className="comments-link" onClick={onCommentClick}>
-                {commentsCount} {commentsCount === 1 ? "commentaire" : "commentaires"}
+                {commentsCount}{" "}
+                {commentsCount === 1 ? "commentaire" : "commentaires"}
               </span>
               <span className="dot-separator">·</span>
             </>
@@ -89,7 +90,6 @@ const ReportActionsBarWithReactions: React.FC<Props> = ({
             </span>
           )}
         </div>
-
       </div>
 
       <div className="separator" />
@@ -135,10 +135,7 @@ const ReportActionsBarWithReactions: React.FC<Props> = ({
           </button>
         </div>
         <div className="status-right">
-          <img
-            src={statutIcon}
-            className="icon-statut"
-          />
+          <img src={statutIcon} className="icon-statut" />
           {/* <CheckCircle size={16} color="#2563eb" /> */}
           <span>En cours de correction</span>
         </div>

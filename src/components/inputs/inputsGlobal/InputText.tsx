@@ -30,11 +30,9 @@ const InputText = forwardRef<HTMLInputElement, Props>(
       onChange,
       ...rest
     },
-    ref
+    ref,
   ) => {
-    const [isFilled, setIsFilled] = useState(
-      !!value || !!defaultValue
-    );
+    const [isFilled, setIsFilled] = useState(!!value || !!defaultValue);
 
     // synchroniser si `value` est contrôlé par un parent
     useEffect(() => {
@@ -61,14 +59,16 @@ const InputText = forwardRef<HTMLInputElement, Props>(
           ref={(el) => {
             registration?.ref?.(el);
             if (typeof ref === "function") ref(el);
-            else if (ref) (ref as React.MutableRefObject<HTMLInputElement | null>).current = el;
+            else if (ref)
+              (ref as React.MutableRefObject<HTMLInputElement | null>).current =
+                el;
           }}
           {...rest}
         />
         {label && <label htmlFor={id}>{label}</label>}
       </div>
     );
-  }
+  },
 );
 
 InputText.displayName = "InputText";

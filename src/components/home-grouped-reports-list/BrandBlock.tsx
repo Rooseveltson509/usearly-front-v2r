@@ -7,7 +7,6 @@ import { getBrandLogo } from "@src/utils/brandLogos";
 import { getCategoryIconPathFromSubcategory } from "@src/utils/IconsUtils";
 import type { PublicGroupedReport } from "@src/types/Reports";
 import { useAuth } from "@src/services/AuthContext";
-import { getFullAvatarUrl } from "@src/utils/avatarUtils";
 import Avatar from "../shared/Avatar";
 
 interface Props {
@@ -18,12 +17,18 @@ interface Props {
 
 const BrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
   const { userProfile } = useAuth();
-  const [expandedSubCategory, setExpandedSubCategory] = useState<string | null>(null);
+  const [expandedSubCategory, setExpandedSubCategory] = useState<string | null>(
+    null,
+  );
   const [expanded, setExpanded] = useState(false);
-  const [currentIndexes, setCurrentIndexes] = useState<Record<string, number>>({});
+  const [currentIndexes, setCurrentIndexes] = useState<Record<string, number>>(
+    {},
+  );
 
   const toggleSubCategory = (subCategory: string) => {
-    setExpandedSubCategory((prev) => (prev === subCategory ? null : subCategory));
+    setExpandedSubCategory((prev) =>
+      prev === subCategory ? null : subCategory,
+    );
   };
 
   const handlePrev = (subCategory: string) => {
@@ -43,9 +48,9 @@ const BrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
   const lastDate = Math.max(
     ...reports.flatMap((r) =>
       r.subCategories.flatMap((sc) =>
-        sc.descriptions.map((d) => new Date(d.createdAt).getTime())
-      )
-    )
+        sc.descriptions.map((d) => new Date(d.createdAt).getTime()),
+      ),
+    ),
   );
 
   const totalCount = reports.reduce((sum, r) => sum + r.totalCount, 0);
@@ -61,10 +66,17 @@ const BrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
         </div>
         <span className="brand-date">
           {lastDate
-            ? formatDistanceToNow(new Date(lastDate), { locale: fr, addSuffix: true })
+            ? formatDistanceToNow(new Date(lastDate), {
+                locale: fr,
+                addSuffix: true,
+              })
             : ""}
         </span>
-        <img src={getBrandLogo(brand, siteUrl)} alt={brand} className="brand-logo" />
+        <img
+          src={getBrandLogo(brand, siteUrl)}
+          alt={brand}
+          className="brand-logo"
+        />
       </div>
 
       {expanded && (
@@ -105,24 +117,35 @@ const BrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
                             wrapperClassName="avatar-wrapper-override"
                           />
                           {currentDesc.emoji && (
-                            <div className="emoji-overlay">{currentDesc.emoji}</div>
+                            <div className="emoji-overlay">
+                              {currentDesc.emoji}
+                            </div>
                           )}
                         </div>
                       </div>
                       <div className="feedback-content">
                         <div className="feedback-meta">
-                          <span className="pseudo">{currentDesc.user?.pseudo}</span>
-                          {userProfile?.id === currentDesc.user?.id && <span className="badge-me">Moi</span>}
+                          <span className="pseudo">
+                            {currentDesc.user?.pseudo}
+                          </span>
+                          {userProfile?.id === currentDesc.user?.id && (
+                            <span className="badge-me">Moi</span>
+                          )}
                           <span className="brand"> · {brand}</span>
                           <span className="time">
                             ·{" "}
-                            {formatDistanceToNow(new Date(currentDesc.createdAt), {
-                              locale: fr,
-                              addSuffix: true,
-                            })}
+                            {formatDistanceToNow(
+                              new Date(currentDesc.createdAt),
+                              {
+                                locale: fr,
+                                addSuffix: true,
+                              },
+                            )}
                           </span>
                         </div>
-                        <p className="feedback-text">{currentDesc.description}</p>
+                        <p className="feedback-text">
+                          {currentDesc.description}
+                        </p>
 
                         {sub.descriptions.length > 1 && (
                           <div className="description-chevrons">
@@ -135,9 +158,14 @@ const BrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
                               </button>
                               <button
                                 onClick={() =>
-                                  handleNext(sub.subCategory, sub.descriptions.length)
+                                  handleNext(
+                                    sub.subCategory,
+                                    sub.descriptions.length,
+                                  )
                                 }
-                                disabled={currentIndex === sub.descriptions.length - 1}
+                                disabled={
+                                  currentIndex === sub.descriptions.length - 1
+                                }
                               >
                                 <ChevronRight size={18} />
                               </button>

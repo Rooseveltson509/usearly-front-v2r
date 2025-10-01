@@ -17,23 +17,21 @@ const RageReportsList = ({
   const { data, loading } = usePaginatedGroupedReportsByRage(true);
 
   // On transforme les résultats du backend en ExplodedGroupedReport
-const explodedData: ExplodedGroupedReport[] = data.map((r) => ({
-  id: String(r.reportingId),
-  reportingId: String(r.reportingId),
-  category: r.category,
-  marque: r.marque,
-  siteUrl: r.siteUrl ?? undefined,
-  totalCount: r.count,
-  reactions: [], // pas encore dispo pour rage
-  subCategory: {
-    subCategory: r.subCategory,
-    count: r.count,
-    descriptions: r.descriptions as any, // déjà uniques côté backend
-  },
-  subCategories: [], // 👈 vide → évite les doublons
-}));
-
-
+  const explodedData: ExplodedGroupedReport[] = data.map((r) => ({
+    id: String(r.reportingId),
+    reportingId: String(r.reportingId),
+    category: r.category,
+    marque: r.marque,
+    siteUrl: r.siteUrl ?? undefined,
+    totalCount: r.count,
+    reactions: [], // pas encore dispo pour rage
+    subCategory: {
+      subCategory: r.subCategory,
+      count: r.count,
+      descriptions: r.descriptions as any, // déjà uniques côté backend
+    },
+    subCategories: [], // 👈 vide → évite les doublons
+  }));
 
   return (
     <ReportListView

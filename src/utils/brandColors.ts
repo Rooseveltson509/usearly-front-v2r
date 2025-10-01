@@ -1,5 +1,3 @@
-import { LayoutDashboard } from "lucide-react";
-
 export const brandColors: Record<string, string> = {
   // Streaming & Entertainment
   netflix: "#E50914",

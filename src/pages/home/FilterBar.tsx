@@ -16,7 +16,14 @@ interface Props {
     | "";
   setFilter: React.Dispatch<
     React.SetStateAction<
-      "hot" | "rage" | "popular" | "recent" | "urgent" | "confirmed" | "chrono" | ""
+      | "hot"
+      | "rage"
+      | "popular"
+      | "recent"
+      | "urgent"
+      | "confirmed"
+      | "chrono"
+      | ""
     >
   >;
   viewMode: "flat" | "chrono" | "confirmed";
@@ -50,7 +57,7 @@ const normalize = (str: string) =>
 const FilterBar: React.FC<Props> = ({
   filter,
   setFilter,
-  viewMode,
+  /* viewMode, */
   setViewMode,
   setSelectedBrand,
   setSelectedCategory,
@@ -94,7 +101,10 @@ const FilterBar: React.FC<Props> = ({
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
         setIsDropdownOpen(false);
       }
     };
@@ -134,7 +144,9 @@ const FilterBar: React.FC<Props> = ({
   return (
     <div className="filter-container">
       <div className="primary-filters">
-        <div className={`select-filter-wrapper ${filter === "hot" ? "hot-active" : ""}`}>
+        <div
+          className={`select-filter-wrapper ${filter === "hot" ? "hot-active" : ""}`}
+        >
           <select
             className="select-filter"
             value={filter === "confirmed" ? "hot" : filter}
@@ -152,7 +164,9 @@ const FilterBar: React.FC<Props> = ({
                 setViewMode("confirmed");
                 onViewModeChange?.("confirmed");
                 setActiveFilter("confirmed");
-              } else if (["rage", "popular", "recent", "urgent"].includes(value)) {
+              } else if (
+                ["rage", "popular", "recent", "urgent"].includes(value)
+              ) {
                 setFilter(value as any);
                 setViewMode("chrono");
                 onViewModeChange?.("chrono");
@@ -183,7 +197,10 @@ const FilterBar: React.FC<Props> = ({
       </div>
       <div className="secondary-filters-container">
         <div className="filter-dropdown-wrapper" ref={dropdownRef}>
-          <button className="filter-toggle" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+          <button
+            className="filter-toggle"
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          >
             <SlidersHorizontal size={18} style={{ marginRight: "6px" }} />
             Filtrer
           </button>
@@ -255,7 +272,11 @@ const FilterBar: React.FC<Props> = ({
           )}
         </div>
 
-        <SearchBar value={searchTerm} onChange={onSearchTermChange} placeholder="Rechercher un signalement..." />
+        <SearchBar
+          value={searchTerm}
+          onChange={onSearchTermChange}
+          placeholder="Rechercher un signalement..."
+        />
       </div>
     </div>
   );

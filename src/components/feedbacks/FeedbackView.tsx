@@ -4,7 +4,12 @@ import ChronologicalReportList from "../report-grouped/ChronologicalReportList";
 import FilteredReportList from "../report-grouped/feedback-list-header/FilteredReportList";
 import { isToday, isYesterday, format } from "date-fns";
 import { fr } from "date-fns/locale";
-import type { ExplodedGroupedReport, GroupedReport, CoupDeCoeur, Suggestion } from "@src/types/Reports";
+import type {
+  ExplodedGroupedReport,
+  GroupedReport,
+  CoupDeCoeur,
+  Suggestion,
+} from "@src/types/Reports";
 import { useState, type JSX } from "react";
 import {
   groupByBrandThenCategory,
@@ -46,10 +51,10 @@ const FeedbackView = ({
   const exploded = (currentState.data as GroupedReport[]).flatMap((report) =>
     Array.isArray(report.subCategories)
       ? report.subCategories.map((subCategory) => ({
-        ...report,
-        subCategory,
-      }))
-      : []
+          ...report,
+          subCategory,
+        }))
+      : [],
   );
   console.log("FeedbackView data:", currentState.data);
   console.log("Loading:", currentState.loading);
@@ -69,7 +74,7 @@ const FeedbackView = ({
   if (activeTab === "report") {
     if (viewMode === "grouped") {
       const groupedByBrand = groupByBrandThenCategory(
-        groupByBrand(explodeGroupedReports(currentState.data))
+        groupByBrand(explodeGroupedReports(currentState.data)),
       );
       return (
         <GroupedReportList
@@ -83,7 +88,7 @@ const FeedbackView = ({
 
     if (viewMode === "flat") {
       const groupedFlat = Object.entries(
-        groupByBrand(explodeGroupedReports(currentState.data))
+        groupByBrand(explodeGroupedReports(currentState.data)),
       );
       return (
         <div className="flat-report-list">
@@ -101,26 +106,33 @@ const FeedbackView = ({
       const chronoMapped = exploded
         .filter((item) => item.subCategory?.descriptions?.[0]?.createdAt)
         .sort((a, b) => {
-          const aDate = new Date(a.subCategory.descriptions[0].createdAt).getTime();
-          const bDate = new Date(b.subCategory.descriptions[0].createdAt).getTime();
+          const aDate = new Date(
+            a.subCategory.descriptions[0].createdAt,
+          ).getTime();
+          const bDate = new Date(
+            b.subCategory.descriptions[0].createdAt,
+          ).getTime();
           return bDate - aDate;
         });
 
-      const groupedByDay = chronoMapped.reduce((acc, item) => {
-        const desc = item.subCategory.descriptions[0];
-        const date = new Date(desc.createdAt);
-        if (isNaN(date.getTime())) return acc;
+      const groupedByDay = chronoMapped.reduce(
+        (acc, item) => {
+          const desc = item.subCategory.descriptions[0];
+          const date = new Date(desc.createdAt);
+          if (isNaN(date.getTime())) return acc;
 
-        const label = isToday(date)
-          ? "Aujourd’hui"
-          : isYesterday(date)
-            ? "Hier"
-            : format(date, "dd MMMM yyyy", { locale: fr });
+          const label = isToday(date)
+            ? "Aujourd’hui"
+            : isYesterday(date)
+              ? "Hier"
+              : format(date, "dd MMMM yyyy", { locale: fr });
 
-        if (!acc[label]) acc[label] = [];
-        acc[label].push(item);
-        return acc;
-      }, {} as Record<string, typeof chronoMapped>);
+          if (!acc[label]) acc[label] = [];
+          acc[label].push(item);
+          return acc;
+        },
+        {} as Record<string, typeof chronoMapped>,
+      );
 
       return Object.entries(groupedByDay).length > 0 ? (
         <ChronologicalReportList
@@ -128,7 +140,7 @@ const FeedbackView = ({
           renderCard={(item, index) => {
             const desc = item.subCategory.descriptions[0];
             const cardId = `${item.reportingId}_${desc?.id || index}`;
-            return renderCard(item);
+            return <div key={cardId}>{renderCard(item)}</div>;
           }}
         />
       ) : (
@@ -152,14 +164,16 @@ const FeedbackView = ({
   // Coup de cœur & suggestions
   return (
     <>
-      {(currentState.data as (CoupDeCoeur | Suggestion)[]).map((item, index) => (
-        <InteractiveFeedbackCard
-          key={item.id || `feedback-${index}`}
-          item={item}
-          isOpen={openId === item.id}
-          onToggle={(id) => setOpenId((prev) => (prev === id ? null : id))}
-        />
-      ))}
+      {(currentState.data as (CoupDeCoeur | Suggestion)[]).map(
+        (item, index) => (
+          <InteractiveFeedbackCard
+            key={item.id || `feedback-${index}`}
+            item={item}
+            isOpen={openId === item.id}
+            onToggle={(id) => setOpenId((prev) => (prev === id ? null : id))}
+          />
+        ),
+      )}
     </>
   );
 };

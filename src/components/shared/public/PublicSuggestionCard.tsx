@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
-//import "./InteractiveFeedbackCard.scss"; // ✅ on réutilise les mêmes styles
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 import Avatar from "../Avatar";
 import { brandColors } from "@src/utils/brandColors";
-import { getContrastTextColor } from "@src/utils/colorUtils";
 import { fetchValidBrandLogo } from "@src/utils/brandLogos";
 import type { PublicSuggestion } from "@src/types/suggestion";
 
@@ -73,28 +71,25 @@ const PublicSuggestionCard: React.FC<Props> = ({ item }) => {
   const rawDescription = item.description || "";
   const description = rawDescription.trim();
   const DESCRIPTION_LIMIT = 150;
-  const shouldShowToggle = description.length > DESCRIPTION_LIMIT || item.capture;
+  const shouldShowToggle =
+    description.length > DESCRIPTION_LIMIT || item.capture;
   //const bgColor = brandColors[item.marque?.toLowerCase()] || brandColors.default;
   const brandKey = item.marque ? item.marque.toLowerCase() : "default";
   const bgColor = brandColors[brandKey] || brandColors.default;
 
-  const textColor = getContrastTextColor(bgColor);
   const brandName = item.marque?.trim() ?? "";
   const brandLogo = brandName ? logos[brandName] : "";
 
   const votes = item.votes ?? 0;
   const max = 300;
-  const pct = Math.max(0, Math.min(100, (votes / max) * 100)); // clamp 0–100 
+  const pct = Math.max(0, Math.min(100, (votes / max) * 100)); // clamp 0–100
 
   return (
     <div className="feedback-card open">
       {/* Bloc gauche */}
       <div className="feedback-type">
         {item.title ? (
-          <div
-            className="feedback-left"
-            style={{ backgroundColor: bgColor }}
-          >
+          <div className="feedback-left" style={{ backgroundColor: bgColor }}>
             <div className="feedback-icon">{item.emoji}</div>
             <div className="punchlines">
               {item.title.split("\n").map((line, index) => (
@@ -202,12 +197,14 @@ const PublicSuggestionCard: React.FC<Props> = ({ item }) => {
         <div className="feedback-footer">
           <div
             className="vote-progress"
-            style={{ ["--pct" as any]: `${pct}%` }}   // variable CSS pour la position
+            style={{ ["--pct" as any]: `${pct}%` }} // variable CSS pour la position
           >
             <progress className="pg" value={votes} max={max} />
             {/* étoile décorative au bout du remplissage */}
             <span className="pg-thumb" aria-hidden="true" />
-            <span className="pg-count">{votes}/{max}</span>
+            <span className="pg-count">
+              {votes}/{max}
+            </span>
           </div>
 
           <button

@@ -1,49 +1,49 @@
 @use "@src/styles/base/variables" as *;
 @use "@src/styles/utils/mixins" as *;
 
-.sidebar-nav{
-    width: 250px;
-    h2{
-        font-size: 20px;
-        font-family: $font-family;
-        color: $transparent;
-        margin-bottom: 2.813rem;   
-    }
-    div{
-        display: flex;
-        flex-direction: column;
-        gap: 8rem;
-        ul{
-            list-style: none;
-            h3{
-                color: $dark;
-                font-size: 14px;
-                font-weight: 700;
-            }
-            li{
-                width: 100%;
-                a{
-                    display: block;
-                    width: 100%;
-                    padding: 1rem 0;
-                    font-weight: 400;
-                    font-family: $font-main-text;
-                    border-bottom: 1px solid $gray-200;
-                    cursor: pointer;
-                }
-            }
-            .active{
-                display: block;
-                width: 100%;
-                padding: 1rem 0;
-                font-weight: 700;
-                border-bottom: 2px solid $dark;
-            }
-            li:last-child{
-                a{
-                    border-bottom: none;
-                }
-            }
+.sidebar-nav {
+  width: 250px;
+  h2 {
+    font-size: 20px;
+    font-family: $font-family;
+    color: $transparent;
+    margin-bottom: 2.813rem;
+  }
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: 8rem;
+    ul {
+      list-style: none;
+      h3 {
+        color: $dark;
+        font-size: 14px;
+        font-weight: 700;
+      }
+      li {
+        width: 100%;
+        a {
+          display: block;
+          width: 100%;
+          padding: 1rem 0;
+          font-weight: 400;
+          font-family: $font-main-text;
+          border-bottom: 1px solid $gray-200;
+          cursor: pointer;
         }
+      }
+      .active {
+        display: block;
+        width: 100%;
+        padding: 1rem 0;
+        font-weight: 700;
+        border-bottom: 2px solid $dark;
+      }
+      li:last-child {
+        a {
+          border-bottom: none;
+        }
+      }
     }
+  }
 }

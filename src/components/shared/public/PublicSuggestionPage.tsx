@@ -56,9 +56,15 @@ const PublicSuggestionPage: React.FC = () => {
       <h1>Suggestion partagée</h1>
       <PublicSuggestionCard item={{ ...suggestion, type: "suggestion" }} />
       <div className="cta-login">
-        <p>👉 Connectez-vous ou créez un compte pour interagir avec cette carte.</p>
-        <a href="/login" className="btn-login">Se connecter</a>
-        <a href="/register" className="btn-register">Créer un compte</a>
+        <p>
+          👉 Connectez-vous ou créez un compte pour interagir avec cette carte.
+        </p>
+        <a href="/login" className="btn-login">
+          Se connecter
+        </a>
+        <a href="/register" className="btn-register">
+          Créer un compte
+        </a>
       </div>
     </div>
   );

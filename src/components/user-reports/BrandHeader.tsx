@@ -13,7 +13,7 @@ interface Props {
 
 const BrandHeader: React.FC<Props> = ({
   brand,
-  siteUrl,
+  /*  siteUrl, */
   logoUrl,
   reportCount,
   mostRecentDate,
@@ -22,10 +22,13 @@ const BrandHeader: React.FC<Props> = ({
   return (
     <div className="brand-header" onClick={onToggle}>
       <p className="brand-reports-count">
-        <strong>{reportCount}</strong> signalement{reportCount > 1 ? "s" : ""} sur <strong>{brand}</strong>
+        <strong>{reportCount}</strong> signalement{reportCount > 1 ? "s" : ""}{" "}
+        sur <strong>{brand}</strong>
       </p>
       <p className="date-card">
-        {mostRecentDate ? `Il y a ${formatDistanceToNow(mostRecentDate, { locale: fr })}` : "Date inconnue"}
+        {mostRecentDate
+          ? `Il y a ${formatDistanceToNow(mostRecentDate, { locale: fr })}`
+          : "Date inconnue"}
       </p>
       <img src={logoUrl} alt={brand} className="brand-logo" />
       <ChevronDown size={18} className="chevron-icon" />
@@ -34,4 +37,3 @@ const BrandHeader: React.FC<Props> = ({
 };
 
 export default BrandHeader;
-

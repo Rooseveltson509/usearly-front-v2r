@@ -15,7 +15,7 @@ export interface Comment {
 export const useCommentsForDescription = (
   descriptionId: string,
   type: "report" | "suggestion" | "coupdecoeur",
-  refreshKey = 0 // Ajout d'un refreshKey pour forcer la récupération des commentaires
+  refreshKey = 0, // Ajout d'un refreshKey pour forcer la récupération des commentaires
 ) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(false);
@@ -51,5 +51,11 @@ export const useCommentsForDescription = (
     fetchComments();
   }, [descriptionId, type, refreshKey]);
 
-  return { comments, loading, addComment, deleteComment, refreshComments: fetchComments };
+  return {
+    comments,
+    loading,
+    addComment,
+    deleteComment,
+    refreshComments: fetchComments,
+  };
 };

@@ -45,14 +45,14 @@
 
       opacity: 0;
       transform: translateX(-50%) translateY(5px);
-      transition: opacity 0.2s ease,
-      transform 0.2s ease;
+      transition:
+        opacity 0.2s ease,
+        transform 0.2s ease;
 
       &:hover .custom-tooltip {
         opacity: 1;
         transform: translateX(-50%) translateY(0);
       }
-
     }
 
     &:hover .custom-tooltip {

@@ -10,7 +10,7 @@ interface Props {
 
 const CommentForm: React.FC<Props> = ({ avatarUrl, value, onSubmit }) => {
   const [text, setText] = useState(value);
-     const { userProfile } = useAuth();
+  const { userProfile } = useAuth();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

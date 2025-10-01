@@ -2,9 +2,12 @@ import { useState, useEffect, useCallback } from "react";
 import { getGroupedReportsByHot } from "@src/services/feedbackService";
 import type { PopularGroupedReport } from "@src/types/Reports";
 
-export const usePaginatedGroupedReportsByHot = (filter: string, enabled: boolean) => {
- const [data, setData] = useState<Record<string, PopularGroupedReport[]>>({});
-  const [page, setPage]   = useState(1);
+export const usePaginatedGroupedReportsByHot = (
+  filter: string,
+  enabled: boolean,
+) => {
+  const [data, setData] = useState<Record<string, PopularGroupedReport[]>>({});
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 

@@ -1,5 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import { FALLBACK_BRAND_PLACEHOLDER, fetchValidBrandLogo } from "@src/utils/brandLogos";
+import {
+  FALLBACK_BRAND_PLACEHOLDER,
+  fetchValidBrandLogo,
+} from "@src/utils/brandLogos";
 
 export const useBrandLogos = (brands: string[]): Record<string, string> => {
   const [logos, setLogos] = useState<Record<string, string>>({});
@@ -24,9 +27,11 @@ export const useBrandLogos = (brands: string[]): Record<string, string> => {
     const load = async () => {
       const entries = await Promise.all(
         missing.map(async (brand) => {
-          const logo = await fetchValidBrandLogo(brand).catch(() => FALLBACK_BRAND_PLACEHOLDER);
+          const logo = await fetchValidBrandLogo(brand).catch(
+            () => FALLBACK_BRAND_PLACEHOLDER,
+          );
           return [brand, logo || FALLBACK_BRAND_PLACEHOLDER] as const;
-        })
+        }),
       );
 
       if (!cancelled) {

@@ -33,13 +33,8 @@ const UserGroupedReportsList: React.FC = () => {
   const resetKey = `${viewMode}`;
 
   /* Scroll infini pour vue PAR MARQUE */
-  const {
-    reports,
-    loading,
-    error,
-    hasMore,
-    loadMore,
-  } = useInfiniteGroupedReports(10, resetKey);
+  const { reports, loading, error, hasMore, loadMore } =
+    useInfiniteGroupedReports(10, resetKey);
 
   /* Filtres (par marque / catégorie) */
   const {
@@ -73,7 +68,7 @@ const UserGroupedReportsList: React.FC = () => {
       > = {};
 
       for (const [day, items] of Object.entries(
-        chronoData as Record<string, ExplodedGroupedReport[]>
+        chronoData as Record<string, ExplodedGroupedReport[]>,
       )) {
         result[day] = await Promise.all(
           items.map(async (item) => {
@@ -84,10 +79,10 @@ const UserGroupedReportsList: React.FC = () => {
 
             const brandLogoUrl = await fetchValidBrandLogo(
               item.marque,
-              item.siteUrl || undefined
+              item.siteUrl || undefined,
             );
             return { ...item, brandLogoUrl };
-          })
+          }),
         );
       }
 
@@ -107,7 +102,7 @@ const UserGroupedReportsList: React.FC = () => {
           loadMore();
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.3 },
     );
 
     observer.observe(loaderRef.current);
@@ -216,11 +211,14 @@ const UserGroupedReportsList: React.FC = () => {
           </p>
         ) : (
           Object.entries(
-            filteredData.reduce((acc, curr) => {
-              if (!acc[curr.marque]) acc[curr.marque] = [];
-              acc[curr.marque].push(curr);
-              return acc;
-            }, {} as Record<string, UserGroupedReport[]>)
+            filteredData.reduce(
+              (acc, curr) => {
+                if (!acc[curr.marque]) acc[curr.marque] = [];
+                acc[curr.marque].push(curr);
+                return acc;
+              },
+              {} as Record<string, UserGroupedReport[]>,
+            ),
           ).map(([brand, reports]) => (
             <UserBrandBlock
               key={brand}

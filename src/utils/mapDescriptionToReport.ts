@@ -1,8 +1,11 @@
-import type { ExplodedGroupedReport, FeedbackDescription } from "@src/types/Reports";
+import type {
+  ExplodedGroupedReport,
+  FeedbackDescription,
+} from "@src/types/Reports";
 
 export const mapDescriptionToGroupedReport = (
   desc: FeedbackDescription,
-  options?: { includeSubCategories?: boolean }
+  options?: { includeSubCategories?: boolean },
 ): ExplodedGroupedReport => {
   const reportingId = desc.id;
   const brand = desc.brand || "Autre";
@@ -32,4 +35,3 @@ export const mapDescriptionToGroupedReport = (
       : [],
   };
 };
-

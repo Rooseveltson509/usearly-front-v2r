@@ -25,7 +25,7 @@ interface AuthContextProps {
   login: (
     accessToken: string,
     profile: UserProfile,
-    rememberMe?: boolean
+    rememberMe?: boolean,
   ) => Promise<void>;
   logout: () => void;
   setUserProfile: (profile: UserProfile | null) => void;
@@ -43,9 +43,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const login = async (
     accessToken: string,
     profile: UserProfile,
-    rememberMe = false
+    rememberMe = false,
   ) => {
-    apiService.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+    apiService.defaults.headers.common["Authorization"] =
+      `Bearer ${accessToken}`;
 
     localStorage.setItem("userType", profile.type);
     if (rememberMe) {
@@ -167,7 +168,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context)
-    throw new Error("useAuth must be used within AuthProvider");
+  if (!context) throw new Error("useAuth must be used within AuthProvider");
   return context;
 };

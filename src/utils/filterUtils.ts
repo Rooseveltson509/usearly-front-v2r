@@ -27,7 +27,7 @@ export const flattenGroupedReports = (data: GroupedReport[]) => {
 
 export const filterAndSortDescriptions = (
   descriptions: ReturnType<typeof flattenGroupedReports>,
-  filters: FilterOptions
+  filters: FilterOptions,
 ) => {
   let results = descriptions;
 
@@ -39,7 +39,7 @@ export const filterAndSortDescriptions = (
     results = results.filter((d) => d.subCategory === filters.category);
   }
 
-/*   if (filters.status) {
+  /*   if (filters.status) {
     results = results.filter((d) => d.status === filters.status);
   } */
 

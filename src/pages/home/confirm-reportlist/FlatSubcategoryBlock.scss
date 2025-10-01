@@ -85,45 +85,44 @@
         position: relative;
         padding-right: 24px;
 
-.avatar-logo-group {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+        .avatar-logo-group {
+          display: flex;
+          align-items: center;
+          justify-content: center;
 
-  .user-avatar-wrapper,
-  .brand-logo-wrapper {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    overflow: hidden;
-    position: relative;
+          .user-avatar-wrapper,
+          .brand-logo-wrapper {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            overflow: hidden;
+            position: relative;
 
-    .avatar-img-custom {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      border-radius: 50%;
-      border: 2px solid #fff;
-    }
+            .avatar-img-custom {
+              width: 100%;
+              height: 100%;
+              object-fit: contain;
+              border-radius: 50%;
+              border: 2px solid #fff;
+            }
 
-    .avatar-fallback-custom {
-      border-radius: 50%;
-    }
-  }
+            .avatar-fallback-custom {
+              border-radius: 50%;
+            }
+          }
 
-  .brand-logo-wrapper {
-    margin-left: -10px;
-    z-index: 4;
-  }
+          .brand-logo-wrapper {
+            margin-left: -10px;
+            z-index: 4;
+          }
 
-  .user-avatar-wrapper {
-    z-index: 1;
-  }
-}
+          .user-avatar-wrapper {
+            z-index: 1;
+          }
+        }
 
-
-  .text-meta {
-    text-align: center;
+        .text-meta {
+          text-align: center;
 
           .user-brand-line {
             display: block;

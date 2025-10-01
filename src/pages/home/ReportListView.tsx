@@ -1,4 +1,4 @@
-import './ReportListView.scss';
+import "./ReportListView.scss";
 
 import ChronologicalReportList from "@src/components/report-grouped/ChronologicalReportList";
 import ChronoReportCard from "@src/components/report-grouped/report-by-date/ChronoReportCard";
@@ -9,7 +9,6 @@ import type {
   PopularGroupedReport,
   PublicGroupedReport,
 } from "@src/types/Reports";
-// import FlatReportCard from "./confirm-reportlist/FlatReportCard";
 import FlatSubcategoryBlock from "./confirm-reportlist/FlatSubcategoryBlock";
 import { getBrandLogo } from "@src/utils/brandLogos";
 import SqueletonAnime from "@src/components/loader/SqueletonAnime";
@@ -62,7 +61,10 @@ const ReportListView: React.FC<Props> = ({
   if (isPopularFilter) {
     const { groupedByDay, isLoading } =
       filter === "popular"
-        ? { groupedByDay: popularEngagementData, isLoading: loadingPopularEngagement }
+        ? {
+            groupedByDay: popularEngagementData,
+            isLoading: loadingPopularEngagement,
+          }
         : filter === "rage"
           ? { groupedByDay: rageData, isLoading: loadingRage }
           : { groupedByDay: popularData, isLoading: loadingPopular };
@@ -127,7 +129,7 @@ const ReportListView: React.FC<Props> = ({
       (item): item is ExplodedGroupedReport =>
         "subCategory" in item &&
         typeof item.subCategory === "object" &&
-        Array.isArray(item.subCategory.descriptions)
+        Array.isArray(item.subCategory.descriptions),
     );
 
     if (flatData.length === 0) {
@@ -145,15 +147,13 @@ const ReportListView: React.FC<Props> = ({
       return <p>Aucun report disponible pour ce filtre.</p>;
     }
 
-    const normalizedSearchTerm = searchTerm
-      ? normalizeText(searchTerm)
-      : "";
+    const normalizedSearchTerm = searchTerm ? normalizeText(searchTerm) : "";
 
     const filteredExplodedReports = normalizedSearchTerm
       ? explodedReports.filter((item) =>
           normalizeText(item.subCategory.subCategory || "").includes(
-            normalizedSearchTerm
-          )
+            normalizedSearchTerm,
+          ),
         )
       : explodedReports;
 
@@ -161,7 +161,11 @@ const ReportListView: React.FC<Props> = ({
       return (
         <div className="no-search-results">
           <p>Aucun résultat pour "{searchTerm}"</p>
-          <button type="button" onClick={onClearSearchTerm} className="clear-button">
+          <button
+            type="button"
+            onClick={onClearSearchTerm}
+            className="clear-button"
+          >
             Effacer
           </button>
         </div>
@@ -184,14 +188,14 @@ const ReportListView: React.FC<Props> = ({
     );
   }
 
-
-
-
-  const grouped = flatData.reduce<Record<string, typeof flatData>>((acc, report) => {
-    if (!acc[report.marque]) acc[report.marque] = [];
-    acc[report.marque].push(report);
-    return acc;
-  }, {});
+  const grouped = flatData.reduce<Record<string, typeof flatData>>(
+    (acc, report) => {
+      if (!acc[report.marque]) acc[report.marque] = [];
+      acc[report.marque].push(report);
+      return acc;
+    },
+    {},
+  );
 
   return (
     <>

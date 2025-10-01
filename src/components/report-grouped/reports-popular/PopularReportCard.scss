@@ -12,26 +12,28 @@
     transform: scale(1);
   }
 }
-  .badge-count {
-    background-color: #8b5cf6;
-    color: white;
-    font-size: 0.85rem;
-    font-weight: 600;
-    padding: 2px 16px;
-    border-radius: 12px;
-    font-family: "inter";
-    width: 24px; // ou une taille adaptée à ton design
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0; // pour que le badge ne rétrécisse jamais
-  }
+.badge-count {
+  background-color: #8b5cf6;
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 2px 16px;
+  border-radius: 12px;
+  font-family: "inter";
+  width: 24px; // ou une taille adaptée à ton design
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0; // pour que le badge ne rétrécisse jamais
+}
 .report-card.hot-effect {
   border: 1px solid #ff5722;
   background-color: rgba(255, 87, 34, 0.02);
   animation: flame-pulse 1.8s ease-in-out infinite;
-  transition: background-color 0.3s, border-color 0.3s;
+  transition:
+    background-color 0.3s,
+    border-color 0.3s;
 
   .card-header {
     background: rgba(255, 87, 34, 0.06);
@@ -53,7 +55,8 @@
 }
 
 @keyframes flame-bounce {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0) scale(1);
   }
   50% {

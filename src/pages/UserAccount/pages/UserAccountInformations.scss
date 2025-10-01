@@ -1,84 +1,84 @@
 @use "@src/styles/base/variables" as *;
 @use "@src/styles/utils/mixins" as *;
 
+.user-account {
+  background-color: white;
+  padding: 2rem 3rem;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+  width: 729px;
+  max-width: 729px;
+  h1 {
+    font-family: $font-main-title;
+    font-size: 2rem;
+    font-weight: 700;
+    color: $dark;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid $gray-200;
+    margin-bottom: 1.5rem;
+  }
+  .avatar-preview {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 1rem;
+    gap: 2rem;
 
-.user-account{
-    background-color: white;
-    padding: 2rem 3rem;
-    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
-    width: 729px;
-    max-width: 729px;
-    h1{
-        font-family: $font-main-title;
-        font-size: 2rem;
-        font-weight: 700;
-        color: $dark;
-        padding-bottom: 0.5rem;
-        border-bottom: 1px solid $gray-200;
-        margin-bottom: 1.5rem;
+    h2 {
+      font-family: $font-main-text;
+      font-size: 0.75rem;
+      color: $transparent;
+      font-weight: 500;
     }
-    .avatar-preview{
-        display: flex;
-        flex-direction: row;
-        margin-bottom: 1rem;
-        gap: 2rem;
+    div {
+      img,
+      div {
+        width: 124px;
+        height: 124px;
+        border-radius: 50%;
+      }
+    }
+    .modify-icon {
+      width: 24px;
+      height: 24px;
+      position: relative;
+      bottom: 30px;
+      left: 90px;
+      cursor: pointer;
+      box-shadow: 2px 3px 5px $gray-500;
+    }
+    .with-img {
+      left: -30px;
+      bottom: 10px;
+    }
+  }
+  #avatarImg {
+    display: none;
+  }
 
-        h2{
-            font-family: $font-main-text;
-            font-size: 0.75rem;
-            color: $transparent;
-            font-weight: 500;
-        }
-        div{
-            img, div{
-                width: 124px;
-                height: 124px;
-                border-radius: 50%;
-            }
-        }
-        .modify-icon{
-            width: 24px;
-            height: 24px;
-            position: relative;
-            bottom: 30px;
-            left: 90px;
-            cursor: pointer;
-            box-shadow: 2px 3px 5px $gray-500;
-        }
-        .with-img{
-            left: -30px;
-            bottom: 10px;
-        }
-    }
-    #avatarImg{
-        display: none;
-    }
-
-    .submit-group{
-        margin-top: 1.5rem;
-    }
+  .submit-group {
+    margin-top: 1.5rem;
+  }
 }
 
-.password-change{
-    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
-    margin-top: 10px;
-    background-color: white;
-    padding: 2rem 3rem;
-    h2{
-        padding-bottom: 0.75rem;
-        border-bottom: 1px solid $gray-200;
-        margin-bottom: 2.25rem;
-    }
-    .form-group{
-        margin-bottom: 2.25rem;
-    }
+.password-change {
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 10px;
+  background-color: white;
+  padding: 2rem 3rem;
+  h2 {
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid $gray-200;
+    margin-bottom: 2.25rem;
+  }
+  .form-group {
+    margin-bottom: 2.25rem;
+  }
 }
 
-.delete-account{
-    margin-top: 1.1rem;
-    margin-left: 3rem;
-    font-size: 0.875rem;
-    font-weight: 400;
-    margin-bottom: 6rem;
-    cursor: pointer;
+.delete-account {
+  margin-top: 1.1rem;
+  margin-left: 3rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  margin-bottom: 6rem;
+  cursor: pointer;
 }

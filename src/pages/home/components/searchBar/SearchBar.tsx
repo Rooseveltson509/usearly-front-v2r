@@ -9,7 +9,11 @@ interface SearchBarProps {
   placeholder?: string;
 }
 
-const SearchBar = ({ value, onChange, placeholder = "Rechercher..." }: SearchBarProps) => {
+const SearchBar = ({
+  value,
+  onChange,
+  placeholder = "Rechercher...",
+}: SearchBarProps) => {
   const [isActive, setIsActive] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -32,7 +36,10 @@ const SearchBar = ({ value, onChange, placeholder = "Rechercher..." }: SearchBar
 
   return (
     <div className={`search-bar ${isActive ? "active" : ""}`}>
-      <span className={`icon ${isActive ? "active" : ""}`} onClick={toggleActive}>
+      <span
+        className={`icon ${isActive ? "active" : ""}`}
+        onClick={toggleActive}
+      >
         <Search size={16} />
       </span>
       <input
