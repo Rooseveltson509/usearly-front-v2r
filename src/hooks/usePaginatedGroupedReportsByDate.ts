@@ -6,7 +6,10 @@ import type {
   PublicGroupedReportFromAPI,
 } from "@src/types/Reports";
 
-export const usePaginatedGroupedReportsByDate = (enabled: boolean) => {
+export const usePaginatedGroupedReportsByDate = (
+  enabled: boolean,
+  pageSize = 20,
+) => {
   const [data, setData] = useState<Record<string, ExplodedGroupedReport[]>>({});
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -18,13 +21,19 @@ export const usePaginatedGroupedReportsByDate = (enabled: boolean) => {
     }
   }, [loading, hasMore, enabled]);
 
-  // Reset et déclenche le loader immédiatement lors de l'activation
+  // ✅ reset complet quand on change `enabled`
   useEffect(() => {
-    if (enabled) {
+    if (!enabled) {
       setData({});
       setPage(1);
       setHasMore(true);
-      setLoading(true); // ✅ pour afficher le loader immédiatement
+      setLoading(false);
+    } else {
+      // si on réactive → repartir proprement
+      setData({});
+      setPage(1);
+      setHasMore(true);
+      setLoading(true); // affiche le loader direct
     }
   }, [enabled]);
 
@@ -35,7 +44,7 @@ export const usePaginatedGroupedReportsByDate = (enabled: boolean) => {
       try {
         setLoading(true);
         const response: GetGroupedReportsByDateResponse =
-          await getGroupedReportsByDate(page, 20);
+          await getGroupedReportsByDate(page, pageSize);
 
         if (response.success) {
           const transformedData: Record<string, ExplodedGroupedReport[]> = {};
@@ -75,10 +84,7 @@ export const usePaginatedGroupedReportsByDate = (enabled: boolean) => {
           setHasMore(false);
         }
       } catch (error) {
-        console.error(
-          "Erreur lors du chargement des reports groupés par date :",
-          error,
-        );
+        console.error("❌ Erreur chargement reports par date:", error);
         setHasMore(false);
       } finally {
         setLoading(false);
@@ -86,7 +92,13 @@ export const usePaginatedGroupedReportsByDate = (enabled: boolean) => {
     };
 
     fetchData();
-  }, [page, enabled]);
+  }, [page, enabled, pageSize]);
 
-  return { data, loading, hasMore, loadMore };
+  const reset = useCallback(() => {
+    setData({});
+    setPage(1);
+    setHasMore(true);
+  }, []);
+
+  return { data, loading, hasMore, loadMore, reset };
 };

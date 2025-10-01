@@ -17,28 +17,19 @@ import FlatSubcategoryBlock from "./confirm-reportlist/FlatSubcategoryBlock";
 import { getBrandLogo } from "@src/utils/brandLogos";
 import { useBrands } from "@src/hooks/useBrands";
 import { apiService } from "@src/services/apiService";
-import { capitalizeFirstLetter } from "@src/utils/stringUtils";
 
 type ViewMode = "flat" | "chrono" | "confirmed";
 
 interface Props {
   activeTab: FeedbackType;
-
-  // Gestion du filtre actif
   activeFilter: string;
   setActiveFilter: (val: string) => void;
-
-  // Gestion du mode d’affichage
   viewMode: ViewMode;
   onViewModeChange: (mode: ViewMode) => void;
-
-  // Sélections
   selectedBrand: string;
   setSelectedBrand: (val: string) => void;
-
   selectedCategory: string;
   setSelectedCategory: (val: string) => void;
-
   setSelectedSiteUrl: (val: string | undefined) => void;
   totalityCount: number;
 }
@@ -76,19 +67,17 @@ const getSearchableStrings = (report: FilteredReport) => {
 
   if (Array.isArray(report.descriptions)) {
     report.descriptions.forEach((item) => {
-      if (typeof item === "string") {
-        values.push(item);
-      } else if (item && typeof item === "object") {
-        const description = (item as any).description;
-        if (typeof description === "string") values.push(description);
-        const title = (item as any).title;
-        if (typeof title === "string") values.push(title);
-        const text = (item as any).text;
-        if (typeof text === "string") values.push(text);
+      if (typeof item === "string") values.push(item);
+      else if (item && typeof item === "object") {
+        if (typeof (item as any).description === "string")
+          values.push((item as any).description);
+        if (typeof (item as any).title === "string")
+          values.push((item as any).title);
+        if (typeof (item as any).text === "string")
+          values.push((item as any).text);
       }
     });
   }
-
   return values;
 };
 
@@ -105,7 +94,7 @@ const HomeGroupedReportsList = ({
   setSelectedCategory,
   totalityCount,
 }: Props) => {
-  const [filter, setFilter] = useState<FilterType>("");
+  const [filter, setFilter] = useState<FilterType>("confirmed");
   const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>(
     {},
   );
@@ -116,68 +105,53 @@ const HomeGroupedReportsList = ({
   const [loadingFiltered, setLoadingFiltered] = useState(false);
   const [initializing, setInitializing] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [totalCount, setTotalCount] = useState(totalityCount);
-
-  const isChronoView =
-    viewMode === "chrono" && (filter === undefined || filter === "chrono");
+  const [, setTotalCount] = useState(totalityCount);
 
   const { brands } = useBrands();
   const availableBrands = useMemo(() => brands.map((b) => b.marque), [brands]);
 
-  // ---------------- Data hooks (toujours appelés) ----------------
-  const flatData = useFetchGroupedReports(activeTab);
-  const chronoData = usePaginatedGroupedReportsByDate(isChronoView);
+  // ⚡ Un seul hook est utilisé selon le filtre actif
+  const confirmedData = useConfirmedFlatData();
+  const rageData = usePaginatedGroupedReportsByRage(filter === "rage", 10);
   const popularEngagementData = usePaginatedGroupedReportsByPopularEngagement(
     filter === "popular",
+    20,
   );
-  const rageData = usePaginatedGroupedReportsByRage(filter === "rage");
-  const confirmedData = useConfirmedFlatData();
+  const chronoData = usePaginatedGroupedReportsByDate(filter === "chrono");
+
+  const flatData = useFetchGroupedReports(activeTab);
+
+  let reportData: { data?: any; loading: boolean; hasMore?: boolean } = {
+    loading: false,
+  };
+
+  switch (filter) {
+    case "confirmed":
+      reportData = confirmedData;
+      break;
+    case "rage":
+      reportData = rageData;
+      break;
+    case "popular":
+      reportData = popularEngagementData;
+      break;
+    case "chrono":
+      reportData = chronoData;
+      break;
+    default:
+      reportData = flatData;
+  }
 
   // ---------------- Initial filter selection ----------------
   useEffect(() => {
     if (!initializing) return;
 
-    if (
-      confirmedData.loading ||
-      rageData.loading ||
-      popularEngagementData.loading ||
-      chronoData.loading
-    )
-      return;
-
-    if ((confirmedData.data ?? []).length > 0) {
-      setFilter("confirmed");
-      setActiveFilter("confirmed");
-    } else if (rageData.data && Object.keys(rageData.data).length > 0) {
-      setFilter("rage");
-      setActiveFilter("rage");
-    } else if (
-      popularEngagementData.data &&
-      (popularEngagementData.data ?? []).length > 0
-    ) {
-      setFilter("popular");
-      setActiveFilter("popular");
-    } else if (chronoData.data && Object.keys(chronoData.data).length > 0) {
-      setFilter("chrono");
-      setActiveFilter("chrono");
-    } else {
-      setFilter("");
-      setActiveFilter("");
-    }
+    // 🚀 Toujours démarrer sur confirmed
+    setFilter("confirmed");
+    setActiveFilter("confirmed");
 
     setInitializing(false);
-  }, [
-    initializing,
-    confirmedData.loading,
-    rageData.loading,
-    popularEngagementData.loading,
-    chronoData.loading,
-    confirmedData.data,
-    rageData.data,
-    popularEngagementData.data,
-    chronoData.data,
-    setActiveFilter,
-  ]);
+  }, [initializing, setActiveFilter]);
 
   // ---------------- Fetch filtered reports by brand ----------------
   useEffect(() => {
@@ -189,7 +163,7 @@ const HomeGroupedReportsList = ({
       try {
         setLoadingFiltered(true);
         const { data } = await apiService.get("/reports", {
-          params: { brand: selectedBrand, page: 1, limit: 20 },
+          params: { brand: selectedBrand, page: 1, limit: 10 },
         });
         setFilteredReports(data.data);
         setTotalCount(data.data.length);
@@ -238,7 +212,6 @@ const HomeGroupedReportsList = ({
     if (!normalizedSearchTerm) return filteredByCategory;
     return filteredByCategory.filter((report) => {
       const searchableValues = getSearchableStrings(report);
-      console.log("searchableValues", searchableValues);
       return searchableValues.some((value) =>
         normalizeText(value).includes(normalizedSearchTerm),
       );
@@ -312,80 +285,29 @@ const HomeGroupedReportsList = ({
               Aucun signalement trouvé pour ces filtres...
             </div>
           ) : (
-            Object.entries(
-              reportsToDisplay.reduce(
-                (acc: Record<string, FilteredReport[]>, report) => {
-                  if (!acc[report.category]) acc[report.category] = [];
-                  acc[report.category].push(report);
-                  return acc;
-                },
-                {},
-              ),
-            ).map(([category, reports]) => (
-              <>
-                {selectedBrand && (
-                  <div className="selected-brand-summary">
-                    <div className="selected-brand-summary__brand">
-                      <div className="selected-brand-summary__logo">
-                        <img
-                          src={getBrandLogo(selectedBrand)}
-                          alt={selectedBrand}
-                        />
-                      </div>
-                      <div className="selected-brand-summary__info-container">
-                        {selectedCategory ? (
-                          <>
-                            <span className="count">
-                              {filteredByCategory.length}
-                            </span>
-                            <span className="text">
-                              signalement
-                              {filteredByCategory.length > 1 ? "s" : ""} lié
-                              {filteredByCategory.length > 1 ? "s" : ""} à «{" "}
-                              <b>{selectedCategory}</b> » sur{" "}
-                              {` ${capitalizeFirstLetter(selectedBrand)}`}
-                            </span>
-                          </>
-                        ) : (
-                          <>
-                            <span className="count">{totalCount}</span>
-                            <span className="text">
-                              signalement{totalCount > 1 ? "s" : ""} sur{" "}
-                              {` ${capitalizeFirstLetter(selectedBrand)}`}
-                            </span>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                )}
-                <div key={category} className="category-block">
-                  {reports.map((report, i) => (
-                    <FlatSubcategoryBlock
-                      key={`${report.reportingId}-${report.subCategory}-${i}`}
-                      brand={report.marque}
-                      siteUrl={report.siteUrl}
-                      subcategory={report.subCategory}
-                      descriptions={report.descriptions || []}
-                      brandLogoUrl={getBrandLogo(report.marque, report.siteUrl)}
-                      capture={report.capture}
-                      hideFooter={true}
-                    />
-                  ))}
-                </div>
-              </>
+            reportsToDisplay.map((report, i) => (
+              <FlatSubcategoryBlock
+                key={`${report.reportingId}-${report.subCategory}-${i}`}
+                brand={report.marque}
+                siteUrl={report.siteUrl}
+                subcategory={report.subCategory}
+                descriptions={report.descriptions || []}
+                brandLogoUrl={getBrandLogo(report.marque, report.siteUrl)}
+                capture={report.capture}
+                hideFooter={true}
+              />
             ))
           )}
         </div>
       ) : filter === "confirmed" ? (
-        confirmedData.loading ? (
+        reportData.loading ? (
           <SqueletonAnime
             loaderRef={loaderRef}
             loading={true}
             hasMore={false}
             error={null}
           />
-        ) : (confirmedData.data ?? []).length === 0 ? (
+        ) : (reportData.data ?? []).length === 0 ? (
           <div style={{ padding: "20px", textAlign: "center", color: "#888" }}>
             Aucun signalement confirmé pour le moment.
           </div>
@@ -400,7 +322,7 @@ const HomeGroupedReportsList = ({
           />
         )
       ) : filter === "rage" ? (
-        rageData.loading ? (
+        reportData.loading ? (
           <SqueletonAnime
             loaderRef={loaderRef}
             loading={true}
@@ -422,29 +344,29 @@ const HomeGroupedReportsList = ({
           />
         )
       ) : filter === "popular" ? (
-        popularEngagementData.loading ? (
+        reportData.loading ? (
           <SqueletonAnime
             loaderRef={loaderRef}
             loading={true}
             hasMore={false}
             error={null}
           />
-        ) : (popularEngagementData.data ?? []).length === 0 ? (
+        ) : (reportData.data ?? []).length === 0 ? (
           <div style={{ padding: "20px", textAlign: "center", color: "#888" }}>
             Aucun signalement populaire pour le moment.
           </div>
         ) : (
           <PopularReportList
-            data={popularEngagementData.data}
+            data={reportData.data}
             expandedItems={expandedItems}
             handleToggle={(key) =>
               setExpandedItems((prev) => ({ ...prev, [key]: !prev[key] }))
             }
-            loading={popularEngagementData.loading}
+            loading={reportData.loading}
           />
         )
       ) : filter === "chrono" ? (
-        chronoData.loading ? (
+        reportData.loading ? (
           <SqueletonAnime
             loaderRef={loaderRef}
             loading={true}
@@ -470,17 +392,8 @@ const HomeGroupedReportsList = ({
       {viewMode !== "confirmed" && (
         <SqueletonAnime
           loaderRef={loaderRef}
-          loading={
-            (filter === "chrono" && chronoData.loading) ||
-            (filter === "popular" && popularEngagementData.loading) ||
-            (!filter && flatData.loading)
-          }
-          hasMore={
-            (filter === "chrono" && chronoData.hasMore) ||
-            (filter === "popular" && popularEngagementData.hasMore) ||
-            (!filter && flatData.hasMore) ||
-            false
-          }
+          loading={reportData.loading}
+          hasMore={reportData.hasMore || false}
           error={null}
         />
       )}

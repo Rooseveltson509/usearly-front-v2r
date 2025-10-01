@@ -12,7 +12,14 @@ export const usePaginatedGroupedReportsByRage = (
   const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
-    if (!active) return;
+    if (!active) {
+      // 🚀 reset auto quand le filtre n’est pas actif
+      setData([]);
+      setPage(1);
+      setHasMore(true);
+      setLoading(false);
+      return;
+    }
 
     const fetchData = async () => {
       setLoading(true);
@@ -23,13 +30,13 @@ export const usePaginatedGroupedReportsByRage = (
         setData((prev) => {
           const map = new Map<string, ConfirmedSubcategoryReport>();
 
-          // On garde l’ancien contenu
+          // Garder l’ancien contenu
           prev.forEach((item) => {
             const key = `${item.reportingId}-${item.subCategory}`;
             map.set(key, item);
           });
 
-          // On ajoute les nouveaux sans dupliquer
+          // Ajouter les nouveaux sans doublons
           newData.forEach((item) => {
             const key = `${item.reportingId}-${item.subCategory}`;
             map.set(key, item);
@@ -52,7 +59,7 @@ export const usePaginatedGroupedReportsByRage = (
   }, [active, page, pageSize]);
 
   const loadMore = () => {
-    if (!loading && hasMore) {
+    if (!loading && hasMore && active) {
       setPage((prev) => prev + 1);
     }
   };

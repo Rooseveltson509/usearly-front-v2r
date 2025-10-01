@@ -149,9 +149,13 @@ const FilterBar: React.FC<Props> = ({
         >
           <select
             className="select-filter"
-            value={filter === "confirmed" ? "hot" : filter}
+            value={filter}
             onChange={(e) => {
               const value = e.target.value as typeof filter;
+
+              // ⚡ éviter de re-déclencher si c'est la même valeur
+              if (value === filter) return;
+
               resetBrandFilters();
 
               if (value === "chrono") {
@@ -159,7 +163,7 @@ const FilterBar: React.FC<Props> = ({
                 setViewMode("chrono");
                 onViewModeChange?.("chrono");
                 setActiveFilter("chrono");
-              } else if (value === "hot") {
+              } else if (value === "confirmed") {
                 setFilter("confirmed");
                 setViewMode("confirmed");
                 onViewModeChange?.("confirmed");
@@ -179,7 +183,7 @@ const FilterBar: React.FC<Props> = ({
               }
             }}
           >
-            <option value="hot">🔥 Problèmes les plus signalés</option>
+            <option value="confirmed">🔥 Problèmes les plus signalés</option>
             <option value="rage">😡 Problèmes les plus rageants</option>
             <option value="popular">👍 Signalements les plus populaires</option>
             <option value="chrono">📅 Signalements les plus récents</option>

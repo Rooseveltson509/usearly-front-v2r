@@ -15,25 +15,27 @@ type FetchResult = {
 export const fetchFeedbackData = async (
   filter: string,
   tab: FeedbackType,
+  page = 1,
+  limit = 10,
 ): Promise<FetchResult> => {
   let res;
 
   if (tab === "coupdecoeur") {
     switch (filter) {
       case "popular":
-        res = await getPopularCoupsDeCoeur(1, 50);
+        res = await getPopularCoupsDeCoeur(page, limit);
         break;
       case "enflammes":
-        res = await getEnflammesCoupsDeCoeur(1, 50);
+        res = await getEnflammesCoupsDeCoeur(page, limit);
         break;
       default:
-        res = await getPublicCoupsDeCoeur(1, 50);
+        res = await getPublicCoupsDeCoeur(page, limit);
     }
     return { data: res?.coupdeCoeurs || [] };
   }
 
   if (tab === "suggestion") {
-    res = await getPublicSuggestions(1, 50);
+    res = await getPublicSuggestions(page, limit);
     return { data: res?.suggestions || [] };
   }
 

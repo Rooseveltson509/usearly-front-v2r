@@ -52,7 +52,7 @@ function UserAccountInformations() {
   const [pseudo, setPseudo] = useState("");
   const [email, setEmail] = useState("");
   const [birthdate, setBirthdate] = useState(""); // valeur POUR l’input: YYYY-MM-DD
-  const [, setGender] = useState("");
+  const [gender, setGender] = useState("");
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -216,7 +216,7 @@ function UserAccountInformations() {
         <div className="form-group">
           <SelectAccount
             id="gender"
-            title="Genre"
+            title={gender || "N/A"}
             disabled={true}
             options={["Homme", "Femme", "Autre"]}
             onChange={(value) => setGender(value)}
