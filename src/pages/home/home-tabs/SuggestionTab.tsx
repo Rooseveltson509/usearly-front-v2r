@@ -4,6 +4,8 @@ import FeedbackView from "@src/components/feedbacks/FeedbackView";
 import FilterIllustration from "../home-illustration/FilterIllustration";
 import SqueletonAnime from "@src/components/loader/SqueletonAnime";
 import { capitalizeFirstLetter } from "@src/utils/stringUtils";
+import { getBrandLogo } from "@src/utils/brandLogos";
+import Avatar from "@src/components/shared/Avatar";
 
 interface Props {
   activeFilter: string;
@@ -20,6 +22,9 @@ interface Props {
   suggestionsForDisplay: any[];
   displayedCount: number;
   selectedBrandLogo: string | null;
+  selectedSiteUrl?: string;
+  totalCount: number;
+  filteredByCategory: any[];
   isLoading: boolean;
 }
 
@@ -33,21 +38,15 @@ const SuggestionTab: React.FC<Props> = ({
   suggestionCategories,
   suggestionSearch,
   setSuggestionSearch,
-  suggestionBannerStyle,
-  brandBannerStyle,
   suggestionsForDisplay,
-  displayedCount,
-  selectedBrandLogo,
+  selectedSiteUrl,
+  totalCount,
+  filteredByCategory,
   isLoading,
 }) => {
   return (
     <div
       className={`suggestion-banner-container ${selectedBrand ? "banner-filtered" : `banner-${activeFilter}`}`}
-      style={
-        selectedBrand
-          ? { ...suggestionBannerStyle, ...brandBannerStyle }
-          : suggestionBannerStyle
-      }
     >
       <div className="feedback-list-wrapper">
         <HomeFiltersSuggestion
@@ -72,21 +71,42 @@ const SuggestionTab: React.FC<Props> = ({
         ) : (
           <div>
             <div className="selected-brand-heading">
-              {selectedBrand && selectedBrandLogo && (
-                <img
-                  src={selectedBrandLogo}
-                  alt={`${selectedBrand} logo`}
-                  className="selected-brand-heading__logo"
-                />
-              )}
               {selectedBrand && (
-                <h1>
-                  <div className="selected-brand-count">{displayedCount}</div>
-                  signalement{displayedCount > 1 ? "s" : ""}{" "}
-                  {selectedCategory &&
-                    `lié${displayedCount > 1 ? "s" : ""} au ${selectedCategory}`}{" "}
-                  sur {capitalizeFirstLetter(selectedBrand)}
-                </h1>
+                <div className="selected-brand-summary">
+                  <div className="selected-brand-summary__brand">
+                    <div className="selected-brand-summary__logo">
+                      <Avatar
+                        avatar={getBrandLogo(selectedBrand, selectedSiteUrl)}
+                        pseudo={selectedBrand}
+                        type="brand"
+                      />
+                    </div>
+                    <div className="selected-brand-summary__info-container">
+                      {selectedCategory ? (
+                        <>
+                          <span className="count">
+                            {filteredByCategory.length}
+                          </span>
+                          <span className="text">
+                            Signalement
+                            {filteredByCategory.length > 1 ? "s" : ""} lié
+                            {filteredByCategory.length > 1 ? "s" : ""} à «{" "}
+                            <b>{selectedCategory}</b> » sur{" "}
+                            {` ${capitalizeFirstLetter(selectedBrand)}`}
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <span className="count">{totalCount}</span>
+                          <span className="text">
+                            Signalement{totalCount > 1 ? "s" : ""} sur{" "}
+                            {` ${capitalizeFirstLetter(selectedBrand)}`}
+                          </span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
             <FeedbackView
@@ -115,6 +135,7 @@ const SuggestionTab: React.FC<Props> = ({
           filter={activeFilter}
           selectedBrand={selectedBrand}
           selectedCategory={selectedCategory}
+          onglet="suggestion"
         />
       </aside>
     </div>

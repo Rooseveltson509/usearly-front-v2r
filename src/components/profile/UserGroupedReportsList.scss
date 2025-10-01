@@ -1,5 +1,4 @@
 @use "@src/styles/base/variables" as *;
-@use "@src/styles/utils/mixins" as *;
 
 .subcategory-header {
   display: flex;
@@ -618,7 +617,6 @@
 
 .feedback-card {
   width: 100%; // ✅ occupe toute la largeur du parent
-  max-width: 740px;
   margin-bottom: 0; // ✅ retiré, on utilise `gap` dans le parent maintenant
   border-radius: $border-radius-md;
   overflow: hidden;

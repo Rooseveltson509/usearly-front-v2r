@@ -50,5 +50,10 @@ export function useBrandColors(
     };
   }, [selectedBrand, selectedSiteUrl]);
 
-  return { brandBannerStyle, suggestionBannerStyle, selectedBrandLogo };
+  return {
+    brandBannerStyle,
+    suggestionBannerStyle,
+    selectedBrandLogo,
+    selectedBrandBaseColor,
+  };
 }

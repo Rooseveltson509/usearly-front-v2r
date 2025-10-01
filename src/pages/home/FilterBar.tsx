@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import { SlidersHorizontal } from "lucide-react";
+import { SlidersHorizontal, ChevronDown } from "lucide-react";
 import SearchBar from "./components/searchBar/SearchBar";
 import BrandSelect from "@src/components/shared/BrandSelect";
 import "./FilterBar.scss";
@@ -140,150 +140,211 @@ const FilterBar: React.FC<Props> = ({
     onViewModeChange?.("confirmed");
     setActiveFilter("confirmed");
   };
-
-  return (
-    <div className="filter-container">
-      <div className="primary-filters">
-        <div
-          className={`select-filter-wrapper ${filter === "hot" ? "hot-active" : ""}`}
-        >
-          <select
-            className="select-filter"
-            value={filter}
-            onChange={(e) => {
-              const value = e.target.value as typeof filter;
-
-              // ⚡ éviter de re-déclencher si c'est la même valeur
-              if (value === filter) return;
-
-              resetBrandFilters();
-
-              if (value === "chrono") {
-                setFilter("chrono");
-                setViewMode("chrono");
-                onViewModeChange?.("chrono");
-                setActiveFilter("chrono");
-              } else if (value === "confirmed") {
-                setFilter("confirmed");
-                setViewMode("confirmed");
-                onViewModeChange?.("confirmed");
-                setActiveFilter("confirmed");
-              } else if (
-                ["rage", "popular", "recent", "urgent"].includes(value)
-              ) {
-                setFilter(value as any);
-                setViewMode("chrono");
-                onViewModeChange?.("chrono");
-                setActiveFilter(value);
-              } else {
-                setFilter("");
-                setViewMode("flat");
-                onViewModeChange?.("flat");
-                setActiveFilter("");
-              }
-            }}
+  if (!selectedBrand) {
+    return (
+      // <FilterBarBrandSelect
+      //   filter={filter}
+      //   setFilter={setFilter}
+      //   setViewMode={setViewMode}
+      //   setSelectedBrand={setSelectedBrand}
+      //   setSelectedCategory={setSelectedCategory}
+      //   setActiveFilter={setActiveFilter}
+      //   onViewModeChange={onViewModeChange}
+      //   dropdownRef={dropdownRef}
+      //   isDropdownOpen={isDropdownOpen}
+      //   setIsDropdownOpen={setIsDropdownOpen}
+      //   selectedBrand={selectedBrand}
+      //   selectedCategory={selectedCategory}
+      //   availableBrands={availableBrands}
+      //   availableCategories={availableCategories}
+      //   searchTerm={searchTerm}
+      //   onSearchTermChange={onSearchTermChange}
+      // />
+      <div className="filter-container">
+        <div className="primary-filters">
+          <div
+            className={`select-filter-wrapper ${filter === "hot" ? "hot-active" : ""}`}
           >
-            <option value="confirmed">🔥 Problèmes les plus signalés</option>
-            <option value="rage">😡 Problèmes les plus rageants</option>
-            <option value="popular">👍 Signalements les plus populaires</option>
-            <option value="chrono">📅 Signalements les plus récents</option>
-            <option value="urgent">👀 À shaker vite</option>
-          </select>
-        </div>
+            <select
+              className="select-filter"
+              value={filter === "confirmed" ? "hot" : filter}
+              onChange={(e) => {
+                const value = e.target.value as typeof filter;
+                resetBrandFilters();
 
-        <BrandSelect
-          brands={availableBrands}
-          selectedBrand={selectedBrand}
-          onSelect={(brand) => handleBrandSelect(brand)}
-          onClear={() => clearBrand()}
-          placeholder="Choisir une marque"
-        />
-      </div>
-      <div className="secondary-filters-container">
-        <div className="filter-dropdown-wrapper" ref={dropdownRef}>
-          <button
-            className="filter-toggle"
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          >
-            <SlidersHorizontal size={18} style={{ marginRight: "6px" }} />
-            Filtrer
-          </button>
-
-          {isDropdownOpen && (
-            <div className="filter-dropdown">
-              <div className="brand-search">
-                <input
-                  type="text"
-                  value={brandSearch}
-                  onChange={(e) => setBrandSearch(e.target.value)}
-                  placeholder="Rechercher une marque..."
-                />
-
-                {brandSearch && (
-                  <ul className="autocomplete-list">
-                    {filteredBrands.length > 0 ? (
-                      filteredBrands.map((brand) => (
-                        <li
-                          key={brand}
-                          onClick={() => {
-                            handleBrandSelect(brand);
-                            setBrandSearch("");
-                            setCategorySearch("");
-                            setIsDropdownOpen(false);
-                          }}
-                        >
-                          {brand}
-                        </li>
-                      ))
-                    ) : (
-                      <li className="no-results">Aucune marque trouvée</li>
-                    )}
-                  </ul>
-                )}
-              </div>
-
-              <select
-                value={selectedCategory}
-                onChange={(e) => {
-                  setSelectedCategory(e.target.value);
-                  setViewMode("flat");
+                if (value === "chrono") {
+                  setFilter("chrono");
+                  setViewMode("chrono");
+                  onViewModeChange?.("chrono");
+                  setActiveFilter("chrono");
+                } else if (value === "hot") {
+                  setFilter("confirmed");
+                  setViewMode("confirmed");
+                  onViewModeChange?.("confirmed");
+                  setActiveFilter("confirmed");
+                } else if (
+                  ["rage", "popular", "recent", "urgent"].includes(value)
+                ) {
+                  setFilter(value as any);
+                  setViewMode("chrono");
+                  onViewModeChange?.("chrono");
+                  setActiveFilter(value);
+                } else {
                   setFilter("");
+                  setViewMode("flat");
                   onViewModeChange?.("flat");
                   setActiveFilter("");
-                }}
-                disabled={!selectedBrand}
-              >
-                <option value="">Type de signalements</option>
-                {normalizedCategories.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
-                  </option>
-                ))}
-              </select>
+                }
+              }}
+            >
+              <option value="hot">🔥 Problèmes les plus signalés</option>
+              <option value="rage">😡 Problèmes les plus rageants</option>
+              <option value="popular">
+                👍 Signalements les plus populaires
+              </option>
+              <option value="chrono">📅 Signalements les plus récents</option>
+              <option value="urgent">👀 À shaker vite</option>
+            </select>
+          </div>
 
-              {(selectedBrand || selectedCategory) && (
-                <button
-                  className="reset"
-                  onClick={() => {
-                    clearBrand();
-                    setCategorySearch("");
-                  }}
-                >
-                  Réinitialiser
-                </button>
-              )}
-            </div>
-          )}
+          <BrandSelect
+            brands={availableBrands}
+            selectedBrand={selectedBrand}
+            onSelect={(brand) => handleBrandSelect(brand)}
+            onClear={() => clearBrand()}
+            placeholder="Choisir une marque"
+          />
         </div>
+        <div className="secondary-filters-container">
+          <div className="filter-dropdown-wrapper" ref={dropdownRef}>
+            <button
+              className="filter-toggle"
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            >
+              <SlidersHorizontal size={18} style={{ marginRight: "6px" }} />
+              Filtrer
+            </button>
 
-        <SearchBar
-          value={searchTerm}
-          onChange={onSearchTermChange}
-          placeholder="Rechercher un signalement..."
-        />
+            {isDropdownOpen && (
+              <div className="filter-dropdown">
+                <div className="brand-search">
+                  <input
+                    type="text"
+                    value={brandSearch}
+                    onChange={(e) => setBrandSearch(e.target.value)}
+                    placeholder="Rechercher une marque..."
+                  />
+
+                  {brandSearch && (
+                    <ul className="autocomplete-list">
+                      {filteredBrands.length > 0 ? (
+                        filteredBrands.map((brand) => (
+                          <li
+                            key={brand}
+                            onClick={() => {
+                              handleBrandSelect(brand);
+                              setBrandSearch("");
+                              setCategorySearch("");
+                              setIsDropdownOpen(false);
+                            }}
+                          >
+                            {brand}
+                          </li>
+                        ))
+                      ) : (
+                        <li className="no-results">Aucune marque trouvée</li>
+                      )}
+                    </ul>
+                  )}
+                </div>
+
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => {
+                    setSelectedCategory(e.target.value);
+                    setViewMode("flat");
+                    setFilter("");
+                    onViewModeChange?.("flat");
+                    setActiveFilter("");
+                  }}
+                  disabled={!selectedBrand}
+                >
+                  <option value="">Type de signalements</option>
+                  {normalizedCategories.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
+                </select>
+
+                {(selectedBrand || selectedCategory) && (
+                  <button
+                    className="reset"
+                    onClick={() => {
+                      clearBrand();
+                      setCategorySearch("");
+                    }}
+                  >
+                    Réinitialiser
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+
+          <SearchBar
+            value={searchTerm}
+            onChange={onSearchTermChange}
+            placeholder="Rechercher un signalement..."
+          />
+        </div>
       </div>
-    </div>
-  );
+    );
+  } else if (selectedBrand) {
+    return (
+      <div className="filter-container">
+        <div className="primary-filters-select">
+          <BrandSelect
+            brands={availableBrands}
+            selectedBrand={selectedBrand}
+            onSelect={(brand) => handleBrandSelect(brand)}
+            onClear={() => clearBrand()}
+            placeholder="Choisir une marque"
+            className="brand-select-rounded"
+          />
+          <div className="category-select-select">
+            <select
+              value={selectedCategory}
+              onChange={(e) => {
+                setSelectedCategory(e.target.value);
+                setViewMode("flat");
+                setFilter("");
+                onViewModeChange?.("flat");
+                setActiveFilter("");
+              }}
+              disabled={!selectedBrand}
+            >
+              <option value="">Type de signalements</option>
+              {normalizedCategories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
+            <ChevronDown size={16} className="cat-select__chev" aria-hidden />
+          </div>
+        </div>
+        <div className="secondary-filters-select">
+          <SearchBar
+            value={searchTerm}
+            onChange={onSearchTermChange}
+            placeholder="Rechercher un signalement..."
+          />
+        </div>
+      </div>
+    );
+  }
+  return null;
 };
 
 export default FilterBar;

@@ -12,6 +12,7 @@ import type {
 import FlatSubcategoryBlock from "./confirm-reportlist/FlatSubcategoryBlock";
 import { getBrandLogo } from "@src/utils/brandLogos";
 import SqueletonAnime from "@src/components/loader/SqueletonAnime";
+import "./countBarBrand.scss";
 
 const normalizeText = (value: string) =>
   value
@@ -72,7 +73,7 @@ const ReportListView: React.FC<Props> = ({
     if (!isLoading && Object.keys(groupedByDay || {}).length === 0) {
       return (
         <div className="no-popular-results">
-          <p>Aucun signalement ne correspond à ce filtre pour le moment.</p>
+          <p>Aucune publication ne correspond à ce filtre pour le moment.</p>
         </div>
       );
     }
@@ -100,7 +101,7 @@ const ReportListView: React.FC<Props> = ({
     if (!loadingChrono && Object.keys(chronoData || {}).length === 0) {
       return (
         <div className="no-popular-results">
-          <p>Aucun signalement récent disponible.</p>
+          <p>Aucune publication récente disponible.</p>
         </div>
       );
     }
