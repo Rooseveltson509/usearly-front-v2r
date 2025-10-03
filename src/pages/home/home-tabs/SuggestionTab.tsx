@@ -17,7 +17,7 @@ interface Props {
   suggestionCategories: string[];
   suggestionSearch: string;
   setSuggestionSearch: (s: string) => void;
-  suggestionBannerStyle: React.CSSProperties;
+  suggestionBannerStyle?: React.CSSProperties;
   brandBannerStyle: React.CSSProperties;
   suggestionsForDisplay: any[];
   displayedCount: number;
@@ -38,6 +38,7 @@ const SuggestionTab: React.FC<Props> = ({
   suggestionCategories,
   suggestionSearch,
   setSuggestionSearch,
+  suggestionBannerStyle,
   suggestionsForDisplay,
   selectedSiteUrl,
   totalCount,
@@ -47,6 +48,11 @@ const SuggestionTab: React.FC<Props> = ({
   return (
     <div
       className={`suggestion-banner-container ${selectedBrand ? "banner-filtered" : `banner-${activeFilter}`}`}
+      style={
+        selectedBrand && suggestionBannerStyle
+          ? suggestionBannerStyle
+          : undefined
+      }
     >
       <div className="feedback-list-wrapper">
         <HomeFiltersSuggestion

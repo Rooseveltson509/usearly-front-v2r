@@ -93,33 +93,34 @@ const HomeFiltersSuggestion = ({
         hideFilterWhenBrandSelected={true}
       />
 
-      <BrandSelect
-        brands={availableBrands}
-        selectedBrand={selectedBrand}
-        onSelect={(brand) => handleBrandSelect(brand)}
-        onClear={() => handleBrandSelect("")}
-        placeholder="Choisir une marque"
-      />
-
       {selectedBrand && (
-        <div className="suggestion-search">
-          <CiSearch />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="Rechercher par titre, contenu ou marque"
+        <>
+          <BrandSelect
+            brands={availableBrands}
+            selectedBrand={selectedBrand}
+            onSelect={(brand) => handleBrandSelect(brand)}
+            onClear={() => handleBrandSelect("")}
+            placeholder="Choisir une marque"
           />
-          {searchQuery && (
-            <button
-              type="button"
-              className="clear-search"
-              onClick={() => onSearchChange("")}
-            >
-              Effacer
-            </button>
-          )}
-        </div>
+          <div className="suggestion-search">
+            <CiSearch />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => onSearchChange(e.target.value)}
+              placeholder="Rechercher par titre, contenu ou marque"
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                className="clear-search"
+                onClick={() => onSearchChange("")}
+              >
+                Effacer
+              </button>
+            )}
+          </div>
+        </>
       )}
     </div>
   );
