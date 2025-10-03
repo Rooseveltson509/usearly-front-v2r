@@ -17,8 +17,21 @@ import FlatSubcategoryBlock from "./confirm-reportlist/FlatSubcategoryBlock";
 import { getBrandLogo } from "@src/utils/brandLogos";
 import { useBrands } from "@src/hooks/useBrands";
 import { apiService } from "@src/services/apiService";
+import { capitalizeFirstLetter } from "@src/utils/stringUtils";
+import Avatar from "@src/components/shared/Avatar";
+import "./countBarBrand.scss";
 
 type ViewMode = "flat" | "chrono" | "confirmed";
+
+type SectionKey =
+  | "loading"
+  | "brandFiltered"
+  | "confirmed"
+  | "rage"
+  | "popular"
+  | "chrono"
+  | "urgent"
+  | "default";
 
 interface Props {
   activeTab: FeedbackType;
@@ -31,7 +44,10 @@ interface Props {
   selectedCategory: string;
   setSelectedCategory: (val: string) => void;
   setSelectedSiteUrl: (val: string | undefined) => void;
+  selectedSiteUrl?: string;
+
   totalityCount: number;
+  onSectionChange?: (section: SectionKey) => void;
 }
 
 type ReportDescription = {
@@ -92,7 +108,9 @@ const HomeGroupedReportsList = ({
   setSelectedSiteUrl,
   selectedCategory,
   setSelectedCategory,
+  selectedSiteUrl,
   totalityCount,
+  onSectionChange,
 }: Props) => {
   const [filter, setFilter] = useState<FilterType>("confirmed");
   const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>(
@@ -105,7 +123,11 @@ const HomeGroupedReportsList = ({
   const [loadingFiltered, setLoadingFiltered] = useState(false);
   const [initializing, setInitializing] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [, setTotalCount] = useState(totalityCount);
+  const [totalCount, setTotalCount] = useState(totalityCount);
+  const [currentSection, setCurrentSection] = useState<SectionKey>("loading");
+
+  /* const isChronoView =
+    viewMode === "chrono" && (filter === undefined || filter === "chrono"); */
 
   const { brands } = useBrands();
   const availableBrands = useMemo(() => brands.map((b) => b.marque), [brands]);
@@ -113,6 +135,49 @@ const HomeGroupedReportsList = ({
   // ⚡ Un seul hook est utilisé selon le filtre actif
   const confirmedData = useConfirmedFlatData();
   const rageData = usePaginatedGroupedReportsByRage(filter === "rage", 10);
+  const derivedSection = useMemo<SectionKey>(() => {
+    if (initializing) {
+      return "loading";
+    }
+
+    const hasBrand = Boolean(selectedBrand?.trim());
+    const hasCategory = Boolean(selectedCategory?.trim());
+
+    if (hasBrand || hasCategory) {
+      return "brandFiltered";
+    }
+
+    switch (filter) {
+      case "confirmed":
+        return "confirmed";
+      case "rage":
+        return "rage";
+      case "popular":
+        return "popular";
+      case "chrono":
+        return "chrono";
+      case "urgent":
+        return "urgent";
+      default:
+        return "default";
+    }
+  }, [filter, initializing, selectedBrand, selectedCategory]);
+
+  useEffect(() => {
+    if (currentSection !== derivedSection) {
+      setCurrentSection(derivedSection);
+    }
+  }, [currentSection, derivedSection]);
+
+  useEffect(() => {
+    if (onSectionChange) {
+      onSectionChange(currentSection);
+    }
+  }, [currentSection, onSectionChange]);
+
+  // ---------------- Data hooks (toujours appelés) ----------------
+  // const flatData = useFetchGroupedReports(activeTab);
+  // const chronoData = usePaginatedGroupedReportsByDate(isChronoView);
   const popularEngagementData = usePaginatedGroupedReportsByPopularEngagement(
     filter === "popular",
     20,
@@ -234,7 +299,10 @@ const HomeGroupedReportsList = ({
   // ---------------- Render ----------------
   if (initializing) {
     return (
-      <div className="home-grouped-reports-list">
+      <div
+        className="home-grouped-reports-list"
+        data-current-section={currentSection}
+      >
         <SqueletonAnime
           loaderRef={loaderRef}
           loading={true}
@@ -246,7 +314,10 @@ const HomeGroupedReportsList = ({
   }
 
   return (
-    <div className="home-grouped-reports-list">
+    <div
+      className="home-grouped-reports-list"
+      data-current-section={currentSection}
+    >
       <FilterBarAny
         filter={filter || ""}
         setFilter={setFilter}
@@ -271,6 +342,41 @@ const HomeGroupedReportsList = ({
       {/* === données filtrées === */}
       {selectedBrand || selectedCategory ? (
         <div className="grouped-by-category">
+          {selectedBrand && (
+            <div className="selected-brand-summary">
+              <div className="selected-brand-summary__brand">
+                <div className="selected-brand-summary__logo">
+                  <Avatar
+                    avatar={getBrandLogo(selectedBrand, selectedSiteUrl)}
+                    pseudo={selectedBrand}
+                    type="brand"
+                  />
+                </div>
+                <div className="selected-brand-summary__info-container">
+                  {selectedCategory ? (
+                    <>
+                      <span className="count">{filteredByCategory.length}</span>
+                      <span className="text">
+                        Signalement
+                        {filteredByCategory.length > 1 ? "s" : ""} lié
+                        {filteredByCategory.length > 1 ? "s" : ""} à «{" "}
+                        <b>{selectedCategory}</b> » sur{" "}
+                        {` ${capitalizeFirstLetter(selectedBrand)}`}
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="count">{totalCount}</span>
+                      <span className="text">
+                        Signalement{totalCount > 1 ? "s" : ""} sur{" "}
+                        {` ${capitalizeFirstLetter(selectedBrand)}`}
+                      </span>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
           {loadingFiltered ? (
             <SqueletonAnime
               loaderRef={loaderRef}
@@ -312,14 +418,53 @@ const HomeGroupedReportsList = ({
             Aucun signalement confirmé pour le moment.
           </div>
         ) : (
-          <ConfirmedReportsList
-            expandedItems={expandedItems}
-            handleToggle={(key) =>
-              setExpandedItems((prev) => ({ ...prev, [key]: !prev[key] }))
-            }
-            searchTerm={searchTerm}
-            onClearSearchTerm={() => setSearchTerm("")}
-          />
+          <>
+            {selectedBrand && (
+              <div className="selected-brand-summary">
+                <div className="selected-brand-summary__brand">
+                  <div className="selected-brand-summary__logo">
+                    <Avatar
+                      avatar={getBrandLogo(selectedBrand, selectedSiteUrl)}
+                      pseudo={selectedBrand}
+                      type="brand"
+                    />
+                  </div>
+                  <div className="selected-brand-summary__info-container">
+                    {selectedCategory ? (
+                      <>
+                        <span className="count">
+                          {filteredByCategory.length}
+                        </span>
+                        <span className="text">
+                          Signalement
+                          {filteredByCategory.length > 1 ? "s" : ""} lié
+                          {filteredByCategory.length > 1 ? "s" : ""} à «{" "}
+                          <b>{selectedCategory}</b> » sur{" "}
+                          {` ${capitalizeFirstLetter(selectedBrand)}`}
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="count">{totalCount}</span>
+                        <span className="text">
+                          Signalement{totalCount > 1 ? "s" : ""} sur{" "}
+                          {` ${capitalizeFirstLetter(selectedBrand)}`}
+                        </span>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+            <ConfirmedReportsList
+              expandedItems={expandedItems}
+              handleToggle={(key) =>
+                setExpandedItems((prev) => ({ ...prev, [key]: !prev[key] }))
+              }
+              searchTerm={searchTerm}
+              onClearSearchTerm={() => setSearchTerm("")}
+            />
+          </>
         )
       ) : filter === "rage" ? (
         reportData.loading ? (
@@ -334,14 +479,53 @@ const HomeGroupedReportsList = ({
             Aucun signalement rageux trouvé.
           </div>
         ) : (
-          <RageReportsList
-            expandedItems={expandedItems}
-            handleToggle={(key) =>
-              setExpandedItems((prev) => ({ ...prev, [key]: !prev[key] }))
-            }
-            searchTerm={searchTerm}
-            onClearSearchTerm={() => setSearchTerm("")}
-          />
+          <>
+            {selectedBrand && (
+              <div className="selected-brand-summary">
+                <div className="selected-brand-summary__brand">
+                  <div className="selected-brand-summary__logo">
+                    <Avatar
+                      avatar={getBrandLogo(selectedBrand, selectedSiteUrl)}
+                      pseudo={selectedBrand}
+                      type="brand"
+                    />
+                  </div>
+                  <div className="selected-brand-summary__info-container">
+                    {selectedCategory ? (
+                      <>
+                        <span className="count">
+                          {filteredByCategory.length}
+                        </span>
+                        <span className="text">
+                          Signalement
+                          {filteredByCategory.length > 1 ? "s" : ""} lié
+                          {filteredByCategory.length > 1 ? "s" : ""} à «{" "}
+                          <b>{selectedCategory}</b> » sur{" "}
+                          {` ${capitalizeFirstLetter(selectedBrand)}`}
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="count">{totalCount}</span>
+                        <span className="text">
+                          Signalement{totalCount > 1 ? "s" : ""} sur{" "}
+                          {` ${capitalizeFirstLetter(selectedBrand)}`}
+                        </span>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+            <RageReportsList
+              expandedItems={expandedItems}
+              handleToggle={(key) =>
+                setExpandedItems((prev) => ({ ...prev, [key]: !prev[key] }))
+              }
+              searchTerm={searchTerm}
+              onClearSearchTerm={() => setSearchTerm("")}
+            />
+          </>
         )
       ) : filter === "popular" ? (
         reportData.loading ? (
@@ -356,14 +540,61 @@ const HomeGroupedReportsList = ({
             Aucun signalement populaire pour le moment.
           </div>
         ) : (
-          <PopularReportList
-            data={reportData.data}
-            expandedItems={expandedItems}
-            handleToggle={(key) =>
-              setExpandedItems((prev) => ({ ...prev, [key]: !prev[key] }))
-            }
-            loading={reportData.loading}
-          />
+          <>
+            <PopularReportList
+              data={reportData.data}
+              expandedItems={expandedItems}
+              handleToggle={(key) =>
+                setExpandedItems((prev) => ({ ...prev, [key]: !prev[key] }))
+              }
+              loading={reportData.loading}
+            />
+            {selectedBrand && (
+              <div className="selected-brand-summary">
+                <div className="selected-brand-summary__brand">
+                  <div className="selected-brand-summary__logo">
+                    <Avatar
+                      avatar={getBrandLogo(selectedBrand, selectedSiteUrl)}
+                      pseudo={selectedBrand}
+                      type="brand"
+                    />
+                  </div>
+                  <div className="selected-brand-summary__info-container">
+                    {selectedCategory ? (
+                      <>
+                        <span className="count">
+                          {filteredByCategory.length}
+                        </span>
+                        <span className="text">
+                          Signalement
+                          {filteredByCategory.length > 1 ? "s" : ""} lié
+                          {filteredByCategory.length > 1 ? "s" : ""} à «{" "}
+                          <b>{selectedCategory}</b> » sur{" "}
+                          {` ${capitalizeFirstLetter(selectedBrand)}`}
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="count">{totalCount}</span>
+                        <span className="text">
+                          Signalement{totalCount > 1 ? "s" : ""} sur{" "}
+                          {` ${capitalizeFirstLetter(selectedBrand)}`}
+                        </span>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+            <PopularReportList
+              data={popularEngagementData.data}
+              expandedItems={expandedItems}
+              handleToggle={(key) =>
+                setExpandedItems((prev) => ({ ...prev, [key]: !prev[key] }))
+              }
+              loading={popularEngagementData.loading}
+            />
+          </>
         )
       ) : filter === "chrono" ? (
         reportData.loading ? (

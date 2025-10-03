@@ -56,7 +56,7 @@ const ReportTab: React.FC<Props> = ({
           selectedBrand={selectedBrand}
           siteUrl={undefined}
           selectedCategory={selectedCategory}
-          onglet="signalement"
+          onglet="report"
         />
       </aside>
     </div>

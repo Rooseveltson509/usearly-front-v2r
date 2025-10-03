@@ -1,0 +1,66 @@
+@use "@src/styles/base/variables" as *;
+
+.selected-brand-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  padding-right: 0px;
+  padding-top: 27px;
+  width: 100%;
+  max-width: 200px;
+
+  &__brand {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f2937;
+
+    &__label {
+      font-size: 18px;
+    }
+
+    .selected-brand-summary__count {
+      font-weight: 500;
+      color: #4b5563;
+    }
+  }
+
+  &__category {
+    font-size: 13px;
+    font-weight: 500;
+    color: #2563eb;
+  }
+  .selected-brand-summary__brand {
+    display: flex;
+    align-items: center;
+    .selected-brand-summary__logo {
+      display: flex;
+      height: 58px !important;
+      width: 58px !important;
+      min-width: 58px;
+      border-radius: 999px;
+      .avatar-wrapper-custom {
+        width: 100%;
+      }
+    }
+    .selected-brand-summary__info-container {
+      display: flex;
+      flex-direction: column;
+      .count {
+        font-family: "Ralway", sans-serif;
+        font-size: 36px;
+        font-weight: 700;
+        color: $dark;
+      }
+      .text {
+        font-family: "Ralway", sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+      }
+    }
+  }
+}

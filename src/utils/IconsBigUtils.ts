@@ -19,9 +19,15 @@ const keywordMap: Record<string, string[]> = {
   // "filter.png": [
   //   "filtre", "recherche", "tri", "moteur", "affichage", "trié"
   // ],
-  // "connect-bug.png": [
-  //   "connexion", "login", "identifiant", "mot de passe", "inscription", "compte", "déconnexion"
-  // ],
+  "connexionCatSignalement.png": [
+    "connexion",
+    "login",
+    "identifiant",
+    "mot de passe",
+    "inscription",
+    "compte",
+    "déconnexion",
+  ],
   "commandeCatSignalement.png": [
     "commande",
     "suivi",
@@ -51,13 +57,29 @@ const keywordMap: Record<string, string[]> = {
     "problème avec la carte",
   ],
 
-  // "loading-page.png": [
-  //   "chargement", "bug", "réactivité", "lent", "ralenti", "bloque", "plante", "plantage", "lag", "freeze"
-  // ],
+  "timeCatSignalement.png": [
+    "chargement",
+    "bug",
+    "réactivité",
+    "lent",
+    "ralenti",
+    "bloque",
+    "plante",
+    "plantage",
+    "lag",
+    "freeze",
+  ],
 
-  // "design.png": [
-  //   "affichage", "interface", "ux", "ui", "visuel", "design", "graphisme", "problème d'affichage"
-  // ],
+  "affichageCatSignalement.png": [
+    "affichage",
+    "interface",
+    "ux",
+    "ui",
+    "visuel",
+    "design",
+    "graphisme",
+    "problème d'affichage",
+  ],
 
   // "wrong-address.png": [
   //   "adresse", "mauvaise", "livraison", "destinataire", "invalide"
@@ -65,11 +87,23 @@ const keywordMap: Record<string, string[]> = {
   // "delay.png": [
   //   "retard", "tard", "long", "attente", "temps", "jour", "délai"
   // ],
-  // "support.png": [
-  //   "service client", "conseiller", "support", "contact", "joindre", "assistance",
-  //   "réponse", "injoignable", "disponible", "indisponible", "tchat", "chat",
-  //   "pas de réponse", "aucune réponse", "relance"
-  // ],
+  "serviceClientCatSignalement.png": [
+    "service client",
+    "conseiller",
+    "support",
+    "contact",
+    "joindre",
+    "assistance",
+    "réponse",
+    "injoignable",
+    "disponible",
+    "indisponible",
+    "tchat",
+    "chat",
+    "pas de réponse",
+    "aucune réponse",
+    "relance",
+  ],
 
   // "error-message.png": [
   //   "popup", "alerte", "message système"
@@ -84,6 +118,7 @@ const keywordMap: Record<string, string[]> = {
     "trop de texte",
     "compliqué",
     "incompréhensible",
+    "navigation",
   ],
   // "size-product.png": [
   //   "taille", "dimension", "format", "grande", "petite", "panier"
@@ -101,7 +136,7 @@ const keywordMap: Record<string, string[]> = {
   // "photo-error.png": [
   //   "photo", "image", "manquante", "visuel", "aperçu", "miniature"
   // ],
-  "other.png": [],
+  "otherCatSignalement.png": [],
 };
 
 const normalize = (text: string) => {
@@ -114,8 +149,19 @@ const normalize = (text: string) => {
 
 export const getCategoryIconPathFromSubcategory = (
   subcategory: string | undefined,
+  onglet: string | undefined,
+  selectBrand?: string | undefined,
 ): string => {
   if (!subcategory) return "/assets/categories-icons/defaultCatSignalement.png";
+  if (selectBrand) {
+    if (onglet === "report") {
+      return "/assets/brandSolo/reportBrandSolo.png";
+    } else if (onglet === "coupdecoeur") {
+      return "/assets/brandSolo/cdcBrandSolo.png";
+    } else if (onglet === "suggestion") {
+      return "/assets/brandSolo/suggestBrandSolo.png";
+    }
+  }
 
   const clean = normalize(subcategory);
 
@@ -173,5 +219,5 @@ export const getCategoryIconPathFromSubcategory = (
     return `/assets/categories-icons/${match}.png`;
   }
 
-  return "/assets/categories-icons/defaultCatSignalement.png"; // fallback final
+  return "/assets/categories-icons/otherCatSignalement.png"; // fallback final
 };

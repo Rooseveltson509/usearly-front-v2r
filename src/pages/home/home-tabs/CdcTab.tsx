@@ -3,6 +3,9 @@ import HomeFiltersCdc from "../HomeFiltersCdc";
 import FeedbackView from "@src/components/feedbacks/FeedbackView";
 import FilterIllustration from "../home-illustration/FilterIllustration";
 import SqueletonAnime from "@src/components/loader/SqueletonAnime";
+import { capitalizeFirstLetter } from "@src/utils/stringUtils";
+import { getBrandLogo } from "@src/utils/brandLogos";
+import Avatar from "@src/components/shared/Avatar";
 
 interface Props {
   activeFilter: string;
@@ -14,6 +17,9 @@ interface Props {
   brandBannerStyle: React.CSSProperties;
   coupDeCoeurCategories: string[];
   coupDeCoeursForDisplay: any[];
+  filteredByCategory: any[];
+  totalCount: number;
+  selectedSiteUrl?: string;
   isLoading: boolean;
 }
 
@@ -27,6 +33,9 @@ const CdcTab: React.FC<Props> = ({
   brandBannerStyle,
   coupDeCoeurCategories,
   coupDeCoeursForDisplay,
+  filteredByCategory,
+  totalCount,
+  selectedSiteUrl,
   isLoading,
 }) => {
   return (
@@ -54,6 +63,45 @@ const CdcTab: React.FC<Props> = ({
         ) : (
           <div className="feedback-view-container">
             <div className="feedback-view-wrapper">
+              <div className="selected-brand-heading">
+                {selectedBrand && (
+                  <div className="selected-brand-summary">
+                    <div className="selected-brand-summary__brand">
+                      <div className="selected-brand-summary__logo">
+                        <Avatar
+                          avatar={getBrandLogo(selectedBrand, selectedSiteUrl)}
+                          pseudo={selectedBrand}
+                          type="brand"
+                        />
+                      </div>
+                      <div className="selected-brand-summary__info-container">
+                        {selectedCategory ? (
+                          <>
+                            <span className="count">
+                              {filteredByCategory.length}
+                            </span>
+                            <span className="text">
+                              Signalement
+                              {filteredByCategory.length > 1 ? "s" : ""} lié
+                              {filteredByCategory.length > 1 ? "s" : ""} à «{" "}
+                              <b>{selectedCategory}</b> » sur{" "}
+                              {` ${capitalizeFirstLetter(selectedBrand)}`}
+                            </span>
+                          </>
+                        ) : (
+                          <>
+                            <span className="count">{totalCount}</span>
+                            <span className="text">
+                              Signalement{totalCount > 1 ? "s" : ""} sur{" "}
+                              {` ${capitalizeFirstLetter(selectedBrand)}`}
+                            </span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
               <FeedbackView
                 activeTab="coupdecoeur"
                 viewMode="flat"
@@ -77,6 +125,7 @@ const CdcTab: React.FC<Props> = ({
                 filter={activeFilter}
                 selectedBrand={selectedBrand}
                 selectedCategory={selectedCategory}
+                onglet="coupdecoeur"
               />
             </aside>
           </div>

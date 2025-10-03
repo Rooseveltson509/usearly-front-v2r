@@ -97,7 +97,7 @@ export const BrandSelect = ({
     .join(" ");
 
   return (
-    <div className={rootClassName} ref={containerRef}>
+    <div className={rootClassName + " " + className} ref={containerRef}>
       <button
         type="button"
         className={triggerClassName}

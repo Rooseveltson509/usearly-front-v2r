@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import "./Home.scss";
 import { type FeedbackType } from "@src/components/user-profile/FeedbackTabs";
 import UserStatsCard from "@src/components/user-profile/UserStatsCard";
@@ -52,6 +52,22 @@ function Home() {
     setActiveFilter(brand ? "brandSolo" : "allSuggest");
   }, []);
 
+  // nombre total affiché (sans distinction de catégorie)
+  const totalCount = displayedCount;
+
+  // liste “filtrée par catégorie” (uniquement quand une category est choisie)
+  const filteredByCategory = useMemo(() => {
+    if (!selectedCategory) return [];
+    if (activeTab === "coupdecoeur") return coupDeCoeursForDisplay;
+    if (activeTab === "suggestion") return suggestionsForDisplay;
+    return [];
+  }, [
+    activeTab,
+    selectedCategory,
+    coupDeCoeursForDisplay,
+    suggestionsForDisplay,
+  ]);
+
   return (
     <div className="home-page">
       <PurpleBanner activeTab={activeTab} onTabChange={setActiveTab} />
@@ -86,6 +102,9 @@ function Home() {
             brandBannerStyle={brandBannerStyle}
             coupDeCoeurCategories={coupDeCoeurCategories}
             coupDeCoeursForDisplay={coupDeCoeursForDisplay}
+            totalCount={totalCount}
+            filteredByCategory={filteredByCategory}
+            selectedSiteUrl={selectedSiteUrl}
             isLoading={isLoading}
           />
         )}
@@ -105,6 +124,9 @@ function Home() {
             brandBannerStyle={brandBannerStyle}
             suggestionsForDisplay={suggestionsForDisplay}
             displayedCount={displayedCount}
+            totalCount={totalCount}
+            filteredByCategory={filteredByCategory}
+            selectedSiteUrl={selectedSiteUrl}
             selectedBrandLogo={selectedBrandLogo}
             isLoading={isLoading}
           />
