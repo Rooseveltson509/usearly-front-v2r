@@ -30,12 +30,13 @@ export function useBrandColors(
   }, [selectedBrandBaseColor]);
 
   const suggestionBannerStyle = useMemo(() => {
-    const fallback = "#F1E9FF";
-    const baseColor = brandColors[selectedBrand.toLowerCase()] || fallback;
+    if (!selectedBrand) return undefined;
+    const brandColor = brandColors[selectedBrand.toLowerCase()];
+    if (!brandColor) return undefined;
     return {
-      "--suggestion-bg": hexToRgba(baseColor, 0.15),
-      "--suggestion-border": hexToRgba(baseColor, 0),
-      "--suggestion-accent": baseColor,
+      "--suggestion-bg": hexToRgba(brandColor, 0.15),
+      "--suggestion-border": hexToRgba(brandColor, 0),
+      "--suggestion-accent": brandColor,
     } as React.CSSProperties;
   }, [activeTab, feedbackData, selectedBrand]);
 
