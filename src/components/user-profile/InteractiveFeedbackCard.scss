@@ -309,9 +309,11 @@
         .user-brand {
           font-weight: 500;
           margin-bottom: 4px;
+          text-transform: none;
 
           strong {
             color: $dark;
+            text-transform: none;
           }
         }
 
@@ -359,8 +361,13 @@
         font-weight: 700;
       }
 
+      h2 {
+        line-height: 1.4;
+        margin-bottom: 5px;
+      }
+
       p {
-        font-size: 13px;
+        font-size: 14px;
         font-weight: 300;
       }
     }
