@@ -54,6 +54,36 @@ const normalize = (str: string) =>
     .replace(/[\s.]+$/g, "")
     .trim();
 
+const filterOptions = [
+  {
+    value: "hot" as const,
+    emoji: "🔥",
+    label: "Problèmes les plus signalés",
+  },
+  {
+    value: "rage" as const,
+    emoji: "😡",
+    label: "Problèmes les plus rageants",
+  },
+  {
+    value: "popular" as const,
+    emoji: "👍",
+    label: "Signalements les plus populaires",
+  },
+  {
+    value: "chrono" as const,
+    emoji: "📅",
+    label: "Signalements les plus récents",
+  },
+  {
+    value: "urgent" as const,
+    emoji: "👀",
+    label: "À shaker vite",
+  },
+];
+
+type FilterOptionValue = (typeof filterOptions)[number]["value"];
+
 const FilterBar: React.FC<Props> = ({
   filter,
   setFilter,
@@ -75,6 +105,24 @@ const FilterBar: React.FC<Props> = ({
 }) => {
   const [brandSearch, setBrandSearch] = useState("");
   const [categorySearch, setCategorySearch] = useState("");
+  const normalizedSelectValue = useMemo<FilterOptionValue>(() => {
+    if (filter === "confirmed" || filter === "") {
+      return "hot";
+    }
+
+    if (filter === "recent") {
+      return "chrono";
+    }
+
+    if (filterOptions.some((option) => option.value === filter)) {
+      return filter as FilterOptionValue;
+    }
+
+    return "hot";
+  }, [filter]);
+  const selectedOption =
+    filterOptions.find((option) => option.value === normalizedSelectValue) ??
+    filterOptions[0];
 
   const filteredBrands = useMemo(() => {
     if (!brandSearch.trim()) return availableBrands;
@@ -163,13 +211,13 @@ const FilterBar: React.FC<Props> = ({
       <div className="filter-container">
         <div className="primary-filters">
           <div
-            className={`select-filter-wrapper ${filter === "hot" ? "hot-active" : ""}`}
+            className={`select-filter-wrapper ${normalizedSelectValue === "hot" ? "hot-active" : ""}`}
           >
             <select
               className="select-filter"
-              value={filter === "confirmed" ? "hot" : filter}
+              value={normalizedSelectValue}
               onChange={(e) => {
-                const value = e.target.value as typeof filter;
+                const value = e.target.value as FilterOptionValue;
                 resetBrandFilters();
 
                 if (value === "chrono") {
@@ -182,10 +230,8 @@ const FilterBar: React.FC<Props> = ({
                   setViewMode("confirmed");
                   onViewModeChange?.("confirmed");
                   setActiveFilter("confirmed");
-                } else if (
-                  ["rage", "popular", "recent", "urgent"].includes(value)
-                ) {
-                  setFilter(value as any);
+                } else if (["rage", "popular", "urgent"].includes(value)) {
+                  setFilter(value);
                   setViewMode("chrono");
                   onViewModeChange?.("chrono");
                   setActiveFilter(value);
@@ -197,14 +243,23 @@ const FilterBar: React.FC<Props> = ({
                 }
               }}
             >
-              <option value="hot">🔥 Problèmes les plus signalés</option>
-              <option value="rage">😡 Problèmes les plus rageants</option>
-              <option value="popular">
-                👍 Signalements les plus populaires
-              </option>
-              <option value="chrono">📅 Signalements les plus récents</option>
-              <option value="urgent">👀 À shaker vite</option>
+              {filterOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {`${option.emoji} ${option.label}`}
+                </option>
+              ))}
             </select>
+            <span className="select-filter-display" aria-hidden="true">
+              <span className="select-filter-content">
+                <span className="select-filter-emoji">
+                  {selectedOption?.emoji ?? ""}
+                </span>
+                <span className="select-filter-label">
+                  {selectedOption?.label ?? ""}
+                </span>
+              </span>
+              <ChevronDown size={16} className="select-filter-chevron" />
+            </span>
           </div>
 
           <BrandSelect
