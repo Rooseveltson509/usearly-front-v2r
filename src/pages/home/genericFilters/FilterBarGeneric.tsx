@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { SlidersHorizontal } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { SlidersHorizontal, ChevronDown } from "lucide-react";
 import "./FilterBar.scss";
 
 export interface FilterOption {
@@ -55,6 +55,21 @@ const normalize = (str: string) =>
     .replace(/[\s.]+$/g, "") // espaces/points finaux
     .trim();
 
+const splitLeadingEmoji = (label: string) => {
+  const trimmed = label.trim();
+  if (!trimmed) {
+    return { emoji: "", text: "" };
+  }
+
+  const [firstToken, ...rest] = trimmed.split(/\s+/);
+  const hasAlphaNumeric = /[0-9A-Za-z]/.test(firstToken);
+  if (!hasAlphaNumeric && rest.length > 0) {
+    return { emoji: firstToken, text: rest.join(" ") };
+  }
+
+  return { emoji: "", text: trimmed };
+};
+
 const FilterBarGeneric: React.FC<Props> = ({
   filter,
   setFilter,
@@ -78,6 +93,35 @@ const FilterBarGeneric: React.FC<Props> = ({
   baseFilterValue,
 }) => {
   const [search, setSearch] = useState("");
+  const parsedOptions = useMemo(() => {
+    return options.map((opt) => {
+      const { emoji, text } = splitLeadingEmoji(opt.label);
+      return {
+        ...opt,
+        emoji,
+        displayLabel: text,
+      };
+    });
+  }, [options]);
+
+  const fallbackOption = useMemo(() => {
+    if (baseFilterValue) {
+      return parsedOptions.find((opt) => opt.value === baseFilterValue);
+    }
+    return parsedOptions[0];
+  }, [parsedOptions, baseFilterValue]);
+
+  const selectedOption = useMemo(() => {
+    return (
+      parsedOptions.find((opt) => opt.value === filter) ??
+      fallbackOption ?? {
+        value: "",
+        label: "",
+        emoji: "",
+        displayLabel: "",
+      }
+    );
+  }, [parsedOptions, filter, fallbackOption]);
 
   // ✅ recherche marque normalisée
   const filteredBrands = search.trim()
@@ -133,6 +177,19 @@ const FilterBarGeneric: React.FC<Props> = ({
             </option>
           ))}
         </select>
+        <span className="select-filter-display" aria-hidden="true">
+          <span className="select-filter-content">
+            {selectedOption?.emoji && (
+              <span className="select-filter-emoji">
+                {selectedOption.emoji}
+              </span>
+            )}
+            <span className="select-filter-label">
+              {selectedOption?.displayLabel || selectedOption?.label || ""}
+            </span>
+          </span>
+          <ChevronDown size={16} className="select-filter-chevron" />
+        </span>
       </div>
 
       {/* 🔧 Deuxième filtre : input + catégories (optionnel) */}
