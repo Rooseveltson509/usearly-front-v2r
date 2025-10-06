@@ -363,68 +363,6 @@
   }
 }
 
-@keyframes flame-wiggle {
-  0%,
-  100% {
-    transform: rotate(0deg) scale(1);
-  }
-
-  25% {
-    transform: rotate(-10deg) scale(1.05);
-  }
-
-  75% {
-    transform: rotate(10deg) scale(1.05);
-  }
-}
-
-.select-filter.hot-active option[value="hot"]::before {
-  content: "🔥";
-  display: inline-block;
-  animation: flame-wiggle 1.2s infinite;
-}
-
-.select-filter option {
-  &::first-letter {
-    animation: flame-wiggle 1.2s infinite;
-  }
-}
-
-.select-filter-wrapper {
-  position: relative;
-  display: inline-block;
-
-  &.hot-active::before {
-    content: "🔥";
-    position: absolute;
-    left: 0.6rem;
-    top: 50%;
-    transform: translateY(-50%);
-    animation: wiggle 1s infinite;
-    font-size: 1.2rem;
-    pointer-events: none;
-  }
-}
-
-@keyframes wiggle {
-  0%,
-  100% {
-    transform: translateY(-50%) rotate(0deg);
-  }
-
-  25% {
-    transform: translateY(-50%) rotate(-10deg);
-  }
-
-  50% {
-    transform: translateY(-50%) rotate(10deg);
-  }
-
-  75% {
-    transform: translateY(-50%) rotate(-5deg);
-  }
-}
-
 .confirmed-view-btn {
   margin-top: 8px;
   margin-left: 4px;
