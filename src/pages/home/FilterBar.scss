@@ -28,10 +28,14 @@
       height: auto;
       select {
         width: 100%;
-
+        max-width: 100%;
+        display: block;
+        overflow: hidden;
         border-radius: 4px;
         height: 100%;
         padding: 12px 8px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
     }
     .category-select-select {
@@ -49,6 +53,9 @@
         background: #fff;
         font-weight: 600;
         cursor: pointer;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
 
         // cache le chevron natif sur IE/Edge Legacy
         &::-ms-expand {
@@ -214,6 +221,12 @@
         opacity: 0.6;
         cursor: not-allowed;
       }
+    }
+
+    select {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .brand-search,
