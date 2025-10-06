@@ -184,6 +184,22 @@
         margin-left: -15px;
       }
     }
+    .feedback-view-container {
+      .right-panel {
+        position: relative;
+        z-index: 1;
+        right: 0;
+        width: 27.5%;
+        @media screen and (max-width: 1350px) {
+          display: none;
+        }
+        img {
+          width: 100%;
+          max-width: 291px;
+          margin-left: 20px;
+        }
+      }
+    }
     .filter-bar-generic-container {
       @media screen and (max-width: 1350px) {
         width: 100%;
@@ -194,20 +210,6 @@
 
   .cdc-content {
     display: flex;
-    .right-panel {
-      position: relative;
-      z-index: 1;
-      right: 0;
-      width: 27.5%;
-      @media screen and (max-width: 1570px) {
-        display: none;
-      }
-      img {
-        width: 100%;
-        max-width: 291px;
-        margin-left: 20px;
-      }
-    }
     @media screen and (max-width: 1570px) {
       .feedback-list-section {
         width: 100%;
@@ -279,6 +281,9 @@
 
   .right-panel {
     margin-top: 5px;
+    @media screen and (max-width: 1350px) {
+      display: none;
+    }
   }
 
   .feedback-list-wrapper {
