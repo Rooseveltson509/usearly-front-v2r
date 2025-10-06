@@ -1,7 +1,7 @@
 .filter-illustration-sidebar {
   width: 320px;
   padding: 16px;
-  padding-top: 38px;
+  padding-top: 0px;
   @media screen and (min-width: 1620px) {
     padding-left: 0;
   }
@@ -43,7 +43,7 @@
 
   .illustration-content {
     padding: 16px;
-    padding-top: 0;
+    padding-top: 48px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -83,6 +83,10 @@
         user-select: none;
       }
     }
+  }
+
+  .category-icon-container {
+    padding-top: 0px;
   }
   .brand-solo {
     padding-top: 40px;

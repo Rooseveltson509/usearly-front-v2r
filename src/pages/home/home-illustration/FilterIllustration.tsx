@@ -110,6 +110,8 @@ const FilterIllustration = ({
     );
   }, [selectedCategory, selectedBrand, shouldShowCategoryIcon, onglet]);
 
+  const hasCategorySelection = shouldShowCategoryIcon && !!categoryIcon;
+
   // Charger le logo de marque si une marque est sélectionnée
   useEffect(() => {
     let isMounted = true;
@@ -167,20 +169,15 @@ const FilterIllustration = ({
 
   // === Cas 1 : Marque/Catégorie sélectionnée → on montre soit le logo, soit un fallback d’onglet
   if (selectedBrand || selectedCategory) {
-    const imgSrc = brandSoloImg || logoUrl || illustrationMap[fallbackKey].img;
+    const showCategoryOnly = hasCategorySelection && !!categoryIcon;
+    const containerClassName = `filter-illustration-sidebar filtered${
+      !showCategoryOnly && brandSoloImg ? " brand-solo" : ""
+    }`;
 
-    return (
-      <div
-        className={`filter-illustration-sidebar filtered ${brandSoloImg ? "brand-solo" : ""}`}
-      >
-        <div className="illustration-content">
-          <img
-            src={imgSrc}
-            alt={selectedBrand || "Illustration"}
-            className={`brand-hero__img ${logoUrl ? "brand-logo" : "fallback-img"}`}
-          />
-
-          {shouldShowCategoryIcon && categoryIcon && (
+    if (showCategoryOnly && categoryIcon) {
+      return (
+        <div className={containerClassName}>
+          <div className="illustration-content category-icon-container">
             <div className="category-icon-wrapper">
               <img
                 src={categoryIcon}
@@ -188,7 +185,21 @@ const FilterIllustration = ({
                 className="category-icon"
               />
             </div>
-          )}
+          </div>
+        </div>
+      );
+    }
+
+    const imgSrc = brandSoloImg || logoUrl || illustrationMap[fallbackKey].img;
+
+    return (
+      <div className={containerClassName}>
+        <div className="illustration-content">
+          <img
+            src={imgSrc}
+            alt={selectedBrand || "Illustration"}
+            className={`brand-hero__img ${logoUrl ? "brand-logo" : "fallback-img"}`}
+          />
         </div>
       </div>
     );
