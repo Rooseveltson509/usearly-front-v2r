@@ -1,5 +1,5 @@
 .filter-illustration-sidebar {
-  width: 320px;
+  width: 260px;
   padding: 16px;
   padding-top: 0px;
   @media screen and (min-width: 1620px) {
@@ -35,6 +35,10 @@
       margin: 0;
     }
   }
+}
+
+.filter-illustration-sidebar.brand-solo {
+  width: 320px;
 }
 
 .filter-illustration-sidebar.filtered {
