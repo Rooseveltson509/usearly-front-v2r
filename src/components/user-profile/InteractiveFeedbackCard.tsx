@@ -11,6 +11,7 @@ import { brandColors } from "@src/utils/brandColors";
 import { apiService } from "@src/services/apiService";
 import { showToast } from "@src/utils/toastUtils";
 import starProgressBar from "/assets/icons/icon-progress-bar.svg";
+import { capitalizeFirstLetter } from "@src/utils/stringUtils";
 
 interface Props {
   item: (CoupDeCoeur | Suggestion) & {
@@ -196,7 +197,9 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
           <div className="feedback-header">
             <div className="feedback-meta">
               <span className="user-brand">
-                {item.author?.pseudo} × <strong>{item.marque}</strong>
+                {item.author?.pseudo}
+                {" × "}
+                <strong>{capitalizeFirstLetter(item.marque)}</strong>
               </span>
               ⸱
               {isValidDate(item.createdAt) && (

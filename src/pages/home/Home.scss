@@ -37,8 +37,7 @@
   .filter-bar-generic-container {
     display: flex;
     justify-content: space-between;
-    width: 72.5%;
-    max-width: 740px;
+    width: 100%;
   }
   @media screen and (max-width: 1350px) {
     max-width: 100%;
@@ -155,8 +154,8 @@
   width: 100%;
   max-width: 1120px;
   border-radius: 24px;
-  padding: 28px 24px;
-  margin: 4.5rem 0 32px 0;
+  padding: 15px 24px;
+  margin: 3.5rem 0 32px 0;
   justify-content: space-between;
   align-items: flex-start;
   position: relative;
@@ -225,6 +224,9 @@
   .feedback-list-wrapper {
     .feedback-view-container {
       .feedback-view-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
         @media screen and (max-width: 1350px) {
           width: 100%;
         }
@@ -260,6 +262,7 @@
   .feedback-view-container {
     display: flex;
     flex-direction: row;
+    margin-top: 10px;
   }
 }
 

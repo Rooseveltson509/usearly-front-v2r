@@ -44,15 +44,6 @@ const CdcTab: React.FC<Props> = ({
       style={brandBannerStyle}
     >
       <div className="feedback-list-wrapper">
-        <HomeFiltersCdc
-          filter={activeFilter}
-          setFilter={setActiveFilter}
-          selectedBrand={selectedBrand}
-          setSelectedBrand={setSelectedBrand}
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-          availableCategories={coupDeCoeurCategories}
-        />
         {isLoading ? (
           <SqueletonAnime
             loaderRef={{ current: null }}
@@ -63,62 +54,76 @@ const CdcTab: React.FC<Props> = ({
         ) : (
           <div className="feedback-view-container">
             <div className="feedback-view-wrapper">
-              <div className="selected-brand-heading">
-                {selectedBrand && (
-                  <div className="selected-brand-summary">
-                    <div className="selected-brand-summary__brand">
-                      <div className="selected-brand-summary__logo">
-                        <Avatar
-                          avatar={getBrandLogo(selectedBrand, selectedSiteUrl)}
-                          pseudo={selectedBrand}
-                          type="brand"
-                        />
-                      </div>
-                      <div className="selected-brand-summary__info-container">
-                        {selectedCategory ? (
-                          <>
-                            <span className="count">
-                              {filteredByCategory.length}
-                            </span>
-                            <span className="text">
-                              Signalement
-                              {filteredByCategory.length > 1 ? "s" : ""} lié
-                              {filteredByCategory.length > 1 ? "s" : ""} à «{" "}
-                              <b>{selectedCategory}</b> » sur{" "}
-                              {` ${capitalizeFirstLetter(selectedBrand)}`}
-                            </span>
-                          </>
-                        ) : (
-                          <>
-                            <span className="count">{totalCount}</span>
-                            <span className="text">
-                              Signalement{totalCount > 1 ? "s" : ""} sur{" "}
-                              {` ${capitalizeFirstLetter(selectedBrand)}`}
-                            </span>
-                          </>
-                        )}
+              <HomeFiltersCdc
+                filter={activeFilter}
+                setFilter={setActiveFilter}
+                selectedBrand={selectedBrand}
+                setSelectedBrand={setSelectedBrand}
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
+                availableCategories={coupDeCoeurCategories}
+              />
+              <div>
+                <div className="selected-brand-heading">
+                  {selectedBrand && (
+                    <div className="selected-brand-summary">
+                      <div className="selected-brand-summary__brand">
+                        <div className="selected-brand-summary__logo">
+                          <Avatar
+                            avatar={getBrandLogo(
+                              selectedBrand,
+                              selectedSiteUrl,
+                            )}
+                            pseudo={selectedBrand}
+                            type="brand"
+                          />
+                        </div>
+                        <div className="selected-brand-summary__info-container">
+                          {selectedCategory ? (
+                            <>
+                              <span className="count">
+                                {filteredByCategory.length}
+                              </span>
+                              <span className="text">
+                                Signalement
+                                {filteredByCategory.length > 1 ? "s" : ""} lié
+                                {filteredByCategory.length > 1 ? "s" : ""} à «{" "}
+                                <b>{selectedCategory}</b> » sur{" "}
+                                {` ${capitalizeFirstLetter(selectedBrand)}`}
+                              </span>
+                            </>
+                          ) : (
+                            <>
+                              <span className="count">{totalCount}</span>
+                              <span className="text">
+                                Signalement{totalCount > 1 ? "s" : ""} sur{" "}
+                                {` ${capitalizeFirstLetter(selectedBrand)}`}
+                              </span>
+                            </>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
+                <FeedbackView
+                  activeTab="coupdecoeur"
+                  viewMode="flat"
+                  currentState={{
+                    data: coupDeCoeursForDisplay,
+                    loading: isLoading,
+                    hasMore: false,
+                    error: null,
+                  }}
+                  openId={null}
+                  setOpenId={() => {}}
+                  groupOpen={{}}
+                  setGroupOpen={() => {}}
+                  selectedBrand={selectedBrand}
+                  selectedCategory={selectedCategory}
+                  renderCard={() => <></>}
+                />
               </div>
-              <FeedbackView
-                activeTab="coupdecoeur"
-                viewMode="flat"
-                currentState={{
-                  data: coupDeCoeursForDisplay,
-                  loading: isLoading,
-                  hasMore: false,
-                  error: null,
-                }}
-                openId={null}
-                setOpenId={() => {}}
-                groupOpen={{}}
-                setGroupOpen={() => {}}
-                selectedBrand={selectedBrand}
-                selectedCategory={selectedCategory}
-                renderCard={() => <></>}
-              />
             </div>
             <aside className="right-panel">
               <FilterIllustration
