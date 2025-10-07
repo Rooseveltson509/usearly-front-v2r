@@ -1,7 +1,6 @@
 .emoji-reaction-picker {
   position: relative;
   display: flex;
-  gap: 0.5rem;
   background: white;
   border: 1px solid #ddd;
   border-radius: 12px;
@@ -45,6 +44,16 @@
 
     &:hover::after {
       opacity: 1;
+    }
+  }
+}
+
+.actions-left {
+  .react-hover-area {
+    .emoji-picker-container {
+      .emoji-reaction-picker {
+        gap: 0.75rem;
+      }
     }
   }
 }
