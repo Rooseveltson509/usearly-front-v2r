@@ -45,7 +45,13 @@ const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <>
       <Header />
-      <main style={{ minHeight: "100vh", paddingTop: HeaderHeight }}>
+      <main
+        style={{
+          minHeight: "100vh",
+          paddingTop: HeaderHeight,
+          overflow: "auto",
+        }}
+      >
         {children}
       </main>
       <Footer />
