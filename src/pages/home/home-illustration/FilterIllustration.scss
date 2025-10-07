@@ -2,6 +2,7 @@
   width: 260px;
   padding: 16px;
   padding-top: 0px;
+  padding-left: 0px;
   @media screen and (min-width: 1620px) {
     padding-left: 0;
   }
@@ -47,7 +48,7 @@
 
   .illustration-content {
     padding: 16px;
-    padding-top: 48px;
+    padding-top: 24px;
     display: flex;
     flex-direction: column;
     align-items: center;
