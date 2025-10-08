@@ -17,7 +17,6 @@
   padding: 1rem 0;
   height: 260px;
   background: rgb(14, 4, 49);
-  margin-top: 50px;
 
   .banner-content {
     position: absolute; // Permet de centrer par rapport à la page
@@ -49,6 +48,7 @@
     .decorative-logos {
       position: relative;
       height: 130px;
+      width: 200px;
 
       .logo {
         position: absolute;
@@ -152,11 +152,11 @@
 
 // Colonne droite
 .right-panel {
-  margin-top: -25px;
+  margin-top: 60px;
 
   .separator {
     height: 1px;
-    background: #e8e8e8;
+    background: #f0f0f0;
     width: 80%;
     margin: 1.4rem auto; // 'auto' centre horizontalement
   }

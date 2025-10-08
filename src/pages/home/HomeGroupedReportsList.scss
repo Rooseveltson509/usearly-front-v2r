@@ -2,6 +2,7 @@
 
 .home-grouped-reports-list {
   margin-top: 20px;
+  margin-right: 20px;
   z-index: 1;
 
   .selected-brand-summary {
@@ -81,7 +82,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  flex-wrap: wrap; // 🔁 Permet le retour à la ligne sur petit écran
+  flex-wrap: nowrap; // 🔁 Permet le retour à la ligne sur petit écran
   // margin-bottom: 40px;
 
   .profile-filters-container {
@@ -102,8 +103,8 @@
 
         select {
           padding: 10px 12px;
-          border: 1px solid #0000001c;
-          border-radius: 10px;
+          border: 1px solid #f0f0f0;
+          border-radius: 6px;
           font-size: 13px;
           font-weight: 400;
           background-color: white;
@@ -175,8 +176,8 @@
   font-size: 13px;
   font-weight: 600;
   padding: 10px 12px;
-  border: 1px solid #0000001c;
-  border-radius: 10px;
+  border: 1px solid #f0f0f0;
+  border-radius: 6px;
   background: white;
   cursor: pointer;
 
