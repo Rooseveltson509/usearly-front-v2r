@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { ChevronDown, ChevronUp, Image } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { getCategoryIconPathFromSubcategory } from "@src/utils/IconsUtils";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -39,19 +39,31 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
     refreshKey,
   );
   const [visibleDescriptionsCount, setVisibleDescriptionsCount] = useState(2); // par défaut 2 visibles
-  const [showCapture, setShowCapture] = useState(false);
   const captureUrl = capture || initialDescription.capture || null;
+  const [showFullText, setShowFullText] = useState(false);
 
   const toggleExpanded = () => {
     setExpanded((prev) => !prev);
     setShowComments(false);
     setShowSimilarReports(false);
   };
+  useEffect(() => {
+    // si la notif correspond à cette carte, on l'ouvre
+    if (window.location.hash === `#${initialDescription.id}`) {
+      setExpanded(true);
+      setShowComments(true);
+    }
+  }, [initialDescription.id]);
+
   if (!initialDescription) {
     return null; // ou un fallback
   }
+
   return (
-    <div className={`subcategory-block flat ${expanded ? "open" : ""}`}>
+    <div
+      className={`subcategory-block flat ${expanded ? "open" : ""}`}
+      data-description-id={initialDescription.id}
+    >
       <div className="subcategory-header" onClick={toggleExpanded}>
         <div className="subcategory-left">
           <img
@@ -126,31 +138,38 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
       {expanded && (
         <div className="subcategory-content">
           <div className="main-description">
+            {/* Texte de description */}
             <p className="description-text">
-              {initialDescription.description}.... {initialDescription.emoji}
+              {showFullText
+                ? `${initialDescription.description} ${initialDescription.emoji || ""}`
+                : `${initialDescription.description.slice(0, 180)}${
+                    initialDescription.description.length > 180 ? "..." : ""
+                  } ${initialDescription.emoji || ""}`}
             </p>
-            {captureUrl && (
-              <div className="screenshot-section">
+
+            {/* Bouton "Voir plus / Voir moins" */}
+            {(initialDescription.description.length > 180 || captureUrl) && (
+              <div className="see-more-section">
                 <button
-                  className="show-capture-button"
+                  className="see-more-button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    setShowCapture((prev) => !prev);
+                    setShowFullText((prev) => !prev);
                   }}
                 >
-                  <Image size={16} style={{ marginRight: 6 }} />
-                  {showCapture ? "Masquer la capture" : "Voir la capture"}
+                  {showFullText ? "Voir moins" : "Voir plus"}
                 </button>
+              </div>
+            )}
 
-                {showCapture && (
-                  <div className="inline-capture">
-                    <img
-                      src={captureUrl}
-                      alt="Capture"
-                      className="inline-capture-img"
-                    />
-                  </div>
-                )}
+            {/* Image affichée uniquement quand on clique sur "Voir plus" */}
+            {showFullText && captureUrl && (
+              <div className="inline-capture">
+                <img
+                  src={captureUrl}
+                  alt="Capture du signalement"
+                  className="inline-capture-img"
+                />
               </div>
             )}
           </div>

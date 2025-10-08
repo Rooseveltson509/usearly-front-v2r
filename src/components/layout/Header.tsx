@@ -5,9 +5,11 @@ import "./Header.scss";
 import Logo from "@src/assets/logo.svg";
 import { useAuth } from "@src/services/AuthContext";
 import {
+  deleteNotification,
   getNotifications,
   markNotificationAsRead,
 } from "@src/services/notificationService";
+import NotificationItem from "../notification/NotificationItem";
 
 const Header = () => {
   const { isAuthenticated, userProfile, logout } = useAuth();
@@ -16,10 +18,9 @@ const Header = () => {
   const [notifOpen, setNotifOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
 
-  const toggleUserMenu = () => setUserMenuOpen((prev) => !prev);
-
-  // 🔹 Fermer les dropdowns quand on clique en dehors
+  // 🔹 Fermer les dropdowns quand on clique ailleurs
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -56,11 +57,11 @@ const Header = () => {
     }
   };
 
-  // 🔹 Charger notifs au mount + refresh auto toutes les 10s
+  // 🔹 Auto-refresh des notifs toutes les 10 secondes
   useEffect(() => {
     if (isAuthenticated) {
       fetchNotifications();
-      const interval = setInterval(fetchNotifications, 10000); // refresh toutes les 10s
+      const interval = setInterval(fetchNotifications, 10000);
       return () => clearInterval(interval);
     }
   }, [isAuthenticated]);
@@ -68,14 +69,14 @@ const Header = () => {
   const handleLogout = () => {
     logout();
     setUserMenuOpen(false);
-    navigate("/"); // retour à l'accueil après déconnexion
+    navigate("/");
   };
 
   return (
     <header className="header">
       <div className="header-container">
         {/* Logo */}
-        <div className="logo">
+        <div className="logo" onClick={() => navigate("/home")}>
           <img src={Logo} alt="Usearly Logo" />
           <span className="logo-text">Usearly</span>
         </div>
@@ -98,7 +99,7 @@ const Header = () => {
           </NavLink>
         </nav>
 
-        {/* Partie droite : notifs + utilisateur */}
+        {/* Droite : notifications + profil */}
         <div className="header-right" ref={dropdownRef}>
           {/* 🔔 Notifications */}
           {isAuthenticated && (
@@ -110,12 +111,11 @@ const Header = () => {
               }}
             >
               <i className="fa fa-bell" />
-              {Array.isArray(notifications) &&
-                notifications.filter((n) => !n.read).length > 0 && (
-                  <span className="notif-count">
-                    {notifications.filter((n) => !n.read).length}
-                  </span>
-                )}
+              {notifications.some((n) => !n.read) && (
+                <span className="notif-count">
+                  {notifications.filter((n) => !n.read).length}
+                </span>
+              )}
 
               {notifOpen && (
                 <div className="notif-dropdown">
@@ -123,26 +123,32 @@ const Header = () => {
                     <p className="empty">Aucune notification</p>
                   ) : (
                     <>
-                      {/* 🔹 Limite à 20 notifs max */}
-                      {notifications.slice(0, 20).map((n) => (
-                        <div
+                      {notifications.slice(0, 10).map((n) => (
+                        <NotificationItem
                           key={n.id}
-                          className={`notif-item ${n.read ? "read" : "unread"}`}
-                          onClick={() => {
-                            markAsRead(n.id);
-                            if (n.suggestionId) {
-                              navigate(`/suggestions/${n.suggestionId}`);
-                            } else if (n.coupDeCoeurId) {
-                              navigate(`/coupsdecoeur/${n.coupDeCoeurId}`);
-                            }
+                          notification={n}
+                          onMarkAsRead={markAsRead}
+                          onDelete={(id) => {
+                            deleteNotification(id)
+                              .then(() =>
+                                setNotifications((prev) =>
+                                  prev.filter((notif) => notif.id !== id),
+                                ),
+                              )
+                              .catch((err) =>
+                                console.error(
+                                  "❌ Erreur suppression notif:",
+                                  err,
+                                ),
+                              )
+                              .finally(() => setConfirmDelete(null));
                           }}
-                        >
-                          {n.message}
-                        </div>
+                          confirmDeleteId={confirmDelete}
+                          setConfirmDeleteId={setConfirmDelete}
+                        />
                       ))}
 
-                      {/* 🔹 Bouton voir toutes */}
-                      {notifications.length > 20 && (
+                      {notifications.length > 10 && (
                         <div
                           className="notif-see-all"
                           onClick={() => {
@@ -165,7 +171,7 @@ const Header = () => {
             className={`user-toggle ${userMenuOpen ? "open" : ""}`}
             onClick={(e) => {
               e.stopPropagation();
-              toggleUserMenu();
+              setUserMenuOpen((prev) => !prev);
             }}
           >
             <i className="far fa-user" />

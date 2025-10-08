@@ -20,6 +20,7 @@ import { apiService } from "@src/services/apiService";
 import { capitalizeFirstLetter } from "@src/utils/stringUtils";
 import Avatar from "@src/components/shared/Avatar";
 import "./countBarBrand.scss";
+import { useLocation } from "react-router-dom";
 
 type ViewMode = "flat" | "chrono" | "confirmed";
 
@@ -125,6 +126,7 @@ const HomeGroupedReportsList = ({
   const [searchTerm, setSearchTerm] = useState("");
   const [totalCount, setTotalCount] = useState(totalityCount);
   const [currentSection, setCurrentSection] = useState<SectionKey>("loading");
+  const location = useLocation(); // pour focus depuis une notif
 
   /* const isChronoView =
     viewMode === "chrono" && (filter === undefined || filter === "chrono"); */
@@ -295,6 +297,42 @@ const HomeGroupedReportsList = ({
     }
     setSelectedSiteUrl(reportsToDisplay[0]?.siteUrl);
   }, [reportsToDisplay, selectedBrand, selectedCategory, setSelectedSiteUrl]);
+
+  // 💡 Effet d’ouverture et focus automatique depuis une notif
+  useEffect(() => {
+    const focusId = location.state?.focusDescriptionId;
+    if (!focusId) return;
+
+    const timeout = setTimeout(() => {
+      const el = document.querySelector(`[data-description-id="${focusId}"]`);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+        el.classList.add("highlight-flash");
+        setTimeout(() => el.classList.remove("highlight-flash"), 2500);
+      } else {
+        console.warn("⚠️ Aucun bloc trouvé pour focusDescriptionId:", focusId);
+      }
+    }, 600);
+
+    return () => clearTimeout(timeout);
+  }, [location]);
+
+  // ---------------- Render ----------------
+  if (initializing) {
+    return (
+      <div
+        className="home-grouped-reports-list"
+        data-current-section={currentSection}
+      >
+        <SqueletonAnime
+          loaderRef={loaderRef}
+          loading
+          hasMore={false}
+          error={null}
+        />
+      </div>
+    );
+  }
 
   // ---------------- Render ----------------
   if (initializing) {
