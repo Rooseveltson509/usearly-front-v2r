@@ -2,10 +2,30 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 60px;
-  padding: 20px;
-  min-height: calc(100vh - 100px); // prend tout l’espace moins header
   background: #fafafa; // optionnel pour différencier la page
+  .usearly-wrap {
+    min-height: 25vh !important;
+  }
+}
+
+.suggestion-card-wrapper {
+  width: 700px;
+  .feedback-card {
+    border-radius: 12px;
+    padding: 20px 16px 0px 15px;
+
+    .feedback-type {
+      flex: none;
+      width: 269px;
+      height: 299px;
+      border-radius: 16px;
+      padding-bottom: 16px;
+
+      .feedback-left {
+        border-radius: 16px;
+      }
+    }
+  }
 }
 
 .page-title {
@@ -14,9 +34,4 @@
   margin-bottom: 30px;
   text-align: center;
   color: #222;
-}
-
-.suggestion-card-wrapper {
-  width: 100%;
-  max-width: 850px;
 }

@@ -109,7 +109,7 @@ const ShareCoupDeCoeurModal: React.FC<Props> = ({ coupDeCoeurId, onClose }) => {
   };
 
   return (
-    <div className="share-modal-overlay" onClick={onClose}>
+    <div className="share-modal-overlay share-social-userly" onClick={onClose}>
       <div className="share-modal" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <h3>Partager le coup de cœur 💖</h3>
@@ -180,25 +180,25 @@ const ShareCoupDeCoeurModal: React.FC<Props> = ({ coupDeCoeurId, onClose }) => {
               onClick={() => handleShareSocial("whatsapp")}
               className="whatsapp"
             >
-              <FaWhatsapp size={18} /> WhatsApp
+              <FaWhatsapp size={24} color="#25D366" /> WhatsApp
             </button>
             <button
               onClick={() => handleShareSocial("facebook")}
               className="facebook"
             >
-              <FaFacebook size={18} /> Facebook
+              <FaFacebook size={24} color="#1877F2" /> Facebook
             </button>
             <button
               onClick={() => handleShareSocial("linkedin")}
               className="linkedin"
             >
-              <FaLinkedin size={18} /> LinkedIn
+              <FaLinkedin size={24} color="#0A66C2" /> LinkedIn
             </button>
             <button
               onClick={() => handleShareSocial("twitter")}
               className="twitter"
             >
-              <FaTwitter size={18} /> Twitter/X
+              <FaTwitter size={24} color="#1D9BF0" /> Twitter/X
             </button>
           </div>
         </div>

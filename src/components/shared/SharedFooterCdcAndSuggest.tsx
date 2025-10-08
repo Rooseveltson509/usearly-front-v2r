@@ -126,6 +126,9 @@ const SharedFooterCdcAndSuggest: React.FC<Props> = ({
             <button className="comment-toggle-btn" onClick={toggleComments}>
               <MessageCircle size={16} />{" "}
               {type === "coupdecoeur" && "Commenter"}
+              {type === "suggestion" && (
+                <span className="footer-icon-tooltip">Commenter</span>
+              )}
             </button>
 
             {/* Partager */}
@@ -134,6 +137,9 @@ const SharedFooterCdcAndSuggest: React.FC<Props> = ({
               onClick={() => setShowShareModal(true)}
             >
               <Share2 size={16} /> {type === "coupdecoeur" && "Partager"}
+              {type === "suggestion" && (
+                <span className="footer-icon-tooltip">Partager</span>
+              )}
             </button>
           </div>
           <div>

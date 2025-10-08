@@ -2,21 +2,33 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 60px;
-  padding: 20px;
-  min-height: calc(100vh - 100px); // prend tout l’espace moins header
-  background: #fafafa; // optionnel pour différencier la page
+
+  .coupdecoeur-card-wrapper,
+  .suggestion-card-wrapper {
+    width: 700px;
+    .feedback-card {
+      border-radius: 12px;
+      padding: 20px 16px 0px 15px;
+
+      .feedback-type {
+        padding-bottom: 20px;
+        .feedback-left {
+          width: 269px;
+          height: 299px;
+          border-radius: 16px;
+        }
+      }
+    }
+  }
+  .usearly-wrap {
+    min-height: 25vh;
+  }
 }
 
 .page-title {
   font-size: 1.8rem;
   font-weight: 600;
-  margin-bottom: 30px;
+  margin: 30px 0;
   text-align: center;
   color: #222;
-}
-
-.suggestion-card-wrapper {
-  width: 100%;
-  max-width: 850px;
 }

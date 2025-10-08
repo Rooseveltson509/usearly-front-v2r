@@ -134,10 +134,20 @@ const DescriptionCommentSection: React.FC<Props> = ({
                 />
                 <button className="comment-toggle-btn" onClick={toggleComments}>
                   <MessageCircleMore size={16} />
-                  {comments.length > 0 && ` ${comments.length}`}
+                  {comments.length > 0 && (
+                    <span className="comment-inline-count">
+                      {comments.length}
+                    </span>
+                  )}
+                  {type === "suggestion" && (
+                    <span className="icon-tooltip">Commentaires</span>
+                  )}
                 </button>
                 <button className="comment-toggle-btn">
                   <Share2 size={16} />
+                  {type === "suggestion" && (
+                    <span className="icon-tooltip">Partager</span>
+                  )}
                 </button>
               </>
             )

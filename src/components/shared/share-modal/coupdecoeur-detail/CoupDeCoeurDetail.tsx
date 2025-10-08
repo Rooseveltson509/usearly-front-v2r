@@ -4,6 +4,7 @@ import type { CoupDeCoeur } from "@src/types/Reports";
 import "./CoupDeCoeurDetail.scss";
 import { getCoupDeCoeurById } from "@src/services/coupDeCoeurService";
 import InteractiveFeedbackCard from "@src/components/user-profile/InteractiveFeedbackCard";
+import UsearlyDraw from "@src/components/background/Usearly";
 
 const CoupDeCoeurDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -31,19 +32,25 @@ const CoupDeCoeurDetail = () => {
 
   if (loading) return <p>Chargement...</p>;
   if (!coupDeCoeur) return <p>Coup de cœur introuvable 💔</p>;
+  console.log("CoupDeCoeurDetail render", coupDeCoeur);
 
   return (
-    <div className="coupdecoeur-detail-page">
-      <h2 className="page-title">Détail du coup de cœur</h2>
-      <div className="coupdecoeur-card-wrapper">
-        <InteractiveFeedbackCard
-          key={coupDeCoeur.id}
-          item={{ ...coupDeCoeur, type: "coupdecoeur" }}
-          isOpen={true}
-          onToggle={() => {}}
-        />
+    <>
+      <div className="coupdecoeur-detail-page">
+        <h2 className="page-title">
+          Coup de cœur de {coupDeCoeur.author.pseudo}
+        </h2>
+        <div className="coupdecoeur-card-wrapper">
+          <InteractiveFeedbackCard
+            key={coupDeCoeur.id}
+            item={{ ...coupDeCoeur, type: "coupdecoeur" }}
+            isOpen={true}
+            onToggle={() => {}}
+          />
+        </div>
+        <UsearlyDraw />
       </div>
-    </div>
+    </>
   );
 };
 

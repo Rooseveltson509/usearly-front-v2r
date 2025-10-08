@@ -32,7 +32,7 @@
     }
 
     button {
-      background: #007bff;
+      background: $dark;
       color: #fff;
       border: none;
       border-radius: 20px;
@@ -42,7 +42,7 @@
       transition: background 0.2s;
 
       &:hover {
-        background: #0062cc;
+        background: #4e4e4e;
       }
     }
   }
@@ -71,7 +71,7 @@
 
         &:focus {
           outline: none;
-          border-color: #4e8cff;
+          border-color: #4e4e4e;
         }
       }
     }
