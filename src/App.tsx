@@ -16,6 +16,7 @@ import NewHome from "./pages/newHome/NewHome";
 import CheckUser from "./pages/auth/CheckUser";
 import SuggestionDetail from "./components/suggestion-detail/SuggestionDetail";
 import PublicSuggestionPage from "./components/shared/public/PublicSuggestionPage";
+import CoupDeCoeurDetail from "./components/shared/share-modal/coupdecoeur-detail/CoupDeCoeurDetail";
 
 function App() {
   return (
@@ -94,6 +95,15 @@ function App() {
               element={
                 <ProtectedRoute allowedTypes={["user"]}>
                   <SuggestionDetail />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/coupsdecoeur/:id"
+              element={
+                <ProtectedRoute allowedTypes={["user"]}>
+                  <CoupDeCoeurDetail />
                 </ProtectedRoute>
               }
             />

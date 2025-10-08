@@ -132,6 +132,8 @@ const Header = () => {
                             markAsRead(n.id);
                             if (n.suggestionId) {
                               navigate(`/suggestions/${n.suggestionId}`);
+                            } else if (n.coupDeCoeurId) {
+                              navigate(`/coupsdecoeur/${n.coupDeCoeurId}`);
                             }
                           }}
                         >
