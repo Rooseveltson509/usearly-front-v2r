@@ -41,3 +41,8 @@ export const voteForSuggestion = async (id: string) => {
   );
   return data;
 };
+
+export const getUserVotes = async () => {
+  const res = await apiService.get("/user/votes");
+  return res.data;
+};

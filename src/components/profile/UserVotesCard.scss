@@ -1,0 +1,75 @@
+.user-votes-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 340px;
+
+  .votes-title {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .votes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+
+    /* ✅ Nouvelle limite de hauteur + scroll doux */
+    max-height: 300px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #bbb transparent;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: #ccc;
+      border-radius: 4px;
+    }
+
+    .vote-item {
+      padding-bottom: 0.7rem;
+      border-bottom: 1px solid #eee;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .vote-title {
+        font-weight: 500;
+        font-size: 0.95rem;
+        color: #222;
+        margin: 0 0 0.4rem 0;
+
+        &.clickable {
+          cursor: pointer;
+          transition: color 0.2s ease;
+          &:hover {
+            color: #2a7cf7;
+          }
+        }
+      }
+
+      .vote-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 0.85rem;
+
+        .progress {
+          color: #2a7cf7;
+          font-weight: 600;
+        }
+
+        .date {
+          color: #777;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+}
