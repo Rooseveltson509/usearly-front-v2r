@@ -261,14 +261,15 @@ const FilterBar: React.FC<Props> = ({
               <ChevronDown size={16} className="select-filter-chevron" />
             </span>
           </div>
-
-          <BrandSelect
-            brands={availableBrands}
-            selectedBrand={selectedBrand}
-            onSelect={(brand) => handleBrandSelect(brand)}
-            onClear={() => clearBrand()}
-            placeholder="Choisir une marque"
-          />
+          {selectedBrand && (
+            <BrandSelect
+              brands={availableBrands}
+              selectedBrand={selectedBrand}
+              onSelect={(brand) => handleBrandSelect(brand)}
+              onClear={() => clearBrand()}
+              placeholder="Choisir une marque"
+            />
+          )}
         </div>
         <div className="secondary-filters-container">
           <div className="filter-dropdown-wrapper" ref={dropdownRef}>
@@ -359,14 +360,16 @@ const FilterBar: React.FC<Props> = ({
     return (
       <div className="filter-container">
         <div className="primary-filters-select">
-          <BrandSelect
-            brands={availableBrands}
-            selectedBrand={selectedBrand}
-            onSelect={(brand) => handleBrandSelect(brand)}
-            onClear={() => clearBrand()}
-            placeholder="Choisir une marque"
-            className="brand-select-rounded"
-          />
+          {selectedBrand && (
+            <BrandSelect
+              brands={availableBrands}
+              selectedBrand={selectedBrand}
+              onSelect={(brand) => handleBrandSelect(brand)}
+              onClear={() => clearBrand()}
+              placeholder="Choisir une marque"
+              className="brand-select-rounded"
+            />
+          )}
           <div className="category-select-select">
             <select
               value={selectedCategory}

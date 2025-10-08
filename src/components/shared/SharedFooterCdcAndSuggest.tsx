@@ -58,7 +58,7 @@ const SharedFooterCdcAndSuggest: React.FC<Props> = ({
     <div className="shared-footer-cdc">
       {/* Ligne emoji + compteur commentaires */}
       <div className="footer-header-row">
-        <div className="emoji-display">
+        <div className={`emoji-display ${totalCount === 1 ? "single" : ""} `}>
           <span className="emoji-icons">
             {topThree.map((r) => (
               <span key={r.emoji} className="emoji-icon">

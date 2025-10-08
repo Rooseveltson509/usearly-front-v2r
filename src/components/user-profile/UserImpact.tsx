@@ -15,7 +15,7 @@ const UserImpact: React.FC = () => {
           </span>
         </div>
         <div className="impact-item">
-          <span className="emoji">🗨️</span>
+          <span className="emoji">💬</span>
           <span>
             <strong>12 utilisateurs</strong> ont réagi à tes signalements
           </span>

@@ -1,4 +1,4 @@
-// #e8e8e8
+// #f0f0f0
 // --brand-banner-border: rgba(17, 17, 17, 0.2);
 import { useMemo, useEffect, useState } from "react";
 import { brandColors } from "@src/utils/brandColors";

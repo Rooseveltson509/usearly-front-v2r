@@ -92,15 +92,15 @@ const HomeFiltersSuggestion = ({
         baseFilterValue="allSuggest"
         hideFilterWhenBrandSelected={true}
       />
-
-      <BrandSelect
-        brands={availableBrands}
-        selectedBrand={selectedBrand}
-        onSelect={(brand) => handleBrandSelect(brand)}
-        onClear={() => handleBrandSelect("")}
-        placeholder="Choisir une marque"
-      />
-
+      {selectedBrand && (
+        <BrandSelect
+          brands={availableBrands}
+          selectedBrand={selectedBrand}
+          onSelect={(brand) => handleBrandSelect(brand)}
+          onClear={() => handleBrandSelect("")}
+          placeholder="Choisir une marque"
+        />
+      )}
       {selectedBrand && (
         <div className="suggestion-search">
           <CiSearch />

@@ -1,3 +1,4 @@
+// BrandSelect.tsx
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown, X } from "lucide-react";
 import { useBrandLogos } from "@src/hooks/useBrandLogos";
@@ -5,7 +6,7 @@ import { FALLBACK_BRAND_PLACEHOLDER } from "@src/utils/brandLogos";
 import "./BrandSelect.scss";
 
 interface BrandSelectProps {
-  brands: string[];
+  brands?: string[]; // ← optionnel
   selectedBrand: string;
   onSelect: (brand: string) => void;
   onClear?: () => void;
@@ -22,39 +23,36 @@ const normalize = (value: string) =>
     .trim();
 
 export const BrandSelect = ({
-  brands,
-  selectedBrand,
+  brands = [], // ← défaut
+  selectedBrand = "",
   onSelect,
   onClear,
   placeholder = "Choisir une marque",
   searchPlaceholder = "Rechercher une marque…",
-  className,
+  className = "",
 }: BrandSelectProps) => {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  const brandLogos = useBrandLogos(brands);
+  const safeBrands = Array.isArray(brands) ? brands : [];
+  const brandLogos = useBrandLogos(safeBrands);
 
   const normalizedBrands = useMemo(() => {
-    const list = brands
-      .map((brand) => brand?.trim())
-      .filter((brand): brand is string => Boolean(brand));
+    const list = safeBrands
+      .map((b) => b?.trim())
+      .filter((b): b is string => Boolean(b));
     const unique = Array.from(new Set(list));
 
     if (query.trim()) {
-      const normalizedQuery = normalize(query);
-      return unique.filter((brand) =>
-        normalize(brand).includes(normalizedQuery),
-      );
+      const q = normalize(query);
+      return unique.filter((b) => normalize(b).includes(q));
     }
-
     return unique;
-  }, [brands, query]);
+  }, [safeBrands, query]);
 
   useEffect(() => {
     if (!open) return;
-
     const handleClickOutside = (event: MouseEvent) => {
       if (
         containerRef.current &&
@@ -63,27 +61,20 @@ export const BrandSelect = ({
         setOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open]);
 
   const renderBadge = (brand?: string) => {
     const lookup = brand?.trim();
-    if (!lookup) {
-      return <span className="brand-badge__initial">?</span>;
-    }
-
+    if (!lookup) return <span className="brand-badge__initial">?</span>;
     const logo = brandLogos[lookup];
     if (logo && logo !== FALLBACK_BRAND_PLACEHOLDER) {
       return <img src={logo} alt="" />;
     }
-
     return (
       <span className="brand-badge__initial">
-        {lookup.slice(0, 2).toUpperCase()}
+        {lookup?.slice(0, 2).toUpperCase()}
       </span>
     );
   };
@@ -97,7 +88,7 @@ export const BrandSelect = ({
     .join(" ");
 
   return (
-    <div className={rootClassName + " " + className} ref={containerRef}>
+    <div className={rootClassName} ref={containerRef}>
       <button
         type="button"
         className={triggerClassName}
@@ -116,7 +107,7 @@ export const BrandSelect = ({
             <input
               type="text"
               value={query}
-              onChange={(event) => setQuery(event.target.value)}
+              onChange={(e) => setQuery(e.target.value)}
               placeholder={searchPlaceholder}
             />
             {query && (
@@ -141,7 +132,6 @@ export const BrandSelect = ({
               ]
                 .filter(Boolean)
                 .join(" ");
-
               return (
                 <li key={brand}>
                   <button

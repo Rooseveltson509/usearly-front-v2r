@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { SlidersHorizontal, ChevronDown } from "lucide-react";
+import { BrandSelect } from "@src/components/shared/BrandSelect";
 import "./FilterBar.scss";
 
 export interface FilterOption {
@@ -149,6 +150,12 @@ const FilterBarGeneric: React.FC<Props> = ({
     };
   }, [isDropdownOpen, setIsDropdownOpen, dropdownRef]);
 
+  const handleBrandSelect = (brand: string) => {
+    setSelectedBrand(brand);
+    setSelectedCategory("");
+    setFilter(brand ? "brandSolo" : "allSuggest");
+  };
+
   return (
     <div className="filter-bar-generic-container">
       {/* 🔥 Premier select = filtres dynamiques */}
@@ -195,13 +202,23 @@ const FilterBarGeneric: React.FC<Props> = ({
       {/* 🔧 Deuxième filtre : input + catégories (optionnel) */}
       {(withBrands || withCategories) && (
         <div className="filter-dropdown-wrapper" ref={dropdownRef}>
-          <button
-            className="filter-toggle"
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          >
-            <SlidersHorizontal size={18} style={{ marginRight: "6px" }} />
-            Filtrer
-          </button>
+          {!selectedBrand ? (
+            <button
+              className="filter-toggle"
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            >
+              <SlidersHorizontal size={18} style={{ marginRight: "6px" }} />
+              Filtrer
+            </button>
+          ) : (
+            <BrandSelect
+              brands={availableBrands ?? []}
+              selectedBrand={selectedBrand}
+              onSelect={handleBrandSelect}
+              onClear={() => handleBrandSelect("")}
+              placeholder="Choisir une marque"
+            />
+          )}
 
           {isDropdownOpen && (
             <div className="filter-dropdown">
