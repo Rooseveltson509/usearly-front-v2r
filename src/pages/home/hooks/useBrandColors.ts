@@ -17,10 +17,15 @@ export function useBrandColors(
     null,
   );
 
+  const normalizedBrand = useMemo(
+    () => selectedBrand?.trim()?.toLowerCase() ?? "",
+    [selectedBrand],
+  );
+
   const selectedBrandBaseColor = useMemo(() => {
-    if (!selectedBrand) return null;
-    return brandColors[selectedBrand.toLowerCase()] || brandColors.default;
-  }, [selectedBrand]);
+    if (!normalizedBrand) return null;
+    return brandColors[normalizedBrand] ?? null;
+  }, [normalizedBrand]);
 
   const brandBannerStyle = useMemo(() => {
     if (!selectedBrandBaseColor) return {};
@@ -32,14 +37,13 @@ export function useBrandColors(
   }, [selectedBrandBaseColor]);
 
   const suggestionBannerStyle = useMemo(() => {
-    const fallback = "#F1E9FF";
-    const baseColor = brandColors[selectedBrand.toLowerCase()] || fallback;
+    if (!selectedBrandBaseColor) return {};
     return {
-      "--suggestion-bg": hexToRgba(baseColor, 0.15),
-      "--suggestion-border": hexToRgba(baseColor, 0),
-      "--suggestion-accent": baseColor,
+      "--suggestion-bg": hexToRgba(selectedBrandBaseColor, 0.15),
+      "--suggestion-border": hexToRgba(selectedBrandBaseColor, 0),
+      "--suggestion-accent": selectedBrandBaseColor,
     } as React.CSSProperties;
-  }, [activeTab, feedbackData, selectedBrand]);
+  }, [selectedBrandBaseColor]);
 
   useEffect(() => {
     if (!selectedBrand) return setSelectedBrandLogo(null);
