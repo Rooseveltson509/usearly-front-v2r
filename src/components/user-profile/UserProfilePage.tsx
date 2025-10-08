@@ -10,8 +10,8 @@ import badge from "/assets/icons/Little-badge.svg";
 import decoBanner from "/assets/images/bulle-deco-banner.svg";
 import UserGroupedReportsList from "../profile/UserGroupedReportsList";
 import UserFeedbackView from "../profile/UserFeedbackView";
-import UserChallenge from "../user-profile/UserChallenge";
 import UserImpact from "./UserImpact";
+import UserVotesCard from "../profile/UserVotesCard";
 
 const UserProfilePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<FeedbackType>("report");
@@ -58,7 +58,7 @@ const UserProfilePage: React.FC = () => {
         </div>
 
         <aside className="right-panel">
-          <UserChallenge />
+          <UserVotesCard />
           <div className="separator"></div>
           <UserImpact />
         </aside>
