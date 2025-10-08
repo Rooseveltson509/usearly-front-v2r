@@ -154,14 +154,19 @@
 
 .modal-actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
+  flex-direction: row-reverse;
   gap: 10px;
 
   .share-btn {
-    background-color: #90ee90 !important;
-    color: #fff;
+    background-color: $dark !important;
+    color: #fff !important;
     border-radius: 6px;
-    padding: 6px 12px;
+    padding: 6px 18px;
+
+    &:hover {
+      opacity: 0.8;
+    }
   }
 }
 .selected-user {
@@ -280,4 +285,27 @@
 .share-modal.avatar-fallback-custom {
   width: 24px;
   height: 24px;
+}
+
+.share-social-userly {
+  .share-modal {
+    .social-share {
+      .social-buttons {
+        display: flex;
+        overflow: auto;
+        gap: 2rem;
+        margin-top: 1rem;
+        button {
+          display: flex;
+          flex-direction: column;
+        }
+      }
+    }
+    .modal-header {
+      .close-btn {
+        margin-top: -10px;
+        margin-right: -5px;
+      }
+    }
+  }
 }

@@ -9,30 +9,77 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 8px;
+
+    .comment-toggle-btn {
+      position: relative;
+      background: none;
+      border: none;
+      font-size: 13px;
+      font-weight: 400;
+      cursor: pointer;
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: background-color 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: #898989;
+      width: fit-content;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+
+      .icon-tooltip {
+        position: absolute;
+        bottom: 120%;
+        left: 50%;
+        transform: translate(-50%, 5px);
+        padding: 4px 8px;
+        border-radius: 6px;
+        background: rgba(34, 34, 34, 0.95);
+        color: #fff;
+        font-size: 12px;
+        line-height: 1;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition:
+          opacity 0.2s ease,
+          transform 0.2s ease;
+        z-index: 5;
+
+        &::after {
+          content: "";
+          position: absolute;
+          top: 100%;
+          left: 50%;
+          transform: translateX(-50%);
+          border-width: 5px;
+          border-style: solid;
+          border-color: rgba(34, 34, 34, 0.95) transparent transparent
+            transparent;
+        }
+      }
+
+      &:hover .icon-tooltip {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+    }
+
+    .comment-inline-count {
+      font-size: 12px;
+      font-weight: 600;
+      color: #5c5c5c;
+    }
+
     .flex-row {
       display: flex;
       flex-direction: row;
       align-items: center;
       gap: 8px;
-      .comment-toggle-btn {
-        background: none;
-        border: none;
-        font-size: 13px;
-        font-weight: 400;
-        cursor: pointer;
-        padding: 8px 12px;
-        border-radius: 8px;
-        transition: background-color 0.2s ease;
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        color: #898989;
-        width: fit-content;
-
-        &:hover {
-          background-color: rgba(0, 0, 0, 0.05);
-        }
-      }
     }
     .shake-btn {
       display: flex;
@@ -128,7 +175,7 @@
     }
 
     button {
-      background-color: #007bff;
+      background-color: $dark;
       color: white;
       padding: 8px 14px;
       border: none;
@@ -136,7 +183,7 @@
       cursor: pointer;
 
       &:hover {
-        background-color: #0056b3;
+        background-color: #4e4e4e;
       }
     }
   }
@@ -240,12 +287,12 @@
 
       &:focus {
         outline: none;
-        border-color: #4e8cff;
+        border-color: #4e4e4e;
       }
     }
 
     button {
-      background: #007bff;
+      background: $dark;
       color: #fff;
       border: none;
       border-radius: 20px;
@@ -255,7 +302,7 @@
       transition: background 0.2s;
 
       &:hover {
-        background: #0062cc;
+        background: #4e4e4e;
       }
     }
   }
@@ -274,17 +321,17 @@
       }
 
       select {
-        border: 1px solid #ccc;
+        border: 1px solid $dark;
         border-radius: 20px;
         padding: 4px 10px;
         font-size: 13px;
         font-family: "inter";
-        background: #f8f8f8;
+        background: white;
         cursor: pointer;
 
         &:focus {
           outline: none;
-          border-color: #4e8cff;
+          border-color: #000;
         }
       }
     }

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import type { Suggestion } from "@src/types/Reports";
 import InteractiveFeedbackCard from "../user-profile/InteractiveFeedbackCard";
 import { getSuggestionById } from "@src/services/coupDeCoeurService";
+import UsearlyDraw from "@src/components/background/Usearly";
 import "./SuggestionDetail.scss";
 
 const SuggestionDetail = () => {
@@ -43,6 +44,7 @@ const SuggestionDetail = () => {
           onToggle={() => {}}
         />
       </div>
+      <UsearlyDraw />
     </div>
   );
 };

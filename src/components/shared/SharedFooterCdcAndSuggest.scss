@@ -77,9 +77,46 @@
         gap: 4px;
         cursor: pointer;
         font-size: 13px;
+        position: relative;
 
         &:hover {
           color: #0f0f0f;
+        }
+
+        .footer-icon-tooltip {
+          position: absolute;
+          bottom: 125%;
+          left: 50%;
+          transform: translate(-50%, 6px);
+          padding: 4px 8px;
+          border-radius: 6px;
+          background: rgba(0, 0, 0, 0.85);
+          color: #fff;
+          font-size: 12px;
+          line-height: 1;
+          white-space: nowrap;
+          opacity: 0;
+          pointer-events: none;
+          transition:
+            opacity 0.2s ease,
+            transform 0.2s ease;
+
+          &::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 5px;
+            border-style: solid;
+            border-color: rgba(0, 0, 0, 0.85) transparent transparent
+              transparent;
+          }
+        }
+
+        &:hover .footer-icon-tooltip {
+          opacity: 1;
+          transform: translate(-50%, 0);
         }
       }
 
