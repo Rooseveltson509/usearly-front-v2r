@@ -6,6 +6,7 @@ import { getEmojisForType } from "@src/components/constants/emojiMapByType";
 import DescriptionCommentSection from "../report-desc-comment/DescriptionCommentSection";
 import "./SharedFooterCdcAndSuggest.scss";
 import ShareModal from "./share-modal/ShareModal";
+import ShareCoupDeCoeurModal from "./share-modal/ShareCoupDeCoeurModal";
 
 interface Props {
   userId: string;
@@ -149,11 +150,27 @@ const SharedFooterCdcAndSuggest: React.FC<Props> = ({
           </div>
 
           {showShareModal && (
+            <>
+              {type === "suggestion" ? (
+                <ShareModal
+                  suggestionId={descriptionId}
+                  onClose={() => setShowShareModal(false)}
+                />
+              ) : (
+                <ShareCoupDeCoeurModal
+                  coupDeCoeurId={descriptionId}
+                  onClose={() => setShowShareModal(false)}
+                />
+              )}
+            </>
+          )}
+
+          {/*          {showShareModal && (
             <ShareModal
               suggestionId={descriptionId}
               onClose={() => setShowShareModal(false)}
             />
-          )}
+          )} */}
         </div>
 
         <div className="comments-section">

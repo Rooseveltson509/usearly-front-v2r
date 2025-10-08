@@ -88,3 +88,8 @@ export const getSuggestionById = async (id: string) => {
   const { data } = await apiService.get(`/suggestions/${id}`);
   return data;
 };
+
+export const getCoupDeCoeurById = async (id: string): Promise<CoupDeCoeur> => {
+  const res = await apiService.get(`/coupdecoeur/${id}`);
+  return res.data;
+};
