@@ -1,0 +1,76 @@
+.confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  animation: fadeIn 0.2s ease;
+}
+
+.confirm-dialog {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  width: 300px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  animation: popIn 0.25s ease;
+
+  p {
+    margin-bottom: 1rem;
+    color: #333;
+  }
+
+  .actions {
+    display: flex;
+    justify-content: space-around;
+
+    button {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .cancel {
+      background: #eee;
+      color: #333;
+      &:hover {
+        background: #ddd;
+      }
+    }
+
+    .confirm {
+      background: #e63946;
+      color: white;
+      &:hover {
+        background: #c92c3c;
+      }
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes popIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

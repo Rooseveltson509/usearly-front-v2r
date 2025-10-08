@@ -122,7 +122,7 @@ const ShareCoupDeCoeurModal: React.FC<Props> = ({ coupDeCoeurId, onClose }) => {
         <div style={{ position: "relative" }}>
           <input
             type="text"
-            placeholder="Rechercher un utilisateur ou email"
+            placeholder="Rechercher un utilisateur"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />

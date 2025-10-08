@@ -1,0 +1,50 @@
+.notif-actions-menu {
+  position: absolute;
+  top: 24px;
+  right: 0;
+  background: #fff;
+  border: 1px solid #eee;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 0.4rem 0;
+  width: 180px;
+  z-index: 10;
+  animation: fadeIn 0.15s ease-out;
+
+  .notif-action {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 0.6rem 1rem;
+    background: none;
+    border: none;
+    color: #333;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: #f6f6f6;
+    }
+
+    &.delete {
+      color: #d33;
+    }
+
+    i {
+      font-size: 0.85rem;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

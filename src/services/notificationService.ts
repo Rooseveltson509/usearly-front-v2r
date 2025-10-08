@@ -37,3 +37,11 @@ export const getAllNotifications = async (page = 1, limit = 10) => {
   });
   return data;
 };
+
+/**
+ * ❌ Supprimer une notification
+ */
+export const deleteNotification = async (id: string) => {
+  const res = await apiService.delete(`/user/notifications/${id}`);
+  return res.data;
+};

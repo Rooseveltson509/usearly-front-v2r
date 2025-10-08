@@ -1,4 +1,3 @@
-// services/commentService.ts
 import { apiService } from "./apiService";
 
 export const fetchComments = async (
@@ -41,4 +40,11 @@ export const getCommentsCountForDescription = async (descriptionId: string) => {
   return apiService.get(
     `/comments/description/${descriptionId}/comments/count`,
   );
+};
+
+export const searchUsersByPseudo = async (query: string) => {
+  const res = await apiService.get(
+    `/users/search?q=${encodeURIComponent(query)}`,
+  );
+  return res.data;
 };
