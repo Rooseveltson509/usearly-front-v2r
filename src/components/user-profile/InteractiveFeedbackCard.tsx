@@ -143,38 +143,31 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
 
   return (
     <div className={`feedback-card ${isOpen ? "open" : ""}`}>
-      {/* Bloc gauche */}
+      {/* Bloc gauche — Punchline IA */}
       <div className="feedback-type">
-        {item.title ? (
+        {item.punchline ? (
           <div className="feedback-left" style={{ backgroundColor: bgColor }}>
             <div className="feedback-icon">{item.emoji}</div>
             <div className="punchlines">
-              {item.title ? (
-                item.title.split("\n").map((line, index) => (
-                  <div
-                    key={index}
-                    className={`bubble ${index === 0 ? "primary" : "secondary"}`}
-                    style={{
-                      backgroundColor: "#fff",
-                      color: index === 0 ? bgColor : "#000",
-                      border: `2px solid ${bgColor}`,
-                      boxShadow:
-                        index === 0 ? "0 2px 6px rgba(0,0,0,0.1)" : "none",
-                    }}
-                  >
-                    {line}
-                  </div>
-                ))
-              ) : (
-                <div className="bubble primary">
-                  {item.type === "coupdecoeur"
-                    ? "Un coup de cœur utilisateur"
-                    : "Une suggestion pour la marque"}
+              {item.punchline.split("\n").map((line, index) => (
+                <div
+                  key={index}
+                  className={`bubble ${index === 0 ? "primary" : "secondary"}`}
+                  style={{
+                    backgroundColor: "#fff",
+                    color: index === 0 ? bgColor : "#000",
+                    border: `2px solid ${bgColor}`,
+                    boxShadow:
+                      index === 0 ? "0 2px 6px rgba(0,0,0,0.1)" : "none",
+                  }}
+                >
+                  {line}
                 </div>
-              )}
+              ))}
             </div>
           </div>
         ) : (
+          // Fallback (aucune punchline IA)
           <p>
             {item.type === "coupdecoeur" ? (
               <>
