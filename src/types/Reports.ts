@@ -54,6 +54,7 @@ export interface CoupDeCoeur {
   id: string;
   marque: string;
   title?: string;
+  punchline?: string;
   illustration?: string;
   descriptionId: string;
   emplacement: string;
@@ -75,6 +76,7 @@ export interface Suggestion {
   id: string;
   marque: string;
   title?: string;
+  punchline?: string;
   illustration?: string;
   descriptionId: string;
   emplacement: string;
