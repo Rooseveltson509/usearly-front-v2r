@@ -105,7 +105,7 @@ const PopularReportCard: React.FC<Props> = ({
                   avatar={firstDescription.user?.avatar ?? null}
                   pseudo={firstDescription.user?.pseudo}
                   type="user"
-                  className="avatar"
+                  className="avatar first-avatar-under"
                 />
                 <Avatar
                   avatar={getBrandLogo(item.marque, item.siteUrl ?? undefined)}

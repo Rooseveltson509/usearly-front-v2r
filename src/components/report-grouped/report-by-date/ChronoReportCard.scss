@@ -108,14 +108,14 @@
         height: 48px;
         //border-radius: 50%;
         object-fit: contain;
-        margin-left: 40px;
+        // margin-left: 40px;
       }
     }
 
     .user-brand-inline {
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: flex-end;
 
       .avatars {
         display: flex;
@@ -123,6 +123,7 @@
         justify-content: center;
         position: relative;
         top: 10px;
+        margin-right: 15%;
 
         .avatar {
           width: 48px;
@@ -130,13 +131,12 @@
           border-radius: 50%;
           object-fit: cover;
           z-index: 1;
-          border: 2px solid #fff;
+          border: 1px solid #f0f0f0;
 
           &:first-child {
             width: 48px;
             height: 48px;
             right: 24px;
-            border: 2px solid white;
             z-index: 1;
             /* position: relative; */
           }
@@ -149,7 +149,6 @@
             /* background-color: white; */
             object-fit: contain;
             border-radius: 50%;
-            border: 2px solid white;
             z-index: 2;
           }
         }

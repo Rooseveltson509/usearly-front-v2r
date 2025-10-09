@@ -2,7 +2,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: #fafafa; // optionnel pour différencier la page
+  background: #fafafa;
+  padding-top: 13px;
+
   .usearly-wrap {
     min-height: 25vh !important;
   }
