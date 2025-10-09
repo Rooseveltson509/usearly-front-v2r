@@ -10,6 +10,12 @@
   border-radius: 12px;
 }
 
+.highlight-mention {
+  background-color: #fff4c2;
+  transition: background-color 0.6s ease;
+  border-radius: 8px;
+}
+
 @keyframes highlightPulse {
   0% {
     box-shadow: 0 0 0px rgba(0, 200, 255, 0);

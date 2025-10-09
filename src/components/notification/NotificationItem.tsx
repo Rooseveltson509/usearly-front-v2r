@@ -24,12 +24,17 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
   const handleNavigate = () => {
     onMarkAsRead(n.id);
 
+    // 🆕 si la notif correspond à une mention, on ajoute le commentId dans l’URL
+    const commentParam = n.commentId ? `?commentId=${n.commentId}` : "";
+
     if (n.suggestionId) {
-      navigate(`/suggestions/${n.suggestionId}`);
+      navigate(`/suggestions/${n.suggestionId}${commentParam}`);
     } else if (n.coupDeCoeurId) {
-      navigate(`/coupsdecoeur/${n.coupDeCoeurId}`);
+      navigate(`/coupsdecoeur/${n.coupDeCoeurId}${commentParam}`);
     } else if (n.descriptionId || n.description?.id) {
-      navigate(`/reports/description/${n.descriptionId || n.description?.id}`);
+      navigate(
+        `/reports/description/${n.descriptionId || n.description?.id}${commentParam}`,
+      );
     } else {
       console.warn("⚠️ Notification sans lien exploitable:", n);
     }

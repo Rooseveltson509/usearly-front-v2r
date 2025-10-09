@@ -365,4 +365,5 @@ export interface PublicGroupedReportFromAPI {
   siteUrl?: string | null;
   count: number;
   descriptions: FeedbackDescription[];
+  date: string;
 }

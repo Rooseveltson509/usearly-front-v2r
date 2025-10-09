@@ -635,20 +635,43 @@ const HomeGroupedReportsList = ({
           </>
         )
       ) : filter === "chrono" ? (
-        reportData.loading ? (
+        reportData.loading || chronoData.loading ? (
           <SqueletonAnime
             loaderRef={loaderRef}
             loading={true}
             hasMore={false}
             error={null}
           />
-        ) : chronoData.data && Object.keys(chronoData.data).length === 0 ? (
+        ) : !chronoData.data || chronoData.data.length === 0 ? (
           <div style={{ padding: "20px", textAlign: "center", color: "#888" }}>
             Aucun signalement récent disponible.
           </div>
         ) : (
-          <div style={{ padding: "20px", textAlign: "center", color: "#888" }}>
-            Vue chronologique en cours...
+          <div className="recent-reports-list">
+            {chronoData.data.map((report: any, i: number) => (
+              <div
+                key={`${report.reportingId}-${i}`}
+                className="recent-report-item"
+              >
+                <div className="recent-report-date">
+                  🗓️{" "}
+                  {new Date(report.date).toLocaleDateString("fr-FR", {
+                    day: "2-digit",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </div>
+
+                <FlatSubcategoryBlock
+                  brand={report.marque}
+                  siteUrl={report.siteUrl}
+                  subcategory={report.subCategory.subCategory} // ✅ nom réel
+                  descriptions={report.subCategory.descriptions || []} // ✅ descriptions correctes
+                  brandLogoUrl={getBrandLogo(report.marque, report.siteUrl)}
+                  hideFooter={true}
+                />
+              </div>
+            ))}
           </div>
         )
       ) : (

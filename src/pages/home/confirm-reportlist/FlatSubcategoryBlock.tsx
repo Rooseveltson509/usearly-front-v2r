@@ -18,6 +18,7 @@ interface Props {
   capture?: string | null;
   descriptions: any[]; // adapte si besoin avec ton type exact
   hideFooter?: boolean;
+  forceOpenComments?: boolean;
 }
 
 const FlatSubcategoryBlock: React.FC<Props> = ({
@@ -27,6 +28,7 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
   subcategory,
   descriptions,
   capture,
+  forceOpenComments = false,
 }) => {
   const [expanded, setExpanded] = useState(true);
   const [showComments, setShowComments] = useState(false);
@@ -55,6 +57,12 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
     }
   }, [initialDescription.id]);
 
+  useEffect(() => {
+    if (forceOpenComments) {
+      setShowComments(true);
+    }
+  }, [forceOpenComments]);
+
   if (!initialDescription) {
     return null; // ou un fallback
   }
@@ -73,7 +81,11 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
           />
           <div className="subcategory-text">
             <div className="subcategory-title-row">
-              <h4>{subcategory}</h4>
+              <h4>
+                {subcategory && subcategory.trim().length > 0
+                  ? subcategory
+                  : initialDescription?.title || "Autre problème"}
+              </h4>
               {descriptions.length > 1 && (
                 <span className="count-badge">{descriptions.length}</span>
               )}
@@ -204,6 +216,7 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
                 type="report"
                 hideFooter={true}
                 refreshKey={refreshKey}
+                forceOpen={forceOpenComments}
               />
             </>
           )}

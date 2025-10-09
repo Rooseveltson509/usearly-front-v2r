@@ -8,9 +8,9 @@ import type {
 
 export const usePaginatedGroupedReportsByDate = (
   enabled: boolean,
-  pageSize = 20,
+  pageSize = 10,
 ) => {
-  const [data, setData] = useState<Record<string, ExplodedGroupedReport[]>>({});
+  const [data, setData] = useState<ExplodedGroupedReport[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -21,24 +21,14 @@ export const usePaginatedGroupedReportsByDate = (
     }
   }, [loading, hasMore, enabled]);
 
-  // ✅ reset complet quand on change `enabled`
   useEffect(() => {
     if (!enabled) {
-      setData({});
+      setData([]);
       setPage(1);
       setHasMore(true);
       setLoading(false);
-    } else {
-      // si on réactive → repartir proprement
-      setData({});
-      setPage(1);
-      setHasMore(true);
-      setLoading(true); // affiche le loader direct
+      return;
     }
-  }, [enabled]);
-
-  useEffect(() => {
-    if (!enabled) return;
 
     const fetchData = async () => {
       try {
@@ -46,43 +36,43 @@ export const usePaginatedGroupedReportsByDate = (
         const response: GetGroupedReportsByDateResponse =
           await getGroupedReportsByDate(page, pageSize);
 
-        if (response.success) {
-          const transformedData: Record<string, ExplodedGroupedReport[]> = {};
-
-          Object.entries(response.data).forEach(([date, reports]) => {
-            transformedData[date] = reports.map(
-              (report: PublicGroupedReportFromAPI) => ({
-                id: report.reportingId,
-                reportingId: report.reportingId,
-                category: report.category,
-                marque: report.marque,
-                totalCount: report.count,
-                subCategory: {
-                  subCategory: report.subCategory,
-                  count: report.count,
-                  descriptions: report.descriptions,
-                },
-                subCategories: [
-                  {
-                    subCategory: report.subCategory,
-                    count: report.count,
-                    descriptions: report.descriptions,
-                  },
-                ],
-                reactions: [],
-              }),
-            );
-          });
-
-          setData((prev) => ({
-            ...prev,
-            ...transformedData,
-          }));
-
-          setHasMore(page < response.totalPages);
-        } else {
+        if (!response?.data || !Array.isArray(response.data)) {
+          console.warn(
+            "⚠️ Format inattendu pour getGroupedReportsByDate:",
+            response,
+          );
           setHasMore(false);
+          return;
         }
+
+        const newData: ExplodedGroupedReport[] = response.data.map(
+          (report: PublicGroupedReportFromAPI) => ({
+            id: report.reportingId,
+            reportingId: report.reportingId,
+            marque: report.marque,
+            category: report.category,
+            siteUrl: report.siteUrl,
+            totalCount: report.count,
+            subCategory: {
+              subCategory: report.subCategory,
+              count: report.count,
+              descriptions: report.descriptions || [], // ✅ ici !
+            },
+            subCategories: [
+              {
+                subCategory: report.subCategory,
+                count: report.count,
+                descriptions: report.descriptions || [], // ✅ ici aussi !
+              },
+            ],
+            reactions: [],
+            date: report.date,
+          }),
+        );
+
+        // ✅ concaténation propre sans écraser les précédents
+        setData((prev) => [...prev, ...newData]);
+        setHasMore(page < response.totalPages);
       } catch (error) {
         console.error("❌ Erreur chargement reports par date:", error);
         setHasMore(false);
@@ -95,7 +85,7 @@ export const usePaginatedGroupedReportsByDate = (
   }, [page, enabled, pageSize]);
 
   const reset = useCallback(() => {
-    setData({});
+    setData([]);
     setPage(1);
     setHasMore(true);
   }, []);
