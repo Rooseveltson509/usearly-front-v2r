@@ -13,25 +13,29 @@ export interface Comment {
 }
 
 export const useCommentsForDescription = (
-  descriptionId: string,
+  descriptionId: string | undefined,
   type: "report" | "suggestion" | "coupdecoeur",
-  refreshKey = 0, // Ajout d'un refreshKey pour forcer la récupération des commentaires
+  refreshKey = 0, // permet de recharger manuellement
 ) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(false);
 
   const buildCommentEndpoint = () => {
+    if (!descriptionId) return null; // ✅ aucune requête si id manquant
     if (type === "report") return `/descriptions/${descriptionId}/comments`;
     if (type === "suggestion") return `/suggestions/${descriptionId}/comments`;
     return `/coupdecoeurs/${descriptionId}/comments`;
   };
 
   const fetchComments = async () => {
+    const url = buildCommentEndpoint();
+    if (!url) return; // ✅ sécurité anti-404
+
     try {
       setLoading(true);
-      const url = buildCommentEndpoint();
       const res = await apiService.get(url);
-      setComments(res.data.comments || []);
+      // certains back renvoient { comments: [...] }, d'autres { data: [...] }
+      setComments(res.data.comments || res.data.data || []);
     } catch (err) {
       console.error("Erreur lors du chargement des commentaires :", err);
     } finally {

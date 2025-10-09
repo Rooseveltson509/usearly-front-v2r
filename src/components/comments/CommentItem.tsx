@@ -1,9 +1,11 @@
 import React from "react";
 import CommentActionsMenu from "../commons/CommentActionsMenu";
 import Avatar from "../shared/Avatar";
+import "./CommentItem.scss"; // 👈 Ajoute ce fichier SCSS juste à côté
 
 interface CommentItemProps {
   comment: {
+    id: string;
     content: string;
     user: {
       pseudo: string;
@@ -15,6 +17,16 @@ interface CommentItemProps {
   onDelete: () => void;
 }
 
+// 🔧 Fonction utilitaire pour formater les mentions
+const formatMentions = (text: string): string => {
+  if (!text) return "";
+  // Transforme les @pseudo en balises stylées
+  return text.replace(
+    /@([a-zA-Z0-9_]+)/g,
+    `<span class="mention-tag">@$1</span>`,
+  );
+};
+
 const CommentItem: React.FC<CommentItemProps> = ({
   comment,
   avatarUrl,
@@ -23,7 +35,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
   onDelete,
 }) => {
   return (
-    <li className="comment-item">
+    <li className="comment-item" data-comment-id={comment.id}>
       <Avatar
         avatar={avatarUrl}
         pseudo={comment.user.pseudo}
@@ -37,9 +49,17 @@ const CommentItem: React.FC<CommentItemProps> = ({
           <span className="comment-time">⸱ {dateLabel}</span>
           {isAuthor && <CommentActionsMenu onDelete={onDelete} />}
         </div>
-        <p className="comment-text">{comment.content}</p>
-        {/* A implémenter plus tar */}
-        {/*         <div className="comment-actions">
+
+        {/* 🟦 Texte du commentaire avec mentions stylées */}
+        <p
+          className="comment-text"
+          dangerouslySetInnerHTML={{
+            __html: formatMentions(comment.content),
+          }}
+        />
+
+        {/* (optionnel) future zone pour like/répondre */}
+        {/* <div className="comment-actions">
           <button type="button">J’aime</button>
           <span> | </span>
           <button type="button">Répondre</button>
