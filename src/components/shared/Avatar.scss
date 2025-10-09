@@ -8,7 +8,7 @@
   justify-content: center;
   border-radius: 50%;
   overflow: hidden;
-  background: #f3f4f6; // gris clair neutre
+  // background: #f3f4f6; // gris clair neutre
 }
 
 .selected-brand-summary__logo {
@@ -32,7 +32,6 @@
 // ✅ Fond blanc pour logos PNG chargés
 .avatar-img-custom.brand-logo-img-loaded {
   background-color: #fff;
-  padding: 2px;
 }
 
 // ✅ Fallback avec initiale
@@ -48,6 +47,16 @@
   height: 100%;
   color: #fff;
   border: 1px solid #f0f0f0;
+}
+
+.notif-item {
+  .notif-avatar {
+    .avatar-fallback-custom {
+      width: 25px;
+      height: 25px;
+      font-size: 1rem;
+    }
+  }
 }
 
 // 👤 Couleurs utilisateurs

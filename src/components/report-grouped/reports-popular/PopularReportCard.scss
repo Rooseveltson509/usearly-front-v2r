@@ -1,17 +1,17 @@
-@keyframes flame-pulse {
-  0% {
-    box-shadow: 0 0 4px rgba(255, 87, 34, 0.3);
-    transform: scale(1);
-  }
-  50% {
-    box-shadow: 0 0 16px rgba(255, 87, 34, 0.6);
-    transform: scale(1.01);
-  }
-  100% {
-    box-shadow: 0 0 4px rgba(255, 87, 34, 0.3);
-    transform: scale(1);
-  }
-}
+// @keyframes flame-pulse {
+//   0% {
+//     box-shadow: 0 0 4px rgba(255, 87, 34, 0.3);
+//     transform: scale(1);
+//   }
+//   50% {
+//     box-shadow: 0 0 16px rgba(255, 87, 34, 0.6);
+//     transform: scale(1.01);
+//   }
+//   100% {
+//     box-shadow: 0 0 4px rgba(255, 87, 34, 0.3);
+//     transform: scale(1);
+//   }
+// }
 .badge-count {
   background-color: #8b5cf6;
   color: white;
@@ -30,7 +30,7 @@
 .report-card.hot-effect {
   border: 1px solid #ff5722;
   background-color: rgba(255, 87, 34, 0.02);
-  animation: flame-pulse 1.8s ease-in-out infinite;
+  // animation: flame-pulse 1.8s ease-in-out infinite;
   transition:
     background-color 0.3s,
     border-color 0.3s;
@@ -49,17 +49,22 @@
       top: -10px;
       right: -10px;
       font-size: 24px;
-      animation: flame-bounce 1.2s infinite ease-in-out;
+      // animation: flame-bounce 1.2s infinite ease-in-out;
     }
   }
 }
 
-@keyframes flame-bounce {
-  0%,
-  100% {
-    transform: translateY(0) scale(1);
-  }
-  50% {
-    transform: translateY(-2px) scale(1.1);
-  }
+.first-avatar-under {
+  position: absolute;
+  margin-right: 40px;
 }
+
+// @keyframes flame-bounce {
+//   0%,
+//   100% {
+//     transform: translateY(0) scale(1);
+//   }
+//   50% {
+//     transform: translateY(-2px) scale(1.1);
+//   }
+// }
