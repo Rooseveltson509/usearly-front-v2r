@@ -10,7 +10,7 @@ import badge from "/assets/icons/Little-badge.svg";
 import decoBanner from "/assets/images/bulle-deco-banner.svg";
 import UserGroupedReportsList from "../profile/UserGroupedReportsList";
 import UserFeedbackView from "../profile/UserFeedbackView";
-import UserImpact from "./UserImpact";
+// import UserImpact from "./UserImpact";
 import UserVotesCard from "../profile/UserVotesCard";
 
 const UserProfilePage: React.FC = () => {
@@ -59,8 +59,8 @@ const UserProfilePage: React.FC = () => {
 
         <aside className="right-panel">
           <UserVotesCard />
-          <div className="separator"></div>
-          <UserImpact />
+          {/* <div className="separator"></div>
+          <UserImpact /> */}
         </aside>
       </main>
     </div>

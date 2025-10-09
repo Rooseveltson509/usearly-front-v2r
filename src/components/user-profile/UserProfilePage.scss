@@ -143,6 +143,10 @@
   grid-template-columns: 260px 1fr 260px;
   padding: 1rem 2rem;
   margin: 0 auto;
+  gap: 40px !important;
+  .feedback-list-wrapper {
+    width: 65%;
+  }
 }
 
 // Colonne gauche
@@ -178,6 +182,11 @@
   flex-direction: column;
   width: 550px;
   margin: 0px 0;
+}
+
+.brand-block .subcategories-list .subcategory-block.open {
+  box-shadow: none !important;
+  border: 1px solid #f0f0f0 !important;
 }
 
 // ===== Responsive =====

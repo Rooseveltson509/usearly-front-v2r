@@ -50,6 +50,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
           minHeight: "100vh",
           paddingTop: HeaderHeight,
           overflow: "auto",
+          overflowX: "hidden",
         }}
       >
         {children}
