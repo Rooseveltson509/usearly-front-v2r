@@ -18,6 +18,7 @@ import SuggestionDetail from "./components/suggestion-detail/SuggestionDetail";
 import PublicSuggestionPage from "./components/shared/public/PublicSuggestionPage";
 import CoupDeCoeurDetail from "./components/shared/share-modal/coupdecoeur-detail/CoupDeCoeurDetail";
 import ReportDetail from "./pages/home/report-detail/ReportDetail";
+import CheckThis from "./pages/check-this/CheckThis";
 
 function App() {
   return (
@@ -41,6 +42,17 @@ function App() {
                 </GuestRoute>
               }
             />
+
+            {/* ephemère link */}
+            <Route
+              path="/check-this"
+              element={
+                <GuestRoute>
+                  <CheckThis />
+                </GuestRoute>
+              }
+            />
+
             <Route
               path="/"
               element={
