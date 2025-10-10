@@ -5,6 +5,7 @@ import SqueletonAnime from "@src/components/loader/SqueletonAnime";
 import FlatSubcategoryBlock from "../confirm-reportlist/FlatSubcategoryBlock";
 import "./ReportDetail.scss";
 import { getBrandLogo } from "@src/utils/brandLogos";
+import UsearlyDraw from "@src/components/background/Usearly";
 
 const ReportDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -21,7 +22,6 @@ const ReportDetail = () => {
     const fetchReport = async () => {
       try {
         const { data } = await apiService.get(`/reports/description/${id}`);
-        console.log("✅ Détail signalement:", data);
         setReport(data.description);
       } catch (err) {
         console.error("❌ Erreur récupération ReportingDescription:", err);
@@ -40,8 +40,8 @@ const ReportDetail = () => {
         const el = document.querySelector(".subcategory-block");
         if (el) {
           el.scrollIntoView({ behavior: "smooth", block: "center" });
-          el.classList.add("highlight-flash");
-          setTimeout(() => el.classList.remove("highlight-flash"), 2500);
+          // el.classList.add("highlight-flash");
+          // setTimeout(() => el.classList.remove("highlight-flash"), 2500);
         }
       }, 500);
       return () => clearTimeout(timeout);
@@ -99,6 +99,7 @@ const ReportDetail = () => {
   // ✅ 6. Affichage principal
   return (
     <div className="report-detail-page">
+      <h1>Signalement de {report.user.pseudo}</h1>
       <FlatSubcategoryBlock
         brand={report.reporting?.marque}
         siteUrl={report.reporting?.siteUrl}
@@ -112,6 +113,7 @@ const ReportDetail = () => {
         hideFooter={true}
         forceOpenComments={!!highlightedCommentId} // 🟢 ouvre auto si mention
       />
+      <UsearlyDraw />
     </div>
   );
 };

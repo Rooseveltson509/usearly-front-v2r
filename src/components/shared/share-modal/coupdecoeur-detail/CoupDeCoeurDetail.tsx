@@ -32,7 +32,6 @@ const CoupDeCoeurDetail = () => {
 
   if (loading) return <p>Chargement...</p>;
   if (!coupDeCoeur) return <p>Coup de cœur introuvable 💔</p>;
-  console.log("CoupDeCoeurDetail render", coupDeCoeur);
 
   return (
     <>
