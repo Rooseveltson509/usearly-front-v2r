@@ -12,6 +12,7 @@ import { apiService } from "@src/services/apiService";
 import { showToast } from "@src/utils/toastUtils";
 import starProgressBar from "/assets/icons/icon-progress-bar.svg";
 import { capitalizeFirstLetter } from "@src/utils/stringUtils";
+import { decideIllustration } from "@src/utils/getIllustrationDecision";
 
 interface Props {
   item: (CoupDeCoeur | Suggestion) & {
@@ -140,6 +141,11 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
   const bgColor =
     brandColors[item.marque?.toLowerCase()] || brandColors.default;
   const brandName = item.marque?.trim() ?? "";
+  const illustration = decideIllustration(
+    item.title,
+    item.punchline,
+    item.type,
+  );
 
   return (
     <div className={`feedback-card ${isOpen ? "open" : ""}`}>
@@ -148,6 +154,8 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
         {item.punchline ? (
           <div className="feedback-left" style={{ backgroundColor: bgColor }}>
             <div className="feedback-icon">{item.emoji}</div>
+
+            {/* Punchlines (1 ou 2 lignes) */}
             <div className="punchlines">
               {item.punchline.split("\n").map((line, index) => (
                 <div
@@ -165,6 +173,17 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
                 </div>
               ))}
             </div>
+
+            {/* 🖼️ Illustration dynamique (en dessous) */}
+            {illustration && (
+              <div className="illu-wrapper">
+                <img
+                  src={illustration}
+                  alt="illustration"
+                  className="illu-image"
+                />
+              </div>
+            )}
           </div>
         ) : (
           // Fallback (aucune punchline IA)

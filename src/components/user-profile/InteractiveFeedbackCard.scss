@@ -425,3 +425,63 @@
     transform: scale(1) translateY(0);
   }
 }
+
+/* --- Illustration dynamique --- */
+.illu-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  width: 100%;
+  height: 100%;
+  margin-top: auto; // pousse vers le bas
+  padding-bottom: 10px;
+
+  .illu-image {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    opacity: 0.9;
+    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.1));
+    animation: fadeSlideIn 0.4s ease-out;
+  }
+}
+
+/* 🎬 Animation d’apparition douce */
+@keyframes fadeSlideIn {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 0.9;
+  }
+}
+
+/* --- Responsive (mobile ≤768px) --- */
+@media (max-width: 768px) {
+  .feedback-left {
+    align-items: center;
+    padding: 12px 0;
+
+    .punchlines {
+      align-items: center;
+      text-align: center;
+
+      .bubble {
+        max-width: 90%;
+      }
+    }
+
+    .illu-wrapper {
+      margin-top: 12px;
+      padding-bottom: 0;
+
+      .illu-image {
+        width: 70px; // un peu plus grande sur mobile
+        height: 70px;
+        opacity: 1;
+      }
+    }
+  }
+}
