@@ -36,7 +36,7 @@ function Home() {
   );
 
   const { brandBannerStyle, suggestionBannerStyle, selectedBrandLogo } =
-    useBrandColors(activeTab, feedbackData, selectedBrand, selectedSiteUrl);
+    useBrandColors(activeTab, selectedBrand, feedbackData, selectedSiteUrl);
 
   const { suggestionCategories, coupDeCoeurCategories } = useCategories(
     activeTab,

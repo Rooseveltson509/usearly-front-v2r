@@ -1,0 +1,20 @@
+/* bobIcon.scss */
+.bob-icon {
+  display: inline-flex;
+  line-height: 0;
+
+  /* Exemple : remplace les couleurs figées de ton SVG */
+  [fill="#4E8CFF"] {
+    fill: var(--c1);
+  }
+  [stroke="#4E8CFF"] {
+    stroke: var(--c1);
+  }
+
+  [fill="#ffffff"] {
+    fill: var(--c2);
+  }
+  [stroke="#ffffff"] {
+    stroke: var(--c2);
+  }
+}

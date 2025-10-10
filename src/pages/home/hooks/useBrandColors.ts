@@ -9,8 +9,8 @@ import type { CoupDeCoeur, Suggestion } from "@src/types/Reports";
 
 export function useBrandColors(
   activeTab: FeedbackType,
-  feedbackData: (CoupDeCoeur | Suggestion)[],
   selectedBrand: string,
+  feedbackData?: (CoupDeCoeur | Suggestion)[],
   selectedSiteUrl?: string,
 ) {
   const [selectedBrandLogo, setSelectedBrandLogo] = useState<string | null>(
