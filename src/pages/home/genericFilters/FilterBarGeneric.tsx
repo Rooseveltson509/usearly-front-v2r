@@ -158,6 +158,7 @@ const FilterBarGeneric: React.FC<Props> = ({
 
   return (
     <div className="filter-bar-generic-container">
+      {/* <BobIcon brand="netflix" category="tv_cinema" iconName="popcorn" /> */}
       {/* 🔥 Premier select = filtres dynamiques */}
       <div className="select-filter-wrapper">
         <select
