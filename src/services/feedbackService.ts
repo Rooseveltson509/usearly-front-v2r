@@ -216,7 +216,6 @@ export const getGroupedReportsByHot = async (
     },
   });
 
-  console.log("data: ", response.data);
   return response.data;
 };
 

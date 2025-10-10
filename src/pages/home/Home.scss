@@ -107,7 +107,7 @@
   min-height: 200px;
   position: relative;
   overflow: visible;
-  background-color: var(--brand-banner-bg, #e9f0ff);
+  background-color: var(--brand-banner-bg, #d6e0ff);
   @media screen and (max-width: 1375px) {
     padding: 0 12px 24px 12px;
   }
@@ -121,6 +121,7 @@
 
   .right-panel {
     margin-top: 24px;
+    margin-left: 10px;
     position: relative;
     z-index: 1;
     @media screen and (max-width: 1350px) {
@@ -129,21 +130,21 @@
   }
 
   &.banner-confirmed {
-    background-color: var(--brand-banner-bg, #e9f0ff);
+    background-color: var(--brand-banner-bg, #d6e0ff);
     height: 240px;
   }
   &.banner-popular {
-    background-color: var(--brand-banner-bg, #e9f0ff);
+    background-color: var(--brand-banner-bg, #d6e0ff);
   }
   &.banner-rage {
-    background-color: var(--brand-banner-bg, #e9f0ff);
+    background-color: var(--brand-banner-bg, #d6e0ff);
   }
   &.banner-urgent {
-    background-color: var(--brand-banner-bg, #e9f0ff);
+    background-color: var(--brand-banner-bg, #d6e0ff);
     height: 240px;
   }
   &.banner-chrono {
-    background-color: var(--brand-banner-bg, #e9f0ff);
+    background-color: var(--brand-banner-bg, #d6e0ff);
     height: 240px;
   }
 }
@@ -154,12 +155,12 @@
   width: 100%;
   max-width: 1120px;
   border-radius: 24px;
-  padding: 15px 24px;
+  padding: 16px 12px;
   margin: 3.5rem 0 32px 0;
   justify-content: space-between;
   align-items: flex-start;
   position: relative;
-  height: 250px;
+  height: 275px;
   background-color: var(--brand-banner-bg, #ffe9e9);
 
   .feedback-list-wrapper {
@@ -273,9 +274,9 @@
   display: flex;
   width: 100%;
   border-radius: 24px;
-  padding: 16px 24px;
+  padding: 16px 12px;
   margin: 32px 0;
-  margin-top: 75px;
+  margin-top: 60px;
   justify-content: space-between;
   align-items: flex-start;
   position: relative;
@@ -296,7 +297,7 @@
     position: relative;
     z-index: 2;
     margin-top: -70px; // ✅ cartes par-dessus
-    gap: 30px;
+    gap: 5px;
 
     .selected-brand-heading {
       position: relative;
@@ -326,6 +327,11 @@
           font-size: 36px;
           font-weight: 700;
         }
+      }
+    }
+    div {
+      .selected-brand-heading {
+        margin-top: 16px;
       }
     }
   }

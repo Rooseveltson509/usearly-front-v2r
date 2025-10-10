@@ -85,10 +85,6 @@ const PublicSuggestionCard: React.FC<Props> = ({ item }) => {
   const max = 300;
   const pct = Math.max(0, Math.min(100, (votes / max) * 100)); // clamp 0–100
 
-  console.log("test");
-  console.log("brandName avant render:", JSON.stringify(brandName));
-  console.log("test");
-
   return (
     <div className="feedback-card open">
       {/* Bloc gauche */}

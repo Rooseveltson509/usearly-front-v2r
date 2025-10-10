@@ -1,29 +1,39 @@
 .report-detail-page {
   padding: 20px;
+  padding-top: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  h1 {
+    padding-bottom: 20px;
+  }
+  .subcategory-block {
+    width: 700px;
+  }
 }
 
 .highlight-flash {
-  animation: highlightPulse 2.5s ease-in-out;
+  // animation: highlightPulse 2.5s ease-in-out;
   border-radius: 12px;
 }
 
 .highlight-mention {
   background-color: #fff4c2;
-  transition: background-color 0.6s ease;
   border-radius: 8px;
 }
 
-@keyframes highlightPulse {
-  0% {
-    box-shadow: 0 0 0px rgba(0, 200, 255, 0);
-  }
-  40% {
-    box-shadow: 0 0 20px rgba(0, 200, 255, 0.7);
-  }
-  100% {
-    box-shadow: 0 0 0px rgba(0, 200, 255, 0);
-  }
+.usearly-wrap {
+  min-height: 20vh;
 }
+
+// @keyframes highlightPulse {
+//   0% {
+//     box-shadow: 0 0 0px rgba(0, 200, 255, 0);
+//   }
+//   40% {
+//     box-shadow: 0 0 20px rgba(0, 200, 255, 0.7);
+//   }
+//   100% {
+//     box-shadow: 0 0 0px rgba(0, 200, 255, 0);
+//   }
+// }
