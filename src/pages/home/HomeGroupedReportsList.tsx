@@ -285,6 +285,27 @@ const HomeGroupedReportsList = ({
     });
   }, [filteredByCategory, normalizedSearchTerm]);
 
+  const availableSubCategoriesByBrandAndCategory = useMemo(() => {
+    const grouped: Record<string, Record<string, string[]>> = {};
+
+    (filteredReports ?? []).forEach((report) => {
+      const brand = report.marque || "Autre";
+      const category = Array.isArray(report.category)
+        ? report.category[0]
+        : report.category || "Autre catégorie";
+      const sub = report.subCategory || "Autre sous-catégorie";
+
+      if (!grouped[brand]) grouped[brand] = {};
+      if (!grouped[brand][category]) grouped[brand][category] = [];
+
+      if (!grouped[brand][category].includes(sub)) {
+        grouped[brand][category].push(sub);
+      }
+    });
+
+    return grouped;
+  }, [filteredReports]);
+
   // ---------------- Update selected siteUrl ----------------
   useEffect(() => {
     if (!selectedBrand && !selectedCategory) {
@@ -373,6 +394,9 @@ const HomeGroupedReportsList = ({
         selectedCategory={selectedCategory}
         availableBrands={availableBrands}
         availableCategories={availableSubCategories}
+        availableSubCategoriesByBrandAndCategory={
+          availableSubCategoriesByBrandAndCategory
+        } // ✅ ajout ici
         searchTerm={searchTerm}
         onSearchTermChange={setSearchTerm}
       />

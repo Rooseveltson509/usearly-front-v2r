@@ -7,12 +7,13 @@ import { useAuth } from "@src/services/AuthContext";
 import { fetchValidBrandLogo, getBrandLogo } from "@src/utils/brandLogos";
 import SharedFooterCdcAndSuggest from "../shared/SharedFooterCdcAndSuggest";
 import Avatar from "../shared/Avatar";
-import { brandColors } from "@src/utils/brandColors";
+/* import { brandColors } from "@src/utils/brandColors"; */
 import { apiService } from "@src/services/apiService";
 import { showToast } from "@src/utils/toastUtils";
 import starProgressBar from "/assets/icons/icon-progress-bar.svg";
 import { capitalizeFirstLetter } from "@src/utils/stringUtils";
 import { decideIllustration } from "@src/utils/getIllustrationDecision";
+import { getBrandThemeColor } from "@src/utils/getBrandThemeColor";
 
 interface Props {
   item: (CoupDeCoeur | Suggestion) & {
@@ -133,14 +134,35 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
     document.body.style.overflow = "auto";
   };
 
+  // 🆕 Détermine si la couleur de base est sombre ou claire
   const rawDescription = item.description || "";
   const description = rawDescription.trim();
   const DESCRIPTION_LIMIT = 150;
   const shouldShowToggle =
     description.length > DESCRIPTION_LIMIT || item.capture;
-  const bgColor =
-    brandColors[item.marque?.toLowerCase()] || brandColors.default;
+
   const brandName = item.marque?.trim() ?? "";
+  /* const baseColor =
+    brandColors[brandName?.toLowerCase()] || brandColors.default; */
+
+  // 🆕 Détermine la palette complète de la marque (foncé / clair)
+  const { base, light, isDark, isPureBlack, isPureWhite } =
+    getBrandThemeColor(brandName);
+
+  // 🧠 On choisit la couleur à appliquer selon l’axe
+  const appliedColor =
+    item.meta?.axe === "illustration"
+      ? isPureBlack
+        ? light // si fond noir, on passe à gris foncé
+        : isPureWhite
+          ? base // si fond blanc, gris clair
+          : isDark
+            ? base
+            : light
+      : base;
+
+  const themeMode = isDark ? "dark" : "light";
+
   const illustration = decideIllustration(
     item.title,
     item.punchline,
@@ -152,41 +174,134 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
       {/* Bloc gauche — Punchline IA */}
       <div className="feedback-type">
         {item.punchline ? (
-          <div className="feedback-left" style={{ backgroundColor: bgColor }}>
-            <div className="feedback-icon">{item.emoji}</div>
+          <div
+            className="feedback-left"
+            style={{
+              backgroundColor: appliedColor,
+              ["--brand-color" as any]: base,
+              ["--brand-color-light" as any]: light,
+            }}
+            data-axe={item.meta?.axe || "typography"}
+            data-theme={themeMode} // 🆕 pour SCSS
+          >
+            {/* === AXE TYPOGRAPHY === */}
+            {item.meta?.axe === "typography" ? (
+              <div
+                className="punchline-typography"
+                dangerouslySetInnerHTML={{
+                  __html: (() => {
+                    let text = item.punchline;
+                    const highlightedWords = item.meta?.highlightedWords ?? [];
+                    highlightedWords.forEach((word) => {
+                      const regex = new RegExp(`(${word})`, "gi");
+                      text = text.replace(
+                        regex,
+                        `<span class="highlight-bubble">${word}</span>`,
+                      );
+                    });
+                    return text;
+                  })(),
+                }}
+              />
+            ) : (
+              <>
+                {/* === AXE EMOJI === */}
+                {item.meta?.axe === "emoji" ? (
+                  <div className="emoji-layout">
+                    <div className="feedback-icon">{item.emoji}</div>
+                    <div
+                      className="emoji-text"
+                      dangerouslySetInnerHTML={{
+                        __html: (() => {
+                          let text = item.punchline;
+                          const highlightedWords =
+                            item.meta?.highlightedWords ?? [];
 
-            {/* Punchlines (1 ou 2 lignes) */}
-            <div className="punchlines">
-              {item.punchline.split("\n").map((line, index) => (
-                <div
-                  key={index}
-                  className={`bubble ${index === 0 ? "primary" : "secondary"}`}
-                  style={{
-                    backgroundColor: "#fff",
-                    color: index === 0 ? bgColor : "#000",
-                    border: `2px solid ${bgColor}`,
-                    boxShadow:
-                      index === 0 ? "0 2px 6px rgba(0,0,0,0.1)" : "none",
-                  }}
-                >
-                  {line}
-                </div>
-              ))}
-            </div>
+                          // ✅ Détection automatique du contraste
+                          const getContrastingColor = (hex: string): string => {
+                            const cleaned = hex.replace("#", "");
+                            const r = parseInt(cleaned.substring(0, 2), 16);
+                            const g = parseInt(cleaned.substring(2, 4), 16);
+                            const b = parseInt(cleaned.substring(4, 6), 16);
+                            const brightness =
+                              (r * 299 + g * 587 + b * 114) / 1000;
+                            // Si la couleur est claire → texte plus foncé, sinon plus clair
+                            return brightness > 160
+                              ? "rgba(0,0,0,0.8)"
+                              : "rgba(255,255,255,0.9)";
+                          };
 
-            {/* 🖼️ Illustration dynamique (en dessous) */}
-            {illustration && (
-              <div className="illu-wrapper">
-                <img
-                  src={illustration}
-                  alt="illustration"
-                  className="illu-image"
-                />
-              </div>
+                          const contrastColor = getContrastingColor(base);
+
+                          highlightedWords.forEach((word) => {
+                            const regex = new RegExp(`(${word})`, "gi");
+                            text = text.replace(
+                              regex,
+                              `<span class="highlight-emoji" style="color:${contrastColor};font-weight:800;">$1</span>`,
+                            );
+                          });
+
+                          return text;
+                        })(),
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <>
+                    {/* === AXES EMOJI + ILLUSTRATION === */}
+                    <div className="punchlines">
+                      {item.punchline.split("\n").map((line, index) => {
+                        let content = line;
+                        const highlightedWords =
+                          item.meta?.highlightedWords ?? [];
+
+                        // ✅ Si axe = emoji → applique la mise en surbrillance
+                        if (
+                          item.meta?.axe === "emoji" &&
+                          highlightedWords.length > 0
+                        ) {
+                          highlightedWords.forEach((word) => {
+                            const regex = new RegExp(`(${word})`, "gi");
+                            content = content.replace(
+                              regex,
+                              `<span class="highlight-emoji">${word}</span>`,
+                            );
+                          });
+                        }
+
+                        return (
+                          <div
+                            key={index}
+                            className={`bubble ${
+                              index === 0 ? "primary" : "secondary"
+                            } ${
+                              item.meta?.layoutType === "two-bubble"
+                                ? "two-bubble"
+                                : ""
+                            }`}
+                            dangerouslySetInnerHTML={{ __html: content }}
+                          />
+                        );
+                      })}
+                    </div>
+
+                    {/* === AXE ILLUSTRATION : image SOUS les bulles === */}
+                    {item.meta?.axe === "illustration" && illustration && (
+                      <div className="illu-wrapper">
+                        <img
+                          src={illustration}
+                          alt="illustration"
+                          className="illu-image"
+                        />
+                      </div>
+                    )}
+                  </>
+                )}
+              </>
             )}
           </div>
         ) : (
-          // Fallback (aucune punchline IA)
+          // Fallback
           <p>
             {item.type === "coupdecoeur" ? (
               <>
