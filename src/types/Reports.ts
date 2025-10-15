@@ -50,6 +50,12 @@ export interface ConfirmedSubcategoryReport {
 export type LikeFeedbackType = Exclude<FeedbackType, "report">;
 // équivalent à "coupdecoeur" | "suggestion"
 
+export interface MetaIA {
+  highlightedWords?: string[];
+  layoutType?: "single-line" | "two-bubble";
+  axe?: "emoji" | "typography" | "illustration";
+}
+
 export interface CoupDeCoeur {
   id: string;
   marque: string;
@@ -71,6 +77,7 @@ export interface CoupDeCoeur {
     email: string;
     avatar: string;
   };
+  meta?: MetaIA; // Ajout de la propriété meta optionnelle
 }
 export interface Suggestion {
   id: string;
@@ -96,6 +103,7 @@ export interface Suggestion {
   };
   isAdopted?: boolean;
   duplicateCount?: number;
+  meta?: MetaIA; // Ajout de la propriété meta optionnelle
 }
 
 export interface ApiDescription {

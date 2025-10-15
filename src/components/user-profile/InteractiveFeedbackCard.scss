@@ -113,6 +113,7 @@
       word-break: break-word;
       position: relative;
       opacity: 0;
+      border: 1px solid black;
       transform: scale(0.9);
       animation: bubblePop 0.4s ease forwards;
 
@@ -484,4 +485,284 @@
       }
     }
   }
+}
+.highlight {
+  font-weight: 700;
+  color: inherit;
+  background: transparent;
+  text-decoration: none;
+  transition: color 0.2s ease;
+
+  // Accent selon le contexte IA
+  .feedback-left[data-axe="emoji"] & {
+    color: #000;
+  }
+  .feedback-left[data-axe="typography"] & {
+    color: var(--primary-color, #000);
+  }
+  .feedback-left[data-axe="illustration"] & {
+    color: #fff;
+  }
+}
+
+.feedback-left[data-axe="emoji"] .punchlines {
+  font-style: italic;
+}
+.feedback-left[data-axe="illustration"] .punchlines {
+  font-weight: 600;
+  text-align: center;
+}
+.feedback-left[data-axe="typography"] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  padding: 2rem;
+  background: var(--brand-color, #f5f5f5);
+  min-height: 220px;
+  text-align: center;
+
+  .punchline-typography {
+    display: inline-block;
+    width: 100%;
+    font-size: 1.4rem;
+    line-height: 1.4;
+    color: #fff;
+    text-align: center;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+
+    /* ✅ Bulles inline (dans le texte) */
+    .highlight-bubble {
+      display: inline-block;
+      vertical-align: middle;
+      background: #fff;
+      color: var(--brand-color, #000);
+      border-radius: 999px;
+      padding: 3px 12px;
+      margin: 0 4px;
+      font-weight: 700;
+      font-size: 1.2rem;
+      line-height: 1.2;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      white-space: nowrap;
+      transition: transform 0.2s ease;
+    }
+
+    /* Petit effet d'animation fluide */
+    .highlight-bubble:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  /* 🧹 Désactive emoji / illu */
+  .feedback-icon,
+  .illu-wrapper {
+    display: none !important;
+  }
+}
+
+/* --- AXE ILLUSTRATION : thème clair vs foncé --- */
+.feedback-left[data-axe="illustration"][data-theme="light"] {
+  background-color: var(--brand-color-light, #f9f9f9);
+
+  .punchlines .bubble {
+    &.primary {
+      background: #fff;
+      color: #000;
+      border: 1px solid black;
+    }
+
+    &.secondary {
+      background: var(--brand-color, #333);
+      color: #fff;
+      border: 1px solid black;
+    }
+  }
+}
+
+.feedback-left[data-axe="illustration"][data-theme="dark"] {
+  background-color: var(--brand-color, #333);
+
+  .punchlines .bubble {
+    &.primary {
+      background: #fff;
+      color: #000;
+      border: 1px solid black;
+    }
+
+    &.secondary {
+      background: #000;
+      color: #fff;
+      border: 1px solid black;
+    }
+  }
+}
+
+.feedback-left[data-axe="emoji"] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: 20px;
+  padding: 2rem 1.5rem;
+  background-color: var(--brand-color-light);
+  color: #000;
+
+  .feedback-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .emoji-text {
+    font-size: 1.4rem;
+    font-weight: 500;
+    line-height: 1.5;
+    color: #000;
+
+    .highlight {
+      color: var(--brand-color);
+      font-weight: 700;
+    }
+  }
+}
+
+/* === 🎨 Harmonisation des 3 AXES === */
+
+/* 🌈 AXE 1 — EMOJI */
+.feedback-left[data-axe="emoji"] {
+  background-color: color-mix(in srgb, var(--brand-color) 5%, white);
+  font-family: "Urbanist", sans-serif;
+  font-style: italic;
+  color: #000;
+  text-align: center;
+  border-radius: 20px;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .feedback-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .emoji-text {
+    font-size: 1.4rem;
+    line-height: 1.5;
+    font-weight: 500;
+    white-space: pre-wrap;
+
+    .highlight {
+      font-family: "Urbanist Black Italic", sans-serif;
+      font-style: italic;
+      color: var(--brand-color);
+      font-weight: 800;
+    }
+  }
+
+  /* Supprime les bulles */
+  .punchlines,
+  .bubble {
+    display: none !important;
+  }
+}
+
+/* 🔤 AXE 2 — TYPOGRAPHIE */
+.feedback-left[data-axe="typography"] {
+  font-family: "Onest", sans-serif;
+  background: color-mix(in srgb, var(--brand-color) 5%, white);
+  text-align: center;
+  padding: 2rem;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .punchline-typography {
+    color: #000;
+    font-size: 1.5rem;
+    line-height: 1.4;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+
+    .highlight-bubble {
+      background: #fff;
+      color: var(--brand-color);
+      border-radius: 999px;
+      padding: 3px 12px;
+      margin: 0 4px;
+      font-family: "Otomanopee One", sans-serif;
+      font-weight: 700;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease;
+    }
+
+    .highlight-bubble:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  /* Pas d’emoji ni illu ici */
+  .feedback-icon,
+  .illu-wrapper {
+    display: none !important;
+  }
+}
+
+/* 🍿 AXE 3 — ILLUSTRATION */
+.feedback-left[data-axe="illustration"] {
+  font-family: "Urbanist", sans-serif;
+  background-color: color-mix(in srgb, var(--brand-color) 15%, white);
+  border-radius: 20px;
+  padding: 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  color: #000;
+
+  .punchlines {
+    margin-bottom: auto;
+
+    .bubble.primary {
+      background: #fff;
+      color: #000;
+      font-weight: 600;
+      border: 2px solid rgba(0, 0, 0, 0.1);
+      font-family: "Urbanist", sans-serif;
+    }
+
+    .bubble.secondary {
+      background: var(--brand-color);
+      color: #fff;
+      font-weight: 700;
+      font-family: "Urbanist Black Italic", sans-serif;
+    }
+  }
+
+  .illu-wrapper {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+
+    .illu-image {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+      opacity: 0.95;
+      filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.1));
+    }
+  }
+}
+.highlight-emoji {
+  font-family: "Urbanist Black Italic", sans-serif;
+  font-style: italic;
+  font-weight: 800;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  transition: all 0.2s ease;
 }

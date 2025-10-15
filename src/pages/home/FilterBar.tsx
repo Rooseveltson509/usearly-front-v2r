@@ -3,6 +3,7 @@ import { SlidersHorizontal, ChevronDown } from "lucide-react";
 import SearchBar from "./components/searchBar/SearchBar";
 import BrandSelect from "@src/components/shared/BrandSelect";
 import "./FilterBar.scss";
+import CategoryDropdown from "@src/components/shared/CategoryDropdown";
 
 interface Props {
   filter:
@@ -43,6 +44,10 @@ interface Props {
   searchTerm: string;
   onSearchTermChange: (value: string) => void;
   labelOverride?: string;
+  availableSubCategoriesByBrandAndCategory?: Record<
+    string, // marque
+    Record<string, string[]> // catégorie principale -> sous-catégories
+  >;
 }
 
 const normalize = (str: string) =>
@@ -102,6 +107,7 @@ const FilterBar: React.FC<Props> = ({
   availableCategories,
   searchTerm,
   onSearchTermChange,
+  availableSubCategoriesByBrandAndCategory,
 }) => {
   const [brandSearch, setBrandSearch] = useState("");
   const [categorySearch, setCategorySearch] = useState("");
@@ -147,6 +153,8 @@ const FilterBar: React.FC<Props> = ({
     setCategorySearch("");
   };
 
+  const [selectedMainCategory, setSelectedMainCategory] = useState("");
+
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (
@@ -168,17 +176,24 @@ const FilterBar: React.FC<Props> = ({
     };
   }, [isDropdownOpen, setIsDropdownOpen, dropdownRef]);
 
+  useEffect(() => {
+    // Quand la marque change → reset des catégories
+    setSelectedMainCategory("");
+    setSelectedCategory("");
+  }, [selectedBrand]);
+
   const handleBrandSelect = (brand: string) => {
     const normalized = brand.trim();
     setSelectedBrand(normalized);
+
+    // 🧹 Réinitialise complètement les filtres liés à la marque précédente
+    setSelectedMainCategory("");
     setSelectedCategory("");
 
-    if (normalized) {
-      setViewMode("flat");
-      setFilter("");
-      onViewModeChange?.("flat");
-      setActiveFilter("");
-    }
+    setViewMode("flat");
+    setFilter("");
+    onViewModeChange?.("flat");
+    setActiveFilter("");
   };
 
   const clearBrand = () => {
@@ -190,24 +205,6 @@ const FilterBar: React.FC<Props> = ({
   };
   if (!selectedBrand) {
     return (
-      // <FilterBarBrandSelect
-      //   filter={filter}
-      //   setFilter={setFilter}
-      //   setViewMode={setViewMode}
-      //   setSelectedBrand={setSelectedBrand}
-      //   setSelectedCategory={setSelectedCategory}
-      //   setActiveFilter={setActiveFilter}
-      //   onViewModeChange={onViewModeChange}
-      //   dropdownRef={dropdownRef}
-      //   isDropdownOpen={isDropdownOpen}
-      //   setIsDropdownOpen={setIsDropdownOpen}
-      //   selectedBrand={selectedBrand}
-      //   selectedCategory={selectedCategory}
-      //   availableBrands={availableBrands}
-      //   availableCategories={availableCategories}
-      //   searchTerm={searchTerm}
-      //   onSearchTermChange={onSearchTermChange}
-      // />
       <div className="filter-container">
         <div className="primary-filters">
           <div
@@ -370,27 +367,60 @@ const FilterBar: React.FC<Props> = ({
               className="brand-select-rounded"
             />
           )}
-          <div className="category-select-select">
-            <select
-              value={selectedCategory}
-              onChange={(e) => {
-                setSelectedCategory(e.target.value);
-                setViewMode("flat");
-                setFilter("");
-                onViewModeChange?.("flat");
-                setActiveFilter("");
-              }}
-              disabled={!selectedBrand}
-            >
-              <option value="">Type de signalements</option>
-              {normalizedCategories.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
-            <ChevronDown size={16} className="cat-select__chev" aria-hidden />
-          </div>
+          {selectedBrand && (
+            <>
+              {/* Sélecteur Catégorie principale */}
+              <div className="category-select-select">
+                <CategoryDropdown
+                  categories={Object.keys(
+                    availableSubCategoriesByBrandAndCategory?.[selectedBrand] ||
+                      {},
+                  )}
+                  selected={selectedMainCategory}
+                  onSelect={(cat) => {
+                    setSelectedMainCategory(cat);
+                    setSelectedCategory("");
+                    setViewMode("flat");
+                    setFilter("");
+                    onViewModeChange?.("flat");
+                    setActiveFilter("");
+                  }}
+                />
+              </div>
+
+              {/* Sélecteur Sous-catégorie */}
+              {selectedMainCategory && (
+                <div className="subcategory-select">
+                  <select
+                    value={selectedCategory}
+                    onChange={(e) => {
+                      setSelectedCategory(e.target.value);
+                      setViewMode("flat");
+                      setFilter("");
+                      onViewModeChange?.("flat");
+                      setActiveFilter("");
+                    }}
+                  >
+                    <option value="">Sous-catégorie</option>
+                    {(
+                      availableSubCategoriesByBrandAndCategory?.[
+                        selectedBrand
+                      ]?.[selectedMainCategory] || []
+                    ).map((sub) => (
+                      <option key={sub} value={sub}>
+                        {sub}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown
+                    size={16}
+                    className="cat-select__chev"
+                    aria-hidden
+                  />
+                </div>
+              )}
+            </>
+          )}
         </div>
         <div className="secondary-filters-select">
           <SearchBar
