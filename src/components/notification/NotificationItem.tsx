@@ -56,7 +56,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
   return (
     <div
       key={n.id}
-      className={`notif-item ${n.read ? "read" : "unread"}`}
+      className={`notif-item-header ${n.read ? "read" : "unread"}`}
       onClick={handleNavigate}
     >
       <Avatar

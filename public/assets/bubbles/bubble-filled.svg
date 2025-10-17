@@ -1,0 +1,27 @@
+<svg
+  width="240"
+  height="100"
+  viewBox="0 0 240 100"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <path
+    d="M20 10
+       h200
+       a10 10 0 0 1 10 10
+       v50
+       a10 10 0 0 1 -10 10
+       h-160
+       a10 10 0 0 1 -10 -10
+       v15
+       l25 -15
+       h-45
+       a10 10 0 0 1 -10 -10
+       v-50
+       a10 10 0 0 1 10 -10
+       z"
+    fill="white"
+    stroke="black"
+    stroke-width="2.5"
+    stroke-linejoin="round"
+  />
+</svg>

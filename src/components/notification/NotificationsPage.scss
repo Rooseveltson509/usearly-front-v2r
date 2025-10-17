@@ -1,0 +1,614 @@
+.notifications-page {
+  max-width: 900px;
+  background: #f9f9fb;
+  position: relative;
+
+  h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1e1e1e;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  /* === BANDEAU PRINCIPAL === */
+  .notifications-banner-container {
+    position: relative;
+    width: calc(100% + 180px);
+    margin-left: -40px;
+    background-color: #d3d9f7;
+    border-radius: 24px;
+    padding: 60px 80px;
+    margin-top: 1rem;
+    margin-bottom: 4rem;
+    display: flex;
+    justify-content: center;
+    min-height: 300px;
+    box-sizing: border-box;
+    align-items: flex-start; /* ✅ le contenu commence en haut */
+    padding-top: 2.5rem; /* on réduit un peu le haut */
+    padding-bottom: 8rem; /* on augmente le bas pour l’espace de chevauchement */
+
+    .notif-banner-content {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 2rem;
+
+      align-items: flex-start; /* ✅ place le titre tout en haut */
+      margin-top: 0;
+
+      .notif-header-text {
+        margin-top: 0;
+        h2 {
+          font-size: 2rem;
+          font-weight: 800;
+          color: #1b1b1b;
+          margin: 0;
+        }
+
+        .notif-subtitle {
+          font-size: 1.05rem;
+          color: #444;
+          margin-top: 0.35rem;
+        }
+      }
+
+      .notif-header-illustration {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        margin-right: -60px; /* ✅ éloigne la cloche des cartes */
+
+        .notif-bubble {
+          position: absolute;
+          top: -25px;
+          left: -65px;
+          background: #fff;
+          border: 2px solid #000;
+          border-radius: 999px;
+          padding: 0.45rem 1.1rem;
+          font-weight: 600;
+          font-size: 0.95rem;
+          box-shadow: 3px 3px 0 #000;
+          transform: rotate(-3deg);
+          z-index: 3;
+        }
+
+        .notif-bell {
+          width: 160px;
+          height: auto;
+          stroke: #000;
+          fill: none;
+          margin-left: 1rem;
+          filter: drop-shadow(3px 3px 0 #000);
+        }
+
+        .notif-count {
+          position: absolute;
+          top: 22%;
+          right: 20%; /* ✅ décalage ajusté à droite */
+          transform: translate(50%, -50%);
+          background: #3b82f6;
+          color: #fff;
+          font-weight: 700;
+          border-radius: 50%;
+          width: 60px;
+          height: 60px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.05rem;
+          border: 2px solid black;
+          box-shadow: 0 3px 8px rgba(59, 130, 246, 0.4);
+        }
+      }
+    }
+  }
+
+  /* === FILTRES === */
+  .notif-filters {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: -20px;
+
+    button {
+      padding: 0.6rem 1.4rem;
+      border-radius: 999px;
+      border: 2px solid #000;
+      background: #fff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &.active {
+        background: #000;
+        color: #fff;
+      }
+
+      &:hover {
+        transform: translateY(-1px);
+      }
+    }
+  }
+
+  /* === LISTE DE NOTIFICATIONS === */
+  .notif-list {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: -40px auto 0 auto;
+    width: 700px;
+
+    /*  z-index: 5; */
+    margin-top: -220px;
+
+    .notif-item {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+      padding: 1.4rem 1.6rem;
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+      }
+
+      &.unread {
+        border-left: 4px solid #000;
+        background: #fdfdfd;
+      }
+
+      &.open {
+        transform: none;
+        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+      }
+
+      /* --- Badge "Nouveau" --- */
+      .notif-badge {
+        background: #000000;
+        color: #fff;
+        font-weight: 600;
+        font-size: 0.75rem;
+        padding: 4px 8px;
+        border-radius: 8px;
+        position: absolute;
+        top: 16px;
+        right: 18px;
+        box-shadow: 2px 2px 0 #000;
+        transform: rotate(-2deg);
+        animation: fadeInBadge 0.3s ease;
+      }
+
+      @keyframes fadeInBadge {
+        from {
+          opacity: 0;
+          transform: scale(0.8) rotate(-2deg);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1) rotate(-2deg);
+        }
+      }
+
+      /* --- Header notification --- */
+      .notif-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 0.8rem;
+
+        .notif-avatar {
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+          object-fit: cover;
+          border: 2px solid #eee;
+        }
+
+        .notif-info {
+          flex: 1;
+        }
+
+        .notif-message {
+          font-weight: 600;
+          color: #111;
+          font-size: 1rem;
+          margin: 0;
+        }
+
+        .notif-time {
+          color: #888;
+          font-size: 0.85rem;
+        }
+      }
+
+      /* --- Contenu étendu --- */
+      .notif-card-wrapper {
+        border-top: 1px solid #eee;
+        margin-top: 0.8rem;
+        /* overflow: hidden; */
+        transition: all 0.4s ease;
+        max-height: 0;
+        opacity: 0;
+
+        &.expanded {
+          max-height: 2000px; // assez grand pour contenir la carte complète
+          opacity: 1;
+          padding-top: 1rem;
+
+          /* ✅ NE PAS UTILISER FLEX POUR CENTRER LES BLOCS (ça casse l’alignement) */
+          display: block;
+          width: 100%;
+
+          /* Contenu interne (carte du renderer) */
+          .notification-card-content {
+            width: 100%; /* ✅ prend toute la largeur du parent */
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            margin: 0; /* retire tout décalage */
+          }
+
+          /* --- Bloc sender (en dessous, à droite) --- */
+          .notif-sender {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+            width: 100%;
+            margin-top: 0.8rem;
+            padding-right: 0.4rem;
+
+            img {
+              width: 40px;
+              height: 40px;
+              border-radius: 50%;
+              object-fit: cover;
+              border: 2px solid #eee;
+            }
+
+            span {
+              font-size: 0.9rem;
+              color: #444;
+
+              &.name {
+                font-weight: 700;
+                color: #111;
+              }
+
+              &.brand {
+                color: #777;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /* --- Effet relief sous les filtres --- */
+  .notif-filters::after {
+    content: "";
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 6px;
+    background: rgba(0, 0, 0, 0.05);
+    filter: blur(4px);
+    border-radius: 50%;
+    z-index: -1;
+  }
+
+  /* === RESPONSIVE === */
+  @media (max-width: 1024px) {
+    .notifications-banner-container {
+      width: 100%;
+      margin-left: 0;
+      padding: 36px 24px;
+      border-radius: 20px;
+      min-height: 250px;
+
+      .notif-banner-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.2rem;
+
+        .notif-header-illustration img {
+          width: 100px;
+        }
+      }
+    }
+
+    .notif-filters {
+      margin-top: -25px;
+    }
+
+    .notif-item {
+      padding: 1.2rem;
+    }
+
+    .notif-avatar {
+      width: 40px;
+      height: 40px;
+    }
+  }
+}
+
+/* === Ajustement final : bloc gauche carré et harmonieux === */
+.notifications-page {
+  .notif-card-wrapper.expanded {
+    .feedback-card {
+      display: grid;
+      grid-template-columns: 1.5fr 2fr;
+    }
+  }
+}
+.notifications-page {
+  .notif-card-wrapper.expanded {
+    .feedback-card {
+      border-radius: 16px;
+    }
+  }
+}
+
+/* === Animation badge "pop" === */
+@keyframes pop-badge {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.notifications-page {
+  .notif-item .notif-badge,
+  .notif-header-illustration .notif-count {
+    animation: pop-badge 0.4s ease-in-out;
+  }
+}
+
+/* === Animation cloche "shake" === */
+@keyframes bell-shake {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  20% {
+    transform: rotate(-12deg);
+  }
+  40% {
+    transform: rotate(10deg);
+  }
+  60% {
+    transform: rotate(-8deg);
+  }
+  80% {
+    transform: rotate(5deg);
+  }
+}
+
+.notifications-page {
+  .notif-header-illustration .notif-bell {
+    transform-origin: top center;
+    &.active {
+      animation: bell-shake 0.5s ease-in-out;
+    }
+  }
+}
+
+@media (max-width: 900px) {
+  .notifications-page {
+    .notifications-banner-container .notif-banner-content {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+
+      .notif-header-illustration {
+        margin-top: 1.5rem;
+        margin-right: 0;
+      }
+    }
+  }
+}
+
+.notifications-page {
+  .notif-header-illustration .notif-bell {
+    transform-origin: top center;
+
+    &.shake {
+      animation: bell-shake 0.6s ease-in-out;
+    }
+  }
+}
+.notif-item.read {
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+  opacity: 0.85;
+}
+
+/* === Menu contextuel ⋮ === */
+.notif-menu-toggle {
+  position: relative;
+  margin-left: auto;
+  cursor: pointer;
+  font-size: 1.3rem;
+  color: #777;
+  padding: 0 0.5rem;
+  user-select: none;
+  line-height: 1;
+
+  &:hover {
+    color: #000;
+  }
+
+  .notif-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: #fff;
+    border: 1px solid #e6e6e6;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    z-index: 20;
+    padding: 0.3rem 0;
+    min-width: 120px;
+    animation: fadeInMenu 0.15s ease forwards;
+
+    button {
+      width: 100%;
+      padding: 0.5rem 1rem;
+      background: none;
+      border: none;
+      text-align: left;
+      font-size: 0.9rem;
+      color: #333;
+      cursor: pointer;
+      transition: background 0.2s ease;
+
+      &:hover {
+        background: #f5f5f5;
+      }
+    }
+  }
+}
+
+@keyframes fadeInMenu {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* === Correction de placement du badge "Nouveau" et du menu ⋮ === */
+.notif-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.notif-badge {
+  background: #000;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  border-radius: 8px 8px 8px 0;
+  margin-right: 0.5rem;
+  white-space: nowrap;
+  position: relative;
+  z-index: 2; // ✅ le badge reste au-dessus
+}
+
+/* --- Menu ⋮ toujours visible même si badge présent --- */
+.notif-menu-toggle {
+  position: relative;
+  margin-left: 0.25rem; // léger espacement pour respirer
+  font-size: 1.3rem;
+  color: #999;
+  cursor: pointer;
+  user-select: none;
+  z-index: 1; // sous le badge visuellement, mais toujours cliquable
+
+  &:hover {
+    color: #000;
+  }
+}
+
+.notif-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  color: #555;
+  font-weight: 500;
+  animation: fadeIn 0.3s ease;
+
+  .spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    border-top-color: #000;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 1rem;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* === Layout notifications avec carte à gauche === */
+.notifications-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 2rem;
+  margin-top: 2rem; // ✅ on remet normal ici (ne remonte plus tout le layout)
+  padding: 0 2rem;
+  position: relative;
+
+  .notifications-sidebar {
+    position: relative;
+    z-index: 2;
+    margin-top: -80px; // 🟣 seul l’aspect visuel de chevauchement vient d’ici
+  }
+
+  .notifications-main {
+    position: relative;
+    z-index: 1;
+  }
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+    padding: 0 1rem;
+
+    .notifications-sidebar {
+      order: -1;
+      margin-top: -50px; // léger chevauchement mobile
+      margin-bottom: 1.5rem;
+    }
+  }
+}

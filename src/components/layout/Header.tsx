@@ -19,6 +19,8 @@ const Header = () => {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
+  const [shakeBell, setShakeBell] = useState(false);
+  const prevUnreadCountRef = useRef(0);
 
   // 🔹 Fermer les dropdowns quand on clique ailleurs
   useEffect(() => {
@@ -35,11 +37,23 @@ const Header = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // 🔹 Récupérer les notifications
+  // 🔹 Récupérer les notifications (petite liste)
   const fetchNotifications = async () => {
     try {
       const data = await getNotifications();
-      setNotifications(Array.isArray(data) ? data : []);
+      const list = Array.isArray(data) ? data : [];
+
+      // ✅ Détection : une nouvelle notif non lue vient d’arriver
+      const prevUnread = prevUnreadCountRef.current;
+      const currentUnread = list.filter((n) => !n.read).length;
+
+      if (currentUnread > prevUnread) {
+        setShakeBell(true);
+        setTimeout(() => setShakeBell(false), 700);
+      }
+
+      prevUnreadCountRef.current = currentUnread;
+      setNotifications(list);
     } catch (err) {
       console.error("❌ Erreur fetchNotifications:", err);
       setNotifications([]);
@@ -57,11 +71,11 @@ const Header = () => {
     }
   };
 
-  // 🔹 Auto-refresh des notifs toutes les 10 secondes
+  // 🔹 Auto-refresh des notifs toutes les 15 secondes
   useEffect(() => {
     if (isAuthenticated) {
       fetchNotifications();
-      const interval = setInterval(fetchNotifications, 10000);
+      const interval = setInterval(fetchNotifications, 15000);
       return () => clearInterval(interval);
     }
   }, [isAuthenticated]);
@@ -110,7 +124,7 @@ const Header = () => {
                 setNotifOpen((prev) => !prev);
               }}
             >
-              <i className="fa fa-bell" />
+              <i className={`fa fa-bell ${shakeBell ? "shake" : ""}`} />
               {notifications.some((n) => !n.read) && (
                 <span className="notif-count">
                   {notifications.filter((n) => !n.read).length}
@@ -148,17 +162,16 @@ const Header = () => {
                         />
                       ))}
 
-                      {notifications.length > 10 && (
-                        <div
-                          className="notif-see-all"
-                          onClick={() => {
-                            setNotifOpen(false);
-                            navigate("/notifications");
-                          }}
-                        >
-                          Voir toutes les notifications →
-                        </div>
-                      )}
+                      {/* 🔗 Bouton “Voir tout” → redirection vers /notifications */}
+                      <div
+                        className="notif-see-all"
+                        onClick={() => {
+                          setNotifOpen(false);
+                          navigate("/notifications");
+                        }}
+                      >
+                        Voir toutes les notifications →
+                      </div>
                     </>
                   )}
                 </div>

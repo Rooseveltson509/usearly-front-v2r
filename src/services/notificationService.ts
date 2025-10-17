@@ -4,7 +4,7 @@ const getAuthToken = () =>
   localStorage.getItem("accessToken") || sessionStorage.getItem("accessToken");
 
 /**
- * 🔔 Récupérer les notifications non lues
+ * 🔔 Récupérer les notifications non lues (mini liste, ex: header)
  */
 export const getNotifications = async () => {
   const { data } = await apiService.get(`/notifications`, {
@@ -14,11 +14,11 @@ export const getNotifications = async () => {
 };
 
 /**
- * ✅ Marquer une notif comme lue
+ * ✅ Marquer une notification comme lue
  */
 export const markNotificationAsRead = async (id: string) => {
-  const { data } = await apiService.post(
-    `/notifications/${id}/read`,
+  const { data } = await apiService.patch(
+    `/notifications/${id}/read`, // ✅ PATCH au lieu de POST
     {},
     {
       headers: { Authorization: `Bearer ${getAuthToken()}` },
@@ -28,13 +28,24 @@ export const markNotificationAsRead = async (id: string) => {
 };
 
 /**
- * 🔹 Notifications paginées
+ * 📜 Récupérer toutes les notifications avec pagination + filtre
  */
-export const getAllNotifications = async (page = 1, limit = 10) => {
+export const getAllNotifications = async (
+  page = 1,
+  limit = 10,
+  type: "all" | "suggestion" | "coupdecoeur" | "report" = "all",
+) => {
   const { data } = await apiService.get(`/notifications/all`, {
-    params: { page, limit },
-    headers: { Authorization: `Bearer ${getAuthToken()}` },
+    params: {
+      page,
+      limit,
+      ...(type !== "all" && { type }), // ✅ Ajoute le filtre uniquement si ≠ all
+    },
+    headers: {
+      Authorization: `Bearer ${getAuthToken()}`,
+    },
   });
+
   return data;
 };
 
@@ -42,6 +53,8 @@ export const getAllNotifications = async (page = 1, limit = 10) => {
  * ❌ Supprimer une notification
  */
 export const deleteNotification = async (id: string) => {
-  const res = await apiService.delete(`/user/notifications/${id}`);
-  return res.data;
+  const { data } = await apiService.delete(`/notifications/${id}`, {
+    headers: { Authorization: `Bearer ${getAuthToken()}` },
+  });
+  return data;
 };

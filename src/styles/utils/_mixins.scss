@@ -1,4 +1,4 @@
-@use "@styles/base/variables" as *;
+@use "../base/variables" as *;
 
 @mixin heading {
   font-family: $font-family;

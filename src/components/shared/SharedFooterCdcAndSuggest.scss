@@ -244,3 +244,31 @@
   margin-left: 4px;
   font-weight: 500;
 }
+
+/* === Expiration du vote === */
+.shared-footer-cdc.expired {
+  opacity: 0.6;
+  pointer-events: none;
+
+  .footer-buttons button {
+    background: #ccc !important;
+    color: #777 !important;
+    cursor: not-allowed !important;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+
+  .vote-button {
+    background: #bbb !important;
+    color: #fff !important;
+    cursor: not-allowed !important;
+  }
+}
+
+/* === Bouton désactivé === */
+.vote-button.disabled {
+  background: #bbb;
+  color: #fff;
+  cursor: not-allowed;
+  pointer-events: none;
+}

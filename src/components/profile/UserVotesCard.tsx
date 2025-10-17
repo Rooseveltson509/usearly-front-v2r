@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./UserVotesCard.scss";
 import { getUserVotes } from "@src/services/suggestionService";
-import { formatDistanceToNowStrict } from "date-fns";
-import { fr } from "date-fns/locale";
 import { useNavigate } from "react-router-dom";
 
 interface Suggestion {
@@ -12,6 +10,7 @@ interface Suggestion {
   createdAt: string;
   emoji?: string;
   marque?: string;
+  expiresInDays: number;
 }
 
 const UserVotesCard: React.FC = () => {
@@ -42,9 +41,8 @@ const UserVotesCard: React.FC = () => {
 
       <div className="votes-list scrollable">
         {votes.map((s) => {
-          const timeAgo = formatDistanceToNowStrict(new Date(s.createdAt), {
-            locale: fr,
-          });
+          const expiresLabel =
+            s.expiresInDays <= 0 ? "J-0" : `J-${s.expiresInDays}`;
 
           return (
             <div key={s.id} className="vote-item">
@@ -57,7 +55,11 @@ const UserVotesCard: React.FC = () => {
 
               <div className="vote-meta">
                 <span className="progress">{s.totalVotes ?? 0}/300</span>
-                <span className="date">{timeAgo}</span>
+                <span
+                  className={`date ${s.expiresInDays <= 0 ? "expired" : ""}`}
+                >
+                  {expiresLabel}
+                </span>
               </div>
             </div>
           );
