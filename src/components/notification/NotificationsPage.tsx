@@ -265,14 +265,14 @@ const NotificationsPage: React.FC = () => {
                   )}
                 </div>
               </div>
-            </div>
 
-            {loading && notifications.length === 0 && (
-              <div className="notif-loading">
-                <div className="spinner"></div>
-                <p>Chargement des notifications...</p>
-              </div>
-            )}
+              {loading && notifications.length === 0 && (
+                <div className="notif-inline-loader">
+                  <div className="spinner"></div>
+                  <p>Chargement des notifications...</p>
+                </div>
+              )}
+            </div>
 
             {/* === Liste === */}
             <div className="notif-list">

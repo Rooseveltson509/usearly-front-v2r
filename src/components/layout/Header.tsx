@@ -4,25 +4,18 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./Header.scss";
 import Logo from "@src/assets/logo.svg";
 import { useAuth } from "@src/services/AuthContext";
-import {
-  deleteNotification,
-  getNotifications,
-  markNotificationAsRead,
-} from "@src/services/notificationService";
-import NotificationItem from "../notification/NotificationItem";
+import { getNotifications } from "@src/services/notificationService";
 
 const Header = () => {
   const { isAuthenticated, userProfile, logout } = useAuth();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [notifications, setNotifications] = useState<any[]>([]);
-  const [notifOpen, setNotifOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
-  const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
   const [shakeBell, setShakeBell] = useState(false);
   const prevUnreadCountRef = useRef(0);
 
-  // 🔹 Fermer les dropdowns quand on clique ailleurs
+  // 🔹 Fermer le menu utilisateur quand on clique ailleurs
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -30,20 +23,19 @@ const Header = () => {
         !dropdownRef.current.contains(event.target as Node)
       ) {
         setUserMenuOpen(false);
-        setNotifOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // 🔹 Récupérer les notifications (petite liste)
+  // 🔹 Récupérer les notifications (petite liste pour le compteur)
   const fetchNotifications = async () => {
     try {
       const data = await getNotifications();
       const list = Array.isArray(data) ? data : [];
 
-      // ✅ Détection : une nouvelle notif non lue vient d’arriver
+      // ✅ Détection d'une nouvelle notification non lue → animation cloche
       const prevUnread = prevUnreadCountRef.current;
       const currentUnread = list.filter((n) => !n.read).length;
 
@@ -60,18 +52,7 @@ const Header = () => {
     }
   };
 
-  const markAsRead = async (id: string) => {
-    try {
-      await markNotificationAsRead(id);
-      setNotifications((prev) =>
-        prev.map((n) => (n.id === id ? { ...n, read: true } : n)),
-      );
-    } catch (err) {
-      console.error("❌ Erreur markAsRead:", err);
-    }
-  };
-
-  // 🔹 Auto-refresh des notifs toutes les 15 secondes
+  // 🔹 Auto-refresh du compteur toutes les 15 secondes
   useEffect(() => {
     if (isAuthenticated) {
       fetchNotifications();
@@ -121,7 +102,7 @@ const Header = () => {
               className="notif-button"
               onClick={(e) => {
                 e.stopPropagation();
-                setNotifOpen((prev) => !prev);
+                navigate("/notifications"); // 🔗 redirection directe
               }}
             >
               <i className={`fa fa-bell ${shakeBell ? "shake" : ""}`} />
@@ -129,52 +110,6 @@ const Header = () => {
                 <span className="notif-count">
                   {notifications.filter((n) => !n.read).length}
                 </span>
-              )}
-
-              {notifOpen && (
-                <div className="notif-dropdown">
-                  {notifications.length === 0 ? (
-                    <p className="empty">Aucune notification</p>
-                  ) : (
-                    <>
-                      {notifications.slice(0, 10).map((n) => (
-                        <NotificationItem
-                          key={n.id}
-                          notification={n}
-                          onMarkAsRead={markAsRead}
-                          onDelete={(id) => {
-                            deleteNotification(id)
-                              .then(() =>
-                                setNotifications((prev) =>
-                                  prev.filter((notif) => notif.id !== id),
-                                ),
-                              )
-                              .catch((err) =>
-                                console.error(
-                                  "❌ Erreur suppression notif:",
-                                  err,
-                                ),
-                              )
-                              .finally(() => setConfirmDelete(null));
-                          }}
-                          confirmDeleteId={confirmDelete}
-                          setConfirmDeleteId={setConfirmDelete}
-                        />
-                      ))}
-
-                      {/* 🔗 Bouton “Voir tout” → redirection vers /notifications */}
-                      <div
-                        className="notif-see-all"
-                        onClick={() => {
-                          setNotifOpen(false);
-                          navigate("/notifications");
-                        }}
-                      >
-                        Voir toutes les notifications →
-                      </div>
-                    </>
-                  )}
-                </div>
               )}
             </div>
           )}
