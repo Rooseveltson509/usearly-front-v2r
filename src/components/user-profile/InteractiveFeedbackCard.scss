@@ -1,5 +1,5 @@
-@use "@src/styles/base/variables" as *;
-@use "@src/styles/utils/mixins" as *;
+@use "../../styles/base/variables" as *;
+@use "../../styles/utils/mixins" as *;
 
 .feedback-card {
   display: flex;
@@ -14,6 +14,17 @@
 
   &.open {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  }
+}
+
+.pg-expire {
+  margin-left: 6px;
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: 500;
+
+  &::before {
+    content: "· ";
   }
 }
 
@@ -73,6 +84,39 @@
   }
 }
 
+/* === Barre de progression désactivée quand période expirée === */
+.vote-progress.expired {
+  opacity: 0.5;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+
+  .pg {
+    background: #d6d6d6 !important;
+  }
+
+  .pg-fill {
+    background: #aaa !important;
+  }
+
+  .pg-thumb img {
+    filter: grayscale(1) brightness(0.9);
+    opacity: 0.6;
+  }
+
+  .pg-count,
+  .pg-expire {
+    color: #777 !important;
+  }
+}
+.vote-progress.expired::after {
+  content: "Vote clôturé";
+  display: block;
+  font-size: 0.8rem;
+  text-align: right;
+  color: #999;
+  margin-top: 4px;
+}
+
 .vote-error {
   margin-top: 6px;
   font-size: 0.85rem;
@@ -91,7 +135,6 @@
 
   .feedback-icon {
     font-size: 32px;
-    margin-bottom: 12px;
   }
 
   .punchlines {
@@ -201,7 +244,6 @@
 
   .feedback-icon {
     font-size: 32px;
-    margin-bottom: 12px;
   }
 
   /* Bulles (titre multi-lignes) */
@@ -495,13 +537,10 @@
 
   // Accent selon le contexte IA
   .feedback-left[data-axe="emoji"] & {
-    color: #000;
-  }
-  .feedback-left[data-axe="typography"] & {
-    color: var(--primary-color, #000);
+    color: inherit;
   }
   .feedback-left[data-axe="illustration"] & {
-    color: #fff;
+    color: inherit;
   }
 }
 
@@ -511,55 +550,6 @@
 .feedback-left[data-axe="illustration"] .punchlines {
   font-weight: 600;
   text-align: center;
-}
-.feedback-left[data-axe="typography"] {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 20px;
-  padding: 2rem;
-  background: var(--brand-color, #f5f5f5);
-  min-height: 220px;
-  text-align: center;
-
-  .punchline-typography {
-    display: inline-block;
-    width: 100%;
-    font-size: 1.4rem;
-    line-height: 1.4;
-    color: #fff;
-    text-align: center;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-
-    /* ✅ Bulles inline (dans le texte) */
-    .highlight-bubble {
-      display: inline-block;
-      vertical-align: middle;
-      background: #fff;
-      color: var(--brand-color, #000);
-      border-radius: 999px;
-      padding: 3px 12px;
-      margin: 0 4px;
-      font-weight: 700;
-      font-size: 1.2rem;
-      line-height: 1.2;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-      white-space: nowrap;
-      transition: transform 0.2s ease;
-    }
-
-    /* Petit effet d'animation fluide */
-    .highlight-bubble:hover {
-      transform: scale(1.05);
-    }
-  }
-
-  /* 🧹 Désactive emoji / illu */
-  .feedback-icon,
-  .illu-wrapper {
-    display: none !important;
-  }
 }
 
 /* --- AXE ILLUSTRATION : thème clair vs foncé --- */
@@ -611,8 +601,7 @@
   color: #000;
 
   .feedback-icon {
-    font-size: 3rem;
-    margin-bottom: 1rem;
+    font-size: 4.5rem;
   }
 
   .emoji-text {
@@ -632,84 +621,99 @@
 
 /* 🌈 AXE 1 — EMOJI */
 .feedback-left[data-axe="emoji"] {
-  background-color: color-mix(in srgb, var(--brand-color) 5%, white);
-  font-family: "Urbanist", sans-serif;
-  font-style: italic;
-  color: #000;
-  text-align: center;
   border-radius: 20px;
   padding: 2rem 1.5rem;
+  font-family: "Urbanist", sans-serif;
+  text-align: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  color: #000; // ✅ texte noir
 
   .feedback-icon {
-    font-size: 3rem;
-    margin-bottom: 1rem;
+    font-size: 4.5rem;
   }
 
   .emoji-text {
     font-size: 1.4rem;
-    line-height: 1.5;
+    line-height: 1.6;
     font-weight: 500;
-    white-space: pre-wrap;
 
-    .highlight {
-      font-family: "Urbanist Black Italic", sans-serif;
-      font-style: italic;
-      color: var(--brand-color);
-      font-weight: 800;
+    .highlight-emoji {
+      color: var(--brand-color); // ✅ couleur de la marque
+      font-weight: 800; // ✅ gras
+      background: none !important; // ✅ pas de bulle
+      border: none !important;
+      padding: 0 !important;
+      box-shadow: none !important;
+      display: inline;
     }
   }
 
-  /* Supprime les bulles */
+  // désactive tout héritage de bulles
   .punchlines,
   .bubble {
     display: none !important;
   }
 }
 
-/* 🔤 AXE 2 — TYPOGRAPHIE */
+/* === 🎯 AXE TYPOGRAPHY — Version unifiée et contrastée === */
 .feedback-left[data-axe="typography"] {
   font-family: "Onest", sans-serif;
-  background: color-mix(in srgb, var(--brand-color) 5%, white);
-  text-align: center;
-  padding: 2rem;
+  background: color-mix(
+    in srgb,
+    var(--brand-color) 6%,
+    white
+  ); // ✅ fond clair dérivé de la marque
   border-radius: 20px;
+  text-align: center;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  min-height: 220px;
+  color: var(--brand-color); // ✅ texte principal couleur marque
 
   .punchline-typography {
-    color: #000;
-    font-size: 1.5rem;
-    line-height: 1.4;
-    white-space: pre-wrap;
+    font-size: 1.4rem;
+    line-height: 1.5;
+    font-weight: 100;
     word-wrap: break-word;
-
-    .highlight-bubble {
-      background: #fff;
-      color: var(--brand-color);
-      border-radius: 999px;
-      padding: 3px 12px;
-      margin: 0 4px;
-      font-family: "Otomanopee One", sans-serif;
-      font-weight: 700;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-      transition: transform 0.2s ease;
-    }
-
-    .highlight-bubble:hover {
-      transform: scale(1.05);
-    }
+    color: var(--brand-color); // ✅ cohérence du texte
   }
 
-  /* Pas d’emoji ni illu ici */
+  /* 💬 Bulles typographiques */
+  .highlight-bubble {
+    display: inline-block;
+    background: var(--brand-color);
+    color: #fff; // ✅ texte blanc sur bulle marque
+    border-radius: 999px;
+    padding: 4px 12px;
+    font-family: $font-otomanopee;
+    font-size: 1.2rem;
+    border: 2px solid black;
+    line-height: 1.2;
+    transition: transform 0.2s ease;
+  }
+
+  .highlight-bubble:hover {
+    transform: scale(1.05);
+  }
+
+  /* 🚫 Cache les visuels inutiles */
   .feedback-icon,
   .illu-wrapper {
     display: none !important;
   }
+}
+
+/* 🧹 Neutralise les anciennes règles */
+.highlight {
+  color: var(--brand-color);
+  font-weight: 700;
+  background: transparent;
+  text-decoration: none;
+  transition: color 0.2s ease;
 }
 
 /* 🍿 AXE 3 — ILLUSTRATION */
@@ -717,7 +721,6 @@
   font-family: "Urbanist", sans-serif;
   background-color: color-mix(in srgb, var(--brand-color) 15%, white);
   border-radius: 20px;
-  padding: 1.5rem;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -763,6 +766,48 @@
   font-family: "Urbanist Black Italic", sans-serif;
   font-style: italic;
   font-weight: 800;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
   transition: all 0.2s ease;
+}
+.highlight-bubble {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: inherit; // ✅ prend automatiquement la couleur contrastée du parent
+}
+
+/* === 🎯 Correction finale contraste axe EMOJI === */
+.feedback-left[data-axe="emoji"] {
+  .emoji-text {
+    color: inherit;
+    font-size: 1.4rem;
+    line-height: 1.6;
+    font-weight: 500;
+    text-align: center;
+  }
+
+  .highlight-emoji {
+    border-radius: 999px;
+    padding: 4px 12px;
+    margin: 0 4px;
+    font-weight: 700;
+    display: inline-block;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  }
+
+  /* 🌓 Fond sombre → bulles blanches, texte couleur marque */
+  &[data-theme="dark"] .highlight-emoji {
+    background: #fff;
+    color: var(--brand-color);
+  }
+
+  /* ☀️ Fond clair → bulles couleur marque, texte blanc */
+  &[data-theme="light"] .highlight-emoji {
+    background: var(--brand-color);
+    color: #fff;
+  }
+
+  /* ✨ Petit effet au survol */
+  .highlight-emoji:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+  }
 }

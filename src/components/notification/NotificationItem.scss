@@ -1,4 +1,4 @@
-.notif-item {
+.notif-item-header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -88,7 +88,6 @@
   }
 }
 
-/* 🌙 Dark mode */
 body.dark .notif-item {
   border-color: rgba(255, 255, 255, 0.08);
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+/* import { useEffect, useState } from "react";
 import {
   getAllNotifications,
   markNotificationAsRead,
@@ -71,7 +71,6 @@ const NotificationsPage = () => {
         </div>
       )}
 
-      {/* Pagination */}
       <div className="pagination">
         <button disabled={page === 1} onClick={() => setPage((p) => p - 1)}>
           Précédent
@@ -91,3 +90,4 @@ const NotificationsPage = () => {
 };
 
 export default NotificationsPage;
+ */

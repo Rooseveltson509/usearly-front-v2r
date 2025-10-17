@@ -18,7 +18,7 @@ import SuggestionDetail from "./components/suggestion-detail/SuggestionDetail";
 import PublicSuggestionPage from "./components/shared/public/PublicSuggestionPage";
 import CoupDeCoeurDetail from "./components/shared/share-modal/coupdecoeur-detail/CoupDeCoeurDetail";
 import ReportDetail from "./pages/home/report-detail/ReportDetail";
-import CheckThis from "./pages/check-this/CheckThis";
+import NotificationsPage from "./components/notification/NotificationsPage";
 
 function App() {
   return (
@@ -42,17 +42,6 @@ function App() {
                 </GuestRoute>
               }
             />
-
-            {/* ephemère link */}
-            <Route
-              path="/check-this"
-              element={
-                <GuestRoute>
-                  <CheckThis />
-                </GuestRoute>
-              }
-            />
-
             <Route
               path="/"
               element={
@@ -126,6 +115,14 @@ function App() {
               element={
                 <ProtectedRoute allowedTypes={["user"]}>
                   <CoupDeCoeurDetail />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/notifications"
+              element={
+                <ProtectedRoute allowedTypes={["user"]}>
+                  <NotificationsPage />
                 </ProtectedRoute>
               }
             />

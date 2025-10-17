@@ -38,6 +38,9 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
   const [, setLogos] = useState<Record<string, string>>({});
   const { userProfile } = useAuth();
   const [votes, setVotes] = useState((item as Suggestion).votes || 0);
+  const [expiresInDays, setExpiresInDays] = useState<number | null>(null);
+  const isExpired = expiresInDays !== null && expiresInDays <= 0;
+  //const isExpired = true;
 
   // --- barre & étoile ---
   const barRef = useRef<HTMLDivElement>(null);
@@ -68,7 +71,11 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
     if (item.type === "suggestion") {
       apiService
         .get(`/suggestions/${item.id}/votes`)
-        .then((res) => setVotes(res.data.votes));
+        .then((res) => {
+          setVotes(res.data.votes);
+          setExpiresInDays(res.data.expiresInDays);
+        })
+        .catch(() => {});
     }
   }, [item.id, item.type]);
 
@@ -169,6 +176,26 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
     item.type,
   );
 
+  // 🧩 Couleur de fond selon l’axe
+  const backgroundVariant =
+    item.meta?.axe === "emoji" ||
+    item.meta?.axe === "typography" ||
+    item.meta?.axe === "illustration"
+      ? `color-mix(in srgb, ${base} 10%, white)` // ✅ emoji → toujours clair
+      : base; // ✅ tous les autres axes → fond de la marque (pas de clair)
+
+  // 🎨 Détection automatique du contraste (texte vs fond)
+  const getContrastingTextColor = (hex: string): string => {
+    const cleaned = hex.replace("#", "");
+    const r = parseInt(cleaned.substring(0, 2), 16);
+    const g = parseInt(cleaned.substring(2, 4), 16);
+    const b = parseInt(cleaned.substring(4, 6), 16);
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    return brightness > 140 ? "#000" : "#fff";
+  };
+
+  const textColor = getContrastingTextColor(appliedColor);
+
   return (
     <div className={`feedback-card ${isOpen ? "open" : ""}`}>
       {/* Bloc gauche — Punchline IA */}
@@ -177,28 +204,51 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
           <div
             className="feedback-left"
             style={{
-              backgroundColor: appliedColor,
+              backgroundColor: backgroundVariant, // ✅ ici on remplace Math.random() par la variable stable
+              color: textColor,
               ["--brand-color" as any]: base,
               ["--brand-color-light" as any]: light,
             }}
             data-axe={item.meta?.axe || "typography"}
-            data-theme={themeMode} // 🆕 pour SCSS
+            data-theme={themeMode}
           >
             {/* === AXE TYPOGRAPHY === */}
             {item.meta?.axe === "typography" ? (
               <div
                 className="punchline-typography"
+                style={{
+                  backgroundColor: backgroundVariant, // ✅ ton fond clair ou foncé
+                  color: "#000", // texte noir lisible
+                  ["--brand-color" as any]: base,
+                  ["--brand-color-light" as any]: light,
+                }}
                 dangerouslySetInnerHTML={{
                   __html: (() => {
                     let text = item.punchline;
                     const highlightedWords = item.meta?.highlightedWords ?? [];
+
+                    // ✅ Couleur inversée pour les bulles
+                    const getContrastingColor = (hex: string): string => {
+                      const cleaned = hex.replace("#", "");
+                      const r = parseInt(cleaned.substring(0, 2), 16);
+                      const g = parseInt(cleaned.substring(2, 4), 16);
+                      const b = parseInt(cleaned.substring(4, 6), 16);
+                      const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+                      return brightness > 160
+                        ? "rgba(0,0,0,0.9)" // fond clair → texte noir
+                        : "rgba(255,255,255,1)"; // fond foncé → texte blanc
+                    };
+
+                    getContrastingColor(base);
+
                     highlightedWords.forEach((word) => {
                       const regex = new RegExp(`(${word})`, "gi");
                       text = text.replace(
                         regex,
-                        `<span class="highlight-bubble">${word}</span>`,
+                        `<span class="highlight-bubble" style="background:${base};color:#fff;">${word}</span>`,
                       );
                     });
+
                     return text;
                   })(),
                 }}
@@ -207,7 +257,17 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
               <>
                 {/* === AXE EMOJI === */}
                 {item.meta?.axe === "emoji" ? (
-                  <div className="emoji-layout">
+                  <div
+                    className="feedback-left"
+                    style={{
+                      backgroundColor: backgroundVariant, // ✅ ton fond clair ou foncé
+                      color: "#000", // texte noir lisible
+                      ["--brand-color" as any]: base,
+                      ["--brand-color-light" as any]: light,
+                    }}
+                    data-axe="emoji"
+                    data-theme={themeMode}
+                  >
                     <div className="feedback-icon">{item.emoji}</div>
                     <div
                       className="emoji-text"
@@ -216,37 +276,20 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
                           let text = item.punchline;
                           const highlightedWords =
                             item.meta?.highlightedWords ?? [];
-
-                          // ✅ Détection automatique du contraste
-                          const getContrastingColor = (hex: string): string => {
-                            const cleaned = hex.replace("#", "");
-                            const r = parseInt(cleaned.substring(0, 2), 16);
-                            const g = parseInt(cleaned.substring(2, 4), 16);
-                            const b = parseInt(cleaned.substring(4, 6), 16);
-                            const brightness =
-                              (r * 299 + g * 587 + b * 114) / 1000;
-                            // Si la couleur est claire → texte plus foncé, sinon plus clair
-                            return brightness > 160
-                              ? "rgba(0,0,0,0.8)"
-                              : "rgba(255,255,255,0.9)";
-                          };
-
-                          const contrastColor = getContrastingColor(base);
-
                           highlightedWords.forEach((word) => {
                             const regex = new RegExp(`(${word})`, "gi");
                             text = text.replace(
                               regex,
-                              `<span class="highlight-emoji" style="color:${contrastColor};font-weight:800;">$1</span>`,
+                              `<span class="highlight-emoji" style="color:${base}; font-weight:800;">$1</span>`,
                             );
                           });
-
                           return text;
                         })(),
                       }}
                     />
                   </div>
                 ) : (
+                  // autres axes (typography, illustration, etc.)
                   <>
                     {/* === AXES EMOJI + ILLUSTRATION === */}
                     <div className="punchlines">
@@ -287,7 +330,15 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
 
                     {/* === AXE ILLUSTRATION : image SOUS les bulles === */}
                     {item.meta?.axe === "illustration" && illustration && (
-                      <div className="illu-wrapper">
+                      <div
+                        className="illu-wrapper"
+                        style={{
+                          backgroundColor: `color-mix(in srgb, ${base} 10%, white)`, // ✅ toujours clair
+                          color: "#000", // ✅ texte noir lisible
+                          ["--brand-color" as any]: base,
+                          ["--brand-color-light" as any]: light,
+                        }}
+                      >
                         <img
                           src={illustration}
                           alt="illustration"
@@ -415,7 +466,7 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
 
         {item.type === "suggestion" && (
           <div className="feedback-footer">
-            <div className="vote-progress">
+            <div className={`vote-progress ${isExpired ? "expired" : ""}`}>
               <div className="pg" ref={barRef}>
                 <div
                   className="pg-fill"
@@ -428,6 +479,9 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
               <span className="pg-count">
                 {votes}/{max}
               </span>
+              {expiresInDays !== null && (
+                <span className="pg-expire">J-{expiresInDays}</span>
+              )}
             </div>
           </div>
         )}
@@ -438,6 +492,7 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
           type={item.type}
           onVoteClick={item.type === "suggestion" ? handleVoteClick : undefined}
           onToggle={onToggle}
+          isExpired={isExpired}
         />
       </div>
 

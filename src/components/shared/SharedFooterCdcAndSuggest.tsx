@@ -15,14 +15,14 @@ interface Props {
   statusLabel?: string;
   onToggle?: (id: string) => void;
   onVoteClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  isExpired?: boolean;
 }
 
 const SharedFooterCdcAndSuggest: React.FC<Props> = ({
   userId,
   descriptionId,
   type,
-  /*   onToggle,
-  statusLabel = "En cours de correction", */
+  isExpired = false,
   onVoteClick,
 }) => {
   const emojis = getEmojisForType(type);
@@ -55,10 +55,10 @@ const SharedFooterCdcAndSuggest: React.FC<Props> = ({
   };
 
   return (
-    <div className="shared-footer-cdc">
+    <div className={`shared-footer-cdc ${isExpired ? "expired" : ""}`}>
       {/* Ligne emoji + compteur commentaires */}
       <div className="footer-header-row">
-        <div className={`emoji-display ${totalCount === 1 ? "single" : ""} `}>
+        <div className={`emoji-display ${totalCount === 1 ? "single" : ""}`}>
           <span className="emoji-icons">
             {topThree.map((r) => (
               <span key={r.emoji} className="emoji-icon">
@@ -106,11 +106,11 @@ const SharedFooterCdcAndSuggest: React.FC<Props> = ({
                 }, 250);
               }}
             >
-              <button type="button">
+              <button type="button" disabled={isExpired}>
                 <ThumbsUp size={16} />
                 {type === "coupdecoeur" && <span>Réagir</span>}
               </button>
-              {showEmojiPicker && (
+              {showEmojiPicker && !isExpired && (
                 <div className="emoji-picker-container">
                   <EmojiUrlyReactionPicker
                     onSelect={handleAddReaction}
@@ -123,8 +123,12 @@ const SharedFooterCdcAndSuggest: React.FC<Props> = ({
             </div>
 
             {/* Commenter */}
-            <button className="comment-toggle-btn" onClick={toggleComments}>
-              <MessageCircle size={16} />{" "}
+            <button
+              className="comment-toggle-btn"
+              onClick={toggleComments}
+              disabled={isExpired}
+            >
+              <MessageCircle size={16} />
               {type === "coupdecoeur" && "Commenter"}
               {type === "suggestion" && (
                 <span className="footer-icon-tooltip">Commenter</span>
@@ -135,25 +139,28 @@ const SharedFooterCdcAndSuggest: React.FC<Props> = ({
             <button
               className="share-btn"
               onClick={() => setShowShareModal(true)}
+              disabled={isExpired}
             >
-              <Share2 size={16} /> {type === "coupdecoeur" && "Partager"}
+              <Share2 size={16} />
+              {type === "coupdecoeur" && "Partager"}
               {type === "suggestion" && (
                 <span className="footer-icon-tooltip">Partager</span>
               )}
             </button>
           </div>
-          <div>
-            {type === "suggestion" && onVoteClick && (
-              <button
-                className="vote-button"
-                onClick={(e) => {
-                  onVoteClick(e);
-                }}
-              >
-                Voter
-              </button>
-            )}
-          </div>
+
+          {/* Bouton voter (désactivé si expiré) */}
+          {type === "suggestion" && onVoteClick && (
+            <button
+              className={`vote-button ${isExpired ? "disabled" : ""}`}
+              onClick={(e) => {
+                if (!isExpired) onVoteClick(e);
+              }}
+              disabled={isExpired}
+            >
+              {isExpired ? "Expiré" : "Voter"}
+            </button>
+          )}
 
           {showShareModal && (
             <>
@@ -170,13 +177,6 @@ const SharedFooterCdcAndSuggest: React.FC<Props> = ({
               )}
             </>
           )}
-
-          {/*          {showShareModal && (
-            <ShareModal
-              suggestionId={descriptionId}
-              onClose={() => setShowShareModal(false)}
-            />
-          )} */}
         </div>
 
         <div className="comments-section">
