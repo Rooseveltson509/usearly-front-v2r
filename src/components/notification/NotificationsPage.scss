@@ -30,6 +30,42 @@
     padding-top: 2.5rem; /* on réduit un peu le haut */
     padding-bottom: 8rem; /* on augmente le bas pour l’espace de chevauchement */
 
+    position: relative; // <-- essentiel pour l'ancrage absolu
+
+    .notif-inline-loader {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+
+      .spinner {
+        width: 32px;
+        height: 32px;
+        border: 3px solid rgba(255, 255, 255, 0.5);
+        border-top: 3px solid #000;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 8px;
+      }
+
+      p {
+        color: #000;
+        font-weight: 500;
+        font-size: 0.95rem;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    }
+
     .notif-banner-content {
       width: 100%;
       max-width: 1200px;
@@ -37,7 +73,6 @@
       justify-content: space-between;
       align-items: center;
       gap: 2rem;
-
       align-items: flex-start; /* ✅ place le titre tout en haut */
       margin-top: 0;
 
@@ -545,7 +580,7 @@
   }
 }
 
-.notif-loading {
+/* .notif-loading {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -565,7 +600,7 @@
     margin-bottom: 1rem;
   }
 }
-
+ */
 @keyframes spin {
   to {
     transform: rotate(360deg);
