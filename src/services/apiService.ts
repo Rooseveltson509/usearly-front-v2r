@@ -152,54 +152,43 @@ export const registerUser = async (
   }
 };
 
-// ✅ Intercepteur de requête – juste pour attacher le token
+// 🟢 Intercepteur de requête → ajoute le accessToken actif
 apiService.interceptors.request.use(
   (config) => {
     const token = getAccessToken();
-
-    if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
-    }
-
+    if (token) config.headers["Authorization"] = `Bearer ${token}`;
     return config;
   },
   (error) => Promise.reject(error),
 );
 
-// ✅ Intercepteur de réponse – gère les 401 et rafraîchit si besoin
+// 🟣 Intercepteur de réponse → gère les 401 (token expiré)
 apiService.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
-    const token = getAccessToken();
-    const userType =
-      localStorage.getItem("userType") || sessionStorage.getItem("userType");
-
-    // Sécurité : ne tente PAS de refresh si aucun token ou aucun userType
-    if (
-      error.response?.status === 401 &&
-      !originalRequest._retry &&
-      token &&
-      userType &&
-      (userType === "user" || userType === "brand")
-    ) {
+    if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
+      console.log("🔄 Token expiré, tentative de refresh...");
 
       try {
         const newAccessToken = await refreshToken();
-        if (!newAccessToken) {
-          throw new Error("No access token after refresh");
-        }
 
-        storeTokenInCurrentStorage(newAccessToken);
-        originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
-        return apiService(originalRequest);
-      } catch (refreshError) {
-        console.error("❌ Échec du refresh token :", refreshError);
-        localStorage.removeItem("accessToken");
-        sessionStorage.removeItem("accessToken");
-        return Promise.reject(refreshError);
+        if (newAccessToken) {
+          // ✅ Mise à jour locale
+          storeTokenInCurrentStorage(newAccessToken);
+          apiService.defaults.headers.common["Authorization"] =
+            `Bearer ${newAccessToken}`;
+          originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+
+          console.log("✅ Token rafraîchi, requête rejouée.");
+          return apiService(originalRequest); // rejoue la requête
+        } else {
+          console.warn("🚫 Aucun nouveau token reçu. Déconnexion requise.");
+        }
+      } catch (err) {
+        console.error("❌ Échec du refresh token :", err);
       }
     }
 
