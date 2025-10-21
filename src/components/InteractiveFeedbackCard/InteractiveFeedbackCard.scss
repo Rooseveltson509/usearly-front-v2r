@@ -672,14 +672,15 @@
   align-items: center;
   justify-content: center;
   min-height: 220px;
-  color: var(--brand-color); // ✅ texte principal couleur marque
+  //color: var(--brand-color);
 
   .punchline-typography {
     font-size: 1.4rem;
     line-height: 1.5;
     font-weight: 100;
     word-wrap: break-word;
-    color: var(--brand-color); // ✅ cohérence du texte
+    color: #000;
+    //color: var(--brand-color); // ✅ cohérence du texte
   }
 
   /* 💬 Bulles typographiques */

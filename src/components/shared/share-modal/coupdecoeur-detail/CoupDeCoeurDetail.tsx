@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import type { CoupDeCoeur } from "@src/types/Reports";
 import "./CoupDeCoeurDetail.scss";
 import { getCoupDeCoeurById } from "@src/services/coupDeCoeurService";
-import InteractiveFeedbackCard from "@src/components/user-profile/InteractiveFeedbackCard";
+import InteractiveFeedbackCard from "@src/components/InteractiveFeedbackCard/InteractiveFeedbackCard";
 import UsearlyDraw from "@src/components/background/Usearly";
 
 const CoupDeCoeurDetail = () => {

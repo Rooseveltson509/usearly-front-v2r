@@ -1,0 +1,71 @@
+.feedback-left {
+  position: relative;
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+  font-family: "Raleway", sans-serif;
+  transition: background-color 0.3s ease;
+
+  &[data-light-brand="true"] {
+    color: #000;
+  }
+
+  &[data-theme="dark"] {
+    color: #fff;
+  }
+
+  .punchline-typography {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    font-weight: 500;
+
+    .highlight-bubble {
+      background: var(--brand-color);
+      color: #fff;
+      font-weight: 700;
+      border-radius: 6px;
+      padding: 0.1em 0.3em;
+      margin: 0 0.1em;
+      display: inline-block;
+      transition: background-color 0.3s ease;
+    }
+
+    // Si la marque est très claire
+    [data-light-brand="true"] & .highlight-bubble {
+      color: #000;
+    }
+  }
+
+  .emoji-layout {
+    .feedback-icon {
+      font-size: 3rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .emoji-text {
+      font-size: 1.1rem;
+      line-height: 1.5;
+      font-weight: 500;
+
+      .highlight-emoji {
+        color: var(--brand-color);
+        font-weight: 800;
+      }
+
+      [data-light-brand="true"] & .highlight-emoji {
+        color: var(--brand-color);
+      }
+    }
+  }
+
+  .illu-wrapper {
+    margin-top: 1rem;
+    border-radius: 10px;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      border-radius: 10px;
+    }
+  }
+}
