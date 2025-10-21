@@ -13,6 +13,9 @@
 
     > .brand-select {
       display: none;
+      &__trigger {
+        height: 100%;
+      }
     }
   }
   .secondary-filters-container {
@@ -370,5 +373,139 @@
   .category-label {
     font-weight: 600;
     color: #333;
+  }
+}
+
+.filters {
+  @media screen and (max-width: 1120px) {
+    margin-top: -30px;
+  }
+  --pill-h: 44px;
+  --gap: 12px;
+
+  .filters__row {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-areas: "brand maincat subcat search";
+    gap: var(--gap);
+    align-items: center;
+    justify-items: stretch;
+
+    > .filters__pill {
+      width: 100%;
+    }
+    .filters__pill {
+      .filters__pill--brand {
+        border: 0px solid #e8eaed;
+        box-shadow: none;
+        .brand-select__trigger {
+          width: auto;
+          border: 1px solid #e4e4e4;
+          box-shadow: none;
+        }
+        .brand-select__trigger--active {
+          box-shadow: none;
+        }
+      }
+      .filters__pill--maincat {
+        width: 100%;
+        .category-dropdown {
+          width: auto;
+          border: 1px solid #e4e4e4;
+        }
+      }
+    }
+  }
+
+  .filters__pill {
+    min-height: var(--pill-h);
+
+    &--brand {
+      grid-area: brand;
+    }
+    &--maincat {
+      grid-area: maincat;
+    }
+    &--subcat {
+      grid-area: subcat;
+      width: 100%;
+    }
+    &--search {
+      grid-area: search;
+    }
+
+    /* style “pill” générique */
+    .pill__control,
+    .pill__select,
+    input {
+      height: var(--pill-h);
+      border-radius: 6px;
+      background: #fff;
+      border: 0px solid #e4e4e4;
+      box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+    }
+
+    .pill__select {
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      border: 1px solid #e4e4e4;
+      width: 100%;
+      max-width: 100%;
+
+      select {
+        appearance: none;
+        background: transparent;
+        border: 0;
+        outline: none;
+        width: 100%;
+        height: 100%;
+        font-size: 14px;
+        font-weight: 600;
+        color: #111;
+      }
+
+      .pill__chev {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0.6;
+      }
+    }
+  }
+
+  /* Tablet : 2 + 1 (la sous-cat passe dessous en pleine largeur) */
+  @media (max-width: 1120px) {
+    .filters__row {
+      grid-template-columns: 1fr 1fr minmax(220px, 1.2fr);
+      grid-template-areas:
+        "brand maincat search"
+        "subcat subcat  search";
+    }
+  }
+
+  /* Mobile : carrousel horizontal de chips */
+  @media (max-width: 600px) {
+    .filters__row {
+      display: flex;
+      overflow-x: auto;
+      gap: var(--gap);
+      padding: 2px; /* pour montrer l’ombre au bord */
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+    .filters__row > .filters__pill {
+      width: auto;
+    }
+    .filters__pill {
+      flex: 0 0 auto;
+      min-width: max(180px, 60%); /* chaque pill assez large pour être “chip” */
+      scroll-snap-align: start;
+    }
+    .filters__pill--search {
+      min-width: 240px; /* la recherche peut être un peu plus large */
+    }
   }
 }
