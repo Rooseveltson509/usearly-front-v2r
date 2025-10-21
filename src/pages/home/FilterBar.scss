@@ -13,6 +13,9 @@
 
     > .brand-select {
       display: none;
+      &__trigger {
+        height: 100%;
+      }
     }
   }
   .secondary-filters-container {
@@ -375,7 +378,7 @@
 
 .filters {
   @media screen and (max-width: 1120px) {
-    margin-top: -15px;
+    margin-top: -30px;
   }
   --pill-h: 44px;
   --gap: 12px;

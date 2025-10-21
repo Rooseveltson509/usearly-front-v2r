@@ -369,79 +369,80 @@ const FilterBar: React.FC<Props> = ({
     );
   } else if (selectedBrand) {
     return (
-      <div className="filter-container">
-        <div className="primary-filters-select">
-          {selectedBrand && (
+      <div className="filters">
+        <div className="filters__row">
+          {/* Pill 1 : Marque (toujours visible) */}
+          <div className="filters__pill filters__pill--brand">
             <BrandSelect
               brands={availableBrands}
               selectedBrand={selectedBrand}
               onSelect={(brand) => handleBrandSelect(brand)}
               onClear={() => clearBrand()}
               placeholder="Choisir une marque"
-              className="brand-select-rounded"
+              className="pill__control"
             />
-          )}
+          </div>
+
+          {/* Pill 2 : Catégorie principale (affichée si une marque est choisie) */}
           {selectedBrand && (
-            <>
-              {/* Sélecteur Catégorie principale */}
-              <div className="category-select-select">
-                <CategoryDropdown
-                  categories={Object.keys(
-                    availableSubCategoriesByBrandAndCategory?.[selectedBrand] ||
-                      {},
-                  )}
-                  selected={selectedMainCategory}
-                  onSelect={(cat) => {
-                    setSelectedMainCategory(cat);
-                    setSelectedCategory("");
+            <div className="filters__pill filters__pill--maincat">
+              <CategoryDropdown
+                categories={Object.keys(
+                  availableSubCategoriesByBrandAndCategory?.[selectedBrand] ||
+                    {},
+                )}
+                selected={selectedMainCategory}
+                onSelect={(cat) => {
+                  setSelectedMainCategory(cat);
+                  setSelectedCategory("");
+                  setViewMode("flat");
+                  setFilter("");
+                  onViewModeChange?.("flat");
+                  setActiveFilter("");
+                }}
+              />
+            </div>
+          )}
+
+          {/* Pill 3 : Sous-catégorie (si cat principale choisie) */}
+          {selectedBrand && selectedMainCategory && (
+            <div className="filters__pill filters__pill--subcat">
+              <div className="pill__select">
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => {
+                    setSelectedCategory(e.target.value);
                     setViewMode("flat");
                     setFilter("");
                     onViewModeChange?.("flat");
                     setActiveFilter("");
                   }}
-                />
+                  aria-label="Sous-catégorie"
+                >
+                  <option value="">Sous-catégorie</option>
+                  {(
+                    availableSubCategoriesByBrandAndCategory?.[selectedBrand]?.[
+                      selectedMainCategory
+                    ] || []
+                  ).map((sub) => (
+                    <option key={sub} value={sub}>
+                      {sub}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown size={16} className="pill__chev" aria-hidden />
               </div>
-
-              {/* Sélecteur Sous-catégorie */}
-              {selectedMainCategory && (
-                <div className="subcategory-select">
-                  <select
-                    value={selectedCategory}
-                    onChange={(e) => {
-                      setSelectedCategory(e.target.value);
-                      setViewMode("flat");
-                      setFilter("");
-                      onViewModeChange?.("flat");
-                      setActiveFilter("");
-                    }}
-                  >
-                    <option value="">Sous-catégorie</option>
-                    {(
-                      availableSubCategoriesByBrandAndCategory?.[
-                        selectedBrand
-                      ]?.[selectedMainCategory] || []
-                    ).map((sub) => (
-                      <option key={sub} value={sub}>
-                        {sub}
-                      </option>
-                    ))}
-                  </select>
-                  <ChevronDown
-                    size={16}
-                    className="cat-select__chev"
-                    aria-hidden
-                  />
-                </div>
-              )}
-            </>
+            </div>
           )}
-        </div>
-        <div className="secondary-filters-select">
-          <SearchBar
-            value={searchTerm}
-            onChange={onSearchTermChange}
-            placeholder="Rechercher un signalement..."
-          />
+
+          {/* Recherche (se place en bout de ligne / passe en dessous selon le layout) */}
+          <div className="filters__pill filters__pill--search">
+            <SearchBar
+              value={searchTerm}
+              onChange={onSearchTermChange}
+              placeholder="Rechercher un signalement…"
+            />
+          </div>
         </div>
       </div>
     );
