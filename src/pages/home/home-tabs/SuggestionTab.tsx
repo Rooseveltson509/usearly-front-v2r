@@ -90,7 +90,7 @@ const SuggestionTab: React.FC<Props> = ({
                             {filteredByCategory.length}
                           </span>
                           <span className="text">
-                            Signalement
+                            Suggestion
                             {filteredByCategory.length > 1 ? "s" : ""} lié
                             {filteredByCategory.length > 1 ? "s" : ""} à «{" "}
                             <b>{selectedCategory}</b> » sur{" "}
@@ -101,7 +101,7 @@ const SuggestionTab: React.FC<Props> = ({
                         <>
                           <span className="count">{totalCount}</span>
                           <span className="text">
-                            Signalement{totalCount > 1 ? "s" : ""} sur{" "}
+                            suggestion{totalCount > 1 ? "s" : ""} sur{" "}
                             {` ${capitalizeFirstLetter(selectedBrand)}`}
                           </span>
                         </>

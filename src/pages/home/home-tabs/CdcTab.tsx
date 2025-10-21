@@ -85,7 +85,7 @@ const CdcTab: React.FC<Props> = ({
                                 {filteredByCategory.length}
                               </span>
                               <span className="text">
-                                Signalement
+                                Coup de Coeurs
                                 {filteredByCategory.length > 1 ? "s" : ""} lié
                                 {filteredByCategory.length > 1 ? "s" : ""} à «{" "}
                                 <b>{selectedCategory}</b> » sur{" "}
@@ -96,7 +96,7 @@ const CdcTab: React.FC<Props> = ({
                             <>
                               <span className="count">{totalCount}</span>
                               <span className="text">
-                                Signalement{totalCount > 1 ? "s" : ""} sur{" "}
+                                Coup de Coeurs {totalCount > 1 ? "s" : ""} sur{" "}
                                 {` ${capitalizeFirstLetter(selectedBrand)}`}
                               </span>
                             </>
