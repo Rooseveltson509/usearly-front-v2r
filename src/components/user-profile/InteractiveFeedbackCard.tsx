@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
-import "./InteractiveFeedbackCard.scss";
 import { formatDistanceToNowStrict } from "date-fns";
 import { fr } from "date-fns/locale";
 import type { CoupDeCoeur, Suggestion } from "@src/types/Reports";
