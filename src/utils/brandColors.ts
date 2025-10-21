@@ -28,11 +28,12 @@ export const brandColors: Record<string, string> = {
   visa: "#1A1F71",
   mastercard: "#EB001B",
   revolut: "#000000ff",
-  n26: "#14F195",
+  n26: "#000000",
   stripe: "#635BFF",
   coinbase: "#0052FF",
   binance: "#F3BA2F",
   kraken: "#1A1A1A",
+  "caisse-epargne": "#f90200",
 
   // Social Media & Communication
   whatsapp: "#25D366",

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import InteractiveFeedbackCard from "@src/components/user-profile/InteractiveFeedbackCard";
+import InteractiveFeedbackCard from "@src/components/InteractiveFeedbackCard/InteractiveFeedbackCard";
 import { useFetchUserFeedback } from "@src/hooks/useFetchUserFeedback";
 import type { FeedbackType } from "@src/components/user-profile/FeedbackTabs";
 import type { CoupDeCoeur, Suggestion } from "@src/types/Reports";
