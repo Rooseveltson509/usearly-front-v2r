@@ -44,6 +44,8 @@ interface Props {
   setSelectedBrand: (val: string) => void;
   selectedCategory: string;
   setSelectedCategory: (val: string) => void;
+  selectedMainCategory: string;
+  setSelectedMainCategory: (val: string) => void;
   setSelectedSiteUrl: (val: string | undefined) => void;
   selectedSiteUrl?: string;
 
@@ -109,6 +111,8 @@ const HomeGroupedReportsList = ({
   setSelectedSiteUrl,
   selectedCategory,
   setSelectedCategory,
+  selectedMainCategory,
+  setSelectedMainCategory,
   selectedSiteUrl,
   totalityCount,
   onSectionChange,
@@ -384,6 +388,8 @@ const HomeGroupedReportsList = ({
         setViewMode={onViewModeChange}
         setSelectedBrand={setSelectedBrand}
         setSelectedCategory={setSelectedCategory}
+        selectedMainCategory={selectedMainCategory}
+        setSelectedMainCategory={setSelectedMainCategory}
         setActiveFilter={setActiveFilter}
         onViewModeChange={onViewModeChange}
         isHotFilterAvailable={true}

@@ -3,6 +3,9 @@
 .home-grouped-reports-list {
   margin-top: 20px;
   margin-right: 20px;
+  @media screen and (max-width: 1350px) {
+    margin-right: 0px;
+  }
   z-index: 1;
 
   .selected-brand-summary {
@@ -67,6 +70,13 @@
         }
       }
     }
+  }
+}
+
+@media screen and (min-width: 1120px) {
+  .report-banner-container
+    .home-grouped-reports-list:has(.filters__pill--subcat) {
+    margin-top: 40px;
   }
 }
 

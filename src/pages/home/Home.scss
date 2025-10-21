@@ -149,6 +149,32 @@
   }
 }
 
+.brandSelected > .report-banner-container {
+  margin-top: -60px;
+}
+
+.brandCategorySelected > .report-banner-container {
+  margin-top: -120px;
+}
+
+.brandSelected {
+  .feedback-list-wrapper {
+    .home-grouped-reports-list {
+      margin-top: 30px;
+    }
+  }
+}
+
+.brandCategorySelected {
+  margin-top: 7rem;
+  .feedback-list-wrapper {
+    margin-top: -120px;
+    .home-grouped-reports-list {
+      margin-top: 20px;
+    }
+  }
+}
+
 /* ==== Coups de cœur ==== */
 .cdc-banner-container {
   display: flex;

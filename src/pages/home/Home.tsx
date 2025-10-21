@@ -16,6 +16,7 @@ function Home() {
   const [activeTab, setActiveTab] = useState<FeedbackType>("report");
   const [selectedBrand, setSelectedBrand] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedMainCategory, setSelectedMainCategory] = useState("");
   const [activeFilter, setActiveFilter] = useState("confirmed");
   const [selectedSiteUrl, setSelectedSiteUrl] = useState<string | undefined>();
   const [suggestionSearch, setSuggestionSearch] = useState("");
@@ -48,6 +49,7 @@ function Home() {
   const handleSuggestionBrandChange = useCallback((brand: string) => {
     setSelectedBrand(brand);
     setSelectedCategory("");
+    setSelectedMainCategory("");
     setSuggestionSearch("");
     setActiveFilter(brand ? "brandSolo" : "allSuggest");
   }, []);
@@ -85,6 +87,8 @@ function Home() {
             setSelectedBrand={setSelectedBrand}
             selectedCategory={selectedCategory}
             setSelectedCategory={setSelectedCategory}
+            selectedMainCategory={selectedMainCategory}
+            setSelectedMainCategory={setSelectedMainCategory}
             setSelectedSiteUrl={setSelectedSiteUrl}
             brandBannerStyle={brandBannerStyle}
             displayedCount={displayedCount}
