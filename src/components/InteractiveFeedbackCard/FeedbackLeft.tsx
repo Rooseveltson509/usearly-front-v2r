@@ -2,6 +2,7 @@ import React from "react";
 import { decideIllustration } from "@src/utils/getIllustrationDecision";
 import { getBrandThemeColor } from "@src/utils/getBrandThemeColor";
 import type { CoupDeCoeur, Suggestion } from "@src/types/Reports";
+import { BrandSvg } from "../shared/BrandSvg";
 
 interface Props {
   item: (CoupDeCoeur | Suggestion) & { type: "suggestion" | "coupdecoeur" };
@@ -28,17 +29,6 @@ const FeedbackLeft: React.FC<Props> = ({ item }) => {
   const adjustedBase = isTooLight ? "#4A90E2" : base;
   const adjustedLight = isTooLight ? "rgba(74,144,226,0.15)" : light;
   const themeMode = isDark ? "dark" : "light";
-
-  /* const appliedColor =
-    item.meta?.axe === "illustration"
-      ? isPureBlack
-        ? light
-        : isPureWhite
-          ? base
-          : isDark
-            ? base
-            : light
-      : base; */
 
   const illustration = decideIllustration(
     item.title,
@@ -146,11 +136,20 @@ const FeedbackLeft: React.FC<Props> = ({ item }) => {
                     color: "#000",
                   }}
                 >
-                  <img
-                    src={illustration}
-                    alt="illustration"
-                    className="illu-image"
-                  />
+                  {item.type === "coupdecoeur" ? (
+                    <BrandSvg
+                      src={illustration}
+                      brandColor={adjustedBase}
+                      className="illu-image"
+                      alt="Illustration de la marque"
+                    />
+                  ) : (
+                    <img
+                      src={illustration}
+                      alt="illustration"
+                      className="illu-image"
+                    />
+                  )}
                 </div>
               )}
             </>
