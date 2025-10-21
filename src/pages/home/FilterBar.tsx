@@ -39,6 +39,8 @@ interface Props {
   setIsDropdownOpen: (val: boolean) => void;
   selectedBrand: string;
   selectedCategory: string;
+  selectedMainCategory?: string;
+  setSelectedMainCategory?: (val: string) => void;
   availableBrands: string[];
   availableCategories: string[];
   searchTerm: string;
@@ -103,6 +105,8 @@ const FilterBar: React.FC<Props> = ({
   setIsDropdownOpen,
   selectedBrand,
   selectedCategory,
+  selectedMainCategory: externalSelectedMainCategory,
+  setSelectedMainCategory: externalSetSelectedMainCategory,
   availableBrands,
   availableCategories,
   searchTerm,
@@ -142,6 +146,15 @@ const FilterBar: React.FC<Props> = ({
     return availableCategories.filter((cat) => normalize(cat).includes(query));
   }, [availableCategories, categorySearch]);
 
+  const [internalSelectedMainCategory, setInternalSelectedMainCategory] =
+    useState("");
+
+  const selectedMainCategory =
+    externalSelectedMainCategory ?? internalSelectedMainCategory;
+
+  const setSelectedMainCategory =
+    externalSetSelectedMainCategory ?? setInternalSelectedMainCategory;
+
   const resetBrandFilters = () => {
     if (selectedBrand) {
       setSelectedBrand("");
@@ -149,11 +162,12 @@ const FilterBar: React.FC<Props> = ({
     if (selectedCategory) {
       setSelectedCategory("");
     }
+    if (selectedMainCategory) {
+      setSelectedMainCategory("");
+    }
     setBrandSearch("");
     setCategorySearch("");
   };
-
-  const [selectedMainCategory, setSelectedMainCategory] = useState("");
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -180,7 +194,7 @@ const FilterBar: React.FC<Props> = ({
     // Quand la marque change → reset des catégories
     setSelectedMainCategory("");
     setSelectedCategory("");
-  }, [selectedBrand]);
+  }, [selectedBrand, setSelectedMainCategory, setSelectedCategory]);
 
   const handleBrandSelect = (brand: string) => {
     const normalized = brand.trim();

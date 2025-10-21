@@ -138,21 +138,23 @@
   }
 
   .punchlines {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    align-items: flex-start;
+    display: grid;
+    justify-items: start;
+    align-content: start;
     margin-top: 8px;
-    min-height: 175px;
+    min-height: max-content;
     position: relative;
 
     .bubble {
-      padding: 10px 16px;
+      justify-self: start;
+      width: -moz-fit-content;
+      width: fit-content;
+      max-width: 220px;
+      padding: 10px 10px;
       border-radius: 18px;
-      font-size: 14px;
+      font-size: 18px;
       font-weight: 600;
       line-height: 1.4;
-      max-width: 220px;
       word-break: break-word;
       position: relative;
       opacity: 0;
@@ -160,17 +162,18 @@
       transform: scale(0.9);
       animation: bubblePop 0.4s ease forwards;
 
-      &.primary {
-        align-self: flex-start;
-        border-radius: 18px 18px 18px 4px;
-        animation-delay: 0.1s;
-      }
-
       &.secondary {
-        align-self: flex-end;
+        justify-self: end;
         border-radius: 18px 18px 4px 18px;
         margin-right: 12px;
+        margin-top: -7.5px;
         animation-delay: 0.3s;
+      }
+
+      &.primary {
+        z-index: 1;
+        border-radius: 18px 18px 18px 4px;
+        animation-delay: 0.1s;
       }
     }
   }
@@ -193,21 +196,22 @@
   }
 
   .bubble {
+    width: -moz-fit-content;
+    width: fit-content;
+    max-width: 90%;
     padding: 10px 16px;
     border-radius: 18px;
     font-size: 14px;
     font-weight: 600;
     line-height: 1.4;
-    max-width: 90%;
     word-break: break-word;
 
     &.primary {
-      align-self: flex-start;
       border-radius: 18px 18px 18px 4px;
     }
 
     &.secondary {
-      align-self: flex-end;
+      justify-self: end;
       border-radius: 18px 18px 4px 18px;
     }
   }
@@ -215,6 +219,7 @@
 
 .bubble.primary {
   font-weight: 700;
+  border-radius: 999px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -248,20 +253,22 @@
 
   /* Bulles (titre multi-lignes) */
   .punchlines {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    align-items: flex-start;
+    display: grid;
+    justify-items: start;
+    align-content: start;
     margin-top: 8px;
-    min-height: 175px;
+    min-height: max-content;
 
     .bubble {
-      padding: 10px 16px;
+      justify-self: start;
+      width: -moz-fit-content;
+      width: fit-content;
+      max-width: 220px;
+      padding: 10px 10px;
       border-radius: 18px;
-      font-size: 14px;
+      font-size: 18px;
       font-weight: 600;
       line-height: 1.4;
-      max-width: 220px;
       word-break: break-word;
       position: relative;
 
@@ -270,19 +277,18 @@
       transform: scale(0.9);
       animation: bubblePop 0.4s ease forwards;
 
+      &.secondary {
+        justify-self: end;
+        border-radius: 18px 18px 4px 18px;
+        margin-right: 12px;
+        animation-delay: 0.3s;
+      }
+
       &.primary {
-        align-self: flex-start;
         border-radius: 18px 18px 18px 4px;
         animation-delay: 0.1s;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         font-weight: 700;
-      }
-
-      &.secondary {
-        align-self: flex-end;
-        border-radius: 18px 18px 4px 18px;
-        margin-right: 12px;
-        animation-delay: 0.3s;
       }
     }
   }
@@ -400,7 +406,7 @@
 
       .cdc-post-title {
         color: $dark;
-        font-size: 18px;
+        font-size: 16px;
         font-weight: 700;
       }
 
@@ -473,19 +479,45 @@
 .illu-wrapper {
   display: flex;
   justify-content: center;
-  align-items: flex-end;
+  align-items: center;
+  flex: 1 1 auto;
   width: 100%;
-  height: 100%;
+  max-width: 100%;
   margin-top: auto; // pousse vers le bas
-  padding-bottom: 10px;
+  padding: 0 12px 10px;
+  box-sizing: border-box;
+  overflow: hidden;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  max-height: 100%;
+  height: fill-available;
+  height: -moz-available;
+  height: -webkit-fill-available;
 
   .illu-image {
-    width: 60px;
-    height: 60px;
-    object-fit: contain;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    max-height: 100%;
+    min-width: 0;
+    min-height: 0;
     opacity: 0.9;
     filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.1));
     animation: fadeSlideIn 0.4s ease-out;
+  }
+
+  .illu-image svg,
+  .illu-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
   }
 }
 
@@ -508,7 +540,7 @@
     padding: 12px 0;
 
     .punchlines {
-      align-items: center;
+      justify-items: center;
       text-align: center;
 
       .bubble {
@@ -565,7 +597,7 @@
 
     &.secondary {
       background: var(--brand-color, #333);
-      color: #fff;
+      color: var(--bubble-secondary-text, #fff);
       border: 1px solid black;
     }
   }
@@ -583,7 +615,7 @@
 
     &.secondary {
       background: #000;
-      color: #fff;
+      color: var(--bubble-secondary-text, #fff);
       border: 1px solid black;
     }
   }
@@ -605,10 +637,11 @@
   }
 
   .emoji-text {
-    font-size: 1.4rem;
+    font-size: clamp(14px, 1.75cqw, 23px);
     font-weight: 500;
-    line-height: 1.5;
+    line-height: 1.35;
     color: #000;
+    transition: font-size 80ms ease;
 
     .highlight {
       color: var(--brand-color);
@@ -636,19 +669,11 @@
   }
 
   .emoji-text {
-    font-size: 1.4rem;
+    font-size: clamp(14px, 1.75cqw, 23px);
+    text-wrap: balance; /* répartit mieux les mots sur les lignes */
+    overflow-wrap: anywhere; /* évite les débordements moches */
     line-height: 1.6;
     font-weight: 500;
-
-    .highlight-emoji {
-      color: var(--brand-color); // ✅ couleur de la marque
-      font-weight: 800; // ✅ gras
-      background: none !important; // ✅ pas de bulle
-      border: none !important;
-      padding: 0 !important;
-      box-shadow: none !important;
-      display: inline;
-    }
   }
 
   // désactive tout héritage de bulles
@@ -736,13 +761,17 @@
       background: #fff;
       color: #000;
       font-weight: 600;
+      border-radius: 999px;
+      text-align: left;
       border: 2px solid rgba(0, 0, 0, 0.1);
       font-family: "Urbanist", sans-serif;
     }
 
     .bubble.secondary {
       background: var(--brand-color);
-      color: #fff;
+      color: var(--bubble-secondary-text, #fff);
+      border-radius: 999px;
+      text-align: right;
       font-weight: 700;
       font-family: "Urbanist Black Italic", sans-serif;
     }
@@ -750,24 +779,39 @@
 
   .illu-wrapper {
     margin-top: 1rem;
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
+    align-items: center;
 
     .illu-image {
-      width: 60px;
-      height: 60px;
-      object-fit: contain;
       opacity: 0.95;
       filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.1));
     }
   }
 }
+// Surbrillance emoji : stylisée + adaptable
 .highlight-emoji {
   font-family: "Urbanist Black Italic", sans-serif;
   font-style: italic;
   font-weight: 800;
-  transition: all 0.2s ease;
+  border-radius: 999px;
+  display: inline-block;
+  transition:
+    transform 0.2s ease,
+    filter 0.2s ease;
+  background: transparent;
+  color: inherit;
+  text-shadow: 0 1px 2px var(--highlight-text-shadow, rgba(0, 0, 0, 0.5));
+}
+
+.highlight-emoji--shadow-strong {
+  text-shadow:
+    0 1px 1px var(--highlight-text-shadow, rgba(0, 0, 0, 0.5)),
+    0 0 1px var(--highlight-text-shadow-strong, rgba(0, 0, 0, 0.75)),
+    0 0 2px var(--highlight-text-shadow-strong, rgba(0, 0, 0, 0.75));
+}
+
+.highlight-emoji:hover {
+  transform: scale(1.05);
+  filter: brightness(1.05);
 }
 .highlight-bubble {
   background-color: rgba(255, 255, 255, 0.2);
@@ -778,37 +822,9 @@
 .feedback-left[data-axe="emoji"] {
   .emoji-text {
     color: inherit;
-    font-size: 1.4rem;
+    font-size: clamp(14px, 1.75cqw, 23px);
     line-height: 1.6;
     font-weight: 500;
     text-align: center;
-  }
-
-  .highlight-emoji {
-    border-radius: 999px;
-    padding: 4px 12px;
-    margin: 0 4px;
-    font-weight: 700;
-    display: inline-block;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-  }
-
-  /* 🌓 Fond sombre → bulles blanches, texte couleur marque */
-  &[data-theme="dark"] .highlight-emoji {
-    background: #fff;
-    color: var(--brand-color);
-  }
-
-  /* ☀️ Fond clair → bulles couleur marque, texte blanc */
-  &[data-theme="light"] .highlight-emoji {
-    background: var(--brand-color);
-    color: #fff;
-  }
-
-  /* ✨ Petit effet au survol */
-  .highlight-emoji:hover {
-    transform: scale(1.05);
-    filter: brightness(1.1);
   }
 }

@@ -10,6 +10,8 @@ interface Props {
   setSelectedBrand: (b: string) => void;
   selectedCategory: string;
   setSelectedCategory: (c: string) => void;
+  selectedMainCategory: string;
+  setSelectedMainCategory: (c: string) => void;
   setSelectedSiteUrl: (url?: string) => void;
   brandBannerStyle: React.CSSProperties;
   displayedCount: number;
@@ -22,19 +24,25 @@ const ReportTab: React.FC<Props> = ({
   setSelectedBrand,
   selectedCategory,
   setSelectedCategory,
+  selectedMainCategory,
+  setSelectedMainCategory,
   setSelectedSiteUrl,
   brandBannerStyle,
   displayedCount,
 }) => {
+  const bannerClassName = [
+    "report-banner-container",
+    selectedBrand || selectedCategory
+      ? "banner-filtered"
+      : `banner-${activeFilter}`,
+    selectedBrand ? "brandSelected" : "",
+    selectedMainCategory || selectedCategory ? "brandCategorySelected" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
-    <div
-      className={`report-banner-container ${
-        selectedBrand || selectedCategory
-          ? "banner-filtered"
-          : `banner-${activeFilter}`
-      }`}
-      style={brandBannerStyle}
-    >
+    <div className={bannerClassName} style={brandBannerStyle}>
       <div className="feedback-list-wrapper">
         <HomeGroupedReportsList
           activeTab={"report" as FeedbackType}
@@ -46,6 +54,8 @@ const ReportTab: React.FC<Props> = ({
           setSelectedBrand={setSelectedBrand}
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
+          selectedMainCategory={selectedMainCategory}
+          setSelectedMainCategory={setSelectedMainCategory}
           setSelectedSiteUrl={setSelectedSiteUrl}
           totalityCount={displayedCount}
         />

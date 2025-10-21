@@ -122,6 +122,10 @@
           width: clamp(70px, 7vw, 120px);
           animation-delay: 2s;
         }
+
+        &.logo-badge {
+          opacity: 1 !important;
+        }
       }
     }
 
