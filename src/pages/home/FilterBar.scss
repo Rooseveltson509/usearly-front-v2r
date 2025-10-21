@@ -377,12 +377,16 @@
 }
 
 .filters {
-  @media screen and (max-width: 1120px) {
-    margin-top: -30px;
-  }
   --pill-h: 44px;
   --gap: 12px;
 
+  @media screen and (max-width: 1120px) {
+    margin-top: -30px;
+  }
+  & {
+    --pill-h: 44px;
+    --gap: 12px;
+  }
   .filters__row {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
