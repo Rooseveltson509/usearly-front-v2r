@@ -9,7 +9,7 @@ import {
 } from "@src/services/notificationService";
 import NotificationCardRenderer from "./NotificationCardRenderer";
 import Avatar from "../shared/Avatar";
-import PurpleBannerMinimal from "../shared/PurpleBannerMinimal";
+import PurpleBanner from "../../pages/home/components/purpleBanner/PurpleBanner";
 import UserStatsCard from "../user-profile/UserStatsCard";
 
 interface Notification {
@@ -188,7 +188,7 @@ const NotificationsPage: React.FC = () => {
 
   return (
     <>
-      <PurpleBannerMinimal />
+      <PurpleBanner navOn={false} />
       <div className="notifications-layout">
         {/* 🧑‍💼 Carte utilisateur à gauche */}
         <aside className="notifications-sidebar">

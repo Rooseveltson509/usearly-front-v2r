@@ -9,15 +9,20 @@ import emojiIcon from "/assets/images/emoji-top-bar.png";
 import big from "/assets/images/big.svg";
 import medium from "/assets/images/medium.svg";
 import small from "/assets/images/small.svg";
+import badge from "/assets/icons/Little-badge.svg";
 
 export type PurpleBannerProps = {
-  activeTab: FeedbackType;
-  onTabChange: (tab: FeedbackType) => void;
+  activeTab?: FeedbackType;
+  onTabChange?: (tab: FeedbackType) => void;
+  navOn?: boolean;
+  pastille?: boolean;
 };
 
 export default function PurpleBanner({
-  activeTab,
-  onTabChange,
+  activeTab = "report",
+  onTabChange = () => {},
+  navOn = true,
+  pastille = false,
 }: PurpleBannerProps) {
   return (
     <div className="purple-banner">
@@ -40,11 +45,16 @@ export default function PurpleBanner({
           <img src={big} alt="big" className="logo logo-big" />
           <img src={medium} alt="medium" className="logo logo-medium" />
           <img src={small} alt="small" className="logo logo-small" />
+          {pastille && (
+            <img src={badge} alt="badge" className="logo logo-badge" />
+          )}
         </div>
       </div>
 
       {/* tabs (report, coupdecoeur, suggestion) */}
-      <FeedbackTabs activeTab={activeTab} onTabChange={onTabChange} />
+      {navOn && (
+        <FeedbackTabs activeTab={activeTab} onTabChange={onTabChange} />
+      )}
     </div>
   );
 }

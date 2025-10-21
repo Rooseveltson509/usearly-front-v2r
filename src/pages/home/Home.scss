@@ -227,8 +227,9 @@
       .feedback-view-wrapper {
         display: flex;
         flex-direction: column;
-        gap: 20px;
+        gap: 27px;
         width: 68%;
+        margin-top: -5px;
         @media screen and (max-width: 1350px) {
           width: 100%;
         }
@@ -296,8 +297,8 @@
     flex: 1;
     position: relative;
     z-index: 2;
-    margin-top: -70px; // ✅ cartes par-dessus
-    gap: 5px;
+    margin-top: -80px; // ✅ cartes par-dessus
+    gap: 0px;
 
     .selected-brand-heading {
       position: relative;

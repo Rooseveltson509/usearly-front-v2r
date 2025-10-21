@@ -78,7 +78,7 @@ export const brandColors: Record<string, string> = {
   laboutiqueofficielle: "#e74b58",
 
   // Tech
-  apple: "#000000",
+  apple: "#F3F3F6",
   google: "#4285F4",
   facebook: "#1877F2",
   instagram: "#E1306C",
@@ -113,6 +113,12 @@ export const brandColors: Record<string, string> = {
   lyft: "#FF00BF",
   bolt: "#000000",
   "velib-metropole": "#6eb1c0",
+
+  // Esthetic & Fashion
+  blackboxparis: "#000000",
+  sephora: "#000000",
+  glossier: "#FDE8E8",
+  birchbox: "#E91E63",
 
   // Default fallback
   default: "#3b3b3cff",

@@ -14,6 +14,7 @@ import starProgressBar from "/assets/icons/icon-progress-bar.svg";
 import { capitalizeFirstLetter } from "@src/utils/stringUtils";
 import { decideIllustration } from "@src/utils/getIllustrationDecision";
 import { getBrandThemeColor } from "@src/utils/getBrandThemeColor";
+import { BrandSvg } from "../shared/BrandSvg";
 
 interface Props {
   item: (CoupDeCoeur | Suggestion) & {
@@ -194,7 +195,88 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
     return brightness > 140 ? "#000" : "#fff";
   };
 
+  const normalizeHex = (hex: string): string => {
+    if (!hex) return "#000000";
+    let clean = hex.trim().toLowerCase();
+    if (!clean.startsWith("#")) {
+      clean = `#${clean}`;
+    }
+    clean = clean.replace("#", "");
+
+    if (clean.length === 3) {
+      clean = clean
+        .split("")
+        .map((char) => `${char}${char}`)
+        .join("");
+    } else if (clean.length === 4) {
+      clean = clean
+        .substring(0, 3)
+        .split("")
+        .map((char) => `${char}${char}`)
+        .join("");
+    } else if (clean.length === 8) {
+      clean = clean.substring(0, 6);
+    }
+
+    if (clean.length !== 6) {
+      return "#000000";
+    }
+
+    return `#${clean}`;
+  };
+
+  const hexToRgb = (hex: string) => {
+    const sanitized = normalizeHex(hex).replace("#", "");
+    const intVal = parseInt(sanitized, 16);
+    return {
+      r: (intVal >> 16) & 255,
+      g: (intVal >> 8) & 255,
+      b: intVal & 255,
+    };
+  };
+
+  const getPerceivedBrightness = (hex: string): number => {
+    const { r, g, b } = hexToRgb(hex);
+    return (r * 299 + g * 587 + b * 114) / 1000;
+  };
+
+  const escapeRegExp = (value: string): string =>
+    value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+  const normalizedBaseColor = normalizeHex(base);
+  const bubbleSecondaryTextColor = getContrastingTextColor(normalizedBaseColor);
   const textColor = getContrastingTextColor(appliedColor);
+  const highlightTextColor = normalizedBaseColor;
+  const highlightBrightness = getPerceivedBrightness(highlightTextColor);
+  const highlightShadowColor =
+    highlightBrightness > 175
+      ? "rgba(0, 0, 0, 0.55)"
+      : "rgba(255, 255, 255, 0.8)";
+  const highlightShadowStrongColor =
+    highlightBrightness > 175
+      ? "rgba(0, 0, 0, 0.75)"
+      : "rgba(255, 255, 255, 0.95)";
+  const highlightNeedsShadowBoost = highlightBrightness > 200;
+
+  const highlightClassName = [
+    "highlight-emoji",
+    highlightNeedsShadowBoost ? "highlight-emoji--shadow-strong" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  const highlightStyleSegments = [
+    `color:${highlightTextColor}`,
+    "font-weight:800",
+    "background:transparent",
+    `--highlight-text-shadow:${highlightShadowColor}`,
+    `--highlight-text-shadow-strong:${highlightShadowStrongColor}`,
+  ];
+
+  const highlightStyle = `${highlightStyleSegments.join(";")};`;
+
+  const wrapHighlight = (content: string) =>
+    `<span class="${highlightClassName}" style="${highlightStyle}">${content}</span>`;
 
   return (
     <div className={`feedback-card ${isOpen ? "open" : ""}`}>
@@ -208,6 +290,7 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
               color: textColor,
               ["--brand-color" as any]: base,
               ["--brand-color-light" as any]: light,
+              ["--bubble-secondary-text" as any]: bubbleSecondaryTextColor,
             }}
             data-axe={item.meta?.axe || "typography"}
             data-theme={themeMode}
@@ -221,6 +304,7 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
                   color: "#000", // texte noir lisible
                   ["--brand-color" as any]: base,
                   ["--brand-color-light" as any]: light,
+                  ["--bubble-secondary-text" as any]: bubbleSecondaryTextColor,
                 }}
                 dangerouslySetInnerHTML={{
                   __html: (() => {
@@ -242,7 +326,7 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
                     getContrastingColor(base);
 
                     highlightedWords.forEach((word) => {
-                      const regex = new RegExp(`(${word})`, "gi");
+                      const regex = new RegExp(`(${escapeRegExp(word)})`, "gi");
                       text = text.replace(
                         regex,
                         `<span class="highlight-bubble" style="background:${base};color:#fff;">${word}</span>`,
@@ -264,6 +348,8 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
                       color: "#000", // texte noir lisible
                       ["--brand-color" as any]: base,
                       ["--brand-color-light" as any]: light,
+                      ["--bubble-secondary-text" as any]:
+                        bubbleSecondaryTextColor,
                     }}
                     data-axe="emoji"
                     data-theme={themeMode}
@@ -277,10 +363,12 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
                           const highlightedWords =
                             item.meta?.highlightedWords ?? [];
                           highlightedWords.forEach((word) => {
-                            const regex = new RegExp(`(${word})`, "gi");
-                            text = text.replace(
-                              regex,
-                              `<span class="highlight-emoji" style="color:${base}; font-weight:800;">$1</span>`,
+                            const pattern = new RegExp(
+                              `(${escapeRegExp(word)})`,
+                              "gi",
+                            );
+                            text = text.replace(pattern, (match) =>
+                              wrapHighlight(match),
                             );
                           });
                           return text;
@@ -304,10 +392,12 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
                           highlightedWords.length > 0
                         ) {
                           highlightedWords.forEach((word) => {
-                            const regex = new RegExp(`(${word})`, "gi");
-                            content = content.replace(
-                              regex,
-                              `<span class="highlight-emoji">${word}</span>`,
+                            const regex = new RegExp(
+                              `(${escapeRegExp(word)})`,
+                              "gi",
+                            );
+                            content = content.replace(regex, (match) =>
+                              wrapHighlight(match),
                             );
                           });
                         }
@@ -339,11 +429,20 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
                           ["--brand-color-light" as any]: light,
                         }}
                       >
-                        <img
-                          src={illustration}
-                          alt="illustration"
-                          className="illu-image"
-                        />
+                        {item.type === "coupdecoeur" ? (
+                          <BrandSvg
+                            src={illustration}
+                            brandColor={base}
+                            className="illu-image"
+                            alt="Illustration de la marque"
+                          />
+                        ) : (
+                          <img
+                            src={illustration}
+                            alt="illustration"
+                            className="illu-image"
+                          />
+                        )}
                       </div>
                     )}
                   </>
