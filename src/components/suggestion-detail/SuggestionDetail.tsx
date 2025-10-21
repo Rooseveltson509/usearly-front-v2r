@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import type { Suggestion } from "@src/types/Reports";
-import InteractiveFeedbackCard from "../user-profile/InteractiveFeedbackCard";
+import InteractiveFeedbackCard from "../InteractiveFeedbackCard/InteractiveFeedbackCard";
 import { getSuggestionById } from "@src/services/coupDeCoeurService";
 import UsearlyDraw from "@src/components/background/Usearly";
 import "./SuggestionDetail.scss";

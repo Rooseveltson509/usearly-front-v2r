@@ -17,7 +17,7 @@ import {
   explodeGroupedReports,
 } from "@src/utils/feedbackListUtils";
 import type { FeedbackType } from "../user-profile/FeedbackTabs";
-import InteractiveFeedbackCard from "../user-profile/InteractiveFeedbackCard";
+import InteractiveFeedbackCard from "../InteractiveFeedbackCard/InteractiveFeedbackCard";
 
 interface Props {
   activeTab: FeedbackType;

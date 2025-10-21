@@ -1,5 +1,5 @@
 import React from "react";
-import InteractiveFeedbackCard from "@src/components/user-profile/InteractiveFeedbackCard";
+import InteractiveFeedbackCard from "@src/components/InteractiveFeedbackCard/InteractiveFeedbackCard";
 import { getBrandLogo } from "@src/utils/brandLogos";
 import FlatSubcategoryBlock from "@src/pages/home/confirm-reportlist/FlatSubcategoryBlock";
 
