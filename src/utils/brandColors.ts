@@ -79,7 +79,7 @@ export const brandColors: Record<string, string> = {
   laboutiqueofficielle: "#e74b58",
 
   // Tech
-  apple: "#F3F3F6",
+  apple: "#000000",
   google: "#4285F4",
   facebook: "#1877F2",
   instagram: "#E1306C",

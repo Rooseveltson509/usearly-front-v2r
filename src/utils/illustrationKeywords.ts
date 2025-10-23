@@ -77,7 +77,7 @@ export const illustrationKeywords: Record<string, string> = {
   coeur: "general/coeurlike.svg",
   love: "general/coeurdoigt.svg",
   bravo: "general/applaudissement.svg",
-  rire: "general/emojiteterrire.svg",
+  rire: "general/emojiteterire.svg",
   message: "general/messagelike.svg",
   default: "general/ordilike.svg",
 };

@@ -9,7 +9,7 @@ import UserVotesCard from "../profile/UserVotesCard";
 import PurpleBanner from "@src/pages/home/components/purpleBanner/PurpleBanner";
 
 const UserProfilePage: React.FC = () => {
-  const [activeTab] = useState<FeedbackType>("report");
+  const [activeTab, setActiveTab] = useState<FeedbackType>("report");
   const mountCount = useRef(0);
 
   useEffect(() => {
@@ -20,7 +20,12 @@ const UserProfilePage: React.FC = () => {
   return (
     <div className="user-profile-page">
       {/* Bandeau du haut */}
-      <PurpleBanner navOn={false} pastille={true} />
+      <PurpleBanner
+        navOn={true}
+        pastille={true}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+      />
 
       {/* Contenu principal */}
       <main className="user-main-content">

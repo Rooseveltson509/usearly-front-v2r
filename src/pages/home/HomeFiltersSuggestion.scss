@@ -72,6 +72,7 @@
       flex-wrap: nowrap;
       .brand-select {
         text-wrap: nowrap;
+        min-width: 175px;
         .brand-select__trigger {
           .brand-badge {
             flex-grow: 0;

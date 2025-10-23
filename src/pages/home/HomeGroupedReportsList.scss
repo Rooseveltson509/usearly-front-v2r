@@ -3,10 +3,10 @@
 .home-grouped-reports-list {
   margin-top: 20px;
   margin-right: 20px;
+  z-index: 1;
   @media screen and (max-width: 1350px) {
     margin-right: 0px;
   }
-  z-index: 1;
   // @media screen and (max-width: 1120px) {
   //   margin-top: 0px;
   // }

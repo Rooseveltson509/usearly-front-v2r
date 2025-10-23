@@ -46,6 +46,12 @@
   @media screen and (min-width: 1350px) {
     &.active {
       flex-direction: row-reverse;
+      margin-left: 80px;
+    }
+  }
+  @media screen and (max-width: 1120px) {
+    &.active {
+      margin-right: 30px;
     }
   }
 }
