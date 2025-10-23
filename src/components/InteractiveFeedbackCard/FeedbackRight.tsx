@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { formatDistanceToNowStrict } from "date-fns";
 import { fr } from "date-fns/locale";
 import Avatar from "../shared/Avatar";
-import { getBrandLogo } from "@src/utils/brandLogos";
+import { fetchValidBrandLogo } from "@src/utils/brandLogos";
 import { capitalizeFirstLetter } from "@src/utils/stringUtils";
 import SharedFooterCdcAndSuggest from "../shared/SharedFooterCdcAndSuggest";
 import FeedbackProgressBar from "./FeedbackProgressBar";
@@ -50,6 +50,7 @@ const FeedbackRight: React.FC<Props> = ({
   const shouldShowToggle =
     description.length > DESCRIPTION_LIMIT || item.capture;
   const brandName = item.marque?.trim() ?? "";
+  const [brandLogo, setBrandLogo] = useState<string | null>(null);
 
   const toggleText = () => setShowFullText((prev) => !prev);
   const openLightbox = (imageSrc: string) => {
@@ -57,6 +58,23 @@ const FeedbackRight: React.FC<Props> = ({
     document.body.classList.add("lightbox-open");
     document.body.style.overflow = "hidden";
   };
+
+  useEffect(() => {
+    if (!brandName) return;
+    let isMounted = true;
+
+    fetchValidBrandLogo(brandName, item.siteUrl)
+      .then((logoUrl) => {
+        if (isMounted) setBrandLogo(logoUrl);
+      })
+      .catch(() => {
+        if (isMounted) setBrandLogo(null);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [brandName, item.siteUrl]);
 
   return (
     <div className="feedback-right" onClick={() => onToggle(item.id)}>
@@ -88,7 +106,7 @@ const FeedbackRight: React.FC<Props> = ({
               {brandName && (
                 <div className="brand-overlay">
                   <Avatar
-                    avatar={getBrandLogo(brandName, item.siteUrl)}
+                    avatar={brandLogo}
                     pseudo={brandName}
                     type="brand"
                     wrapperClassName="brand-logo"
