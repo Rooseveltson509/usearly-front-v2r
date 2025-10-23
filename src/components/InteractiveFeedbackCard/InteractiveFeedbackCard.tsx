@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import "./InteractiveFeedbackCard.scss";
 import { useAuth } from "@src/services/AuthContext";
-import { fetchValidBrandLogo } from "@src/utils/brandLogos";
 import { apiService } from "@src/services/apiService";
 import { showToast } from "@src/utils/toastUtils";
 import starProgressBar from "/assets/icons/icon-progress-bar.svg";
@@ -24,7 +23,6 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
   const [votes, setVotes] = useState((item as Suggestion).votes || 0);
   const [expiresInDays, setExpiresInDays] = useState<number | null>(null);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [, setLogos] = useState<Record<string, string>>({});
   const barRef = useRef<HTMLDivElement>(null);
   const [thumbLeft, setThumbLeft] = useState(0);
   const max = 300;
@@ -61,24 +59,6 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
         .catch(() => {});
     }
   }, [item.id, item.type]);
-
-  // --- logos
-  useEffect(() => {
-    const brandKey = item.marque?.trim();
-    if (!brandKey) return;
-    let isMounted = true;
-    fetchValidBrandLogo(brandKey, item.siteUrl)
-      .then((logoUrl) => {
-        if (!isMounted) return;
-        setLogos((prev) =>
-          prev[brandKey] === logoUrl ? prev : { ...prev, [brandKey]: logoUrl },
-        );
-      })
-      .catch(() => {});
-    return () => {
-      isMounted = false;
-    };
-  }, [item.marque, item.siteUrl]);
 
   // --- lightbox cleanup
   useEffect(() => {
