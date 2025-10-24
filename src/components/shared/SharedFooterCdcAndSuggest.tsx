@@ -3,7 +3,6 @@ import { ThumbsUp, MessageCircle, Share2 } from "lucide-react";
 import { useReactionsForDescription } from "@src/hooks/useReactionsForDescription";
 import EmojiUrlyReactionPicker from "@src/utils/EmojiUrlyReactionPicker";
 import { getEmojisForType } from "@src/components/constants/emojiMapByType";
-import DescriptionCommentSection from "../report-desc-comment/DescriptionCommentSection";
 import "./SharedFooterCdcAndSuggest.scss";
 import ShareModal from "./share-modal/ShareModal";
 import ShareCoupDeCoeurModal from "./share-modal/ShareCoupDeCoeurModal";
@@ -16,6 +15,9 @@ interface Props {
   onToggle?: (id: string) => void;
   onVoteClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   isExpired?: boolean;
+  commentCount: number;
+  showComments: boolean;
+  onToggleComments: () => void;
 }
 
 const SharedFooterCdcAndSuggest: React.FC<Props> = ({
@@ -24,11 +26,12 @@ const SharedFooterCdcAndSuggest: React.FC<Props> = ({
   type,
   isExpired = false,
   onVoteClick,
+  commentCount,
+  showComments,
+  onToggleComments,
 }) => {
   const emojis = getEmojisForType(type);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const [showComments, setShowComments] = useState(false);
-  const [commentCount, setCommentCount] = useState(0);
   const [showShareModal, setShowShareModal] = useState(false);
   let hoverTimeout: NodeJS.Timeout;
 
@@ -51,7 +54,7 @@ const SharedFooterCdcAndSuggest: React.FC<Props> = ({
   };
 
   const toggleComments = () => {
-    setShowComments((prev) => !prev);
+    onToggleComments();
   };
 
   return (
@@ -124,7 +127,8 @@ const SharedFooterCdcAndSuggest: React.FC<Props> = ({
 
             {/* Commenter */}
             <button
-              className="comment-toggle-btn"
+              className={`comment-toggle-btn ${showComments ? "active" : ""}`}
+              aria-pressed={showComments}
               onClick={toggleComments}
               disabled={isExpired}
             >
@@ -177,21 +181,6 @@ const SharedFooterCdcAndSuggest: React.FC<Props> = ({
               )}
             </>
           )}
-        </div>
-
-        <div className="comments-section">
-          <DescriptionCommentSection
-            userId={userId}
-            descriptionId={descriptionId}
-            type={type}
-            hideFooter={true}
-            autoOpenIfComments={false}
-            forceOpen={showComments}
-            onCommentCountChange={setCommentCount}
-            onCommentAddedOrDeleted={() => {
-              setCommentCount((prev) => prev + 1);
-            }}
-          />
         </div>
       </div>
     </div>

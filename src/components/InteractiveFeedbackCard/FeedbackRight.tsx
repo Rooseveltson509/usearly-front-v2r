@@ -4,8 +4,8 @@ import { fr } from "date-fns/locale";
 import Avatar from "../shared/Avatar";
 import { fetchValidBrandLogo } from "@src/utils/brandLogos";
 import { capitalizeFirstLetter } from "@src/utils/stringUtils";
-import SharedFooterCdcAndSuggest from "../shared/SharedFooterCdcAndSuggest";
 import FeedbackProgressBar from "./FeedbackProgressBar";
+import SharedFooterCdcAndSuggest from "../shared/SharedFooterCdcAndSuggest";
 
 interface Props {
   item: any;
@@ -20,7 +20,10 @@ interface Props {
   thumbLeft: number;
   expiresInDays: number | null;
   starProgressBar: string;
-  onVoteClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onVoteClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  showComments: boolean;
+  onToggleComments: () => void;
+  commentCount: number;
 }
 
 const isValidDate = (value: any) => {
@@ -42,6 +45,9 @@ const FeedbackRight: React.FC<Props> = ({
   expiresInDays,
   starProgressBar,
   onVoteClick,
+  showComments,
+  onToggleComments,
+  commentCount,
 }) => {
   const [showFullText, setShowFullText] = useState(false);
   const DESCRIPTION_LIMIT = 150;
@@ -182,14 +188,21 @@ const FeedbackRight: React.FC<Props> = ({
         />
       )}
 
-      <SharedFooterCdcAndSuggest
-        userId={userProfile.id}
-        descriptionId={item.id}
-        type={item.type}
-        onVoteClick={item.type === "suggestion" ? onVoteClick : undefined}
-        onToggle={onToggle}
-        isExpired={isExpired}
-      />
+      <div
+        className="feedback-shared-footer"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <SharedFooterCdcAndSuggest
+          userId={userProfile.id}
+          descriptionId={item.id}
+          type={item.type}
+          onVoteClick={item.type === "suggestion" ? onVoteClick : undefined}
+          isExpired={isExpired}
+          commentCount={commentCount}
+          showComments={showComments}
+          onToggleComments={onToggleComments}
+        />
+      </div>
     </div>
   );
 };

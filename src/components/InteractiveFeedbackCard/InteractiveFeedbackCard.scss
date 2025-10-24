@@ -3,7 +3,7 @@
 
 .feedback-card {
   display: flex;
-  align-items: stretch; // étire les enfants sur la même hauteur
+  flex-direction: column;
   background: #fff;
   border-radius: 0px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
@@ -14,6 +14,25 @@
 
   &.open {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  }
+}
+
+.feedback-main {
+  display: flex;
+  align-items: stretch;
+}
+
+.feedback-shared-footer {
+  background: #fff;
+}
+
+.feedback-comments {
+  width: 100%;
+  background: #fff;
+  padding: 0 16px 16px;
+
+  &.hidden {
+    display: none;
   }
 }
 
@@ -291,6 +310,7 @@
   padding-bottom: 0px;
   padding-left: 5px;
   padding-right: 8px;
+  min-height: 0;
 
   .feedback-content {
     gap: 22.5px;
@@ -429,17 +449,21 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-  .feedback-card {
+  .feedback-main {
     flex-direction: column;
+  }
 
-    .feedback-type {
-      flex: none;
-      width: 100%;
-    }
+  .feedback-left {
+    border-radius: 12px 12px 0 0;
+    text-align: center;
+  }
 
-    .feedback-right {
-      padding: 12px;
-    }
+  .feedback-right {
+    padding: 12px;
+  }
+
+  .feedback-comments {
+    padding: 0 12px 12px;
   }
 }
 
