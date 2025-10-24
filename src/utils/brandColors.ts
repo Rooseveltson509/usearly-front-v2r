@@ -22,6 +22,7 @@ export const brandColors: Record<string, string> = {
   lynda: "#F7A600",
   disneylandparis: "#141c57",
   sg: "#d32d32",
+  samsung: "#3684cd",
 
   // Finance & Payment
   paypal: "#003087",

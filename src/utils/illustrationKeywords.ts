@@ -8,6 +8,9 @@ export const illustrationKeywords: Record<string, string> = {
   économie: "bancaire/tirelire.svg",
   récompense: "bancaire/tirelire.svg",
   points: "bancaire/tirelire.svg",
+  pdf: "bancaire/receipt.svg",
+  reçus: "bancaire/receipt.svg",
+  reçu: "bancaire/receipt.svg",
 
   // 🎬 TV & Cinéma
   cinéma: "tv_cinema/clapcinema.svg",
