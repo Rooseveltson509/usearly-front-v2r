@@ -89,7 +89,6 @@
       height: clamp(140px, 20vw, 220px);
       z-index: 1; // float the icons above the banner background
       pointer-events: none; // keep the logos from catching mouse events
-      opacity: 0.1;
       @media screen and (max-width: 750px) {
         top: -70px;
         right: -10px;
@@ -107,12 +106,14 @@
           top: -75px;
           right: 90px;
           width: clamp(120px, 11vw, 180px);
+          opacity: 0.1;
         }
 
         &.logo-medium {
           top: -10px;
           right: 250px;
           width: clamp(90px, 9vw, 140px);
+          opacity: 0.1;
           animation-delay: 1s;
         }
 
@@ -120,11 +121,12 @@
           top: 90px;
           right: 175px;
           width: clamp(70px, 7vw, 120px);
+          opacity: 0.1;
           animation-delay: 2s;
         }
 
         &.logo-badge {
-          opacity: 1 !important;
+          opacity: 1;
         }
       }
     }
