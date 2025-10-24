@@ -53,23 +53,25 @@
       .logo {
         position: absolute;
         animation: float 3s ease-in-out infinite;
-        opacity: 0.2;
 
         &.logo-big {
           top: -75px;
           right: 120px;
+          opacity: 0.2;
           animation-delay: 0s;
         }
 
         &.logo-medium {
           top: -25px;
           right: 350px;
+          opacity: 0.2;
           animation-delay: 1s;
         }
 
         &.logo-small {
           top: 100px;
           right: 200px;
+          opacity: 0.2;
           animation-delay: 2s;
         }
         &.logo-badge {
@@ -77,8 +79,8 @@
           width: 120px;
           top: -10px;
           right: 250px;
+          opacity: 1;
           animation: none;
-          opacity: 1 !important;
         }
       }
     }

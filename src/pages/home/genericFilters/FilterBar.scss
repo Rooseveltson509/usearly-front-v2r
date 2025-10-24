@@ -13,6 +13,7 @@
     cursor: pointer;
     appearance: none;
     z-index: 2;
+    font-family: "Inter", sans-serif;
 
     &:focus + .select-filter-display {
       border-color: #b8b8b8;
