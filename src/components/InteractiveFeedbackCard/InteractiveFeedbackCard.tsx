@@ -6,6 +6,7 @@ import { showToast } from "@src/utils/toastUtils";
 import starProgressBar from "/assets/icons/icon-progress-bar.svg";
 import FeedbackLeft from "./FeedbackLeft";
 import FeedbackRight from "./FeedbackRight";
+import DescriptionCommentSection from "../report-desc-comment/DescriptionCommentSection";
 import type { CoupDeCoeur, Suggestion } from "@src/types/Reports";
 
 interface Props {
@@ -25,6 +26,8 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const barRef = useRef<HTMLDivElement>(null);
   const [thumbLeft, setThumbLeft] = useState(0);
+  const [showComments, setShowComments] = useState(false);
+  const [commentCount, setCommentCount] = useState(0);
   const max = 300;
   const thumbSize = 24;
   const isExpired = expiresInDays !== null && expiresInDays <= 0;
@@ -70,6 +73,16 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
     };
   }, [selectedImage]);
 
+  useEffect(() => {
+    if (!isOpen) {
+      setShowComments(false);
+    }
+  }, [isOpen]);
+
+  const toggleComments = () => {
+    setShowComments((prev) => !prev);
+  };
+
   const handleVoteClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     try {
@@ -88,25 +101,41 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
 
   return (
     <div className={`feedback-card ${isOpen ? "open" : ""}`}>
-      {/* === Bloc gauche === */}
-      <FeedbackLeft item={item} />
+      <div className="feedback-main">
+        {/* === Bloc gauche === */}
+        <FeedbackLeft item={item} />
 
-      {/* === Bloc droit === */}
-      <FeedbackRight
-        item={item}
-        onToggle={onToggle}
-        userProfile={userProfile}
-        selectedImage={selectedImage}
-        setSelectedImage={setSelectedImage}
-        isExpired={isExpired}
-        votes={votes}
-        max={max}
-        barRef={barRef}
-        thumbLeft={thumbLeft}
-        expiresInDays={expiresInDays}
-        starProgressBar={starProgressBar}
-        onVoteClick={handleVoteClick}
-      />
+        {/* === Bloc droit === */}
+        <FeedbackRight
+          item={item}
+          onToggle={onToggle}
+          userProfile={userProfile}
+          selectedImage={selectedImage}
+          setSelectedImage={setSelectedImage}
+          isExpired={isExpired}
+          votes={votes}
+          max={max}
+          barRef={barRef}
+          thumbLeft={thumbLeft}
+          expiresInDays={expiresInDays}
+          starProgressBar={starProgressBar}
+          onVoteClick={item.type === "suggestion" ? handleVoteClick : undefined}
+          showComments={showComments}
+          onToggleComments={toggleComments}
+          commentCount={commentCount}
+        />
+      </div>
+
+      <div className={`feedback-comments ${showComments ? "open" : "hidden"}`}>
+        <DescriptionCommentSection
+          userId={userProfile.id}
+          descriptionId={item.id}
+          type={item.type}
+          hideFooter={true}
+          forceOpen={showComments}
+          onCommentCountChange={setCommentCount}
+        />
+      </div>
 
       {selectedImage && (
         <div className="lightbox" onClick={() => setSelectedImage(null)}>
