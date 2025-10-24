@@ -72,6 +72,8 @@ export const illustrationKeywords: Record<string, string> = {
   rapidité: "general/flèchecoeur.svg",
   performance: "general/flèchecoeur.svg",
 
+  durable: "general/coeurlike.svg",
+
   // 💬 Généraliste / fallback
   like: "general/coeurlike.svg",
   coeur: "general/coeurlike.svg",
