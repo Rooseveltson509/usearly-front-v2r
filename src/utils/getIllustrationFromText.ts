@@ -3,15 +3,17 @@ import { illustrationKeywords } from "./illustrationKeywords";
 export function getIllustrationFromText(
   title: string,
   punchline?: string,
+  keywordsMap: Record<string, string> = illustrationKeywords,
+  basePath = "bobAssets",
 ): string {
   const text = `${title} ${punchline || ""}`.toLowerCase();
 
-  for (const [keyword, path] of Object.entries(illustrationKeywords)) {
+  for (const [keyword, path] of Object.entries(keywordsMap)) {
     if (text.includes(keyword)) {
-      return `/assets/bobAssets/${path}`;
+      return `/assets/${basePath}/${path}`;
     }
   }
 
   // 🔁 Fallback général
-  return `/assets/bobAssets/${illustrationKeywords.default}`;
+  return `/assets/${basePath}/${keywordsMap.default}`;
 }

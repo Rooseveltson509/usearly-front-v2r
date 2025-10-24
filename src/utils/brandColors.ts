@@ -77,6 +77,8 @@ export const brandColors: Record<string, string> = {
   boulangeriepoilane: "#000000",
   laredoute: "#E60012",
   laboutiqueofficielle: "#e74b58",
+  lego: "#E3000B",
+  weareholy: "#d473d4",
 
   // Tech
   apple: "#000000",

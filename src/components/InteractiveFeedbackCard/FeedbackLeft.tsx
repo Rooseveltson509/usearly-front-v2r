@@ -249,7 +249,7 @@ const FeedbackLeft: React.FC<Props> = ({ item }) => {
                       const regex = new RegExp(`(${word})`, "gi");
                       text = text.replace(
                         regex,
-                        `<span class="${highlightEmojiClass}" style="color:${highlightEmojiColor}; font-weight:800;">$1</span>`,
+                        `<span class="${highlightEmojiClass}" style="color:${highlightEmojiColor}; font-weight:900;">$1</span>`,
                       );
                     });
                     return text;
