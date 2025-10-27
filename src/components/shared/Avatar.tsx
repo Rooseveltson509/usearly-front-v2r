@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./Avatar.scss";
 import { getFullAvatarUrl } from "@src/utils/avatarUtils";
+import { FALLBACK_BRAND_PLACEHOLDER } from "@src/utils/brandLogos";
 
 interface AvatarProps {
   avatar: string | null;
@@ -22,8 +23,14 @@ const Avatar: React.FC<AvatarProps> = ({
   const initial = pseudo?.charAt(0)?.toUpperCase() || "?";
   const fullUrl = type === "brand" ? avatar || null : getFullAvatarUrl(avatar);
 
+  // 🚫 On évite d’afficher le placeholder base64 noir
+  const isInvalidPlaceholder =
+    !fullUrl ||
+    fullUrl.includes("placeholderSvg") ||
+    fullUrl === FALLBACK_BRAND_PLACEHOLDER;
+
   // Fallback si pas d’URL valide OU erreur de chargement
-  const showFallback = !fullUrl || imgError;
+  const showFallback = imgError || isInvalidPlaceholder;
 
   const colorIndex = initial.charCodeAt(0) % 6;
   const colorClass =
@@ -41,6 +48,8 @@ const Avatar: React.FC<AvatarProps> = ({
           className={`avatar-img-custom ${className} ${
             type === "brand" ? "brand-logo-img-loaded" : ""
           }`}
+          decoding="async"
+          loading="lazy"
         />
       ) : (
         <div

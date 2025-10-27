@@ -158,10 +158,13 @@ const FeedbackLeft: React.FC<Props> = ({ item }) => {
   >([]);
 
   // Lignes stables
-  const lines = useMemo(
-    () => (item.punchline ? item.punchline.split("\n") : []),
-    [item.punchline],
-  );
+  const lines = useMemo(() => {
+    if (!item.punchline) return [];
+    const normalized = item.punchline
+      .replace(/\\\\n/g, "\n")
+      .replace(/\\n/g, "\n");
+    return normalized.split("\n");
+  }, [item.punchline]);
 
   // ✅ Recalcule : si wrap => nombre de mots, sinon null
   useLayoutEffect(() => {

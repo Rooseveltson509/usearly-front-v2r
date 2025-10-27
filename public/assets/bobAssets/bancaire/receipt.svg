@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <!-- Fond -->
+  <rect x="12" y="8" width="96" height="104" rx="8" fill="#F5F7FA" stroke="#1E2A38" stroke-width="2"/>
+  <!-- En-tête PDF -->
+  <rect x="20" y="16" width="80" height="16" rx="3" fill="#E74C3C"/>
+  <text x="60" y="28" text-anchor="middle" font-family="Arial, sans-serif" font-weight="bold" font-size="9" fill="#fff">REÇU PDF</text>
+  <!-- Lignes de texte -->
+  <rect x="24" y="40" width="72" height="6" rx="2" fill="#D6DCE5"/>
+  <rect x="24" y="52" width="60" height="6" rx="2" fill="#D6DCE5"/>
+  <rect x="24" y="64" width="72" height="6" rx="2" fill="#D6DCE5"/>
+  <rect x="24" y="76" width="48" height="6" rx="2" fill="#D6DCE5"/>
+  <!-- Icône enregistrement -->
+  <circle cx="60" cy="98" r="10" fill="#2ECC71" stroke="#1E2A38" stroke-width="2"/>
+  <path d="M56 98l3 3 5-6" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
