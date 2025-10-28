@@ -48,7 +48,13 @@ const ReportTab: React.FC<Props> = ({
           activeTab={"report" as FeedbackType}
           activeFilter={activeFilter}
           setActiveFilter={setActiveFilter}
-          viewMode={activeFilter === "confirmed" ? "confirmed" : "flat"}
+          viewMode={
+            activeFilter === "confirmed"
+              ? "confirmed"
+              : activeFilter === "chrono"
+                ? "chrono"
+                : "flat"
+          }
           onViewModeChange={() => {}}
           selectedBrand={selectedBrand}
           setSelectedBrand={setSelectedBrand}

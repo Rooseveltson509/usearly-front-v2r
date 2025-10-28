@@ -17,7 +17,7 @@ function Home() {
   const [selectedBrand, setSelectedBrand] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedMainCategory, setSelectedMainCategory] = useState("");
-  const [activeFilter, setActiveFilter] = useState("confirmed");
+  const [activeFilter, setActiveFilter] = useState("chrono");
   const [selectedSiteUrl, setSelectedSiteUrl] = useState<string | undefined>();
   const [suggestionSearch, setSuggestionSearch] = useState("");
 
