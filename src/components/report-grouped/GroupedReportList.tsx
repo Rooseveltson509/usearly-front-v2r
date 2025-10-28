@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import type { GroupedReport } from "@src/types/Reports";
 import { fetchValidBrandLogo } from "@src/utils/brandLogos"; // ⬅️ version dynamique
+import { getBrandLogo } from "@src/utils/brandLogos";
+import Avatar from "../shared/Avatar";
 
 interface Props {
   grouped: Record<string, Record<string, GroupedReport[]>>;
@@ -87,10 +89,11 @@ const GroupedReportList = ({
                       <span className="chevron">{isOpen ? "▼" : "▶"}</span>
                       <span className="category-label">{category}</span>
                     </div>
-                    <img
-                      src={logos[brand] || ""}
-                      alt={brand}
-                      className="brand-logo"
+                    <Avatar
+                      avatar={getBrandLogo(brand)}
+                      pseudo={brand}
+                      type="brand"
+                      wrapperClassName="brand-logo"
                     />
                   </div>
 
