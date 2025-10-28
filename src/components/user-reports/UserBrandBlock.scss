@@ -23,7 +23,7 @@
 
 .description-text {
   max-width: 400px; // à ajuster selon ton design
-  margin-left: 30px;
+  // margin-left: 30px;
   padding-bottom: 16px;
   padding-right: 45px;
   line-height: 20px;
@@ -84,7 +84,7 @@
       border-radius: 50%;
       object-fit: contain;
       //background-color: #fff;
-      padding: 2px;
+      // padding: 2px;
       border: 1px solid #ececec;
       margin-left: -10px; // superposition
       z-index: 2; // passe devant
@@ -384,7 +384,7 @@
   grid-template-columns: 40px 100px 24px;
   /* badge, date, chevron */
   align-items: center;
-  column-gap: 12px;
+  column-gap: 0px;
   justify-content: flex-end;
   /* aligne tout à droite */
 

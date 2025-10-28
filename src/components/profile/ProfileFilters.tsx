@@ -1,5 +1,8 @@
 import React from "react";
-import { ChevronDown } from "lucide-react";
+
+import { BrandSelect } from "../shared/BrandSelect";
+import CategoryDropdown from "@src/components/shared/CategoryDropdown";
+import "./ProfileFilters.scss";
 
 interface Props {
   availableBrands: string[];
@@ -21,20 +24,20 @@ const ProfileFilters: React.FC<Props> = ({
   return (
     <div className="profile-filters">
       <div className="control">
-        <div className="select-wrapper">
-          <select
-            value={selectedBrand}
-            onChange={(e) => setSelectedBrand(e.target.value)}
-          >
-            {availableBrands.map((brand) => (
-              <option key={brand} value={brand}>
-                {brand}
-              </option>
-            ))}
-          </select>
-          <ChevronDown className="chevron-icon" size={16} />
-        </div>
-        <div className="select-wrapper">
+        <BrandSelect
+          brands={availableBrands}
+          selectedBrand={selectedBrand}
+          onSelect={setSelectedBrand}
+          placeholder="Select Brand"
+          className="brand-select--profile"
+        />
+        <CategoryDropdown
+          categories={availableCategories}
+          selected={selectedCategory}
+          onSelect={setSelectedCategory}
+          placeholder="Select Category"
+        />
+        {/* <div className="select-wrapper">
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
@@ -46,7 +49,7 @@ const ProfileFilters: React.FC<Props> = ({
             ))}
           </select>
           <ChevronDown className="chevron-icon" size={16} />
-        </div>
+        </div> */}
       </div>
     </div>
   );

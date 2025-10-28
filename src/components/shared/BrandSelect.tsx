@@ -6,7 +6,7 @@ import { FALLBACK_BRAND_PLACEHOLDER } from "@src/utils/brandLogos";
 import "./BrandSelect.scss";
 
 interface BrandSelectProps {
-  brands?: string[]; // ← optionnel
+  brands?: string[];
   selectedBrand: string;
   onSelect: (brand: string) => void;
   onClear?: () => void;
@@ -22,8 +22,14 @@ const normalize = (value: string) =>
     .replace(/[\u0300-\u036f]/g, "")
     .trim();
 
+// 🔎 Détecte la valeur "Tous" (et variantes)
+const isAllValue = (v?: string) => {
+  const n = normalize(v || "");
+  return n === "tous" || n === "tout" || n === "all";
+};
+
 export const BrandSelect = ({
-  brands = [], // ← défaut
+  brands = [],
   selectedBrand = "",
   onSelect,
   onClear,
@@ -37,6 +43,13 @@ export const BrandSelect = ({
 
   const safeBrands = Array.isArray(brands) ? brands : [];
   const brandLogos = useBrandLogos(safeBrands);
+
+  /** Renvoie la forme "canonique" d'une marque (exacte dans `brands`), sinon `undefined` */
+  const toCanonicalBrand = (name?: string) => {
+    if (!name) return undefined;
+    const n = normalize(name);
+    return safeBrands.find((b) => normalize(b) === n);
+  };
 
   const normalizedBrands = useMemo(() => {
     const list = safeBrands
@@ -65,16 +78,31 @@ export const BrandSelect = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open]);
 
+  /**
+   * Affiche soit le logo (si marque connue ET logo non fallback),
+   * soit un badge texte/initiales.
+   * ⚠️ Si "Tous" → pas d'image/badge (retourne null).
+   */
   const renderBadge = (brand?: string) => {
-    const lookup = brand?.trim();
-    if (!lookup) return <span className="brand-badge__initial">?</span>;
-    const logo = brandLogos[lookup];
+    if (isAllValue(brand)) return null; // 🚫 rien à côté de "Tous"
+
+    const canonical = toCanonicalBrand(brand);
+    if (!canonical) {
+      const label = (brand || "?").trim();
+      return (
+        <span className="brand-badge__initial">
+          {label ? label.slice(0, 2).toUpperCase() : "?"}
+        </span>
+      );
+    }
+
+    const logo = brandLogos[canonical];
     if (logo && logo !== FALLBACK_BRAND_PLACEHOLDER) {
       return <img src={logo} alt="" />;
     }
     return (
       <span className="brand-badge__initial">
-        {lookup?.slice(0, 2).toUpperCase()}
+        {canonical.slice(0, 2).toUpperCase()}
       </span>
     );
   };
@@ -94,7 +122,10 @@ export const BrandSelect = ({
         className={triggerClassName}
         onClick={() => setOpen((prev) => !prev)}
       >
-        <span className="brand-badge">{renderBadge(selectedBrand)}</span>
+        {/* 🚫 Ne pas afficher d'image/badge pour "Tous" */}
+        {!isAllValue(selectedBrand) && (
+          <span className="brand-badge">{renderBadge(selectedBrand)}</span>
+        )}
         <span className="brand-select__label">
           {selectedBrand || placeholder}
         </span>
@@ -132,6 +163,8 @@ export const BrandSelect = ({
               ]
                 .filter(Boolean)
                 .join(" ");
+              const hideBadge = isAllValue(brand);
+
               return (
                 <li key={brand}>
                   <button
@@ -143,7 +176,10 @@ export const BrandSelect = ({
                       setOpen(false);
                     }}
                   >
-                    <span className="brand-badge">{renderBadge(brand)}</span>
+                    {/* 🚫 Pas de logo/badge pour l’option "Tous" */}
+                    {!hideBadge && (
+                      <span className="brand-badge">{renderBadge(brand)}</span>
+                    )}
                     <span className="brand-select__option-label">{brand}</span>
                   </button>
                 </li>

@@ -12,6 +12,7 @@ import { getCommentsCountForDescription } from "@src/services/commentService";
 import CommentSection from "../comments/CommentSection";
 import { parseISO, isAfter } from "date-fns";
 import Avatar from "../shared/Avatar";
+import { getBrandThemeColor } from "@src/utils/getBrandThemeColor";
 
 interface Props {
   brand: string;
@@ -89,7 +90,14 @@ const UserBrandBlock: React.FC<Props> = ({
   const mostRecentDate = getMostRecentDate();
 
   return (
-    <div className={`brand-block ${isOpen ? "open" : "close"}`}>
+    <div
+      style={{
+        backgroundColor: isOpen
+          ? `color-mix(in srgb, ${getBrandThemeColor(brand).base} 10%, white)`
+          : "white",
+      }}
+      className={`brand-block ${isOpen ? "open" : "close"}`}
+    >
       <div className="brand-header" onClick={onToggle}>
         <p className="brand-reports-count">
           <strong>{reports.length}</strong> signalement
@@ -104,16 +112,27 @@ const UserBrandBlock: React.FC<Props> = ({
             : "Date inconnue"}
         </p>
 
-        <img
+        {/* <img
           src={getBrandLogo(brand, siteUrl)}
           alt={brand}
           className="brand-logo"
+        /> */}
+        <Avatar
+          avatar={getBrandLogo(brand, siteUrl)}
+          pseudo={brand}
+          type="brand"
+          wrapperClassName="avatar brand-logo"
         />
         <ChevronDown size={18} className="chevron-icon" />
       </div>
 
       {isOpen && (
-        <div className="subcategories-list">
+        <div
+          style={{
+            backgroundColor: `color-mix(in srgb, ${getBrandThemeColor(brand).base} 10%, white)`,
+          }}
+          className="subcategories-list"
+        >
           {reports.map((sub) => {
             const initialDescription = sub.descriptions[0];
             const currentCount =
