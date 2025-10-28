@@ -3,7 +3,6 @@ import FilterBarGeneric from "./genericFilters/FilterBarGeneric";
 import "./HomeFiltersSuggestion.scss";
 import { getAllBrandsSuggestion } from "@src/services/coupDeCoeurService";
 import { CiSearch } from "react-icons/ci";
-import BrandSelect from "@src/components/shared/BrandSelect";
 
 interface Props {
   filter: string;
@@ -86,21 +85,12 @@ const HomeFiltersSuggestion = ({
         dropdownRef={dropdownRef}
         isDropdownOpen={isDropdownOpen}
         setIsDropdownOpen={setIsDropdownOpen}
-        withBrands={!selectedBrand}
+        withBrands={true}
         withCategories={!selectedBrand}
         brandFocusFilter="brandSolo"
         baseFilterValue="allSuggest"
         hideFilterWhenBrandSelected={true}
       />
-      {selectedBrand && (
-        <BrandSelect
-          brands={availableBrands}
-          selectedBrand={selectedBrand}
-          onSelect={(brand) => handleBrandSelect(brand)}
-          onClear={() => handleBrandSelect("")}
-          placeholder="Choisir une marque"
-        />
-      )}
       {selectedBrand && (
         <div className="suggestion-search">
           <CiSearch />

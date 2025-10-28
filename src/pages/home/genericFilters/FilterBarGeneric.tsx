@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { SlidersHorizontal, ChevronDown } from "lucide-react";
+import { useEffect, useMemo } from "react";
+import { ChevronDown } from "lucide-react";
 import { BrandSelect } from "@src/components/shared/BrandSelect";
 import "./FilterBar.scss";
 
@@ -46,16 +46,6 @@ interface Props {
   hideFilterWhenBrandSelected?: boolean;
 }
 
-// ✅ fonction de normalisation (mêmes règles que dans HomeGroupedReportsList)
-const normalize = (str: string) =>
-  str
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "") // accents
-    .replace(/[’']/g, "'") // apostrophes
-    .replace(/[\s.]+$/g, "") // espaces/points finaux
-    .trim();
-
 const splitLeadingEmoji = (label: string) => {
   const trimmed = label.trim();
   if (!trimmed) {
@@ -81,19 +71,19 @@ const FilterBarGeneric: React.FC<Props> = ({
   onViewModeChange,
   options,
   withBrands = false,
-  withCategories = false,
+  // withCategories = false,
   availableBrands = [],
-  /* availableCategories = [], */
+  // availableCategories = [],
   dropdownRef,
   isDropdownOpen = false,
   setIsDropdownOpen = () => {},
   selectedBrand = "",
-  selectedCategory = "",
+  // selectedCategory = "",
   locationInfo = null,
   brandFocusFilter = "",
   baseFilterValue,
+  // hideFilterWhenBrandSelected = false,
 }) => {
-  const [search, setSearch] = useState("");
   const parsedOptions = useMemo(() => {
     return options.map((opt) => {
       const { emoji, text } = splitLeadingEmoji(opt.label);
@@ -124,11 +114,6 @@ const FilterBarGeneric: React.FC<Props> = ({
     );
   }, [parsedOptions, filter, fallbackOption]);
 
-  // ✅ recherche marque normalisée
-  const filteredBrands = search.trim()
-    ? availableBrands.filter((b) => normalize(b).includes(normalize(search)))
-    : availableBrands;
-
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (
@@ -150,11 +135,48 @@ const FilterBarGeneric: React.FC<Props> = ({
     };
   }, [isDropdownOpen, setIsDropdownOpen, dropdownRef]);
 
-  const handleBrandSelect = (brand: string) => {
+  const brandFilterValue = useMemo(() => {
+    if (brandFocusFilter && brandFocusFilter.length > 0) {
+      return brandFocusFilter;
+    }
+    return parsedOptions[0]?.value ?? "";
+  }, [brandFocusFilter, parsedOptions]);
+
+  const fallbackFilterValue = useMemo(() => {
+    if (baseFilterValue) {
+      return baseFilterValue;
+    }
+    const alternative = parsedOptions.find(
+      (opt) => opt.value !== brandFilterValue,
+    );
+    return alternative?.value ?? parsedOptions[0]?.value ?? "";
+  }, [baseFilterValue, parsedOptions, brandFilterValue]);
+
+  const handleBrandChange = (brand: string) => {
     setSelectedBrand(brand);
     setSelectedCategory("");
-    setFilter(brand ? "brandSolo" : "allSuggest");
+
+    if (brand) {
+      if (brandFilterValue) {
+        setFilter(brandFilterValue);
+        setActiveFilter(brandFilterValue);
+      }
+      setViewMode("flat");
+      onViewModeChange?.("flat");
+    } else {
+      if (fallbackFilterValue) {
+        setFilter(fallbackFilterValue);
+        setActiveFilter(fallbackFilterValue);
+      }
+      setViewMode("chrono");
+      onViewModeChange?.("chrono");
+    }
+
+    setIsDropdownOpen(false);
   };
+
+  // const showFilterDropdown =
+  //   withCategories && (!hideFilterWhenBrandSelected || !selectedBrand);
 
   return (
     <div className="filter-bar-generic-container">
@@ -201,9 +223,20 @@ const FilterBarGeneric: React.FC<Props> = ({
       </div>
 
       {/* 🔧 Deuxième filtre : input + catégories (optionnel) */}
-      {(withBrands || withCategories) && (
-        <div className="filter-dropdown-wrapper" ref={dropdownRef}>
-          {!selectedBrand ? (
+      <div className="filter-bar-generic-actions">
+        {withBrands && (
+          <BrandSelect
+            brands={availableBrands ?? []}
+            selectedBrand={selectedBrand}
+            onSelect={handleBrandChange}
+            onClear={() => handleBrandChange("")}
+            placeholder="Choisir une marque"
+            className="brand-select-inline"
+          />
+        )}
+
+        {/* {showFilterDropdown && (
+          <div className="filter-dropdown-wrapper" ref={dropdownRef}>
             <button
               className="filter-toggle"
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -211,87 +244,46 @@ const FilterBarGeneric: React.FC<Props> = ({
               <SlidersHorizontal size={18} style={{ marginRight: "6px" }} />
               Filtrer
             </button>
-          ) : (
-            <BrandSelect
-              brands={availableBrands ?? []}
-              selectedBrand={selectedBrand}
-              onSelect={handleBrandSelect}
-              onClear={() => handleBrandSelect("")}
-              placeholder="Choisir une marque"
-            />
-          )}
 
-          {isDropdownOpen && (
-            <div className="filter-dropdown">
-              {/* 🔍 Recherche marque */}
-              {withBrands && (
-                <>
-                  <input
-                    type="text"
-                    value={search || selectedBrand}
-                    onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Rechercher une marque..."
-                  />
+            {isDropdownOpen && (
+              <div className="filter-dropdown">
+                {withCategories && availableCategories.length > 0 && (
+                  <select
+                    value={selectedCategory}
+                    onChange={(e) => {
+                      const nextCategory = e.target.value;
+                      setSelectedCategory(nextCategory);
+                      setViewMode("flat");
+                      setFilter("");
+                      setActiveFilter("");
+                      onViewModeChange?.("flat");
+                    }}
+                  >
+                    <option value="">Toutes les catégories</option>
+                    {availableCategories.map((cat) => (
+                      <option key={cat} value={cat}>
+                        {cat}
+                      </option>
+                    ))}
+                  </select>
+                )}
 
-                  {search && (
-                    <ul className="autocomplete-list">
-                      {filteredBrands.length > 0 ? (
-                        filteredBrands.map((brand) => (
-                          <li
-                            key={brand}
-                            onClick={() => {
-                              setSelectedBrand(brand);
-                              setSelectedCategory("");
-                              setSearch("");
-                              setIsDropdownOpen(false);
-
-                              const focusedFilter = brandFocusFilter ?? "";
-                              // 👉 Mode recherche (filtre solo marque)
-                              setViewMode("flat");
-                              setFilter(focusedFilter);
-                              onViewModeChange?.("flat");
-                              setActiveFilter(focusedFilter);
-                            }}
-                          >
-                            {brand}
-                          </li>
-                        ))
-                      ) : (
-                        <li className="no-results">Aucune marque trouvée</li>
-                      )}
-                    </ul>
-                  )}
-                </>
-              )}
-
-              {(selectedBrand || selectedCategory) && (
-                <button
-                  className="reset"
-                  onClick={() => {
-                    setSelectedBrand("");
-                    setSelectedCategory("");
-                    setSearch("");
-
-                    // 👉 retour au comportement par défaut
-                    setViewMode("chrono");
-                    const fallbackFilter =
-                      baseFilterValue ??
-                      options.find((opt) => opt.value !== brandFocusFilter)
-                        ?.value ??
-                      options[0]?.value ??
-                      "";
-                    setFilter(fallbackFilter);
-                    onViewModeChange?.("chrono");
-                    setActiveFilter(fallbackFilter);
-                  }}
-                >
-                  Réinitialiser
-                </button>
-              )}
-            </div>
-          )}
-        </div>
-      )}
+                {(selectedBrand || selectedCategory) && (
+                  <button
+                    className="reset"
+                    onClick={() => {
+                      handleBrandChange("");
+                      setSelectedCategory("");
+                    }}
+                  >
+                    Réinitialiser
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+        )} */}
+      </div>
     </div>
   );
 };

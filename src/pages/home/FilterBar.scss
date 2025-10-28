@@ -12,7 +12,9 @@
     gap: 14px;
 
     > .brand-select {
-      display: none;
+      display: inline-flex;
+      align-items: stretch;
+
       &__trigger {
         height: 100%;
       }
@@ -92,6 +94,18 @@
           transform 0.2s ease,
           color 0.2s ease;
       }
+    }
+  }
+}
+
+.filter-bar-generic-container {
+  .filter-bar-generic-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .brand-select-inline {
+      min-width: 220px;
     }
   }
 }

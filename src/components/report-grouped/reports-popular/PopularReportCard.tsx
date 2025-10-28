@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 import { ChevronDown, ChevronUp } from "lucide-react";
@@ -9,6 +9,7 @@ import { useAuth } from "@src/services/AuthContext";
 import { useCommentsForDescription } from "@src/hooks/useCommentsForDescription";
 import type { PopularGroupedReport } from "@src/types/Reports";
 import "./PopularReportCard.scss";
+import "@src/pages/home/confirm-reportlist/FlatSubcategoryBlock.scss";
 import { getBrandLogo } from "@src/utils/brandLogos";
 import Avatar from "@src/components/shared/Avatar";
 
@@ -19,6 +20,8 @@ interface Props {
   isHot?: boolean;
 }
 
+const DESCRIPTION_PREVIEW_LENGTH = 180;
+
 const PopularReportCard: React.FC<Props> = ({
   item,
   isOpen,
@@ -27,6 +30,9 @@ const PopularReportCard: React.FC<Props> = ({
 }) => {
   const { userProfile } = useAuth();
   const [showComments, setShowComments] = useState(false);
+  const [showSimilarReports, setShowSimilarReports] = useState(false);
+  const [visibleDescriptionsCount, setVisibleDescriptionsCount] = useState(2);
+  const [showFullText, setShowFullText] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
   const [localCommentsCounts, setLocalCommentsCounts] = useState<
     Record<string, number>
@@ -34,7 +40,7 @@ const PopularReportCard: React.FC<Props> = ({
 
   const firstDescription = item.descriptions?.[0];
 
-  const descriptionId = firstDescription.id;
+  const descriptionId = firstDescription?.id ?? "";
   const { comments, loading } = useCommentsForDescription(
     descriptionId,
     "report",
@@ -42,7 +48,7 @@ const PopularReportCard: React.FC<Props> = ({
   );
 
   useEffect(() => {
-    if (!loading && comments.length > 0) {
+    if (!loading) {
       setLocalCommentsCounts((prev) => ({
         ...prev,
         [descriptionId]: comments.length,
@@ -50,87 +56,178 @@ const PopularReportCard: React.FC<Props> = ({
     }
   }, [comments.length, descriptionId, loading]);
 
+  useEffect(() => {
+    if (!isOpen) {
+      setShowComments(false);
+      setShowSimilarReports(false);
+      setShowFullText(false);
+      setVisibleDescriptionsCount(2);
+    }
+  }, [isOpen]);
+
+  const descriptionText = useMemo(() => {
+    if (!firstDescription) return "";
+
+    if (showFullText || !firstDescription.description) {
+      return `${firstDescription.description}${firstDescription.emoji || ""}`;
+    }
+
+    const truncated = firstDescription.description.slice(
+      0,
+      DESCRIPTION_PREVIEW_LENGTH,
+    );
+
+    const suffix =
+      firstDescription.description.length > DESCRIPTION_PREVIEW_LENGTH
+        ? "..."
+        : "";
+
+    return `${truncated}${suffix} ${firstDescription.emoji || ""}`.trim();
+  }, [firstDescription?.description, firstDescription?.emoji, showFullText]);
+
   if (!firstDescription) return null;
+
+  const author = firstDescription.user ?? {
+    id: "",
+    pseudo: "Utilisateur",
+    avatar: null,
+  };
+
+  const currentCount = localCommentsCounts[descriptionId] ?? 0;
+  const brandLogo = getBrandLogo(item.marque, item.siteUrl ?? undefined);
+  const captureUrl = firstDescription.capture ?? null;
+  const additionalDescriptions = item.descriptions.slice(1);
+  const hasMoreThanTwo = additionalDescriptions.length > 2;
+
+  const handleHeaderClick = () => {
+    onToggle();
+  };
 
   const handleCommentClick = () => {
     if (!isOpen) {
       onToggle();
       setShowComments(true);
-    } else {
-      setShowComments((prev) => !prev);
+      setShowSimilarReports(false);
+      return;
+    }
+
+    setShowComments((prev) => !prev);
+  };
+
+  const handleToggleSimilarReports = () => {
+    if (!isOpen) {
+      onToggle();
+      setShowSimilarReports(true);
+      setShowComments(false);
+      return;
+    }
+
+    setShowSimilarReports((prev) => !prev);
+    if (!showSimilarReports) {
+      setShowComments(false);
     }
   };
 
-  const currentCount = localCommentsCounts[descriptionId] ?? 0;
-
   return (
-    <div className={`report-card ${isHot ? "hot-effect" : ""}`}>
-      <div className="card-header" onClick={onToggle}>
-        <div className="left-icon">
+    <div
+      className={`subcategory-block flat ${isOpen ? "open" : ""} ${isHot ? "hot-effect" : ""}`}
+      data-description-id={descriptionId}
+    >
+      <div className="subcategory-header" onClick={handleHeaderClick}>
+        <div className="subcategory-left">
           <img
             src={getCategoryIconPathFromSubcategory(item.subCategory)}
-            alt="icon"
+            alt={item.subCategory}
+            className="subcategory-icon"
           />
-        </div>
-
-        <div className="card-title">
-          <div className="title-and-meta">
-            <h4>{item.subCategory || "Suggestion"}</h4>
-            <div className="meta-info">
-              {!isOpen && (
-                <span className="date-card">
-                  {formatDistanceToNow(new Date(firstDescription.createdAt), {
-                    locale: fr,
-                    addSuffix: true,
-                  }).replace("environ ", "")}
-                </span>
+          <div className="subcategory-text">
+            <div className="subcategory-title-row">
+              <h4>{item.subCategory || "Signalement"}</h4>
+              {item.count > 1 && (
+                <span className="count-badge">{item.count}</span>
               )}
             </div>
           </div>
         </div>
 
-        <div className="right-section">
-          {!isOpen ? (
-            <div className="brand-logo-container">
-              <img
-                src={getBrandLogo(item.marque, item.siteUrl ?? undefined)}
-                alt={item.marque}
-                className="brand-logo"
-              />
-            </div>
-          ) : (
-            <div className="user-brand-inline">
-              <div className="avatars">
+        <div className="subcategory-right">
+          {isOpen ? (
+            <div className="expanded-header">
+              <div className="avatar-logo-group">
                 <Avatar
-                  avatar={firstDescription.user?.avatar ?? null}
-                  pseudo={firstDescription.user?.pseudo}
+                  avatar={author.avatar}
+                  pseudo={author.pseudo}
                   type="user"
-                  className="avatar first-avatar-under"
+                  className="user-avatar"
+                  wrapperClassName="user-avatar-wrapper"
                 />
                 <Avatar
-                  avatar={getBrandLogo(item.marque, item.siteUrl ?? undefined)}
+                  avatar={brandLogo}
                   pseudo={item.marque}
                   type="brand"
-                  className="avatar"
+                  className="brand-logo"
+                  wrapperClassName="brand-logo-wrapper"
                 />
               </div>
-              <div className="label">
-                {firstDescription.user?.pseudo} <span className="x">×</span>{" "}
-                <strong>{item.marque}</strong>
+              <div className="text-meta">
+                <span className="user-brand-line">
+                  {author.pseudo} <span className="cross">×</span>{" "}
+                  <strong>{item.marque}</strong>
+                </span>
               </div>
+              <ChevronUp size={16} />
+            </div>
+          ) : (
+            <div className="collapsed-header">
+              <span className="date-subcategory">
+                {formatDistanceToNow(new Date(firstDescription.createdAt), {
+                  locale: fr,
+                  addSuffix: true,
+                }).replace("environ ", "")}
+              </span>
+              <Avatar
+                avatar={brandLogo}
+                pseudo={item.marque}
+                type="brand"
+                className="brand-logo"
+                wrapperClassName="avatars"
+              />
+              <ChevronDown size={16} />
             </div>
           )}
-        </div>
-
-        <div className="chevron">
-          {isOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
         </div>
       </div>
 
       {isOpen && (
-        <div className="card-content">
-          <div className="card-description">
-            <p>{firstDescription.description}</p>
+        <div className="subcategory-content">
+          <div className="main-description">
+            <p className="description-text">{descriptionText}</p>
+
+            {(firstDescription.description.length >
+              DESCRIPTION_PREVIEW_LENGTH ||
+              captureUrl) && (
+              <div className="see-more-section">
+                <button
+                  className="see-more-button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowFullText((prev) => !prev);
+                  }}
+                >
+                  {showFullText ? "Voir moins" : "Voir plus"}
+                </button>
+              </div>
+            )}
+
+            {showFullText && captureUrl && (
+              <div className="inline-capture">
+                <img
+                  src={captureUrl}
+                  alt="Capture du signalement"
+                  className="inline-capture-img"
+                />
+              </div>
+            )}
           </div>
 
           <ReportActionsBarWithReactions
@@ -140,7 +237,7 @@ const PopularReportCard: React.FC<Props> = ({
             commentsCount={currentCount}
             onReactClick={() => {}}
             onCommentClick={handleCommentClick}
-            onToggleSimilarReports={() => {}}
+            onToggleSimilarReports={handleToggleSimilarReports}
           />
 
           {showComments && userProfile?.id && (
@@ -148,8 +245,8 @@ const PopularReportCard: React.FC<Props> = ({
               userId={userProfile.id}
               descriptionId={descriptionId}
               type="report"
-              forceOpen={true}
               hideFooter={true}
+              forceOpen={true}
               onCommentCountChange={(count) =>
                 setLocalCommentsCounts((prev) => ({
                   ...prev,
@@ -158,6 +255,86 @@ const PopularReportCard: React.FC<Props> = ({
               }
               onCommentAddedOrDeleted={() => setRefreshKey((prev) => prev + 1)}
             />
+          )}
+
+          {showSimilarReports && additionalDescriptions.length > 0 && (
+            <div className="other-descriptions">
+              {additionalDescriptions
+                .slice(0, visibleDescriptionsCount)
+                .map((desc) => {
+                  const secondaryAuthor = desc.user ?? {
+                    id: "",
+                    pseudo: "Utilisateur",
+                    avatar: null,
+                  };
+                  return (
+                    <div key={desc.id} className="feedback-card">
+                      <div className="feedback-avatar">
+                        <div className="feedback-avatar-wrapper">
+                          <Avatar
+                            avatar={secondaryAuthor.avatar}
+                            pseudo={secondaryAuthor.pseudo}
+                            type="user"
+                            className="avatar"
+                            wrapperClassName="avatar-wrapper-override"
+                          />
+                          {desc.emoji && (
+                            <div className="emoji-overlay">{desc.emoji}</div>
+                          )}
+                        </div>
+                      </div>
+                      <div className="feedback-content">
+                        <div className="feedback-meta">
+                          <span className="pseudo">
+                            {secondaryAuthor.pseudo}
+                          </span>
+                          <span className="brand"> · {item.marque}</span>
+                          <span className="time">
+                            ·{" "}
+                            {formatDistanceToNow(new Date(desc.createdAt), {
+                              locale: fr,
+                              addSuffix: true,
+                            })}
+                          </span>
+                        </div>
+                        <p className="feedback-text">{desc.description}</p>
+
+                        <DescriptionCommentSection
+                          userId={secondaryAuthor.id}
+                          descriptionId={desc.id}
+                          type="report"
+                          modeCompact
+                          triggerType="text"
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+
+              {hasMoreThanTwo && (
+                <div className="see-more-toggle">
+                  {visibleDescriptionsCount < additionalDescriptions.length ? (
+                    <button
+                      className="see-more-descriptions"
+                      onClick={() =>
+                        setVisibleDescriptionsCount((prev) =>
+                          Math.min(prev + 2, additionalDescriptions.length),
+                        )
+                      }
+                    >
+                      Voir plus
+                    </button>
+                  ) : (
+                    <button
+                      className="see-more-descriptions"
+                      onClick={() => setVisibleDescriptionsCount(2)}
+                    >
+                      Voir moins
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
           )}
         </div>
       )}
