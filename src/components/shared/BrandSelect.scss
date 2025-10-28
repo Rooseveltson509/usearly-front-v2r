@@ -4,6 +4,7 @@
 
   &__trigger {
     width: auto;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -20,7 +21,6 @@
     &:hover,
     &:focus-visible,
     &--active {
-      height: 37px;
       width: 100%;
       border-color: #e4e4e4;
       outline: none;

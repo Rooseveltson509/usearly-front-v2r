@@ -113,7 +113,7 @@ const FilterBar: React.FC<Props> = ({
   onSearchTermChange,
   availableSubCategoriesByBrandAndCategory,
 }) => {
-  const [brandSearch, setBrandSearch] = useState("");
+  const [, setBrandSearch] = useState("");
   const [categorySearch, setCategorySearch] = useState("");
   const normalizedSelectValue = useMemo<FilterOptionValue>(() => {
     if (filter === "confirmed" || filter === "") {
@@ -134,11 +134,11 @@ const FilterBar: React.FC<Props> = ({
     filterOptions.find((option) => option.value === normalizedSelectValue) ??
     filterOptions[0];
 
-  const filteredBrands = useMemo(() => {
-    if (!brandSearch.trim()) return availableBrands;
-    const query = normalize(brandSearch);
-    return availableBrands.filter((brand) => normalize(brand).includes(query));
-  }, [availableBrands, brandSearch]);
+  // const filteredBrands = useMemo(() => {
+  //   if (!brandSearch.trim()) return availableBrands;
+  //   const query = normalize(brandSearch);
+  //   return availableBrands.filter((brand) => normalize(brand).includes(query));
+  // }, [availableBrands, brandSearch]);
 
   const normalizedCategories = useMemo(() => {
     if (!categorySearch.trim()) return availableCategories;
@@ -272,17 +272,15 @@ const FilterBar: React.FC<Props> = ({
               <ChevronDown size={16} className="select-filter-chevron" />
             </span>
           </div>
-          {selectedBrand && (
-            <BrandSelect
-              brands={availableBrands}
-              selectedBrand={selectedBrand}
-              onSelect={(brand) => handleBrandSelect(brand)}
-              onClear={() => clearBrand()}
-              placeholder="Choisir une marque"
-            />
-          )}
         </div>
         <div className="secondary-filters-container">
+          <BrandSelect
+            brands={availableBrands}
+            selectedBrand={selectedBrand}
+            onSelect={(brand) => handleBrandSelect(brand)}
+            onClear={() => clearBrand()}
+            placeholder="Choisir une marque"
+          />
           <div className="filter-dropdown-wrapper" ref={dropdownRef}>
             <button
               className="filter-toggle"
@@ -294,7 +292,7 @@ const FilterBar: React.FC<Props> = ({
 
             {isDropdownOpen && (
               <div className="filter-dropdown">
-                <div className="brand-search">
+                {/* <div className="brand-search">
                   <input
                     type="text"
                     value={brandSearch}
@@ -323,7 +321,7 @@ const FilterBar: React.FC<Props> = ({
                       )}
                     </ul>
                   )}
-                </div>
+                </div> */}
 
                 <select
                   value={selectedCategory}
