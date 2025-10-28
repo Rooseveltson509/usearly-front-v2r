@@ -212,10 +212,10 @@ const FilterBar: React.FC<Props> = ({
 
   const clearBrand = () => {
     resetBrandFilters();
-    setViewMode("confirmed");
-    setFilter("confirmed");
-    onViewModeChange?.("confirmed");
-    setActiveFilter("confirmed");
+    setViewMode("chrono");
+    setFilter("chrono");
+    onViewModeChange?.("chrono");
+    setActiveFilter("chrono");
   };
   if (!selectedBrand) {
     return (

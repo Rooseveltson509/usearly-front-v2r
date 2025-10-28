@@ -117,7 +117,7 @@ const HomeGroupedReportsList = ({
   totalityCount,
   onSectionChange,
 }: Props) => {
-  const [filter, setFilter] = useState<FilterType>("confirmed");
+  const [filter, setFilter] = useState<FilterType>("chrono");
   const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>(
     {},
   );
@@ -217,12 +217,13 @@ const HomeGroupedReportsList = ({
   useEffect(() => {
     if (!initializing) return;
 
-    // 🚀 Toujours démarrer sur confirmed
-    setFilter("confirmed");
-    setActiveFilter("confirmed");
+    // 🚀 Toujours démarrer sur les plus récents
+    setFilter("chrono");
+    setActiveFilter("chrono");
+    onViewModeChange?.("chrono");
 
     setInitializing(false);
-  }, [initializing, setActiveFilter]);
+  }, [initializing, onViewModeChange, setActiveFilter]);
 
   // ---------------- Fetch filtered reports by brand ----------------
   useEffect(() => {
