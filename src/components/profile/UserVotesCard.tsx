@@ -34,7 +34,7 @@ const UserVotesCard: React.FC = () => {
   );
   const [loading, setLoading] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [setCollapsedHeight] = useState<number | null>(null);
+  const [, setCollapsedHeight] = useState<number | null>(null);
   const listRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
 
