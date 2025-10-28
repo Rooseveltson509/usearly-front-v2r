@@ -129,10 +129,11 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
   return (
     <div className={`brand-block ${openBrands[brand] ? "open" : "close"}`}>
       <div className="brand-header" onClick={() => toggleBrand(brand)}>
-        <img
-          src={getBrandLogo(brand, siteUrl)}
-          alt={brand}
-          className="brand-logo"
+        <Avatar
+          avatar={getBrandLogo(brand, siteUrl)}
+          pseudo={brand}
+          type="brand"
+          wrapperClassName="brand-logo"
         />
         <p className="brand-reports-count">
           <strong>{uniqueSubCategories.length}</strong> signalement
