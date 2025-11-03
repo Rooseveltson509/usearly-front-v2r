@@ -128,7 +128,7 @@ export const getUserStatsSummary = async (): Promise<UserStatsSummary> => {
   return res.data;
 };
 
-export const getGroupedReportsPublic = async (page: number, limit: number) => {
+/* export const getGroupedReportsPublic = async (page: number, limit: number) => {
   const response = await apiService.get(
     `/reportings/public-grouped-by-category`,
     {
@@ -136,7 +136,7 @@ export const getGroupedReportsPublic = async (page: number, limit: number) => {
     },
   );
   return response.data;
-};
+}; */
 
 export const getAllPublicGroupedReports = async (page = 1, limit = 10) => {
   try {

@@ -1,19 +1,20 @@
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useMemo } from "react";
 import FilterBarGeneric from "./genericFilters/FilterBarGeneric";
+import { useBrands } from "@src/hooks/useBrands";
 import "./HomeFiltersSuggestion.scss";
-import { getAllBrandsSuggestion } from "@src/services/coupDeCoeurService";
 import { CiSearch } from "react-icons/ci";
 
 interface Props {
   filter: string;
   setFilter: (val: string) => void;
   selectedBrand: string;
-  setSelectedBrand: (val: string) => void;
+  setSelectedBrand: (val: string, siteUrl?: string) => void;
   selectedCategory: string;
   setSelectedCategory: (val: string) => void;
   availableCategories: string[];
   searchQuery: string;
   onSearchChange: (val: string) => void;
+  siteUrl?: string;
 }
 
 const HomeFiltersSuggestion = ({
@@ -21,57 +22,46 @@ const HomeFiltersSuggestion = ({
   setFilter,
   selectedBrand,
   setSelectedBrand,
-  selectedCategory,
+  /* selectedCategory, */
   setSelectedCategory,
-  availableCategories,
+  /* availableCategories, */
   searchQuery,
   onSearchChange,
+  siteUrl,
 }: Props) => {
   const [viewMode, setViewMode] = useState<"flat" | "chrono" | "confirmed">(
     "flat",
   );
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [availableBrands, setAvailableBrands] = useState<string[]>([]);
+
+  // ✅ hook partagé avec reports et CDC
+  const { brands, loading } = useBrands("suggestion");
+  const availableBrands = useMemo(
+    () => brands.map((b) => ({ brand: b.marque, siteUrl: b.siteUrl })),
+    [brands],
+  );
 
   const baseOptions = useMemo(
     () => [
-      { value: "allSuggest", label: "👍️ Suggestions les plus populaires" },
+      { value: "allSuggest", label: "👍️ Suggestions populaires" },
       { value: "recentSuggestion", label: "🪄 Suggestions ouvertes aux votes" },
       { value: "likedSuggestion", label: "🙌 Suggestions adoptées" },
     ],
     [],
   );
 
-  const filterOptions = useMemo(() => {
-    return baseOptions;
-  }, [baseOptions]);
-
-  useEffect(() => {
-    const fetchBrands = async () => {
-      try {
-        const brands = await getAllBrandsSuggestion();
-        setAvailableBrands(brands);
-      } catch (e) {
-        console.error("Erreur chargement marques:", e);
-      }
-    };
-    fetchBrands();
-  }, []);
-
-  const handleBrandSelect = (brand: string) => {
-    setSelectedBrand(brand);
+  const handleBrandSelect = (brand: string, brandSiteUrl?: string) => {
+    setSelectedBrand(brand, brandSiteUrl);
     setSelectedCategory("");
     setFilter(brand ? "brandSolo" : "allSuggest");
-    if (!brand) {
-      onSearchChange("");
-    }
+    if (!brand) onSearchChange("");
   };
 
   return (
     <div className="controls">
       <FilterBarGeneric
-        options={filterOptions}
+        options={baseOptions}
         filter={filter}
         setFilter={setFilter}
         viewMode={viewMode}
@@ -79,18 +69,16 @@ const HomeFiltersSuggestion = ({
         setSelectedBrand={handleBrandSelect}
         setSelectedCategory={setSelectedCategory}
         selectedBrand={selectedBrand}
-        selectedCategory={selectedCategory}
         availableBrands={availableBrands}
-        availableCategories={availableCategories}
         dropdownRef={dropdownRef}
         isDropdownOpen={isDropdownOpen}
         setIsDropdownOpen={setIsDropdownOpen}
-        withBrands={true}
-        withCategories={!selectedBrand}
+        withBrands={!loading}
         brandFocusFilter="brandSolo"
         baseFilterValue="allSuggest"
-        hideFilterWhenBrandSelected={true}
+        siteUrl={siteUrl}
       />
+
       {selectedBrand && (
         <div className="suggestion-search">
           <CiSearch />

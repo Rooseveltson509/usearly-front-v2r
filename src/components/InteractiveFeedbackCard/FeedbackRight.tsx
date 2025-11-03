@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { formatDistanceToNowStrict } from "date-fns";
 import { fr } from "date-fns/locale";
 import Avatar from "../shared/Avatar";
-import { fetchValidBrandLogo } from "@src/utils/brandLogos";
 import { capitalizeFirstLetter } from "@src/utils/stringUtils";
 import FeedbackProgressBar from "./FeedbackProgressBar";
 import SharedFooterCdcAndSuggest from "../shared/SharedFooterCdcAndSuggest";
@@ -56,7 +55,10 @@ const FeedbackRight: React.FC<Props> = ({
   const shouldShowToggle =
     description.length > DESCRIPTION_LIMIT || item.capture;
   const brandName = item.marque?.trim() ?? "";
-  const [brandLogo, setBrandLogo] = useState<string | null>(null);
+
+  // ✅ Sécurisation du siteUrl et normalisation
+  const siteUrl = item?.siteUrl ?? undefined;
+  /* const brandEntries = brandName ? [{ brand: brandName, siteUrl }] : []; */
 
   const toggleText = () => setShowFullText((prev) => !prev);
   const openLightbox = (imageSrc: string) => {
@@ -64,23 +66,11 @@ const FeedbackRight: React.FC<Props> = ({
     document.body.classList.add("lightbox-open");
     document.body.style.overflow = "hidden";
   };
-
-  useEffect(() => {
-    if (!brandName) return;
-    let isMounted = true;
-
-    fetchValidBrandLogo(brandName, item.siteUrl)
-      .then((logoUrl) => {
-        if (isMounted) setBrandLogo(logoUrl);
-      })
-      .catch(() => {
-        if (isMounted) setBrandLogo(null);
-      });
-
-    return () => {
-      isMounted = false;
-    };
-  }, [brandName, item.siteUrl]);
+  console.log("🧩 FEEDBACKRIGHT LOGO DEBUG", {
+    marque: item.marque,
+    siteUrl: item.siteUrl,
+    keys: Object.keys(item || {}),
+  });
 
   return (
     <div className="feedback-right" onClick={() => onToggle(item.id)}>
@@ -112,9 +102,10 @@ const FeedbackRight: React.FC<Props> = ({
               {brandName && (
                 <div className="brand-overlay">
                   <Avatar
-                    avatar={brandLogo}
+                    avatar={null}
                     pseudo={brandName}
                     type="brand"
+                    siteUrl={siteUrl}
                     wrapperClassName="brand-logo"
                   />
                 </div>

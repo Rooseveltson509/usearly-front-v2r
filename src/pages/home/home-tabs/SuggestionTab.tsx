@@ -1,28 +1,28 @@
-import React from "react";
+import React, { useMemo, useEffect } from "react";
 import HomeFiltersSuggestion from "../HomeFiltersSuggestion";
 import FeedbackView from "@src/components/feedbacks/FeedbackView";
 import FilterIllustration from "../home-illustration/FilterIllustration";
 import SqueletonAnime from "@src/components/loader/SqueletonAnime";
 import { capitalizeFirstLetter } from "@src/utils/stringUtils";
-import { getBrandLogo } from "@src/utils/brandLogos";
 import Avatar from "@src/components/shared/Avatar";
+import { useBrandLogos } from "@src/hooks/useBrandLogos";
+import { FALLBACK_BRAND_PLACEHOLDER } from "@src/utils/brandLogos";
 
 interface Props {
   activeFilter: string;
   setActiveFilter: (f: string) => void;
   selectedBrand: string;
-  handleSuggestionBrandChange: (b: string) => void;
+  handleSuggestionBrandChange: (b: string, siteUrl?: string) => void;
   selectedCategory: string;
   setSelectedCategory: (c: string) => void;
   suggestionCategories: string[];
   suggestionSearch: string;
   setSuggestionSearch: (s: string) => void;
   suggestionBannerStyle: React.CSSProperties;
-  brandBannerStyle: React.CSSProperties;
+  brandBannerStyle: React.CSSProperties; // ✅ ajouté pour compatibilité avec Home
   suggestionsForDisplay: any[];
-  displayedCount: number;
-  selectedBrandLogo: string | null;
   selectedSiteUrl?: string;
+  setSelectedSiteUrl?: (url?: string) => void;
   totalCount: number;
   filteredByCategory: any[];
   isLoading: boolean;
@@ -39,16 +39,65 @@ const SuggestionTab: React.FC<Props> = ({
   suggestionSearch,
   setSuggestionSearch,
   suggestionBannerStyle,
+  brandBannerStyle,
   suggestionsForDisplay,
   selectedSiteUrl,
+  setSelectedSiteUrl,
   totalCount,
   filteredByCategory,
   isLoading,
 }) => {
+  // 🧩 Si aucun siteUrl défini mais suggestions disponibles → on prend celui du premier
+  useEffect(() => {
+    if (!selectedSiteUrl && suggestionsForDisplay?.length > 0) {
+      const first = suggestionsForDisplay[0];
+      if (first?.siteUrl) {
+        setSelectedSiteUrl?.(first.siteUrl);
+      }
+    }
+  }, [selectedSiteUrl, suggestionsForDisplay, setSelectedSiteUrl]);
+
+  // 🧠 Prépare la récupération dynamique du logo
+  const brandEntries = useMemo(() => {
+    return selectedBrand
+      ? [{ brand: selectedBrand, siteUrl: selectedSiteUrl }]
+      : [];
+  }, [selectedBrand, selectedSiteUrl]);
+
+  const brandLogos = useBrandLogos(brandEntries);
+
+  // 🪶 Résout le logo dynamique
+  const resolvedLogo = useMemo(() => {
+    if (!selectedBrand) return null;
+
+    const brandKey = selectedBrand.toLowerCase().trim();
+    const domain =
+      selectedSiteUrl
+        ?.replace(/^https?:\/\//, "")
+        .replace(/^www\./, "")
+        .split("/")[0]
+        .toLowerCase() || "";
+
+    const possibleKeys = [
+      `${brandKey}|${domain}`,
+      `${brandKey}|${brandKey}.com`,
+      brandKey,
+    ];
+
+    for (const k of possibleKeys) {
+      const logo = brandLogos[k];
+      if (logo && logo !== FALLBACK_BRAND_PLACEHOLDER) return logo;
+    }
+
+    return null;
+  }, [selectedBrand, selectedSiteUrl, brandLogos]);
+
   return (
     <div
-      className={`suggestion-banner-container ${selectedBrand ? "banner-filtered" : `banner-${activeFilter}`}`}
-      style={selectedBrand ? suggestionBannerStyle : undefined}
+      className={`suggestion-banner-container ${
+        selectedBrand ? "banner-filtered" : `banner-${activeFilter}`
+      }`}
+      style={selectedBrand ? suggestionBannerStyle : brandBannerStyle}
     >
       <div className="feedback-list-wrapper">
         <HomeFiltersSuggestion
@@ -61,6 +110,7 @@ const SuggestionTab: React.FC<Props> = ({
           availableCategories={suggestionCategories}
           searchQuery={suggestionSearch}
           onSearchChange={setSuggestionSearch}
+          siteUrl={selectedSiteUrl}
         />
 
         {isLoading ? (
@@ -78,9 +128,11 @@ const SuggestionTab: React.FC<Props> = ({
                   <div className="selected-brand-summary__brand">
                     <div className="selected-brand-summary__logo">
                       <Avatar
-                        avatar={getBrandLogo(selectedBrand, selectedSiteUrl)}
+                        avatar={resolvedLogo}
                         pseudo={selectedBrand}
                         type="brand"
+                        preferBrandLogo={true}
+                        siteUrl={selectedSiteUrl}
                       />
                     </div>
                     <div className="selected-brand-summary__info-container">
@@ -111,6 +163,7 @@ const SuggestionTab: React.FC<Props> = ({
                 </div>
               )}
             </div>
+
             <FeedbackView
               activeTab="suggestion"
               viewMode="flat"
@@ -126,6 +179,7 @@ const SuggestionTab: React.FC<Props> = ({
               setGroupOpen={() => {}}
               selectedBrand={selectedBrand}
               selectedCategory={selectedCategory}
+              selectedSiteUrl={selectedSiteUrl}
               renderCard={() => <></>}
             />
           </div>
@@ -136,6 +190,7 @@ const SuggestionTab: React.FC<Props> = ({
         <FilterIllustration
           filter={activeFilter}
           selectedBrand={selectedBrand}
+          siteUrl={selectedSiteUrl}
           selectedCategory={selectedCategory}
           onglet="suggestion"
         />

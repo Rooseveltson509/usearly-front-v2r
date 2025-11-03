@@ -1,4 +1,3 @@
-// BrandSelect.tsx
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown, X } from "lucide-react";
 import { useBrandLogos } from "@src/hooks/useBrandLogos";
@@ -6,13 +5,14 @@ import { FALLBACK_BRAND_PLACEHOLDER } from "@src/utils/brandLogos";
 import "./BrandSelect.scss";
 
 interface BrandSelectProps {
-  brands?: string[];
+  brands?: (string | { brand: string; siteUrl?: string })[];
   selectedBrand: string;
-  onSelect: (brand: string) => void;
+  onSelect: (brand: string, siteUrl?: string) => void;
   onClear?: () => void;
   placeholder?: string;
   searchPlaceholder?: string;
   className?: string;
+  siteUrl?: string;
 }
 
 const normalize = (value: string) =>
@@ -22,7 +22,6 @@ const normalize = (value: string) =>
     .replace(/[\u0300-\u036f]/g, "")
     .trim();
 
-// 🔎 Détecte la valeur "Tous" (et variantes)
 const isAllValue = (v?: string) => {
   const n = normalize(v || "");
   return n === "tous" || n === "tout" || n === "all";
@@ -42,28 +41,43 @@ export const BrandSelect = ({
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   const safeBrands = Array.isArray(brands) ? brands : [];
-  const brandLogos = useBrandLogos(safeBrands);
 
-  /** Renvoie la forme "canonique" d'une marque (exacte dans `brands`), sinon `undefined` */
+  // 🧩 Uniformise vers { brand, siteUrl }
+  const brandEntries = useMemo(() => {
+    return safeBrands.map((b) =>
+      typeof b === "object" && "brand" in b
+        ? { brand: b.brand, siteUrl: b.siteUrl }
+        : { brand: b, siteUrl: undefined },
+    );
+  }, [safeBrands]);
+
+  // ✅ Logos dynamiques Clearbit
+  const brandLogos = useBrandLogos(brandEntries);
+
   const toCanonicalBrand = (name?: string) => {
     if (!name) return undefined;
     const n = normalize(name);
-    return safeBrands.find((b) => normalize(b) === n);
+    const match = safeBrands.find((b) => {
+      const brandName = typeof b === "string" ? b : b.brand;
+      return normalize(brandName) === n;
+    });
+    return typeof match === "string" ? match : match?.brand;
   };
 
-  const normalizedBrands = useMemo(() => {
-    const list = safeBrands
-      .map((b) => b?.trim())
-      .filter((b): b is string => Boolean(b));
-    const unique = Array.from(new Set(list));
+  const filteredEntries = useMemo(() => {
+    const list = brandEntries.filter(
+      (b) => !query.trim() || normalize(b.brand).includes(normalize(query)),
+    );
+    const uniqueMap = new Map<string, { brand: string; siteUrl?: string }>();
+    list.forEach((b) => {
+      if (!uniqueMap.has(normalize(b.brand))) {
+        uniqueMap.set(normalize(b.brand), b);
+      }
+    });
+    return Array.from(uniqueMap.values());
+  }, [brandEntries, query]);
 
-    if (query.trim()) {
-      const q = normalize(query);
-      return unique.filter((b) => normalize(b).includes(q));
-    }
-    return unique;
-  }, [safeBrands, query]);
-
+  // 👇 ferme le dropdown au clic extérieur
   useEffect(() => {
     if (!open) return;
     const handleClickOutside = (event: MouseEvent) => {
@@ -78,31 +92,60 @@ export const BrandSelect = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open]);
 
-  /**
-   * Affiche soit le logo (si marque connue ET logo non fallback),
-   * soit un badge texte/initiales.
-   * ⚠️ Si "Tous" → pas d'image/badge (retourne null).
-   */
-  const renderBadge = (brand?: string) => {
-    if (isAllValue(brand)) return null; // 🚫 rien à côté de "Tous"
-
-    const canonical = toCanonicalBrand(brand);
-    if (!canonical) {
-      const label = (brand || "?").trim();
-      return (
-        <span className="brand-badge__initial">
-          {label ? label.slice(0, 2).toUpperCase() : "?"}
-        </span>
-      );
-    }
-
-    const logo = brandLogos[canonical];
-    if (logo && logo !== FALLBACK_BRAND_PLACEHOLDER) {
-      return <img src={logo} alt="" />;
-    }
+  const isSuspiciousImage = (url: string) => {
+    // 🧠 Cas où Clearbit retourne une photo ou une image générique
     return (
-      <span className="brand-badge__initial">
-        {canonical.slice(0, 2).toUpperCase()}
+      url.includes("clearbit.com") &&
+      (url.includes("fr/") || url.includes("de/") || url.includes("es/"))
+    );
+  };
+
+  const renderBadge = (brand?: string) => {
+    if (isAllValue(brand)) return null;
+    const canonical = toCanonicalBrand(brand);
+    if (!canonical) return <span className="brand-badge__initial">?</span>;
+
+    const brandKey = canonical.toLowerCase().trim();
+    let logo = brandLogos[brandKey];
+
+    // ✅ Corrige les domaines régionaux (amazon.fr → amazon.com)
+    if (logo && isSuspiciousImage(logo)) {
+      const fixed = `https://logo.clearbit.com/${brandKey}.com`;
+      console.warn(
+        `⚠️ Logo suspect détecté (${brandKey}), fallback vers .com :`,
+        fixed,
+      );
+      logo = fixed;
+    }
+
+    // 🧩 Fallback ultime → initiales
+    const showInitial = !logo || logo === FALLBACK_BRAND_PLACEHOLDER;
+
+    const handleError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+      const img = e.currentTarget;
+      img.style.display = "none";
+      const initials = img.nextElementSibling as HTMLElement | null;
+      if (initials) initials.style.display = "inline";
+      console.warn(`⚠️ Logo échoué pour ${canonical}:`, logo);
+    };
+
+    return (
+      <span className="brand-badge__wrapper">
+        {logo && !showInitial && (
+          <img
+            src={logo}
+            alt={canonical}
+            className="brand-badge__logo"
+            onError={handleError}
+            loading="lazy"
+          />
+        )}
+        <span
+          className="brand-badge__initial"
+          style={{ display: showInitial ? "inline" : "none" }}
+        >
+          {canonical.slice(0, 2).toUpperCase()}
+        </span>
       </span>
     );
   };
@@ -122,7 +165,6 @@ export const BrandSelect = ({
         className={triggerClassName}
         onClick={() => setOpen((prev) => !prev)}
       >
-        {/* 🚫 Ne pas afficher d'image/badge pour "Tous" */}
         {!isAllValue(selectedBrand) && (
           <span className="brand-badge">{renderBadge(selectedBrand)}</span>
         )}
@@ -153,33 +195,29 @@ export const BrandSelect = ({
           </div>
 
           <ul className="brand-select__list">
-            {normalizedBrands.length === 0 && (
+            {filteredEntries.length === 0 && (
               <li className="brand-select__empty">Aucune marque trouvée</li>
             )}
-            {normalizedBrands.map((brand) => {
+            {filteredEntries.map((entry) => {
+              const brand = entry.brand;
               const optionClassName = [
                 "brand-select__option",
                 brand === selectedBrand ? "active" : "",
               ]
                 .filter(Boolean)
                 .join(" ");
-              const hideBadge = isAllValue(brand);
-
               return (
                 <li key={brand}>
                   <button
                     type="button"
                     className={optionClassName}
                     onClick={() => {
-                      onSelect(brand);
+                      onSelect(entry.brand, entry.siteUrl);
                       setQuery("");
                       setOpen(false);
                     }}
                   >
-                    {/* 🚫 Pas de logo/badge pour l’option "Tous" */}
-                    {!hideBadge && (
-                      <span className="brand-badge">{renderBadge(brand)}</span>
-                    )}
+                    <span className="brand-badge">{renderBadge(brand)}</span>
                     <span className="brand-select__option-label">{brand}</span>
                   </button>
                 </li>

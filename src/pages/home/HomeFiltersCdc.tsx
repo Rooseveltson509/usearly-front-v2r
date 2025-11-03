@@ -1,16 +1,18 @@
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useRef, useMemo } from "react";
 import FilterBarGeneric from "./genericFilters/FilterBarGeneric";
-import { getAllBrands } from "@src/services/coupDeCoeurService";
+import { useBrands } from "@src/hooks/useBrands"; // ✅ on réutilise ton hook existant
 import "./HomeFiltersCdc.scss";
 
 interface Props {
   filter: string;
   setFilter: (val: string) => void;
   selectedBrand: string;
-  setSelectedBrand: (val: string) => void;
+  setSelectedBrand: (val: string, siteUrl?: string) => void; // ✅ garde siteUrl
   selectedCategory: string;
   setSelectedCategory: (val: string) => void;
   availableCategories: string[];
+  siteUrl?: string;
+  setSelectedSiteUrl?: (val?: string) => void;
 }
 
 const HomeFiltersCdc = ({
@@ -18,16 +20,25 @@ const HomeFiltersCdc = ({
   setFilter,
   selectedBrand,
   setSelectedBrand,
-  selectedCategory,
+  /*  selectedCategory, */
   setSelectedCategory,
-  availableCategories,
+  /* availableCategories, */
+  siteUrl,
+  setSelectedSiteUrl,
 }: Props) => {
   const [viewMode, setViewMode] = useState<"flat" | "chrono" | "confirmed">(
     "flat",
   );
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [availableBrands, setAvailableBrands] = useState<string[]>([]);
+
+  // ✅ récupération dynamique des marques depuis useBrands
+  const { brands, loading } = useBrands("coupdecoeur");
+
+  const availableBrands = useMemo(
+    () => brands.map((b) => ({ brand: b.marque, siteUrl: b.siteUrl })),
+    [brands],
+  );
 
   const baseOptions = useMemo(
     () => [
@@ -38,32 +49,17 @@ const HomeFiltersCdc = ({
     [],
   );
 
-  const options = useMemo(() => {
-    return baseOptions;
-  }, [baseOptions]);
-
-  useEffect(() => {
-    const fetchBrands = async () => {
-      try {
-        const brands = await getAllBrands();
-        setAvailableBrands(brands);
-      } catch (e) {
-        console.error("Erreur chargement marques:", e);
-      }
-    };
-    fetchBrands();
-  }, []);
-
-  const handleBrandSelect = (brand: string) => {
-    setSelectedBrand(brand);
+  const handleBrandSelect = (brand: string, brandSiteUrl?: string) => {
+    setSelectedBrand(brand, brandSiteUrl);
     setSelectedCategory("");
     setFilter(brand ? "brandSolo" : "all");
+    if (setSelectedSiteUrl) setSelectedSiteUrl(brandSiteUrl);
   };
 
   return (
     <div className="controls">
       <FilterBarGeneric
-        options={options}
+        options={baseOptions}
         filter={filter}
         setFilter={setFilter}
         viewMode={viewMode}
@@ -71,16 +67,14 @@ const HomeFiltersCdc = ({
         setSelectedBrand={handleBrandSelect}
         setSelectedCategory={setSelectedCategory}
         selectedBrand={selectedBrand}
-        selectedCategory={selectedCategory}
         availableBrands={availableBrands}
-        availableCategories={availableCategories}
         dropdownRef={dropdownRef}
         isDropdownOpen={isDropdownOpen}
         setIsDropdownOpen={setIsDropdownOpen}
-        withBrands={true}
-        withCategories={true}
+        withBrands={!loading}
         brandFocusFilter="brandSolo"
         baseFilterValue="all"
+        siteUrl={siteUrl}
       />
     </div>
   );

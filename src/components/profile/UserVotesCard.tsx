@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import "./UserVotesCard.scss";
 import { getUserVotes } from "@src/services/suggestionService";
 import { useNavigate } from "react-router-dom";
-import { fetchValidBrandLogo } from "@src/utils/brandLogos";
+import { useBrandLogos } from "@src/hooks/useBrandLogos";
+import { FALLBACK_BRAND_PLACEHOLDER } from "@src/utils/brandLogos";
 import suggestIcon from "../../../public/assets/icons/suggestSimpleIcon.svg";
 
 interface Suggestion {
@@ -29,15 +30,13 @@ const getBrandInitials = (brand?: string) =>
 
 const UserVotesCard: React.FC = () => {
   const [votes, setVotes] = useState<Suggestion[]>([]);
-  const [brandLogos, setBrandLogos] = useState<Record<string, string | null>>(
-    {},
-  );
   const [loading, setLoading] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
   const [, setCollapsedHeight] = useState<number | null>(null);
   const listRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
 
+  // 🧠 1️⃣ Récupère les votes utilisateur
   useEffect(() => {
     const fetchVotes = async () => {
       try {
@@ -52,50 +51,20 @@ const UserVotesCard: React.FC = () => {
     fetchVotes();
   }, []);
 
-  useEffect(() => {
-    if (!votes.length) return;
-
-    let cancelled = false;
-
-    const loadBrandLogos = async () => {
-      const results = await Promise.all(
-        votes.map(async (vote) => {
-          if (!vote.marque) {
-            return [vote.id, null] as const;
-          }
-
-          try {
-            const url = await fetchValidBrandLogo(vote.marque, vote.siteUrl);
-            return [vote.id, url] as const;
-          } catch {
-            return [vote.id, null] as const;
-          }
-        }),
-      );
-
-      if (cancelled) return;
-
-      setBrandLogos((prev) => {
-        const next = { ...prev };
-        let hasChanges = false;
-
-        results.forEach(([id, logo]) => {
-          if (next[id] === logo) return;
-          next[id] = logo;
-          hasChanges = true;
-        });
-
-        return hasChanges ? next : prev;
-      });
-    };
-
-    loadBrandLogos();
-
-    return () => {
-      cancelled = true;
-    };
+  // ⚡ 2️⃣ Prépare les entrées pour les logos
+  const brandEntries = useMemo(() => {
+    return votes
+      .filter((v) => !!v.marque)
+      .map((v) => ({
+        brand: v.marque!,
+        siteUrl: v.siteUrl || undefined,
+      }));
   }, [votes]);
 
+  // 🔄 3️⃣ Récupère les logos via le hook
+  const logos = useBrandLogos(brandEntries);
+
+  // 🧩 4️⃣ Gestion hauteur collapsée
   useEffect(() => {
     if (!votes.length) {
       setCollapsedHeight(null);
@@ -134,7 +103,7 @@ const UserVotesCard: React.FC = () => {
     computeHeight();
     window.addEventListener("resize", computeHeight);
     return () => window.removeEventListener("resize", computeHeight);
-  }, [votes, brandLogos]);
+  }, [votes, logos]);
 
   useEffect(() => {
     if (votes.length <= 2 && isExpanded) {
@@ -148,20 +117,18 @@ const UserVotesCard: React.FC = () => {
   const hasMoreVotes = votes.length > 2;
   const listEl = listRef.current;
   const listElChildren = listEl?.children;
-  if (listElChildren && listElChildren.length > 0) {
-    console.log(listElChildren[0].scrollHeight);
-    if (listElChildren.length > 1) {
-      console.log(listElChildren[1].scrollHeight);
-    }
-  }
-  const firstVoteItem = listElChildren ? listElChildren[0].scrollHeight : 0;
-  const secondVoteItem = listElChildren ? listElChildren[1].scrollHeight : 0;
+  const firstVoteItem = listElChildren
+    ? (listElChildren[0]?.scrollHeight ?? 0)
+    : 0;
+  const secondVoteItem = listElChildren
+    ? (listElChildren[1]?.scrollHeight ?? 0)
+    : 0;
   const heightTwoFirstVoteItem = firstVoteItem + secondVoteItem + 40;
   const collapsedMaxHeightValue =
     listElChildren && listElChildren.length > 1
       ? heightTwoFirstVoteItem
       : listElChildren && listElChildren.length > 0
-        ? listElChildren[0].scrollHeight
+        ? (listElChildren[0]?.scrollHeight ?? 0)
         : 0;
   const expandedMaxHeight = heightTwoFirstVoteItem + 40;
 
@@ -194,7 +161,8 @@ const UserVotesCard: React.FC = () => {
         {votes.map((s) => {
           const expiresLabel =
             s.expiresInDays <= 0 ? "J-0" : `J-${s.expiresInDays}`;
-          const brandLogo = brandLogos[s.id];
+          const logo =
+            (s.marque && logos[s.marque]) || FALLBACK_BRAND_PLACEHOLDER;
           const voteTarget = s.targetVotes ?? 300;
 
           return (
@@ -250,8 +218,8 @@ const UserVotesCard: React.FC = () => {
               </div>
 
               <div className="vote-brand" aria-hidden={!s.marque}>
-                {brandLogo ? (
-                  <img src={brandLogo} alt={`Logo ${s.marque}`} />
+                {logo && logo !== FALLBACK_BRAND_PLACEHOLDER ? (
+                  <img src={logo} alt={`Logo ${s.marque}`} />
                 ) : (
                   <span className="brand-placeholder">
                     {getBrandInitials(s.marque)}
@@ -262,6 +230,7 @@ const UserVotesCard: React.FC = () => {
           );
         })}
       </div>
+
       {hasMoreVotes && (
         <div className="votes-toggle-wrapper">
           <button

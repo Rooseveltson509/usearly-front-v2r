@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo } from "react";
 import type { GroupedReport } from "@src/types/Reports";
-import { fetchValidBrandLogo } from "@src/utils/brandLogos"; // ⬅️ version dynamique
-import { getBrandLogo } from "@src/utils/brandLogos";
+import { useBrandLogos } from "@src/hooks/useBrandLogos";
 import Avatar from "../shared/Avatar";
 
 interface Props {
@@ -11,53 +10,32 @@ interface Props {
   renderCard: (item: any, index: number) => React.ReactNode;
 }
 
-const GroupedReportList = ({
+const GroupedReportList: React.FC<Props> = ({
   grouped,
   groupOpen,
   setGroupOpen,
   renderCard,
-}: Props) => {
-  const [logos, setLogos] = useState<Record<string, string>>({});
-
-  useEffect(() => {
-    const brands = Object.keys(grouped);
-    const missing = brands.filter((brand) => !logos[brand]);
-    if (missing.length === 0) {
-      return;
-    }
-
-    let cancelled = false;
-
-    const loadBrandLogos = async () => {
-      const entries = await Promise.all(
-        missing.map(async (brand) => {
-          const firstCategoryArray = Object.values(grouped[brand])[0];
-          const firstReport = firstCategoryArray?.[0];
-          const siteUrl = firstReport?.siteUrl || undefined;
-
-          const logoUrl = await fetchValidBrandLogo(brand, siteUrl);
-          return [brand, logoUrl] as const;
-        }),
-      );
-
-      if (!cancelled) {
-        setLogos((prev) => {
-          const next = { ...prev };
-          entries.forEach(([brand, logo]) => {
-            next[brand] = logo;
-          });
-          return next;
+}) => {
+  // 🧠 1️⃣ Récupère toutes les marques + leurs éventuels siteUrl
+  const brandEntries = useMemo(() => {
+    const entries: { brand: string; siteUrl?: string }[] = [];
+    for (const [brand, categories] of Object.entries(grouped)) {
+      const firstCategoryArray = Object.values(categories)[0];
+      const firstReport = firstCategoryArray?.[0];
+      if (brand) {
+        entries.push({
+          brand,
+          siteUrl: firstReport?.siteUrl || undefined,
         });
       }
-    };
+    }
+    return entries;
+  }, [grouped]);
 
-    loadBrandLogos();
+  // ⚡ 2️⃣ Charge tous les logos via le hook globalisé
+  const brandLogos = useBrandLogos(brandEntries);
 
-    return () => {
-      cancelled = true;
-    };
-  }, [grouped, logos]);
-
+  // 🧩 3️⃣ Rendu
   return (
     <>
       {Object.entries(grouped).map(([brand, categories]) => (
@@ -70,6 +48,7 @@ const GroupedReportList = ({
             {Object.entries(categories).map(([category, reports]) => {
               const catId = `${brand}_${category}`;
               const isOpen = groupOpen[catId];
+              const logoUrl = brandLogos[brand];
 
               return (
                 <div
@@ -89,8 +68,9 @@ const GroupedReportList = ({
                       <span className="chevron">{isOpen ? "▼" : "▶"}</span>
                       <span className="category-label">{category}</span>
                     </div>
+
                     <Avatar
-                      avatar={getBrandLogo(brand)}
+                      avatar={logoUrl}
                       pseudo={brand}
                       type="brand"
                       wrapperClassName="brand-logo"

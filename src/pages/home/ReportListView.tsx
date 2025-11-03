@@ -10,7 +10,7 @@ import type {
   PublicGroupedReport,
 } from "@src/types/Reports";
 import FlatSubcategoryBlock from "./confirm-reportlist/FlatSubcategoryBlock";
-import { getBrandLogo } from "@src/utils/brandLogos";
+/* import { getBrandLogo } from "@src/utils/brandLogos"; */
 import SqueletonAnime from "@src/components/loader/SqueletonAnime";
 import "./countBarBrand.scss";
 
@@ -181,7 +181,7 @@ const ReportListView: React.FC<Props> = ({
             brand={item.marque}
             subcategory={item.subCategory.subCategory}
             descriptions={item.subCategory.descriptions}
-            brandLogoUrl={getBrandLogo(item.marque)}
+            siteUrl={item.siteUrl || undefined}
             hideFooter={true}
           />
         ))}
