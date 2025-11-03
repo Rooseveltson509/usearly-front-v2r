@@ -4,7 +4,6 @@ import { apiService } from "@src/services/apiService";
 import SqueletonAnime from "@src/components/loader/SqueletonAnime";
 import FlatSubcategoryBlock from "../confirm-reportlist/FlatSubcategoryBlock";
 import "./ReportDetail.scss";
-import { getBrandLogo } from "@src/utils/brandLogos";
 import UsearlyDraw from "@src/components/background/Usearly";
 
 const ReportDetail = () => {
@@ -105,10 +104,6 @@ const ReportDetail = () => {
         siteUrl={report.reporting?.siteUrl}
         subcategory={report.subCategory}
         descriptions={[report]}
-        brandLogoUrl={getBrandLogo(
-          report.reporting?.marque || "",
-          report.reporting?.siteUrl || "",
-        )}
         capture={report.reporting?.capture}
         hideFooter={true}
         forceOpenComments={!!highlightedCommentId} // 🟢 ouvre auto si mention
