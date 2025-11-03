@@ -37,19 +37,6 @@ const ProfileFilters: React.FC<Props> = ({
           onSelect={setSelectedCategory}
           placeholder="Select Category"
         />
-        {/* <div className="select-wrapper">
-          <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-          >
-            {availableCategories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
-          <ChevronDown className="chevron-icon" size={16} />
-        </div> */}
       </div>
     </div>
   );

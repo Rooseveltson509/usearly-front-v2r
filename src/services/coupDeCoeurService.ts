@@ -93,3 +93,8 @@ export const getCoupDeCoeurById = async (id: string): Promise<CoupDeCoeur> => {
   const res = await apiService.get(`/coupdecoeur/${id}`);
   return res.data;
 };
+
+export const getAllBrandsCdc = async () => {
+  const res = await apiService.get("/coupdecoeurs/brands");
+  return res.data.data;
+};

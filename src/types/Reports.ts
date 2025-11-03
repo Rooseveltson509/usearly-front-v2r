@@ -4,6 +4,7 @@ export type FeedbackType = "report" | "coupdecoeur" | "suggestion";
 
 export interface BrandWithSubCategories {
   marque: string;
+  siteUrl?: string;
   subCategories: string[];
 }
 

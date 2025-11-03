@@ -1,6 +1,5 @@
 import React from "react";
 import InteractiveFeedbackCard from "@src/components/InteractiveFeedbackCard/InteractiveFeedbackCard";
-import { getBrandLogo } from "@src/utils/brandLogos";
 import FlatSubcategoryBlock from "@src/pages/home/confirm-reportlist/FlatSubcategoryBlock";
 
 interface Props {
@@ -48,7 +47,7 @@ const NotificationCardRenderer: React.FC<Props> = ({ notif, isOpen }) => {
     const reporting = report.reporting;
     const brand = reporting?.marque || "Marque inconnue";
     const siteUrl = reporting?.siteUrl || "";
-    const brandLogoUrl = getBrandLogo(brand, siteUrl);
+    /* const brandLogoUrl = getBrandLogo(brand, siteUrl); */
 
     const normalizedDescriptions = [
       {
@@ -67,7 +66,7 @@ const NotificationCardRenderer: React.FC<Props> = ({ notif, isOpen }) => {
           siteUrl={siteUrl}
           subcategory={report.subCategory}
           descriptions={normalizedDescriptions}
-          brandLogoUrl={brandLogoUrl}
+          //brandLogoUrl={brandLogoUrl}
           capture={reporting?.capture}
           hideFooter
           forceOpenComments={false}

@@ -4,30 +4,36 @@ import {
   fetchValidBrandLogo,
 } from "@src/utils/brandLogos";
 
-export const useBrandLogos = (brands: string[]): Record<string, string> => {
+type BrandInput = string | { brand: string; siteUrl?: string };
+
+export const useBrandLogos = (brands: BrandInput[]): Record<string, string> => {
   const [logos, setLogos] = useState<Record<string, string>>({});
 
+  // ✅ Normalisation : clé = brand.toLowerCase().trim()
   const normalizedBrands = useMemo(() => {
-    const set = new Set<string>();
-    for (const brand of brands || []) {
-      const key = brand?.trim();
-      if (key) set.add(key);
+    const map = new Map<string, string | undefined>();
+    for (const b of brands || []) {
+      if (typeof b === "string") {
+        map.set(b.toLowerCase().trim(), undefined);
+      } else {
+        map.set(b.brand.toLowerCase().trim(), b.siteUrl);
+      }
     }
-    return Array.from(set);
+    return Array.from(map.entries());
   }, [brands]);
 
   useEffect(() => {
-    const missing = normalizedBrands.filter((brand) => !logos[brand]);
-    if (missing.length === 0) {
-      return;
-    }
+    if (normalizedBrands.length === 0) return;
 
     let cancelled = false;
 
-    const load = async () => {
-      const entries = await Promise.all(
-        missing.map(async (brand) => {
-          const logo = await fetchValidBrandLogo(brand).catch(
+    const loadMissing = async () => {
+      const missing = normalizedBrands.filter(([brand]) => !logos[brand]);
+      if (missing.length === 0) return;
+
+      const results = await Promise.all(
+        missing.map(async ([brand, siteUrl]) => {
+          const logo = await fetchValidBrandLogo(brand, siteUrl).catch(
             () => FALLBACK_BRAND_PLACEHOLDER,
           );
           return [brand, logo || FALLBACK_BRAND_PLACEHOLDER] as const;
@@ -35,22 +41,24 @@ export const useBrandLogos = (brands: string[]): Record<string, string> => {
       );
 
       if (!cancelled) {
+        // ✅ Toujours renvoyer un nouvel objet → force le re-render
         setLogos((prev) => {
           const next = { ...prev };
-          for (const [brand, logo] of entries) {
+          for (const [brand, logo] of results) {
             next[brand] = logo;
           }
-          return next;
+          return { ...next };
         });
       }
     };
 
-    void load();
+    void loadMissing();
 
     return () => {
       cancelled = true;
     };
-  }, [normalizedBrands, logos]);
+    // ⚠️ ne pas mettre `logos` ici → sinon le hook reboucle sans fin
+  }, [normalizedBrands]);
 
   return logos;
 };

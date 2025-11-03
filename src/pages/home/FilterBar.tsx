@@ -41,11 +41,13 @@ interface Props {
   selectedCategory: string;
   selectedMainCategory?: string;
   setSelectedMainCategory?: (val: string) => void;
-  availableBrands: string[];
+  availableBrands: (string | { brand: string; siteUrl?: string })[];
   availableCategories: string[];
   searchTerm: string;
   onSearchTermChange: (value: string) => void;
   labelOverride?: string;
+  setSelectedSiteUrl: (url?: string) => void;
+  siteUrl?: string;
   availableSubCategoriesByBrandAndCategory?: Record<
     string, // marque
     Record<string, string[]> // catégorie principale -> sous-catégories
@@ -108,9 +110,11 @@ const FilterBar: React.FC<Props> = ({
   selectedMainCategory: externalSelectedMainCategory,
   setSelectedMainCategory: externalSetSelectedMainCategory,
   availableBrands,
+  siteUrl,
   availableCategories,
   searchTerm,
   onSearchTermChange,
+  setSelectedSiteUrl,
   availableSubCategoriesByBrandAndCategory,
 }) => {
   const [, setBrandSearch] = useState("");
@@ -196,11 +200,25 @@ const FilterBar: React.FC<Props> = ({
     setSelectedCategory("");
   }, [selectedBrand, setSelectedMainCategory, setSelectedCategory]);
 
-  const handleBrandSelect = (brand: string) => {
+  const handleBrandSelect = (brand: string, siteUrl?: string): void => {
     const normalized = brand.trim();
     setSelectedBrand(normalized);
 
-    // 🧹 Réinitialise complètement les filtres liés à la marque précédente
+    // ✅ Si siteUrl est vide, on tente de le retrouver depuis availableBrands
+    if (siteUrl) {
+      setSelectedSiteUrl(siteUrl);
+    } else {
+      const matched = availableBrands.find((b) => {
+        if (typeof b === "object") return b.brand === brand;
+        return false;
+      }) as { brand: string; siteUrl?: string } | undefined;
+
+      setSelectedSiteUrl(matched?.siteUrl || "");
+    }
+
+    console.log("✅ handleBrandSelect →", { brand, siteUrl });
+
+    // 🧹 Réinitialise les filtres liés à la marque précédente
     setSelectedMainCategory("");
     setSelectedCategory("");
 
@@ -237,7 +255,7 @@ const FilterBar: React.FC<Props> = ({
                   onViewModeChange?.("chrono");
                   setActiveFilter("chrono");
                 } else if (value === "hot") {
-                  setFilter("confirmed");
+                  setFilter("hot");
                   setViewMode("confirmed");
                   onViewModeChange?.("confirmed");
                   setActiveFilter("confirmed");
@@ -277,9 +295,10 @@ const FilterBar: React.FC<Props> = ({
           <BrandSelect
             brands={availableBrands}
             selectedBrand={selectedBrand}
-            onSelect={(brand) => handleBrandSelect(brand)}
+            onSelect={(brand, siteUrl) => handleBrandSelect(brand, siteUrl)}
             onClear={() => clearBrand()}
             placeholder="Choisir une marque"
+            siteUrl={siteUrl}
           />
           <div className="filter-dropdown-wrapper" ref={dropdownRef}>
             <button
@@ -292,37 +311,6 @@ const FilterBar: React.FC<Props> = ({
 
             {isDropdownOpen && (
               <div className="filter-dropdown">
-                {/* <div className="brand-search">
-                  <input
-                    type="text"
-                    value={brandSearch}
-                    onChange={(e) => setBrandSearch(e.target.value)}
-                    placeholder="Rechercher une marque..."
-                  />
-
-                  {brandSearch && (
-                    <ul className="autocomplete-list">
-                      {filteredBrands.length > 0 ? (
-                        filteredBrands.map((brand) => (
-                          <li
-                            key={brand}
-                            onClick={() => {
-                              handleBrandSelect(brand);
-                              setBrandSearch("");
-                              setCategorySearch("");
-                              setIsDropdownOpen(false);
-                            }}
-                          >
-                            {brand}
-                          </li>
-                        ))
-                      ) : (
-                        <li className="no-results">Aucune marque trouvée</li>
-                      )}
-                    </ul>
-                  )}
-                </div> */}
-
                 <select
                   value={selectedCategory}
                   onChange={(e) => {
@@ -378,6 +366,7 @@ const FilterBar: React.FC<Props> = ({
               onClear={() => clearBrand()}
               placeholder="Choisir une marque"
               className="pill__control"
+              siteUrl={siteUrl}
             />
           </div>
 

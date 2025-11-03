@@ -99,6 +99,16 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
 
   if (!userProfile?.id) return null;
 
+  // 🧠 Normalise la marque et l’URL pour éviter le fallback .com
+  const siteUrl =
+    (item as any)?.siteUrl ?? (item as any)?.brandUrl ?? undefined;
+
+  const safeItem = {
+    ...item,
+    siteUrl,
+    marque: item.marque?.trim() ?? "",
+  };
+
   return (
     <div className={`feedback-card ${isOpen ? "open" : ""}`}>
       <div className="feedback-main">
@@ -107,7 +117,7 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
 
         {/* === Bloc droit === */}
         <FeedbackRight
-          item={item}
+          item={safeItem}
           onToggle={onToggle}
           userProfile={userProfile}
           selectedImage={selectedImage}

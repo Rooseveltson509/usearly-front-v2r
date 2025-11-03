@@ -9,22 +9,25 @@ import DescriptionCommentSection from "@src/components/report-desc-comment/Descr
 import ReportActionsBarWithReactions from "@src/components/shared/ReportActionsBarWithReactions";
 import { useCommentsForDescription } from "@src/hooks/useCommentsForDescription";
 import Avatar from "@src/components/shared/Avatar";
+import {
+  normalizeDomain,
+  FALLBACK_BRAND_PLACEHOLDER,
+} from "@src/utils/brandLogos";
+import { useBrandLogos } from "@src/hooks/useBrandLogos";
 
 interface Props {
   brand: string;
   siteUrl?: string;
-  brandLogoUrl: string;
   subcategory: string;
   capture?: string | null;
-  descriptions: any[]; // adapte si besoin avec ton type exact
+  descriptions: any[];
   hideFooter?: boolean;
   forceOpenComments?: boolean;
 }
 
 const FlatSubcategoryBlock: React.FC<Props> = ({
   brand,
-  /* siteUrl, */
-  brandLogoUrl,
+  siteUrl,
   subcategory,
   descriptions,
   capture,
@@ -34,44 +37,77 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
   const [showComments, setShowComments] = useState(false);
   const [showSimilarReports, setShowSimilarReports] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [visibleDescriptionsCount, setVisibleDescriptionsCount] = useState(2);
+  const [showFullText, setShowFullText] = useState(false);
+
   const initialDescription = descriptions?.[0];
+
+  // ✅ Appelé avant tout return
+  const brandLogos = useBrandLogos([{ brand, siteUrl }]);
+
   const { comments } = useCommentsForDescription(
-    initialDescription.id,
+    initialDescription?.id,
     "report",
     refreshKey,
   );
-  const [visibleDescriptionsCount, setVisibleDescriptionsCount] = useState(2); // par défaut 2 visibles
-  const captureUrl = capture || initialDescription.capture || null;
-  const [showFullText, setShowFullText] = useState(false);
+
+  const captureUrl = capture || initialDescription?.capture || null;
+
+  useEffect(() => {
+    if (window.location.hash === `#${initialDescription?.id}`) {
+      setExpanded(true);
+      setShowComments(true);
+    }
+  }, [initialDescription?.id]);
+
+  useEffect(() => {
+    if (forceOpenComments) setShowComments(true);
+  }, [forceOpenComments]);
 
   const toggleExpanded = () => {
     setExpanded((prev) => !prev);
     setShowComments(false);
     setShowSimilarReports(false);
   };
-  useEffect(() => {
-    // si la notif correspond à cette carte, on l'ouvre
-    if (window.location.hash === `#${initialDescription.id}`) {
-      setExpanded(true);
-      setShowComments(true);
-    }
-  }, [initialDescription.id]);
 
-  useEffect(() => {
-    if (forceOpenComments) {
-      setShowComments(true);
-    }
-  }, [forceOpenComments]);
+  // ✅ return après tous les hooks
+  if (!initialDescription) return null;
 
-  if (!initialDescription) {
-    return null; // ou un fallback
-  }
+  // 🔧 Assure une clé cohérente
+  const normalizedDomain = siteUrl ? normalizeDomain(siteUrl) : "";
+  const key = brand.toLowerCase().trim();
+
+  const possibleKeys = [
+    key,
+    `${key}.com`,
+    normalizedDomain,
+    `${key}.fr`,
+    `${key}.ai`,
+  ];
+
+  const resolvedLogo =
+    possibleKeys.map((k) => brandLogos[k]).find(Boolean) ||
+    FALLBACK_BRAND_PLACEHOLDER;
+
+  const logColor =
+    resolvedLogo === FALLBACK_BRAND_PLACEHOLDER
+      ? "color:orange"
+      : "color:lightgreen";
+
+  console.log(
+    `%c🧩 [FlatSubcategoryBlock] ${brand} → ${
+      resolvedLogo ? "✅ trouvé" : "❌ manquant"
+    }`,
+    logColor,
+    { siteUrl, normalizedDomain, availableKeys: Object.keys(brandLogos || {}) },
+  );
 
   return (
     <div
       className={`subcategory-block flat ${expanded ? "open" : ""}`}
       data-description-id={initialDescription.id}
     >
+      {/* === HEADER === */}
       <div className="subcategory-header" onClick={toggleExpanded}>
         <div className="subcategory-left">
           <img
@@ -82,7 +118,7 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
           <div className="subcategory-text">
             <div className="subcategory-title-row">
               <h4>
-                {subcategory && subcategory.trim().length > 0
+                {subcategory?.trim().length
                   ? subcategory
                   : initialDescription?.title || "Autre problème"}
               </h4>
@@ -109,21 +145,21 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
                   wrapperClassName="user-avatar-wrapper"
                 />
                 <Avatar
-                  avatar={brandLogoUrl}
+                  avatar={resolvedLogo}
                   pseudo={brand}
                   type="brand"
                   className="brand-logo"
                   wrapperClassName="brand-logo-wrapper"
+                  preferBrandLogo={true}
+                  siteUrl={siteUrl}
                 />
               </div>
-
               <div className="text-meta">
                 <span className="user-brand-line">
-                  {initialDescription.user.pseudo}{" "}
+                  {initialDescription.user?.pseudo}{" "}
                   <span className="cross">×</span> <strong>{brand}</strong>
                 </span>
               </div>
-
               <ChevronUp size={16} />
             </div>
           ) : (
@@ -135,11 +171,13 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
                 }).replace("environ ", "")}
               </span>
               <Avatar
-                avatar={brandLogoUrl}
+                avatar={resolvedLogo}
                 pseudo={brand}
                 type="brand"
                 className="brand-logo"
                 wrapperClassName="avatars"
+                preferBrandLogo={true}
+                siteUrl={siteUrl}
               />
               <ChevronDown size={16} />
             </div>
@@ -147,19 +185,20 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
         </div>
       </div>
 
+      {/* === CONTENU === */}
       {expanded && (
         <div className="subcategory-content">
           <div className="main-description">
-            {/* Texte de description */}
             <p className="description-text">
               {showFullText
-                ? `${initialDescription.description} ${initialDescription.emoji || ""}`
+                ? `${initialDescription.description} ${
+                    initialDescription.emoji || ""
+                  }`
                 : `${initialDescription.description.slice(0, 180)}${
                     initialDescription.description.length > 180 ? "..." : ""
                   } ${initialDescription.emoji || ""}`}
             </p>
 
-            {/* Bouton "Voir plus / Voir moins" */}
             {(initialDescription.description.length > 180 || captureUrl) && (
               <div className="see-more-section">
                 <button
@@ -174,7 +213,6 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
               </div>
             )}
 
-            {/* Image affichée uniquement quand on clique sur "Voir plus" */}
             {showFullText && captureUrl && (
               <div className="inline-capture">
                 <img
@@ -187,7 +225,7 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
           </div>
 
           <ReportActionsBarWithReactions
-            userId={initialDescription.user.id}
+            userId={initialDescription.user?.id}
             descriptionId={initialDescription.id}
             reportsCount={descriptions.length}
             commentsCount={comments.length}
@@ -211,7 +249,7 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
                 onCommentDeleted={() => setRefreshKey((prev) => prev + 1)}
               />
               <DescriptionCommentSection
-                userId={initialDescription.user.id}
+                userId={initialDescription.user?.id}
                 descriptionId={initialDescription.id}
                 type="report"
                 hideFooter={true}
@@ -227,7 +265,6 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
                 .slice(1, 1 + visibleDescriptionsCount)
                 .map((desc) => (
                   <div key={desc.id} className="feedback-card">
-                    {" "}
                     <div className="feedback-avatar">
                       <div className="feedback-avatar-wrapper">
                         <Avatar
@@ -242,6 +279,7 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
                         )}
                       </div>
                     </div>
+
                     <div className="feedback-content">
                       <div className="feedback-meta">
                         <span className="pseudo">{desc.user.pseudo}</span>
@@ -267,7 +305,6 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
                   </div>
                 ))}
 
-              {/* ✅ Bouton Voir plus / Voir moins */}
               {descriptions.length - 1 > 2 && (
                 <div className="see-more-toggle">
                   {visibleDescriptionsCount < descriptions.length - 1 ? (

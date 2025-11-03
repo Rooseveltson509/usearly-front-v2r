@@ -1,5 +1,5 @@
 import React from "react";
-import HomeGroupedReportsList from "../HomeGroupedReportsList";
+import HomeGroupedReportsList from "../home-grouped-reports-list/HomeGroupedReportsList";
 import FilterIllustration from "../home-illustration/FilterIllustration";
 import type { FeedbackType } from "@src/components/user-profile/FeedbackTabs";
 
@@ -12,6 +12,7 @@ interface Props {
   setSelectedCategory: (c: string) => void;
   selectedMainCategory: string;
   setSelectedMainCategory: (c: string) => void;
+  selectedSiteUrl?: string;
   setSelectedSiteUrl: (url?: string) => void;
   brandBannerStyle: React.CSSProperties;
   displayedCount: number;
@@ -27,6 +28,7 @@ const ReportTab: React.FC<Props> = ({
   selectedMainCategory,
   setSelectedMainCategory,
   setSelectedSiteUrl,
+  selectedSiteUrl,
   brandBannerStyle,
   displayedCount,
 }) => {
@@ -63,6 +65,7 @@ const ReportTab: React.FC<Props> = ({
           selectedMainCategory={selectedMainCategory}
           setSelectedMainCategory={setSelectedMainCategory}
           setSelectedSiteUrl={setSelectedSiteUrl}
+          selectedSiteUrl={selectedSiteUrl}
           totalityCount={displayedCount}
         />
       </div>
@@ -70,7 +73,7 @@ const ReportTab: React.FC<Props> = ({
         <FilterIllustration
           filter={activeFilter}
           selectedBrand={selectedBrand}
-          siteUrl={undefined}
+          siteUrl={selectedSiteUrl}
           selectedCategory={selectedCategory}
           onglet="report"
         />

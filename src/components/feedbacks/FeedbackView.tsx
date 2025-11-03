@@ -34,6 +34,7 @@ interface Props {
   setGroupOpen: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
   selectedBrand: string;
   selectedCategory: string;
+  selectedSiteUrl?: string;
   renderCard: (item: ExplodedGroupedReport) => JSX.Element;
 }
 
@@ -45,6 +46,7 @@ const FeedbackView = ({
   setGroupOpen,
   selectedBrand,
   selectedCategory,
+  /* selectedSiteUrl, */
   renderCard,
 }: Props) => {
   const [openId, setOpenId] = useState<string | null>(null);
@@ -165,14 +167,28 @@ const FeedbackView = ({
   return (
     <>
       {(currentState.data as (CoupDeCoeur | Suggestion)[]).map(
-        (item, index) => (
-          <InteractiveFeedbackCard
-            key={item.id || `feedback-${index}`}
-            item={item}
-            isOpen={openId === item.id}
-            onToggle={(id) => setOpenId((prev) => (prev === id ? null : id))}
-          />
-        ),
+        (item, index) => {
+          const siteUrl =
+            (item as any)?.siteUrl ??
+            (item as any)?.brandUrl ??
+            (item as any)?.site ??
+            undefined;
+
+          const safeItem = {
+            ...item,
+            siteUrl,
+            marque: item.marque?.trim() ?? "",
+          };
+
+          return (
+            <InteractiveFeedbackCard
+              key={item.id || `feedback-${index}`}
+              item={safeItem}
+              isOpen={openId === item.id}
+              onToggle={(id) => setOpenId((prev) => (prev === id ? null : id))}
+            />
+          );
+        },
       )}
     </>
   );

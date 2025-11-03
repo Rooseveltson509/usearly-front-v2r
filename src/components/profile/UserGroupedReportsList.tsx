@@ -1,6 +1,6 @@
 import "./UserGroupedReportsList.scss";
 import { useAuth } from "@src/services/AuthContext";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import ChronologicalReportList from "@src/components/report-grouped/ChronologicalReportList";
 import ChronoReportCard from "@src/components/report-grouped/report-by-date/ChronoReportCard";
 import { useUserProfileFilters } from "@src/hooks/useUserProfileFilters";
@@ -14,7 +14,7 @@ import UserBrandBlock from "../user-reports/UserBrandBlock";
 import SqueletonAnime from "../loader/SqueletonAnime";
 import { ArrowDownWideNarrow, ChevronDown, ListRestart } from "lucide-react";
 import { useInfiniteGroupedReports } from "@src/hooks/useInfiniteGroupedReports";
-import { fetchValidBrandLogo } from "@src/utils/brandLogos";
+import { useBrandLogos } from "@src/hooks/useBrandLogos";
 
 type ViewMode = "brand" | "date";
 
@@ -26,9 +26,6 @@ const UserGroupedReportsList: React.FC = () => {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const loaderRef = useRef<HTMLDivElement | null>(null);
   const [activeCardId, setActiveCardId] = useState<string | null>(null);
-  const [enrichedChronoData, setEnrichedChronoData] = useState<
-    Record<string, (ExplodedGroupedReport & { brandLogoUrl?: string })[]>
-  >({});
 
   const resetKey = `${viewMode}`;
 
@@ -56,41 +53,47 @@ const UserGroupedReportsList: React.FC = () => {
   } = usePaginatedUserReportsGroupedByDate(viewMode === "date");
 
   /* ────────────────────────────────────────────────────────────
-     Enrichir les données chrono avec brandLogoUrl
-     ──────────────────────────────────────────────────────────── */
-  useEffect(() => {
-    if (!chronoData) return;
+   Enrichir les données chrono avec brandLogoUrl (version hook)
+   ──────────────────────────────────────────────────────────── */
 
-    const enrich = async () => {
-      const result: Record<
-        string,
-        (ExplodedGroupedReport & { brandLogoUrl?: string })[]
-      > = {};
-
-      for (const [day, items] of Object.entries(
-        chronoData as Record<string, ExplodedGroupedReport[]>,
-      )) {
-        result[day] = await Promise.all(
-          items.map(async (item) => {
-            console.log("🟡 enrich item:", {
-              marque: item.marque,
-              siteUrl: item.siteUrl,
-            });
-
-            const brandLogoUrl = await fetchValidBrandLogo(
-              item.marque,
-              item.siteUrl || undefined,
-            );
-            return { ...item, brandLogoUrl };
-          }),
-        );
+  // 🔹 Crée une liste unique de couples (brand, siteUrl)
+  const chronoEntries = useMemo(() => {
+    if (!chronoData) return [];
+    const entries: { brand: string; siteUrl?: string }[] = [];
+    for (const items of Object.values(chronoData)) {
+      for (const item of items) {
+        if (item.marque) {
+          entries.push({
+            brand: item.marque,
+            siteUrl: item.siteUrl || undefined,
+          });
+        }
       }
-
-      setEnrichedChronoData(result);
-    };
-
-    enrich();
+    }
+    return entries;
   }, [chronoData]);
+
+  // 🔹 Charge tous les logos nécessaires d’un coup
+  const logos = useBrandLogos(chronoEntries);
+
+  // 🔹 Génère les données enrichies instantanément
+  const enrichedChronoData = useMemo(() => {
+    if (!chronoData) return {};
+
+    const result: Record<
+      string,
+      (ExplodedGroupedReport & { brandLogoUrl?: string })[]
+    > = {};
+
+    for (const [day, items] of Object.entries(chronoData)) {
+      result[day] = items.map((item) => ({
+        ...item,
+        brandLogoUrl: logos[item.marque] ?? undefined,
+      }));
+    }
+
+    return result;
+  }, [chronoData, logos]);
 
   /* INFINITE SCROLL (vue par MARQUE) */
   useEffect(() => {

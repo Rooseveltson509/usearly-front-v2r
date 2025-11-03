@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 import Avatar from "../Avatar";
 import { brandColors } from "@src/utils/brandColors";
-import { fetchValidBrandLogo } from "@src/utils/brandLogos";
+import { useBrandLogos } from "@src/hooks/useBrandLogos";
 import type { PublicSuggestion } from "@src/types/suggestion";
 import { capitalizeFirstLetter } from "@src/utils/stringUtils";
+import { FALLBACK_BRAND_PLACEHOLDER } from "@src/utils/brandLogos";
 
 interface Props {
   item: PublicSuggestion & { type: "suggestion" };
@@ -19,7 +20,6 @@ const isValidDate = (value: any) => {
 const PublicSuggestionCard: React.FC<Props> = ({ item }) => {
   const [showFullText, setShowFullText] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [logos, setLogos] = useState<Record<string, string>>({});
 
   const toggleText = () => setShowFullText((prev) => !prev);
 
@@ -35,31 +35,19 @@ const PublicSuggestionCard: React.FC<Props> = ({ item }) => {
     document.body.style.overflow = "auto";
   };
 
-  useEffect(() => {
-    const brandKey = item.marque?.trim();
-    if (!brandKey) return;
-
-    let isMounted = true;
-
-    fetchValidBrandLogo(brandKey, item.siteUrl)
-      .then((logoUrl) => {
-        if (!isMounted) return;
-        setLogos((prev) => {
-          if (prev[brandKey] === logoUrl) {
-            return prev;
-          }
-          return { ...prev, [brandKey]: logoUrl };
-        });
-      })
-      .catch(() => {
-        /* silent */
-      });
-
-    return () => {
-      isMounted = false;
-    };
+  // ✅ 1️⃣ Prépare l’entrée pour useBrandLogos
+  const brandEntries = useMemo(() => {
+    const brand = item.marque?.trim();
+    return brand ? [{ brand, siteUrl: item.siteUrl || undefined }] : [];
   }, [item.marque, item.siteUrl]);
 
+  // ⚡ 2️⃣ Récupère le logo depuis le hook centralisé
+  const brandLogos = useBrandLogos(brandEntries);
+  const brandName = item.marque?.trim() ?? "";
+  const brandLogo =
+    (brandName && brandLogos[brandName]) || FALLBACK_BRAND_PLACEHOLDER;
+
+  // ⚙️ 3️⃣ Gestion du cleanup du lightbox
   useEffect(() => {
     return () => {
       if (selectedImage) {
@@ -69,17 +57,14 @@ const PublicSuggestionCard: React.FC<Props> = ({ item }) => {
     };
   }, [selectedImage]);
 
+  // 📋 4️⃣ Données calculées
   const rawDescription = item.description || "";
   const description = rawDescription.trim();
   const DESCRIPTION_LIMIT = 150;
   const shouldShowToggle =
     description.length > DESCRIPTION_LIMIT || item.capture;
-  //const bgColor = brandColors[item.marque?.toLowerCase()] || brandColors.default;
   const brandKey = item.marque ? item.marque.toLowerCase() : "default";
   const bgColor = brandColors[brandKey] || brandColors.default;
-
-  const brandName = item.marque?.trim() ?? "";
-  const brandLogo = brandName ? logos[brandName] : "";
 
   const votes = item.votes ?? 0;
   const max = 300;
@@ -145,7 +130,11 @@ const PublicSuggestionCard: React.FC<Props> = ({ item }) => {
               {brandName && (
                 <div className="brand-overlay">
                   <Avatar
-                    avatar={brandLogo || ""}
+                    avatar={
+                      brandLogo === FALLBACK_BRAND_PLACEHOLDER
+                        ? null
+                        : brandLogo
+                    }
                     pseudo={brandName}
                     type="brand"
                     wrapperClassName="brand-logo"
@@ -198,10 +187,9 @@ const PublicSuggestionCard: React.FC<Props> = ({ item }) => {
         <div className="feedback-footer">
           <div
             className="vote-progress"
-            style={{ ["--pct" as any]: `${pct}%` }} // variable CSS pour la position
+            style={{ ["--pct" as any]: `${pct}%` }} // variable CSS
           >
             <progress className="pg" value={votes} max={max} />
-            {/* étoile décorative au bout du remplissage */}
             <span className="pg-thumb" aria-hidden="true" />
             <span className="pg-count">
               {votes}/{max}

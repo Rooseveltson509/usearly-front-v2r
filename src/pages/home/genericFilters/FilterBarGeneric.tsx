@@ -11,57 +11,38 @@ export interface FilterOption {
 interface Props {
   filter: string;
   setFilter: (val: string) => void;
-
   viewMode: "flat" | "chrono" | "confirmed";
   setViewMode: (val: "flat" | "chrono" | "confirmed") => void;
-
-  setSelectedBrand?: (val: string) => void;
+  setSelectedBrand?: (brand: string, siteUrl?: string) => void; // ✅ supporte siteUrl
   setSelectedCategory?: (val: string) => void;
   setActiveFilter?: (val: string) => void;
-
   onViewModeChange?: (mode: "flat" | "chrono" | "confirmed") => void;
-
-  // Filtres dynamiques
   options: FilterOption[];
-
-  // Recherche marque/catégorie (activable au besoin)
   withBrands?: boolean;
-  withCategories?: boolean;
-
-  availableBrands?: string[];
-  availableCategories?: string[];
-
+  availableBrands?: (string | { brand: string; siteUrl?: string })[];
   dropdownRef: React.RefObject<HTMLDivElement | null>;
   isDropdownOpen?: boolean;
   setIsDropdownOpen?: (val: boolean) => void;
-
   selectedBrand?: string;
-  selectedCategory?: string;
   labelOverride?: string;
   locationInfo?: string | null;
-
   brandFocusFilter?: string;
   baseFilterValue?: string;
-
-  hideFilterWhenBrandSelected?: boolean;
+  siteUrl?: string;
 }
 
 const splitLeadingEmoji = (label: string) => {
   const trimmed = label.trim();
-  if (!trimmed) {
-    return { emoji: "", text: "" };
-  }
+  if (!trimmed) return { emoji: "", text: "" };
 
   const [firstToken, ...rest] = trimmed.split(/\s+/);
   const hasAlphaNumeric = /[0-9A-Za-z]/.test(firstToken);
-  if (!hasAlphaNumeric && rest.length > 0) {
+  if (!hasAlphaNumeric && rest.length > 0)
     return { emoji: firstToken, text: rest.join(" ") };
-  }
-
   return { emoji: "", text: trimmed };
 };
 
-const FilterBarGeneric: React.FC<Props> = ({
+export const FilterBarGeneric: React.FC<Props> = ({
   filter,
   setFilter,
   setViewMode,
@@ -71,46 +52,33 @@ const FilterBarGeneric: React.FC<Props> = ({
   onViewModeChange,
   options,
   withBrands = false,
-  // withCategories = false,
   availableBrands = [],
-  // availableCategories = [],
   dropdownRef,
   isDropdownOpen = false,
   setIsDropdownOpen = () => {},
   selectedBrand = "",
-  // selectedCategory = "",
   locationInfo = null,
   brandFocusFilter = "",
   baseFilterValue,
-  // hideFilterWhenBrandSelected = false,
+  siteUrl,
 }) => {
   const parsedOptions = useMemo(() => {
     return options.map((opt) => {
       const { emoji, text } = splitLeadingEmoji(opt.label);
-      return {
-        ...opt,
-        emoji,
-        displayLabel: text,
-      };
+      return { ...opt, emoji, displayLabel: text };
     });
   }, [options]);
 
   const fallbackOption = useMemo(() => {
-    if (baseFilterValue) {
+    if (baseFilterValue)
       return parsedOptions.find((opt) => opt.value === baseFilterValue);
-    }
     return parsedOptions[0];
   }, [parsedOptions, baseFilterValue]);
 
   const selectedOption = useMemo(() => {
     return (
       parsedOptions.find((opt) => opt.value === filter) ??
-      fallbackOption ?? {
-        value: "",
-        label: "",
-        emoji: "",
-        displayLabel: "",
-      }
+      fallbackOption ?? { value: "", label: "", emoji: "", displayLabel: "" }
     );
   }, [parsedOptions, filter, fallbackOption]);
 
@@ -123,51 +91,36 @@ const FilterBarGeneric: React.FC<Props> = ({
         setIsDropdownOpen(false);
       }
     };
-
-    if (isDropdownOpen) {
+    if (isDropdownOpen)
       document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isDropdownOpen, setIsDropdownOpen, dropdownRef]);
 
   const brandFilterValue = useMemo(() => {
-    if (brandFocusFilter && brandFocusFilter.length > 0) {
-      return brandFocusFilter;
-    }
+    if (brandFocusFilter) return brandFocusFilter;
     return parsedOptions[0]?.value ?? "";
   }, [brandFocusFilter, parsedOptions]);
 
   const fallbackFilterValue = useMemo(() => {
-    if (baseFilterValue) {
-      return baseFilterValue;
-    }
+    if (baseFilterValue) return baseFilterValue;
     const alternative = parsedOptions.find(
       (opt) => opt.value !== brandFilterValue,
     );
     return alternative?.value ?? parsedOptions[0]?.value ?? "";
   }, [baseFilterValue, parsedOptions, brandFilterValue]);
 
-  const handleBrandChange = (brand: string) => {
-    setSelectedBrand(brand);
+  const handleBrandChange = (brand: string, brandSiteUrl?: string) => {
+    setSelectedBrand(brand, brandSiteUrl);
     setSelectedCategory("");
 
     if (brand) {
-      if (brandFilterValue) {
-        setFilter(brandFilterValue);
-        setActiveFilter(brandFilterValue);
-      }
+      setFilter(brandFilterValue);
+      setActiveFilter(brandFilterValue);
       setViewMode("flat");
       onViewModeChange?.("flat");
     } else {
-      if (fallbackFilterValue) {
-        setFilter(fallbackFilterValue);
-        setActiveFilter(fallbackFilterValue);
-      }
+      setFilter(fallbackFilterValue);
+      setActiveFilter(fallbackFilterValue);
       setViewMode("chrono");
       onViewModeChange?.("chrono");
     }
@@ -175,28 +128,19 @@ const FilterBarGeneric: React.FC<Props> = ({
     setIsDropdownOpen(false);
   };
 
-  // const showFilterDropdown =
-  //   withCategories && (!hideFilterWhenBrandSelected || !selectedBrand);
-
   return (
     <div className="filter-bar-generic-container">
-      {/* <BobIcon brand="netflix" category="tv_cinema" iconName="popcorn" /> */}
-      {/* 🔥 Premier select = filtres dynamiques */}
+      {/* 🔹 Menu déroulant de tri */}
       <div className="select-filter-wrapper">
         <select
           className={`select-filter ${locationInfo === "cdc" ? "cdc-style" : ""}`}
           value={filter}
           onChange={(e) => {
             const value = e.target.value;
-
-            // reset marque/catégorie si on change de filtre
             setSelectedBrand("");
             setSelectedCategory("");
-
             setFilter(value);
             setActiveFilter(value);
-
-            // par défaut → mode chrono
             setViewMode("chrono");
             onViewModeChange?.("chrono");
           }}
@@ -222,68 +166,20 @@ const FilterBarGeneric: React.FC<Props> = ({
         </span>
       </div>
 
-      {/* 🔧 Deuxième filtre : input + catégories (optionnel) */}
-      <div className="filter-bar-generic-actions">
-        {withBrands && (
+      {/* 🔹 Sélecteur de marque */}
+      {withBrands && (
+        <div className="filter-bar-generic-actions">
           <BrandSelect
-            brands={availableBrands ?? []}
+            brands={availableBrands}
             selectedBrand={selectedBrand}
-            onSelect={handleBrandChange}
+            onSelect={handleBrandChange} // ✅ transmet (brand, siteUrl)
             onClear={() => handleBrandChange("")}
             placeholder="Choisir une marque"
             className="brand-select-inline"
+            siteUrl={siteUrl}
           />
-        )}
-
-        {/* {showFilterDropdown && (
-          <div className="filter-dropdown-wrapper" ref={dropdownRef}>
-            <button
-              className="filter-toggle"
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            >
-              <SlidersHorizontal size={18} style={{ marginRight: "6px" }} />
-              Filtrer
-            </button>
-
-            {isDropdownOpen && (
-              <div className="filter-dropdown">
-                {withCategories && availableCategories.length > 0 && (
-                  <select
-                    value={selectedCategory}
-                    onChange={(e) => {
-                      const nextCategory = e.target.value;
-                      setSelectedCategory(nextCategory);
-                      setViewMode("flat");
-                      setFilter("");
-                      setActiveFilter("");
-                      onViewModeChange?.("flat");
-                    }}
-                  >
-                    <option value="">Toutes les catégories</option>
-                    {availableCategories.map((cat) => (
-                      <option key={cat} value={cat}>
-                        {cat}
-                      </option>
-                    ))}
-                  </select>
-                )}
-
-                {(selectedBrand || selectedCategory) && (
-                  <button
-                    className="reset"
-                    onClick={() => {
-                      handleBrandChange("");
-                      setSelectedCategory("");
-                    }}
-                  >
-                    Réinitialiser
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
-        )} */}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

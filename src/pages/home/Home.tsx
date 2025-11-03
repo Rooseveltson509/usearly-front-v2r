@@ -7,7 +7,6 @@ import { useFeedbackData } from "./hooks/useFeedbackData";
 import { useBrandColors } from "./hooks/useBrandColors";
 import { useCategories } from "./hooks/useCategories";
 
-// Sous-onglets
 import ReportTab from "./home-tabs/ReportTab";
 import CdcTab from "./home-tabs/CdcTab";
 import SuggestionTab from "./home-tabs/SuggestionTab";
@@ -18,10 +17,16 @@ function Home() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedMainCategory, setSelectedMainCategory] = useState("");
   const [activeFilter, setActiveFilter] = useState("chrono");
-  const [selectedSiteUrl, setSelectedSiteUrl] = useState<string | undefined>();
   const [suggestionSearch, setSuggestionSearch] = useState("");
+  const [selectedSiteUrl, setSelectedSiteUrl] = useState<string | undefined>();
 
-  // 🎯 Hooks factorisés
+  // ✅ Quand on choisit une marque, on la stocke simplement.
+  // L’URL du site sera fournie dynamiquement (par l’extension ou le backend).
+  const handleSetBrand = useCallback((brand: string, siteUrl?: string) => {
+    setSelectedBrand(brand);
+    setSelectedSiteUrl(siteUrl); // 🧠 c’est tout — pas de fallback manuel
+  }, []);
+
   const {
     feedbackData,
     isLoading,
@@ -36,7 +41,7 @@ function Home() {
     suggestionSearch,
   );
 
-  const { brandBannerStyle, suggestionBannerStyle, selectedBrandLogo } =
+  const { brandBannerStyle, suggestionBannerStyle /* , selectedBrandLogo */ } =
     useBrandColors(activeTab, selectedBrand, feedbackData, selectedSiteUrl);
 
   const { suggestionCategories, coupDeCoeurCategories } = useCategories(
@@ -45,19 +50,19 @@ function Home() {
     selectedBrand,
   );
 
-  // ✅ Handler suggestion (remis ici pour la logique simple)
-  const handleSuggestionBrandChange = useCallback((brand: string) => {
-    setSelectedBrand(brand);
-    setSelectedCategory("");
-    setSelectedMainCategory("");
-    setSuggestionSearch("");
-    setActiveFilter(brand ? "brandSolo" : "allSuggest");
-  }, []);
+  const handleSuggestionBrandChange = useCallback(
+    (brand: string, siteUrl?: string) => {
+      handleSetBrand(brand, siteUrl);
+      setSelectedCategory("");
+      setSelectedMainCategory("");
+      setSuggestionSearch("");
+      setActiveFilter(brand ? "brandSolo" : "allSuggest");
+    },
+    [handleSetBrand],
+  );
 
-  // nombre total affiché (sans distinction de catégorie)
   const totalCount = displayedCount;
 
-  // liste “filtrée par catégorie” (uniquement quand une category est choisie)
   const filteredByCategory = useMemo(() => {
     if (!selectedCategory) return [];
     if (activeTab === "coupdecoeur") return coupDeCoeursForDisplay;
@@ -84,13 +89,14 @@ function Home() {
             activeFilter={activeFilter}
             setActiveFilter={setActiveFilter}
             selectedBrand={selectedBrand}
-            setSelectedBrand={setSelectedBrand}
+            setSelectedBrand={handleSetBrand}
             selectedCategory={selectedCategory}
             setSelectedCategory={setSelectedCategory}
             selectedMainCategory={selectedMainCategory}
             setSelectedMainCategory={setSelectedMainCategory}
             setSelectedSiteUrl={setSelectedSiteUrl}
             brandBannerStyle={brandBannerStyle}
+            selectedSiteUrl={selectedSiteUrl}
             displayedCount={displayedCount}
           />
         )}
@@ -100,7 +106,7 @@ function Home() {
             activeFilter={activeFilter}
             setActiveFilter={setActiveFilter}
             selectedBrand={selectedBrand}
-            setSelectedBrand={setSelectedBrand}
+            setSelectedBrand={handleSetBrand}
             selectedCategory={selectedCategory}
             setSelectedCategory={setSelectedCategory}
             brandBannerStyle={brandBannerStyle}
@@ -127,11 +133,11 @@ function Home() {
             suggestionBannerStyle={suggestionBannerStyle}
             brandBannerStyle={brandBannerStyle}
             suggestionsForDisplay={suggestionsForDisplay}
-            displayedCount={displayedCount}
+            //displayedCount={displayedCount}
             totalCount={totalCount}
             filteredByCategory={filteredByCategory}
             selectedSiteUrl={selectedSiteUrl}
-            selectedBrandLogo={selectedBrandLogo}
+            //selectedBrandLogo={selectedBrandLogo}
             isLoading={isLoading}
           />
         )}

@@ -1,11 +1,15 @@
-import React, { useEffect, useState, type JSX } from "react";
+import React, { useMemo, type JSX } from "react";
 import type { GroupedReport } from "@src/types/Reports";
-import { fetchValidBrandLogo } from "@src/utils/brandLogos";
 import { parseISO, formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 import "./FlatReportList.scss";
 import { ChevronDown } from "lucide-react";
 import { Virtuoso } from "react-virtuoso";
+import { useBrandLogos } from "@src/hooks/useBrandLogos";
+import {
+  FALLBACK_BRAND_PLACEHOLDER,
+  normalizeDomain,
+} from "@src/utils/brandLogos";
 
 interface Props {
   grouped: [string, GroupedReport[]][];
@@ -36,63 +40,26 @@ const FlatReportList = ({
   setGroupOpen,
   renderCard,
 }: Props): JSX.Element => {
-  const [logos, setLogos] = useState<Record<string, string>>({});
+  // 🧩 Récupère toutes les marques + siteUrl associés
+  const brandEntries = useMemo(() => {
+    return grouped.map(([brand, reports]) => ({
+      brand,
+      siteUrl: reports?.[0]?.siteUrl || undefined,
+    }));
+  }, [grouped]);
 
-  useEffect(() => {
-    const missing = grouped
-      .map(([brand]) => brand)
-      .filter((brand) => !logos[brand]);
-
-    if (missing.length === 0) {
-      return;
-    }
-
-    let cancelled = false;
-
-    const loadAllLogos = async () => {
-      const entries = await Promise.all(
-        missing.map(async (brand) => {
-          const reports = grouped.find(([b]) => b === brand)?.[1] ?? [];
-          const siteUrl = reports?.[0]?.siteUrl || undefined;
-          const logoUrl = await fetchValidBrandLogo(brand, siteUrl);
-          return [brand, logoUrl] as const;
-        }),
-      );
-
-      if (!cancelled) {
-        setLogos((prev) => {
-          const next = { ...prev };
-          entries.forEach(([brand, logo]) => {
-            next[brand] = logo;
-          });
-          return next;
-        });
-      }
-    };
-
-    loadAllLogos();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [grouped, logos]);
+  // ⚡ Charge automatiquement les logos
+  const logos = useBrandLogos(brandEntries);
 
   const handleToggle = (brand: string) => {
     setGroupOpen((prev) => {
       const isCurrentlyOpen = prev[brand];
-
-      if (isCurrentlyOpen) {
-        // Si le groupe actuel est ouvert, on le ferme
-        return { ...prev, [brand]: false };
-      } else {
-        // Sinon, on ferme tous les autres et on ouvre celui-ci
-        const newState: Record<string, boolean> = {};
-        Object.keys(prev).forEach((key) => {
-          newState[key] = false;
-        });
-        newState[brand] = true;
-        return newState;
-      }
+      const newState: Record<string, boolean> = {};
+      Object.keys(prev).forEach((key) => {
+        newState[key] = false;
+      });
+      newState[brand] = !isCurrentlyOpen;
+      return newState;
     });
   };
 
@@ -103,6 +70,13 @@ const FlatReportList = ({
         const total = reports.length;
         const latestDate = getLatestDateLabel(reports);
 
+        // 🔑 On crée la clé normalisée (brand|domain)
+        const rawUrl = reports?.[0]?.siteUrl ?? "";
+        const domain = rawUrl ? normalizeDomain(rawUrl) : "";
+
+        const key = `${brand.toLowerCase()}|${domain}`;
+        const logoUrl = logos[key] || FALLBACK_BRAND_PLACEHOLDER;
+
         return (
           <div key={brand} className="report-group">
             <div
@@ -111,11 +85,7 @@ const FlatReportList = ({
             >
               {isOpen ? (
                 <div className="report-main-info">
-                  <img
-                    className="brand-logo-small"
-                    src={logos[brand] || ""}
-                    alt={brand}
-                  />
+                  <img className="brand-logo-small" src={logoUrl} alt={brand} />
                   <span className="report-count">{total}</span>
                   <span className="report-label">
                     signalement{total > 1 ? "s" : ""} sur{" "}
@@ -140,11 +110,7 @@ const FlatReportList = ({
                   {latestDate && (
                     <span className="report-date">{latestDate}</span>
                   )}
-                  <img
-                    className="brand-logo"
-                    src={logos[brand] || ""}
-                    alt={brand}
-                  />
+                  <img className="brand-logo" src={logoUrl} alt={brand} />
                 </div>
               )}
             </div>

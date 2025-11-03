@@ -46,3 +46,8 @@ export const getUserVotes = async () => {
   const res = await apiService.get("/user/votes");
   return res.data;
 };
+
+export const getAllBrandsSuggestion = async () => {
+  const res = await apiService.get("/suggestions/brands");
+  return res.data.data;
+};

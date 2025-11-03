@@ -10,8 +10,8 @@ interface AvatarProps {
   type?: "user" | "brand";
   className?: string;
   wrapperClassName?: string;
-  /** Optionnel : si false et type="brand", force le fallback lettre même si une URL existe */
   preferBrandLogo?: boolean;
+  siteUrl?: string;
 }
 
 const Avatar: React.FC<AvatarProps> = ({
@@ -21,6 +21,7 @@ const Avatar: React.FC<AvatarProps> = ({
   className = "",
   wrapperClassName = "",
   preferBrandLogo = true,
+  siteUrl,
 }) => {
   const [imgError, setImgError] = useState(false);
 
@@ -32,13 +33,38 @@ const Avatar: React.FC<AvatarProps> = ({
   const brandKey = type === "brand" ? pseudo?.trim() || "" : "";
 
   const brandLookup = useMemo(
-    () => (type === "brand" && preferBrandLogo && brandKey ? [brandKey] : []),
-    [type, preferBrandLogo, brandKey],
+    () =>
+      type === "brand" && preferBrandLogo && brandKey
+        ? [{ brand: brandKey, siteUrl }]
+        : [],
+    [type, preferBrandLogo, brandKey, siteUrl],
   );
 
   const brandLogos = useBrandLogos(brandLookup);
-  const preferredBrandLogo =
-    brandKey && brandLogos ? brandLogos[brandKey] : undefined;
+  const preferredBrandLogo = useMemo(() => {
+    if (!brandKey || !brandLogos) return undefined;
+
+    // 🔑 essaye les clés possibles (avec domaine)
+    const normalizedKey = brandKey.toLowerCase().trim();
+    const domain =
+      siteUrl
+        ?.replace(/^https?:\/\//, "")
+        .replace(/^www\./, "")
+        .split("/")[0]
+        .toLowerCase() || "";
+
+    const possibleKeys = [
+      `${normalizedKey}|${domain}`,
+      `${normalizedKey}|${normalizedKey}.com`,
+      normalizedKey,
+    ];
+
+    for (const k of possibleKeys) {
+      if (brandLogos[k]) return brandLogos[k];
+    }
+
+    return undefined;
+  }, [brandKey, brandLogos, siteUrl]);
 
   const resolvedBrandLogo = useMemo(
     () =>
@@ -48,7 +74,6 @@ const Avatar: React.FC<AvatarProps> = ({
     [preferredBrandLogo],
   );
 
-  // Pour "brand", on prend l’URL telle quelle ; pour "user", on normalise via util.
   const fullUrl = useMemo(() => {
     if (type === "brand") {
       if (preferBrandLogo) {
@@ -59,13 +84,11 @@ const Avatar: React.FC<AvatarProps> = ({
     return getFullAvatarUrl(avatar);
   }, [type, avatar, preferBrandLogo, resolvedBrandLogo]);
 
-  // 🚫 Évite d’afficher le placeholder noir/base64
   const isInvalidPlaceholder =
     !fullUrl ||
     fullUrl.includes("placeholderSvg") ||
     fullUrl === FALLBACK_BRAND_PLACEHOLDER;
 
-  // Doit-on afficher l’image ?
   const shouldShowImage =
     !imgError && !isInvalidPlaceholder && (type !== "brand" || preferBrandLogo);
 
