@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import SqueletonAnime from "@src/components/loader/SqueletonAnime";
 import FlatSubcategoryBlock from "../../confirm-reportlist/FlatSubcategoryBlock";
 
@@ -20,6 +20,27 @@ const ChronoSection: React.FC<ChronoSectionProps> = ({
   reportData,
   loaderRef,
 }) => {
+  const groupedByDate = useMemo(() => {
+    if (!chronoData.data) {
+      return [];
+    }
+
+    const groups = new Map<string, any[]>();
+
+    chronoData.data.forEach((report: any) => {
+      const key = report.date ?? "unknown";
+      const existing = groups.get(key);
+
+      if (existing) {
+        existing.push(report);
+      } else {
+        groups.set(key, [report]);
+      }
+    });
+
+    return Array.from(groups.entries());
+  }, [chronoData.data]);
+
   // 🕓 Chargement
   if (reportData.loading || chronoData.loading) {
     return (
@@ -44,27 +65,45 @@ const ChronoSection: React.FC<ChronoSectionProps> = ({
   // ✅ Contenu principal
   return (
     <div className="recent-reports-list">
-      {chronoData.data.map((report: any, i: number) => (
-        <div key={`${report.reportingId}-${i}`} className="recent-report-item">
-          <div className="recent-report-date">
-            🗓️{" "}
-            {new Date(report.date).toLocaleDateString("fr-FR", {
-              day: "2-digit",
-              month: "long",
-              year: "numeric",
-            })}
-          </div>
+      {groupedByDate.map(([dateKey, reports]) => {
+        const formattedDate = (() => {
+          if (!dateKey || dateKey === "unknown") {
+            return "Date inconnue";
+          }
 
-          <FlatSubcategoryBlock
-            brand={report.marque}
-            siteUrl={report.siteUrl || undefined}
-            subcategory={report.subCategory.subCategory}
-            descriptions={report.subCategory.descriptions || []}
-            //brandLogoUrl={getBrandLogo(report.marque, report.siteUrl)}
-            hideFooter={true}
-          />
-        </div>
-      ))}
+          const parsedDate = new Date(dateKey);
+
+          if (Number.isNaN(parsedDate.getTime())) {
+            return "Date inconnue";
+          }
+
+          return parsedDate.toLocaleDateString("fr-FR", {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+          });
+        })();
+
+        return (
+          <div key={dateKey} className="recent-reports-group">
+            <div className="recent-report-date">🗓️ {formattedDate}</div>
+
+            <div className="recent-report-items">
+              {reports.map((report: any, index: number) => (
+                <FlatSubcategoryBlock
+                  key={`${report.reportingId}-${index}`}
+                  brand={report.marque}
+                  siteUrl={report.siteUrl || undefined}
+                  subcategory={report.subCategory.subCategory}
+                  descriptions={report.subCategory.descriptions || []}
+                  //brandLogoUrl={getBrandLogo(report.marque, report.siteUrl)}
+                  hideFooter={true}
+                />
+              ))}
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 };

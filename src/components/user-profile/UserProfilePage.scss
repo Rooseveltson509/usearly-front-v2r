@@ -158,7 +158,8 @@
 
 // Colonne droite
 .right-panel {
-  margin-top: 60px;
+  margin-top: 26px;
+  align-self: center;
 
   .separator {
     height: 1px;
@@ -175,7 +176,8 @@
         margin-right: 20px;
       }
       .right-panel {
-        margin-top: 70px;
+        margin-top: 0;
+        align-self: center;
       }
     }
   }

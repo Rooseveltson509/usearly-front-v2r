@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import HomeGroupedReportsList from "../home-grouped-reports-list/HomeGroupedReportsList";
 import FilterIllustration from "../home-illustration/FilterIllustration";
 import type { FeedbackType } from "@src/components/user-profile/FeedbackTabs";
+import SearchBar from "../components/searchBar/SearchBar";
 
 interface Props {
   activeFilter: string;
@@ -32,6 +33,11 @@ const ReportTab: React.FC<Props> = ({
   brandBannerStyle,
   displayedCount,
 }) => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const handleSearchTermChange = useCallback((value: string) => {
+    setSearchTerm(value);
+  }, []);
+
   const bannerClassName = [
     "report-banner-container",
     selectedBrand || selectedCategory
@@ -67,9 +73,16 @@ const ReportTab: React.FC<Props> = ({
           setSelectedSiteUrl={setSelectedSiteUrl}
           selectedSiteUrl={selectedSiteUrl}
           totalityCount={displayedCount}
+          searchTerm={searchTerm}
+          onSearchTermChange={handleSearchTermChange}
         />
       </div>
       <aside className="right-panel">
+        <SearchBar
+          value={searchTerm}
+          onChange={handleSearchTermChange}
+          placeholder="Rechercher un signalement..."
+        />
         <FilterIllustration
           filter={activeFilter}
           selectedBrand={selectedBrand}

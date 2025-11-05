@@ -61,7 +61,7 @@ const PublicSuggestionCard: React.FC<Props> = ({ item }) => {
   // 📋 4️⃣ Données calculées
   const rawDescription = item.description || "";
   const description = rawDescription.trim();
-  const DESCRIPTION_LIMIT = 150;
+  const DESCRIPTION_LIMIT = 100;
   const shouldShowToggle =
     description.length > DESCRIPTION_LIMIT || item.capture;
   const brandKey = item.marque ? item.marque.toLowerCase() : "default";

@@ -10,6 +10,7 @@ import { useCommentsForDescription } from "@src/hooks/useCommentsForDescription"
 import type { ExplodedGroupedReport } from "@src/types/Reports";
 import "./ChronoReportCard.scss";
 import Avatar from "@src/components/shared/Avatar";
+import { capitalizeFirstLetter } from "@src/utils/stringUtils";
 
 interface Props {
   item: ExplodedGroupedReport & { brandLogoUrl?: string }; // ✅ on ajoute brandLogoUrl
@@ -110,7 +111,7 @@ const ChronoReportCard: React.FC<Props> = ({ item, isOpen, onToggle }) => {
               </div>
               <div className="label">
                 {userProfile?.pseudo} <span className="x">×</span>{" "}
-                <strong>{item.marque}</strong>
+                <strong>{capitalizeFirstLetter(item.marque)}</strong>
               </div>
             </div>
           )}

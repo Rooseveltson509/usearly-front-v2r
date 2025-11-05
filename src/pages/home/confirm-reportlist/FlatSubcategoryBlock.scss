@@ -1,4 +1,4 @@
-@use "@src/styles/base/variables" as *;
+@use "@src/styles/base/_variables.scss" as *;
 
 .subcategory-block {
   border-radius: 20px;
@@ -16,7 +16,7 @@
 
     .subcategory-header {
       .subcategory-right {
-        margin-top: -15px;
+        margin-top: 5px;
         .subcategory-user-brand-info {
           .avatars-row {
             .avatar-wrapper-custom {
@@ -61,7 +61,7 @@
             font-size: 18px;
             font-weight: 800;
             margin: 0;
-            font-family: $font-family-2;
+            font-family: $font-family-3;
           }
 
           .count-badge {
@@ -144,7 +144,7 @@
 
           .user-brand-line {
             display: block;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 500;
 
             .cross {
@@ -153,7 +153,7 @@
           }
 
           .date-subcategory {
-            font-size: 13px;
+            font-size: 12px;
             color: #999;
             margin-left: auto;
             margin-right: auto;
@@ -176,7 +176,7 @@
         justify-content: space-between;
 
         .date-subcategory {
-          font-size: 13px;
+          font-size: 12px;
           color: #888;
           margin-left: auto;
           transform: translateY(2px); // petit ajustement vertical si besoin
@@ -206,18 +206,16 @@
   }
 
   .subcategory-content {
-    margin-top: 16px;
-
     .main-description {
       margin-bottom: 12px;
 
       .description-text {
-        font-size: 15px;
+        font-size: 14px;
+        font-weight: 300;
         color: #333;
         line-height: 1.4;
         padding-bottom: 16px;
         margin-top: -5px;
-        margin-left: 30px;
       }
 
       .show-capture-button {
@@ -248,6 +246,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  width: 655px;
 
   &.open {
     background-color: #fff !important; // forcé pour rester blanc en mode ouvert
@@ -296,7 +295,7 @@
   }
 
   .subcategory-content {
-    margin-top: 12px;
+    margin-top: -16px;
   }
 }
 
@@ -330,7 +329,7 @@
     align-items: flex-start;
 
     .user-brand-line {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 500;
 
       .cross {
@@ -340,7 +339,7 @@
     }
 
     .date-subcategory {
-      font-size: 13px;
+      font-size: 12px;
       color: #888;
     }
   }

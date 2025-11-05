@@ -19,6 +19,7 @@ import PublicSuggestionPage from "./components/shared/public/PublicSuggestionPag
 import CoupDeCoeurDetail from "./components/shared/share-modal/coupdecoeur-detail/CoupDeCoeurDetail";
 import ReportDetail from "./pages/home/report-detail/ReportDetail";
 import NotificationsPage from "./components/notification/NotificationsPage";
+import UsearlyDraw from "./components/background/Usearly";
 
 function App() {
   return (
@@ -30,7 +31,10 @@ function App() {
               path="/signup"
               element={
                 <GuestRoute>
-                  <Register />
+                  <>
+                    <Register />
+                    <UsearlyDraw />
+                  </>
                 </GuestRoute>
               }
             />
@@ -38,7 +42,10 @@ function App() {
               path="/lookup"
               element={
                 <GuestRoute>
-                  <CheckUser />
+                  <>
+                    <CheckUser />
+                    <UsearlyDraw />
+                  </>
                 </GuestRoute>
               }
             />
@@ -63,7 +70,10 @@ function App() {
               path="/login"
               element={
                 <GuestRoute>
-                  <Login />
+                  <>
+                    <Login />
+                    <UsearlyDraw />
+                  </>
                 </GuestRoute>
               }
             />

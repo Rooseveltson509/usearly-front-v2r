@@ -92,6 +92,18 @@ const CdcTab: React.FC<Props> = ({
       style={brandBannerStyle}
     >
       <div className="feedback-list-wrapper">
+        <HomeFiltersCdc
+          filter={activeFilter}
+          setFilter={setActiveFilter}
+          selectedBrand={selectedBrand}
+          setSelectedBrand={setSelectedBrand}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          availableCategories={coupDeCoeurCategories}
+          siteUrl={selectedSiteUrl}
+          setSelectedSiteUrl={setSelectedSiteUrl} // ✅ ajouté
+        />
+
         {isLoading ? (
           <SqueletonAnime
             loaderRef={{ current: null }}
@@ -101,96 +113,79 @@ const CdcTab: React.FC<Props> = ({
           />
         ) : (
           <div className="feedback-view-container">
-            <div className="feedback-view-wrapper">
-              <HomeFiltersCdc
-                filter={activeFilter}
-                setFilter={setActiveFilter}
-                selectedBrand={selectedBrand}
-                setSelectedBrand={setSelectedBrand}
-                selectedCategory={selectedCategory}
-                setSelectedCategory={setSelectedCategory}
-                availableCategories={coupDeCoeurCategories}
-                siteUrl={selectedSiteUrl}
-                setSelectedSiteUrl={setSelectedSiteUrl} // ✅ ajouté
-              />
-
-              <div>
-                <div className="selected-brand-heading">
-                  {selectedBrand && (
-                    <div className="selected-brand-summary">
-                      <div className="selected-brand-summary__brand">
-                        <div className="selected-brand-summary__logo">
-                          <Avatar
-                            avatar={resolvedLogo}
-                            pseudo={selectedBrand}
-                            type="brand"
-                            preferBrandLogo={true}
-                            siteUrl={selectedSiteUrl}
-                          />
-                        </div>
-                        <div className="selected-brand-summary__info-container">
-                          {selectedCategory ? (
-                            <>
-                              <span className="count">
-                                {filteredByCategory.length}
-                              </span>
-                              <span className="text">
-                                Coup de Cœur
-                                {filteredByCategory.length > 1 ? "s" : ""} lié
-                                {filteredByCategory.length > 1 ? "s" : ""} à «{" "}
-                                <b>{selectedCategory}</b> » sur{" "}
-                                {` ${capitalizeFirstLetter(selectedBrand)}`}
-                              </span>
-                            </>
-                          ) : (
-                            <>
-                              <span className="count">{totalCount}</span>
-                              <span className="text">
-                                Coup de Cœur
-                                {totalCount > 1 ? "s" : ""} sur{" "}
-                                {` ${capitalizeFirstLetter(selectedBrand)}`}
-                              </span>
-                            </>
-                          )}
-                        </div>
-                      </div>
+            <div className="selected-brand-heading">
+              {selectedBrand && (
+                <div className="selected-brand-summary">
+                  <div className="selected-brand-summary__brand">
+                    <div className="selected-brand-summary__logo">
+                      <Avatar
+                        avatar={resolvedLogo}
+                        pseudo={selectedBrand}
+                        type="brand"
+                        preferBrandLogo={true}
+                        siteUrl={selectedSiteUrl}
+                      />
                     </div>
-                  )}
+                    <div className="selected-brand-summary__info-container">
+                      {selectedCategory ? (
+                        <>
+                          <span className="count">
+                            {filteredByCategory.length}
+                          </span>
+                          <span className="text">
+                            Coup de Cœur
+                            {filteredByCategory.length > 1 ? "s" : ""} lié
+                            {filteredByCategory.length > 1 ? "s" : ""} à «{" "}
+                            <b>{selectedCategory}</b> » sur{" "}
+                            {` ${capitalizeFirstLetter(selectedBrand)}`}
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <span className="count">{totalCount}</span>
+                          <span className="text">
+                            Coup de Cœur
+                            {totalCount > 1 ? "s" : ""} sur{" "}
+                            {` ${capitalizeFirstLetter(selectedBrand)}`}
+                          </span>
+                        </>
+                      )}
+                    </div>
+                  </div>
                 </div>
-
-                <FeedbackView
-                  activeTab="coupdecoeur"
-                  viewMode="flat"
-                  currentState={{
-                    data: coupDeCoeursForDisplay,
-                    loading: isLoading,
-                    hasMore: false,
-                    error: null,
-                  }}
-                  openId={null}
-                  setOpenId={() => {}}
-                  groupOpen={{}}
-                  setGroupOpen={() => {}}
-                  selectedBrand={selectedBrand}
-                  selectedCategory={selectedCategory}
-                  selectedSiteUrl={selectedSiteUrl}
-                  renderCard={() => <></>}
-                />
-              </div>
+              )}
             </div>
 
-            <aside className="right-panel">
-              <FilterIllustration
-                filter={activeFilter}
-                selectedBrand={selectedBrand}
-                siteUrl={selectedSiteUrl}
-                selectedCategory={selectedCategory}
-                onglet="coupdecoeur"
-              />
-            </aside>
+            <FeedbackView
+              activeTab="coupdecoeur"
+              viewMode="flat"
+              currentState={{
+                data: coupDeCoeursForDisplay,
+                loading: isLoading,
+                hasMore: false,
+                error: null,
+              }}
+              openId={null}
+              setOpenId={() => {}}
+              groupOpen={{}}
+              setGroupOpen={() => {}}
+              selectedBrand={selectedBrand}
+              selectedCategory={selectedCategory}
+              selectedSiteUrl={selectedSiteUrl}
+              renderCard={() => <></>}
+            />
           </div>
         )}
       </div>
+      <aside className="right-panel">
+        <FilterIllustration
+          filter={activeFilter}
+          selectedBrand={selectedBrand}
+          siteUrl={selectedSiteUrl}
+          selectedCategory={selectedCategory}
+          onglet="coupdecoeur"
+        />
+      </aside>
     </div>
   );
 };

@@ -44,7 +44,7 @@ const SearchBar = ({
       </span>
       <input
         ref={inputRef}
-        className={`input ${isActive ? "active" : "none"}`}
+        className={`input ${isActive ? "active" : ""}`}
         type="search"
         value={value}
         onChange={(event) => onChange(event.target.value)}

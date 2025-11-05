@@ -2,13 +2,14 @@
   type FeedbackType,
 } from "@src/components/user-profile/FeedbackTabs";
 import "./PurpleBanner.scss";
-
+import {
+  LogoBig,
+  LogoMedium,
+  LogoSmall,
+} from "@src/components/shared/DecorativeLogos";
 import chatIcon from "/assets/images/chat-top-bar.svg";
 import bulleIcon from "/assets/images/bulle-top-bar.png";
 import emojiIcon from "/assets/images/emoji-top-bar.png";
-import big from "/assets/images/big.svg";
-import medium from "/assets/images/medium.svg";
-import small from "/assets/images/small.svg";
 import badge from "/assets/icons/Little-badge.svg";
 
 export type PurpleBannerProps = {
@@ -42,9 +43,9 @@ export default function PurpleBanner({
       {/* right decorative logos */}
       <div className="right">
         <div className="decorative-logos">
-          <img src={big} alt="big" className="logo logo-big" />
-          <img src={medium} alt="medium" className="logo logo-medium" />
-          <img src={small} alt="small" className="logo logo-small" />
+          <LogoBig />
+          <LogoMedium />
+          <LogoSmall />
           {pastille && (
             <img src={badge} alt="badge" className="logo logo-badge" />
           )}

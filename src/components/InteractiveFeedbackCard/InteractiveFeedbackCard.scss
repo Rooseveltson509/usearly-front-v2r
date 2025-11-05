@@ -7,8 +7,9 @@
   background: #fff;
   border-radius: 0px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
   margin-bottom: 16px;
-  overflow: hidden; // respecte l’arrondi du parent
+  width: 655px;
   transition: box-shadow 0.3s ease;
   padding: 2px;
 
@@ -362,6 +363,7 @@
 
         .user-brand {
           font-weight: 500;
+          font-size: 11px;
           margin-bottom: 4px;
           text-transform: none;
 
@@ -372,18 +374,19 @@
         }
 
         .feedback-date {
-          font-size: 12px;
+          font-size: 11px;
           color: $light-color-1;
           opacity: 0.8;
-          font-family: $font-family-2;
+          font-family: $font-family;
         }
       }
     }
 
     .feedback-body {
-      font-size: 14px;
+      font-size: 15px;
       color: #333;
-      line-height: 1.5;
+      font-weight: 300;
+      line-height: normal;
       margin-bottom: 12px;
       padding-right: 45px;
 
@@ -391,7 +394,7 @@
         border: none;
         background: transparent;
         color: black;
-        font-weight: 500;
+        font-weight: 600;
         cursor: pointer;
         margin-left: 4px;
 
@@ -411,19 +414,21 @@
       }
 
       .cdc-post-title {
-        color: $dark;
-        font-size: 16px;
-        font-weight: 700;
+        color: #000000;
+        font-size: 20px;
+        font-weight: 800;
+        font-family: $font-family-2;
+        line-height: normal;
       }
 
       h2 {
         line-height: 1.4;
-        margin-bottom: 5px;
+        margin-bottom: 10px;
         font-family: $font-family-3;
       }
 
       p {
-        font-size: 14px;
+        font-size: 15px;
         font-weight: 300;
       }
     }
@@ -739,6 +744,40 @@
     border: 2px solid black;
     line-height: 1.2;
     transition: transform 0.2s ease;
+    position: relative;
+  }
+
+  .highlight-bubble:nth-of-type(2) {
+    --stroke: 8px; /* épaisseur du trait noir */
+    --r: 14px; /* arrondi du bloc */
+    --tail: 34px; /* taille de la pointe */
+    --tail-x: 46px; /* position horizontale de la pointe */
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      transform: translateY(-50%) rotate(45deg);
+      pointer-events: none;
+    }
+
+    &::before {
+      width: 12px;
+      height: 12px;
+      right: 34.5px;
+      top: 105%;
+      background: #000;
+      clip-path: polygon(100% 0%, 175% 50%, 100% 110%, 35% 49%);
+    }
+
+    &::after {
+      width: 11px;
+      height: 11px;
+      right: 35px;
+      background: inherit;
+      clip-path: polygon(30% 0%, 100% 0%, 130% 132%);
+    }
   }
 
   .highlight-bubble:hover {
@@ -815,7 +854,7 @@
 }
 // Surbrillance emoji : stylisée + adaptable
 .highlight-emoji {
-  font-family: "Urbanist Black Italic", sans-serif;
+  font-family: "Urbanist", sans-serif;
   font-style: italic;
   font-weight: 900;
   border-radius: 999px;

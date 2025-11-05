@@ -1,3 +1,5 @@
+@use "@src/styles/base/variables" as *;
+
 .category-dropdown {
   position: relative;
   display: inline-block;
@@ -8,7 +10,7 @@
     height: 44px;
     border-radius: 6px;
     background: #fff;
-    border: 1px solid #e4e4e4;
+    border: 1px solid $border-color;
     padding: 0 14px;
     display: flex;
     align-items: center;

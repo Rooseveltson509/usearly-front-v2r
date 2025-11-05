@@ -1,3 +1,5 @@
+@use "@src/styles/base/variables" as *;
+
 .user-votes-card {
   width: 100%;
   max-width: 360px;
@@ -25,11 +27,10 @@
     display: flex;
     flex-direction: column;
     gap: 1.2rem;
-    padding: 1.4rem 1.5rem;
+    padding: 1.4rem 1.15rem;
     border-radius: 6px;
-    border: 1px solid #f1f2f4;
+    border: 1px solid $border-color;
     background: #ffffff;
-    box-shadow: 0 18px 36px -24px rgba(15, 23, 42, 0.28);
     max-height: none;
     overflow: hidden;
     scrollbar-width: thin;
@@ -120,7 +121,7 @@
             display: inline-flex;
             align-items: center;
             gap: 0.2rem;
-            color: #4338ca;
+            color: #3e6efc;
             padding: 0.35rem 0;
             border-radius: 999px;
             font-weight: 600;
@@ -132,7 +133,7 @@
               width: 20px;
               height: 20px;
               border-radius: 10px;
-              color: #4338ca;
+              color: #3e6efc;
 
               svg {
                 display: block;
@@ -145,7 +146,7 @@
               background: linear-gradient(
                 135deg,
                 rgba(99, 102, 241, 0.09),
-                rgba(129, 140, 248, 0.18)
+                rgba(62, 110, 252, 0.18)
               );
             }
           }
@@ -192,12 +193,12 @@
     .votes-toggle {
       margin-top: 1rem;
       background: none;
-      border: 2px solid black;
+      border: 1px solid black;
       border-radius: 999px;
       color: black;
       font-weight: 500;
       font-size: 1rem;
-      padding: 0.5rem 1rem;
+      padding: 8px 12px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
