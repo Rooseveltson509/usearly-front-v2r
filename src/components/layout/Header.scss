@@ -2,11 +2,12 @@
 
 .header {
   background: white;
-  padding: 1rem;
+  padding: 1.1rem;
   padding-left: max(5.5rem, 5%);
   padding-right: max(5.5rem, 5%);
   position: fixed;
-  z-index: 2147483647;
+  // z-index: 2147483647;
+  z-index: 999;
   width: 100%;
   font-family: $font-family-2;
   @media screen and (max-width: 1150px) {
@@ -52,7 +53,7 @@
         content: "";
         position: absolute;
         left: 0;
-        bottom: -27px; // distance sous le texte
+        bottom: -28px; // distance sous le texte
         width: 100%;
         height: 1px;
         background: #000;

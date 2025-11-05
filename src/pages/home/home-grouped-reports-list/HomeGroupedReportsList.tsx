@@ -15,7 +15,11 @@ import ConfirmedSection from "./sections/ConfirmedSection";
 import RageSection from "./sections/RageSection";
 import PopularSection from "./sections/PopularSection";
 import ChronoSection from "./sections/ChronoSection";
-import { useGroupedReportsLogic } from "./hooks/useGroupedReportsLogic";
+import {
+  useGroupedReportsLogic,
+  normalizeText,
+  getSearchableStrings,
+} from "./hooks/useGroupedReportsLogic";
 import { useLocation } from "react-router-dom";
 import FilterBar from "../FilterBar";
 import HotSection from "./sections/HotSection";
@@ -71,6 +75,7 @@ const HomeGroupedReportsList: React.FC<Props> = ({
   const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>(
     {},
   );
+  const [localSearchTerm, setLocalSearchTerm] = useState("");
   const location = useLocation();
 
   // === Logique partagée (useGroupedReportsLogic) ===
@@ -84,18 +89,12 @@ const HomeGroupedReportsList: React.FC<Props> = ({
     loadingFiltered,
     totalCount,
     initializing,
-    searchTerm: internalSearchTerm,
-    setSearchTerm,
-    filteredByCategory,
-    reportsToDisplay,
   } = useGroupedReportsLogic(
     activeTab,
     totalityCount,
     onSectionChange,
     selectedBrand,
     selectedCategory,
-    setSelectedSiteUrl,
-    selectedSiteUrl,
   );
 
   const { brands } = useBrands("report");
@@ -109,28 +108,76 @@ const HomeGroupedReportsList: React.FC<Props> = ({
   );
   console.log("✅ availableBrands envoyés à BrandSelect:", availableBrands);
 
-  useEffect(() => {
-    if (
-      typeof externalSearchTerm === "string" &&
-      externalSearchTerm !== internalSearchTerm
-    ) {
-      setSearchTerm(externalSearchTerm);
-    }
-  }, [externalSearchTerm, internalSearchTerm, setSearchTerm]);
-
-  useEffect(() => {
-    if (onSearchTermChange && internalSearchTerm !== externalSearchTerm) {
-      onSearchTermChange(internalSearchTerm);
-    }
-  }, [internalSearchTerm, externalSearchTerm, onSearchTermChange]);
-
   const handleSearchTermChange = useCallback(
     (value: string) => {
-      setSearchTerm(value);
-      onSearchTermChange?.(value);
+      if (onSearchTermChange) {
+        onSearchTermChange(value);
+      } else {
+        setLocalSearchTerm(value);
+      }
     },
-    [setSearchTerm, onSearchTermChange],
+    [onSearchTermChange],
   );
+
+  useEffect(() => {
+    if (typeof externalSearchTerm === "string") {
+      setLocalSearchTerm(externalSearchTerm);
+    }
+  }, [externalSearchTerm]);
+
+  useEffect(() => {
+    handleSearchTermChange("");
+  }, [selectedBrand, handleSearchTermChange]);
+
+  const searchTermValue =
+    typeof externalSearchTerm === "string"
+      ? externalSearchTerm
+      : localSearchTerm;
+
+  const filteredByCategory = useMemo(() => {
+    if (selectedCategory) {
+      return filteredReports.filter((r) => r.subCategory === selectedCategory);
+    }
+    return filteredReports;
+  }, [filteredReports, selectedCategory]);
+
+  const normalizedSearchTerm = useMemo(
+    () => (searchTermValue.trim() ? normalizeText(searchTermValue) : ""),
+    [searchTermValue],
+  );
+
+  const reportsToDisplay = useMemo(() => {
+    if (!normalizedSearchTerm) return filteredByCategory;
+    return filteredByCategory.filter((r) => {
+      const vals = getSearchableStrings(r);
+      return vals.some((v) => normalizeText(v).includes(normalizedSearchTerm));
+    });
+  }, [filteredByCategory, normalizedSearchTerm]);
+
+  useEffect(() => {
+    if (!setSelectedSiteUrl) return;
+
+    if (!selectedBrand && !selectedCategory) {
+      setSelectedSiteUrl(undefined);
+      return;
+    }
+
+    if (selectedBrand && selectedSiteUrl) return;
+
+    const firstValid = reportsToDisplay.find(
+      (r) => typeof r.siteUrl === "string" && r.siteUrl.trim().length > 0,
+    );
+    if (firstValid?.siteUrl) {
+      setSelectedSiteUrl(firstValid.siteUrl);
+      console.log("🔁 SiteUrl auto-déduit:", firstValid.siteUrl);
+    }
+  }, [
+    selectedBrand,
+    selectedCategory,
+    selectedSiteUrl,
+    reportsToDisplay,
+    setSelectedSiteUrl,
+  ]);
 
   // === Focus automatique depuis une notification ===
   useEffect(() => {
@@ -243,7 +290,7 @@ const HomeGroupedReportsList: React.FC<Props> = ({
           filteredByCategory={filteredByCategory}
           expandedItems={expandedItems}
           setExpandedItems={setExpandedItems}
-          searchTerm={internalSearchTerm}
+          searchTerm={searchTermValue}
           setSearchTerm={handleSearchTermChange}
           reportData={reportData}
           loaderRef={loaderRef}
@@ -257,7 +304,7 @@ const HomeGroupedReportsList: React.FC<Props> = ({
           filteredByCategory={filteredByCategory}
           expandedItems={expandedItems}
           setExpandedItems={setExpandedItems}
-          searchTerm={internalSearchTerm}
+          searchTerm={searchTermValue}
           setSearchTerm={handleSearchTermChange}
           reportData={reportData}
           loaderRef={loaderRef}
@@ -284,7 +331,7 @@ const HomeGroupedReportsList: React.FC<Props> = ({
           filteredByCategory={filteredByCategory}
           expandedItems={expandedItems}
           setExpandedItems={setExpandedItems}
-          searchTerm={internalSearchTerm}
+          searchTerm={searchTermValue}
           setSearchTerm={handleSearchTermChange}
           reportData={reportData}
           loaderRef={loaderRef}
