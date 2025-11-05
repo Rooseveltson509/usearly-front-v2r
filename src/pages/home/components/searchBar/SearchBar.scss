@@ -1,57 +1,72 @@
 @use "@src/styles/base/variables" as *;
 
 .search-bar {
+  position: absolute;
+  right: 15px;
+  top: -66px;
   display: flex;
-  justify-content: flex-end;
-  span {
+  align-items: center;
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+  gap: 0;
+  margin-left: auto;
+
+  .icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: white;
-    padding: 10px;
+    background-color: #fff;
     height: 44px;
     width: 44px;
     border-radius: 50%;
-    border: 1px solid #e4e4e4;
-  }
-  span.active {
-    border-radius: 0 12px 12px 0;
-    border-right: none;
-    margin-right: -40px !important;
-    @media screen and (min-width: 1350px) {
-      border-radius: 12px 0 0 12px;
-    }
+    border: 1px solid $border-color;
+    cursor: pointer;
+    transition:
+      border-radius 0.2s ease,
+      border-color 0.2s ease;
+    flex-shrink: 0;
   }
 
-  input {
-    padding: 0.5rem;
-    height: 37px;
-    border: 1px solid #0000001c;
-    border-radius: 4px;
-    position: absolute;
-    margin-left: 34px;
-    width: 200px;
-  }
-  input:focus-visible {
-    outline: 2px solid $dark;
-  }
-  input.active {
-    border-radius: 0 12px 12px 0;
+  .icon.active {
+    height: 48px;
+    width: 48px;
+    border-radius: 0 999px 999px 0;
+    border: 2px solid $dark;
     border-left: none;
-    // margin-left: 32.5px;
   }
-  .none {
-    display: none;
+
+  .input {
+    flex: 0 0 auto;
+    height: 44px;
+    width: 0;
+    min-width: 0;
+    padding: 0;
+    border-radius: 999px 0 0 999px;
+    border: 1px solid transparent;
+    background-color: #fff;
+    font-size: 14px;
+    line-height: 1.2;
+    color: inherit;
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      width 0.25s ease,
+      padding 0.2s ease,
+      opacity 0.15s ease,
+      border-color 0.2s ease;
   }
-  @media screen and (min-width: 1350px) {
-    &.active {
-      flex-direction: row-reverse;
-      margin-left: 80px;
-    }
+
+  .input.active {
+    width: var(--search-width);
+    max-width: 100%;
+    padding: 0 14px;
+    opacity: 1;
+    pointer-events: auto;
+    border-color: $border-color;
+    border-right: none;
   }
-  @media screen and (max-width: 1120px) {
-    &.active {
-      margin-right: 30px;
-    }
+
+  .input:focus-visible {
+    outline: 2px solid $dark;
   }
 }

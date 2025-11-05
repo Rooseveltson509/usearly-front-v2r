@@ -49,7 +49,7 @@ const FeedbackRight: React.FC<Props> = ({
   commentCount,
 }) => {
   const [showFullText, setShowFullText] = useState(false);
-  const DESCRIPTION_LIMIT = 150;
+  const DESCRIPTION_LIMIT = 100;
   const rawDescription = item.description || "";
   const description = rawDescription.trim();
   const shouldShowToggle =

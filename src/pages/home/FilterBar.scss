@@ -1,3 +1,5 @@
+@use "@src/styles/base/variables" as *;
+
 .filter-container {
   display: flex;
   flex-wrap: nowrap;
@@ -5,11 +7,15 @@
   justify-content: space-between;
   gap: 16px;
   margin-bottom: 2rem;
+  width: 100%;
+  position: relative;
 
   .primary-filters {
     display: flex;
     align-items: center;
     gap: 14px;
+    flex: 0 1 auto;
+    min-width: 0;
 
     > .brand-select {
       display: inline-flex;
@@ -22,7 +28,33 @@
   }
   .secondary-filters-container {
     display: flex;
-    gap: 8px;
+    align-items: center;
+    gap: 12px;
+    flex: 1 1 auto;
+    justify-content: flex-end;
+    margin-left: auto;
+    min-width: 0;
+
+    > * {
+      flex-shrink: 0;
+    }
+
+    > .search-bar {
+      margin-left: auto;
+    }
+
+    @media screen and (min-width: 1120px) {
+      position: relative;
+
+      > .search-bar {
+        position: absolute;
+        top: 50%;
+        right: 0;
+        transform: translateY(-50%);
+        margin-left: 0;
+        z-index: 2;
+      }
+    }
   }
 
   .primary-filters-select {
@@ -112,9 +144,70 @@
 
 .select-filter-wrapper {
   position: relative;
-  display: inline-flex;
+  display: flex;
+  flex-direction: column-reverse;
   align-items: stretch;
   min-width: 220px;
+
+  .popup-hot-filter {
+    z-index: 999;
+    position: absolute;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    margin-top: 5px;
+    border: 1px solid $border-color;
+    border-radius: 6px;
+    box-shadow: rgba(#a0a0a0, 0) 0px 1px 5px;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-12px);
+    transition:
+      max-height 0.3s ease-in-out,
+      opacity 0.2s ease-in-out,
+      transform 0.3s ease-in-out,
+      border-color 0.2s ease-in-out,
+      box-shadow 0.2s ease-in-out,
+      visibility 0s linear 0.3s;
+    visibility: hidden;
+
+    .popup-hot-filter-container {
+      display: flex;
+      flex-direction: column;
+      padding: 5px;
+
+      span {
+        text-wrap: nowrap;
+        padding: 5px;
+        border-radius: 6px;
+      }
+
+      span:hover {
+        background-color: #e4e4e4;
+        cursor: pointer;
+      }
+    }
+
+    &.is-open {
+      max-height: 400px;
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+      border-color: $border-color;
+      box-shadow: #a0a0a0 0px 1px 5px;
+      visibility: visible;
+      transition:
+        max-height 0.3s ease-in-out,
+        opacity 0.2s ease-in-out,
+        transform 0.3s ease-in-out,
+        border-color 0.2s ease-in-out,
+        box-shadow 0.2s ease-in-out,
+        visibility 0s;
+    }
+  }
 
   .select-filter {
     position: absolute;
@@ -212,7 +305,7 @@
     flex-direction: column;
     gap: 10px;
     background: #fff;
-    border-radius: 16px;
+    border-radius: 6px;
     border: 1px solid rgba(#d5d5d5, 0.08);
     box-shadow: 0 18px 36px rgba(#d5d5d5, 0.12);
     z-index: 20;
@@ -223,7 +316,7 @@
       padding: 8px 12px;
       font-size: 14px;
       border: 1px solid #d5d5d5;
-      border-radius: 8px;
+      border-radius: 6px;
       background: #fafafa;
       transition:
         border-color 0.2s ease,
@@ -394,6 +487,7 @@
 .filters {
   --pill-h: 44px;
   --gap: 12px;
+  width: 100%;
 
   @media screen and (max-width: 1120px) {
     margin-top: -30px;
@@ -409,6 +503,7 @@
     gap: var(--gap);
     align-items: center;
     justify-items: stretch;
+    width: 100%;
 
     > .filters__pill {
       width: 100%;
@@ -419,7 +514,7 @@
         box-shadow: none;
         .brand-select__trigger {
           width: auto;
-          border: 1px solid #e4e4e4;
+          border: 1px solid $border-color;
           box-shadow: none;
         }
         .brand-select__trigger--active {
@@ -430,7 +525,7 @@
         width: 100%;
         .category-dropdown {
           width: auto;
-          border: 1px solid #e4e4e4;
+          border: 1px solid $border-color;
         }
       }
     }
@@ -451,6 +546,12 @@
     }
     &--search {
       grid-area: search;
+      display: flex;
+      justify-content: flex-end;
+
+      .search-bar {
+        margin-left: auto;
+      }
     }
 
     /* style “pill” générique */
@@ -460,7 +561,7 @@
       height: var(--pill-h);
       border-radius: 6px;
       background: #fff;
-      border: 0px solid #e4e4e4;
+      border: 0px solid $border-color;
       box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
     }
 
@@ -469,7 +570,7 @@
       display: flex;
       align-items: center;
       padding: 0 12px;
-      border: 1px solid #e4e4e4;
+      border: 1px solid $border-color;
       width: 100%;
       max-width: 100%;
 
@@ -502,6 +603,39 @@
       grid-template-areas:
         "brand maincat search"
         "subcat subcat  search";
+    }
+  }
+
+  @media screen and (min-width: 1120px) {
+    .filters__row {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      margin-bottom: 30px;
+    }
+
+    .filters__row > .filters__pill {
+      flex: 0 1 auto;
+      width: auto;
+    }
+
+    .filters__pill--brand,
+    .filters__pill--maincat,
+    .filters__pill--subcat {
+      flex: 0 1 240px;
+    }
+
+    .filters__pill--search {
+      margin-left: auto;
+      flex: 0 0 auto;
+      position: relative;
+      display: flex;
+      align-items: center;
+
+      .search-bar {
+        position: relative;
+        margin-left: 0;
+      }
     }
   }
 

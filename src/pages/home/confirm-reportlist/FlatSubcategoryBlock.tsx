@@ -14,6 +14,7 @@ import {
   FALLBACK_BRAND_PLACEHOLDER,
 } from "@src/utils/brandLogos";
 import { useBrandLogos } from "@src/hooks/useBrandLogos";
+import { capitalizeFirstLetter } from "@src/utils/stringUtils";
 
 interface Props {
   brand: string;
@@ -157,7 +158,8 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
               <div className="text-meta">
                 <span className="user-brand-line">
                   {initialDescription.user?.pseudo}{" "}
-                  <span className="cross">×</span> <strong>{brand}</strong>
+                  <span className="cross">×</span> {""}
+                  <strong>{capitalizeFirstLetter(brand)}</strong>
                 </span>
               </div>
               <ChevronUp size={16} />
@@ -194,34 +196,40 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
                 ? `${initialDescription.description} ${
                     initialDescription.emoji || ""
                   }`
-                : `${initialDescription.description.slice(0, 180)}${
-                    initialDescription.description.length > 180 ? "..." : ""
-                  } ${initialDescription.emoji || ""}`}
-            </p>
+                : `${initialDescription.description.slice(0, 100)}${
+                    initialDescription.description.length > 100 ? "…" : ""
+                  }`}
 
-            {(initialDescription.description.length > 180 || captureUrl) && (
-              <div className="see-more-section">
-                <button
-                  className="see-more-button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setShowFullText((prev) => !prev);
-                  }}
+              {(initialDescription.description.length > 100 || captureUrl) && (
+                <span
+                  className="see-more-section"
+                  style={{ display: "inline" }}
                 >
-                  {showFullText ? "Voir moins" : "Voir plus"}
-                </button>
-              </div>
-            )}
+                  {!showFullText &&
+                    initialDescription.description.length > 100 &&
+                    "\u00A0"}
+                  <button
+                    className="see-more-button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowFullText((prev) => !prev);
+                    }}
+                  >
+                    {showFullText ? "Voir moins" : "Voir plus"}
+                  </button>
+                </span>
+              )}
 
-            {showFullText && captureUrl && (
-              <div className="inline-capture">
-                <img
-                  src={captureUrl}
-                  alt="Capture du signalement"
-                  className="inline-capture-img"
-                />
-              </div>
-            )}
+              {showFullText && captureUrl && (
+                <div className="inline-capture">
+                  <img
+                    src={captureUrl}
+                    alt="Capture du signalement"
+                    className="inline-capture-img"
+                  />
+                </div>
+              )}
+            </p>
           </div>
 
           <ReportActionsBarWithReactions

@@ -13,6 +13,7 @@ import CommentSection from "../comments/CommentSection";
 import { parseISO, isAfter } from "date-fns";
 import Avatar from "../shared/Avatar";
 import { getBrandThemeColor } from "@src/utils/getBrandThemeColor";
+import { capitalizeFirstLetter } from "@src/utils/stringUtils";
 
 interface Props {
   brand: string;
@@ -222,7 +223,8 @@ const UserBrandBlock: React.FC<Props> = ({
                         </div>
                         <div className="user-brand-names">
                           {initialDescription.user.pseudo}{" "}
-                          <span className="x">×</span> <strong>{brand}</strong>
+                          <span className="x">×</span> {""}
+                          <strong>{capitalizeFirstLetter(brand)}</strong>
                         </div>
                       </div>
                     )}

@@ -86,14 +86,22 @@ const keywordMap: Record<string, string[]> = {
     "problème d'affichage",
   ],
 
-  "wrong-address.png": [
+  "delivery.png": [
     "adresse",
     "mauvaise",
     "livraison",
     "destinataire",
     "invalide",
   ],
-  "delay.png": ["retard", "tard", "long", "attente", "temps", "jour", "délai"],
+  "delivery-delay.png": [
+    "retard",
+    "tard",
+    "long",
+    "attente",
+    "temps",
+    "jour",
+    "délai",
+  ],
   "support.png": [
     "service client",
     "conseiller",

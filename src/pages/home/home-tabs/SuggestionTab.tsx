@@ -121,7 +121,7 @@ const SuggestionTab: React.FC<Props> = ({
             error={null}
           />
         ) : (
-          <div>
+          <div className="feedback-view-container">
             <div className="selected-brand-heading">
               {selectedBrand && (
                 <div className="selected-brand-summary">

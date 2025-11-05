@@ -6,6 +6,6 @@ export const categoryIcons: Record<string, string> = {
   "Parcours & Navigation": "/assets/categories-icons/navigation.png",
   "Affichage & design": "/assets/categories-icons/design.png",
   "Chargement lent": "/assets/categories-icons/loading.png",
-  "Service client": "/assets/categories-icons/customer-service.png",
+  "Service client": "/assets/categories-icons/support.png",
   "Autre souci": "/assets/categories-icons/other.png",
 };

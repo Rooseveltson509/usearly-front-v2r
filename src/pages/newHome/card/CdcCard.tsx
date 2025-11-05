@@ -29,8 +29,12 @@ const CdcCard: React.FC = () => {
     <div className="cdc-card">
       <div className="cdc-title">
         <h2>
-          Les coups de <img src={HeartHead} alt="HeartHead" /> que vous avez
-          plus aimés !
+          Les coups{" "}
+          <span className="no-break">
+            de
+            <img src={HeartHead} alt="HeartHead" />
+          </span>{" "}
+          que vous avez plus aimés !
         </h2>
       </div>
       <div className="cdc-main">

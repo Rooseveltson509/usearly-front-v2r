@@ -1,4 +1,10 @@
-import React, { useRef, useState, useMemo, useEffect } from "react";
+import React, {
+  useRef,
+  useState,
+  useMemo,
+  useEffect,
+  useCallback,
+} from "react";
 import type { FeedbackType } from "@src/components/user-profile/FeedbackTabs";
 import "./HomeGroupedReportsList.scss";
 import SqueletonAnime from "@src/components/loader/SqueletonAnime";
@@ -31,6 +37,8 @@ interface Props {
   selectedSiteUrl?: string;
   totalityCount: number;
   onSectionChange?: (section: string) => void;
+  searchTerm?: string;
+  onSearchTermChange?: (value: string) => void;
 }
 
 /**
@@ -53,6 +61,8 @@ const HomeGroupedReportsList: React.FC<Props> = ({
   selectedSiteUrl,
   totalityCount,
   onSectionChange,
+  searchTerm: externalSearchTerm,
+  onSearchTermChange,
 }) => {
   const loaderRef = useRef<HTMLDivElement | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -74,7 +84,7 @@ const HomeGroupedReportsList: React.FC<Props> = ({
     loadingFiltered,
     totalCount,
     initializing,
-    searchTerm,
+    searchTerm: internalSearchTerm,
     setSearchTerm,
     filteredByCategory,
     reportsToDisplay,
@@ -98,6 +108,29 @@ const HomeGroupedReportsList: React.FC<Props> = ({
     [brands],
   );
   console.log("✅ availableBrands envoyés à BrandSelect:", availableBrands);
+
+  useEffect(() => {
+    if (
+      typeof externalSearchTerm === "string" &&
+      externalSearchTerm !== internalSearchTerm
+    ) {
+      setSearchTerm(externalSearchTerm);
+    }
+  }, [externalSearchTerm, internalSearchTerm, setSearchTerm]);
+
+  useEffect(() => {
+    if (onSearchTermChange && internalSearchTerm !== externalSearchTerm) {
+      onSearchTermChange(internalSearchTerm);
+    }
+  }, [internalSearchTerm, externalSearchTerm, onSearchTermChange]);
+
+  const handleSearchTermChange = useCallback(
+    (value: string) => {
+      setSearchTerm(value);
+      onSearchTermChange?.(value);
+    },
+    [setSearchTerm, onSearchTermChange],
+  );
 
   // === Focus automatique depuis une notification ===
   useEffect(() => {
@@ -187,8 +220,6 @@ const HomeGroupedReportsList: React.FC<Props> = ({
         availableSubCategoriesByBrandAndCategory={
           availableSubCategoriesByBrandAndCategory
         }
-        searchTerm={searchTerm}
-        onSearchTermChange={setSearchTerm}
       />
 
       {selectedBrand || selectedCategory ? (
@@ -212,8 +243,8 @@ const HomeGroupedReportsList: React.FC<Props> = ({
           filteredByCategory={filteredByCategory}
           expandedItems={expandedItems}
           setExpandedItems={setExpandedItems}
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
+          searchTerm={internalSearchTerm}
+          setSearchTerm={handleSearchTermChange}
           reportData={reportData}
           loaderRef={loaderRef}
         />
@@ -226,8 +257,8 @@ const HomeGroupedReportsList: React.FC<Props> = ({
           filteredByCategory={filteredByCategory}
           expandedItems={expandedItems}
           setExpandedItems={setExpandedItems}
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
+          searchTerm={internalSearchTerm}
+          setSearchTerm={handleSearchTermChange}
           reportData={reportData}
           loaderRef={loaderRef}
         />
@@ -253,8 +284,8 @@ const HomeGroupedReportsList: React.FC<Props> = ({
           filteredByCategory={filteredByCategory}
           expandedItems={expandedItems}
           setExpandedItems={setExpandedItems}
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
+          searchTerm={internalSearchTerm}
+          setSearchTerm={handleSearchTermChange}
           reportData={reportData}
           loaderRef={loaderRef}
         />

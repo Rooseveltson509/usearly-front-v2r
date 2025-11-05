@@ -1,11 +1,13 @@
 import React from "react";
 import "./MainTopBarHome.scss";
+import {
+  LogoBig,
+  LogoMedium,
+  LogoSmall,
+} from "@src/components/shared/DecorativeLogos";
 import chatIcon from "/assets/images/chat-top-bar.svg";
 import bulleIcon from "/assets/images/bulle-top-bar.png";
 import emojiIcon from "/assets/images/emoji-top-bar.png";
-import big from "/assets/images/big.svg";
-import medium from "/assets/images/medium.svg";
-import small from "/assets/images/small.svg";
 const MainTopBarHome: React.FC = () => {
   return (
     <div className="main-top-bar-home">
@@ -26,9 +28,9 @@ const MainTopBarHome: React.FC = () => {
 
       <div className="right">
         <div className="decorative-logos">
-          <img src={big} alt="big" className="logo logo-big" />
-          <img src={medium} alt="medium" className="logo logo-medium" />
-          <img src={small} alt="small" className="logo logo-small" />
+          <LogoBig />
+          <LogoMedium />
+          <LogoSmall />
         </div>
       </div>
     </div>

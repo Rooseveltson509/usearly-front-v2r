@@ -6,7 +6,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import "./styles/Register.scss";
 import { showToast } from "@src/utils/toastUtils";
 import PasswordRules from "./Components/PasswordRules/PasswordRules";
-import UsearlyDraw from "../../../components/background/Usearly";
 import InputText from "../../../components/inputs/inputsGlobal/InputText";
 import Buttons from "@src/components/buttons/Buttons";
 import { useHandleAuthRedirect } from "@src/hooks/useHandleAuthRedirect";
@@ -303,8 +302,6 @@ const Register = () => {
 
         <Buttons title="Créer un compte" type="submit" />
       </form>
-
-      <UsearlyDraw />
     </div>
   );
 };

@@ -18,6 +18,7 @@ import "../user-reports/UserBrandBlock.scss";
 import { getCommentsCountForDescription } from "@src/services/commentService";
 import { getFullAvatarUrl } from "@src/utils/avatarUtils";
 import Avatar from "../shared/Avatar";
+import { capitalizeFirstLetter } from "@src/utils/stringUtils";
 
 interface Props {
   brand: string;
@@ -239,7 +240,8 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
                         </div>
                         <div className="user-brand-names">
                           {initialDescription.user?.pseudo}{" "}
-                          <span className="x">×</span> <strong>{brand}</strong>
+                          <span className="x">×</span> {""}
+                          <strong>{capitalizeFirstLetter(brand)}</strong>
                         </div>
                       </div>
                     )}

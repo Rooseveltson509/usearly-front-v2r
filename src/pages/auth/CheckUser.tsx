@@ -1,6 +1,5 @@
 import InputText from "../../components/inputs/inputsGlobal/InputText";
 import { checkMailExists } from "@src/services/apiService";
-import UsearlyDraw from "../../components/background/Usearly";
 import { useNavigate } from "react-router-dom";
 import { useState, useRef } from "react";
 import "./CheckUser.scss";
@@ -60,7 +59,6 @@ function CheckUser() {
           <Buttons onClick={() => CheckIfUserExist()} title="Continuer" />
         </div>
       </div>
-      <UsearlyDraw />
     </div>
   );
 }

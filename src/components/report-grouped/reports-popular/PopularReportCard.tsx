@@ -12,6 +12,7 @@ import "./PopularReportCard.scss";
 import "@src/pages/home/confirm-reportlist/FlatSubcategoryBlock.scss";
 import { getBrandLogo } from "@src/utils/brandLogos";
 import Avatar from "@src/components/shared/Avatar";
+import { capitalizeFirstLetter } from "@src/utils/stringUtils";
 
 interface Props {
   item: PopularGroupedReport;
@@ -20,7 +21,7 @@ interface Props {
   isHot?: boolean;
 }
 
-const DESCRIPTION_PREVIEW_LENGTH = 180;
+const DESCRIPTION_PREVIEW_LENGTH = 100;
 
 const PopularReportCard: React.FC<Props> = ({
   item,
@@ -172,7 +173,7 @@ const PopularReportCard: React.FC<Props> = ({
               <div className="text-meta">
                 <span className="user-brand-line">
                   {author.pseudo} <span className="cross">×</span>{" "}
-                  <strong>{item.marque}</strong>
+                  <strong>{capitalizeFirstLetter(item.marque)}</strong>
                 </span>
               </div>
               <ChevronUp size={16} />
@@ -201,33 +202,33 @@ const PopularReportCard: React.FC<Props> = ({
       {isOpen && (
         <div className="subcategory-content">
           <div className="main-description">
-            <p className="description-text">{descriptionText}</p>
-
-            {(firstDescription.description.length >
-              DESCRIPTION_PREVIEW_LENGTH ||
-              captureUrl) && (
-              <div className="see-more-section">
-                <button
-                  className="see-more-button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setShowFullText((prev) => !prev);
-                  }}
-                >
-                  {showFullText ? "Voir moins" : "Voir plus"}
-                </button>
-              </div>
-            )}
-
-            {showFullText && captureUrl && (
-              <div className="inline-capture">
-                <img
-                  src={captureUrl}
-                  alt="Capture du signalement"
-                  className="inline-capture-img"
-                />
-              </div>
-            )}
+            <p className="description-text">
+              {descriptionText}
+              {showFullText && captureUrl && (
+                <div className="inline-capture">
+                  <img
+                    src={captureUrl}
+                    alt="Capture du signalement"
+                    className="inline-capture-img"
+                  />
+                </div>
+              )}
+              {(firstDescription.description.length >
+                DESCRIPTION_PREVIEW_LENGTH ||
+                captureUrl) && (
+                <div className="see-more-section">
+                  <button
+                    className="see-more-button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowFullText((prev) => !prev);
+                    }}
+                  >
+                    {showFullText ? "Voir moins" : "Voir plus"}
+                  </button>
+                </div>
+              )}
+            </p>
           </div>
 
           <ReportActionsBarWithReactions

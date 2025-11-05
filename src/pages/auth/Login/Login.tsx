@@ -5,7 +5,6 @@ import { showToast } from "@src/utils/toastUtils";
 import { useAuth } from "@src/services/AuthContext";
 import "./styles/Login.scss";
 import iconEye from "../../../assets/images/eye-password-logo.svg";
-import UsearlyDraw from "../../../components/background/Usearly";
 import { useHandleAuthRedirect } from "@src/hooks/useHandleAuthRedirect";
 import InputText from "@src/components/inputs/inputsGlobal/InputText";
 
@@ -173,8 +172,6 @@ const Login = () => {
           </button>
         )}
       </form>
-
-      <UsearlyDraw />
     </div>
   );
 };

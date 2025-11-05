@@ -114,7 +114,7 @@ const UserVotesCard: React.FC = () => {
   if (loading) return <p>Chargement...</p>;
   if (!votes.length) return null;
 
-  const hasMoreVotes = votes.length > 2;
+  const hasMoreVotes = votes.length > 3;
   const listEl = listRef.current;
   const listElChildren = listEl?.children;
   const firstVoteItem = listElChildren
@@ -123,14 +123,18 @@ const UserVotesCard: React.FC = () => {
   const secondVoteItem = listElChildren
     ? (listElChildren[1]?.scrollHeight ?? 0)
     : 0;
-  const heightTwoFirstVoteItem = firstVoteItem + secondVoteItem + 40;
+  const thirdVoteItem = listElChildren
+    ? (listElChildren[2]?.scrollHeight ?? 0)
+    : 0;
+  const heightTwoFirstVoteItem =
+    firstVoteItem + secondVoteItem + thirdVoteItem + 65;
   const collapsedMaxHeightValue =
     listElChildren && listElChildren.length > 1
       ? heightTwoFirstVoteItem
       : listElChildren && listElChildren.length > 0
         ? (listElChildren[0]?.scrollHeight ?? 0)
         : 0;
-  const expandedMaxHeight = heightTwoFirstVoteItem + 40;
+  const expandedMaxHeight = heightTwoFirstVoteItem + 120;
 
   const listStyle: React.CSSProperties | undefined = hasMoreVotes
     ? isExpanded

@@ -1,4 +1,5 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+import type { MouseEvent as ReactMouseEvent } from "react";
 import { ChevronDown } from "lucide-react";
 import { BrandSelect } from "@src/components/shared/BrandSelect";
 import "./FilterBar.scss";
@@ -62,6 +63,10 @@ export const FilterBarGeneric: React.FC<Props> = ({
   baseFilterValue,
   siteUrl,
 }) => {
+  const [filterHotactive, setFilterHotactive] = useState(false);
+  const [heightSelectFilter, setHeightSelectFilter] = useState<number | null>(
+    null,
+  );
   const parsedOptions = useMemo(() => {
     return options.map((opt) => {
       const { emoji, text } = splitLeadingEmoji(opt.label);
@@ -109,6 +114,53 @@ export const FilterBarGeneric: React.FC<Props> = ({
     return alternative?.value ?? parsedOptions[0]?.value ?? "";
   }, [baseFilterValue, parsedOptions, brandFilterValue]);
 
+  function clickFilterHot(className: string) {
+    const el = document.querySelector(className);
+
+    setFilterHotactive((prev) => {
+      const next = !prev;
+
+      if (next) {
+        el?.classList.add("hot-active");
+        let h = el?.scrollHeight ?? 0;
+        if (h > 50) {
+          h = 45;
+        }
+        setHeightSelectFilter(h);
+      } else {
+        el?.classList.remove("hot-active");
+      }
+      return next;
+    });
+
+    setTimeout(() => {
+      setHeightSelectFilter(null);
+      console.log("reset height");
+    }, 200);
+  }
+
+  function hotFilterOption(value: string) {
+    return (event?: ReactMouseEvent<HTMLSpanElement>) => {
+      event?.stopPropagation();
+      const wrapper = document.querySelector(".popup-hot-filter");
+      wrapper?.classList.remove("is-open");
+
+      setHeightSelectFilter(45);
+      setTimeout(() => {
+        setHeightSelectFilter(null);
+      }, 200);
+
+      setFilterHotactive(false);
+
+      setSelectedBrand("");
+      setSelectedCategory?.("");
+      setFilter(value);
+      setActiveFilter?.(value);
+      setViewMode("chrono");
+      onViewModeChange?.("chrono");
+    };
+  }
+
   const handleBrandChange = (brand: string, brandSiteUrl?: string) => {
     setSelectedBrand(brand, brandSiteUrl);
     setSelectedCategory("");
@@ -131,16 +183,42 @@ export const FilterBarGeneric: React.FC<Props> = ({
   return (
     <div className="filter-bar-generic-container">
       {/* 🔹 Menu déroulant de tri */}
-      <div className="select-filter-wrapper">
+      <div
+        className="select-filter-wrapper"
+        onClick={() =>
+          clickFilterHot(".filter-bar-generic-container .select-filter-wrapper")
+        }
+      >
+        <div
+          style={{
+            marginTop: heightSelectFilter
+              ? `${heightSelectFilter + 5}px`
+              : "50px",
+          }}
+          className={`popup-hot-filter ${filterHotactive ? "is-open" : ""}`}
+        >
+          <div className="popup-hot-filter-container">
+            {options.map((option) => (
+              <span
+                key={option.value}
+                data-value={option.value}
+                onClick={hotFilterOption(option.value)}
+              >
+                {`${option.label}`}
+              </span>
+            ))}
+          </div>
+        </div>
         <select
+          style={{ display: "none" }}
           className={`select-filter ${locationInfo === "cdc" ? "cdc-style" : ""}`}
           value={filter}
           onChange={(e) => {
             const value = e.target.value;
             setSelectedBrand("");
-            setSelectedCategory("");
+            setSelectedCategory?.("");
             setFilter(value);
-            setActiveFilter(value);
+            setActiveFilter?.(value);
             setViewMode("chrono");
             onViewModeChange?.("chrono");
           }}
