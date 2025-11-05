@@ -28,14 +28,14 @@ type FilterType =
   | "hot"
   | "recent";
 
-const normalizeText = (value: string) =>
+export const normalizeText = (value: string) =>
   value
     .toLowerCase()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .trim();
 
-const getSearchableStrings = (report: any) => {
+export const getSearchableStrings = (report: any) => {
   const values: string[] = [];
 
   if (report.subCategory) values.push(report.subCategory);
@@ -69,14 +69,11 @@ export function useGroupedReportsLogic(
   onSectionChange?: (section: SectionKey) => void,
   selectedBrand?: string,
   selectedCategory?: string,
-  setSelectedSiteUrl?: (val: string | undefined) => void,
-  selectedSiteUrl?: string,
 ) {
   const [filter, setFilter] = useState<FilterType>("chrono");
   const [filteredReports, setFilteredReports] = useState<any[]>([]);
   const [loadingFiltered, setLoadingFiltered] = useState(false);
   const [initializing, setInitializing] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
   const [totalCount, setTotalCount] = useState(totalityCount);
   /* const [currentSection, setCurrentSection] = useState<SectionKey>("loading"); */
 
@@ -190,60 +187,6 @@ export function useGroupedReportsLogic(
     fetchFilteredReports();
   }, [selectedBrand]);
 
-  useEffect(() => setSearchTerm(""), [selectedBrand]);
-
-  // === Filtrage catégorie ===
-  const filteredByCategory = useMemo(() => {
-    if (selectedCategory) {
-      return filteredReports.filter((r) => r.subCategory === selectedCategory);
-    }
-    return filteredReports;
-  }, [filteredReports, selectedCategory]);
-
-  // === Recherche texte ===
-  const normalizedSearchTerm = useMemo(
-    () => (searchTerm.trim() ? normalizeText(searchTerm) : ""),
-    [searchTerm],
-  );
-
-  const reportsToDisplay = useMemo(() => {
-    if (!normalizedSearchTerm) return filteredByCategory;
-    return filteredByCategory.filter((r) => {
-      const vals = getSearchableStrings(r);
-      return vals.some((v) => normalizeText(v).includes(normalizedSearchTerm));
-    });
-  }, [filteredByCategory, normalizedSearchTerm]);
-
-  // === ✅ Mise à jour automatique du siteUrl, sans écraser celui choisi manuellement ===
-  // ✅ Mise à jour du siteUrl (ne remplace pas celui choisi manuellement)
-  useEffect(() => {
-    if (!setSelectedSiteUrl) return;
-
-    // Rien de sélectionné → reset
-    if (!selectedBrand && !selectedCategory) {
-      setSelectedSiteUrl(undefined);
-      return;
-    }
-
-    // Si déjà défini via FilterBar → ne rien faire
-    if (selectedBrand && selectedSiteUrl) return;
-
-    // Sinon, déduction automatique
-    const firstValid = reportsToDisplay.find(
-      (r) => typeof r.siteUrl === "string" && r.siteUrl.trim().length > 0,
-    );
-    if (firstValid?.siteUrl) {
-      setSelectedSiteUrl(firstValid.siteUrl);
-      console.log("🔁 SiteUrl auto-déduit:", firstValid.siteUrl);
-    }
-  }, [
-    selectedBrand,
-    selectedCategory,
-    selectedSiteUrl,
-    reportsToDisplay,
-    setSelectedSiteUrl,
-  ]);
-
   return {
     filter,
     setFilter,
@@ -254,9 +197,5 @@ export function useGroupedReportsLogic(
     loadingFiltered,
     totalCount,
     initializing,
-    searchTerm,
-    setSearchTerm,
-    filteredByCategory,
-    reportsToDisplay,
   };
 }

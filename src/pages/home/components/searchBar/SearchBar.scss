@@ -57,13 +57,14 @@
   }
 
   .input.active {
-    width: var(--search-width);
+    width: 150px;
     max-width: 100%;
     padding: 0 14px;
     opacity: 1;
     pointer-events: auto;
     border-color: $border-color;
     border-right: none;
+    outline: 2px solid black;
   }
 
   .input:focus-visible {
