@@ -14,7 +14,10 @@ interface Comment {
   id: string;
   content: string;
   createdAt: string;
+  likesCount?: number; // 🆕 total de likes
+  userHasLiked?: boolean; // 🆕 si l’utilisateur a liké
   user: User;
+  User?: User;
 }
 
 interface Props {
@@ -26,6 +29,7 @@ interface Props {
   >;
   onDelete: (id: string) => void;
   getFullAvatarUrl: (avatar: string | null) => string;
+  onRefresh?: () => Promise<void>; // 🆕 pour rafraîchir après un like
 }
 
 const CommentList: React.FC<Props> = ({
@@ -35,6 +39,7 @@ const CommentList: React.FC<Props> = ({
   setFilter,
   onDelete,
   getFullAvatarUrl,
+  /* onRefresh, */
 }) => {
   const [visibleCount, setVisibleCount] = useState(3);
 
@@ -50,6 +55,7 @@ const CommentList: React.FC<Props> = ({
     <>
       {comments.length > 0 && (
         <div className="comments-container">
+          {/* 🔽 Header du bloc commentaires */}
           <div className="comments-header">
             <label htmlFor="filter-select">Commentaires</label>
             <select
@@ -63,14 +69,20 @@ const CommentList: React.FC<Props> = ({
             </select>
           </div>
 
+          {/* 🧩 Liste des commentaires */}
           <ul className="comment-list">
             {sorted.slice(0, visibleCount).map((comment) => (
               <CommentItem
                 key={comment.id}
                 comment={comment}
-                isAuthor={comment.user.id === userId}
+                // ✅ Corrige la logique d'identification de l'auteur
+                isAuthor={
+                  comment.user?.id === userId || comment.User?.id === userId // certains cas Sequelize renvoient "User"
+                }
                 onDelete={() => onDelete(comment.id)}
-                avatarUrl={getFullAvatarUrl(comment.user.avatar)}
+                avatarUrl={getFullAvatarUrl(
+                  comment.user?.avatar ?? comment.User?.avatar ?? null,
+                )}
                 dateLabel={formatDistanceToNow(new Date(comment.createdAt), {
                   locale: fr,
                   addSuffix: true,
@@ -79,6 +91,7 @@ const CommentList: React.FC<Props> = ({
             ))}
           </ul>
 
+          {/* 🔽 Bouton “Afficher plus” */}
           {comments.length > visibleCount && (
             <button
               className="load-more-comments-btn"

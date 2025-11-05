@@ -58,3 +58,45 @@
   border-radius: 8px;
   transition: background-color 1.2s ease;
 }
+
+.comment-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+
+  .like-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 13px;
+    transition: color 0.2s ease;
+
+    svg {
+      margin-top: -1px;
+    }
+
+    &:hover {
+      color: #222;
+    }
+
+    &.active {
+      color: #2e89ff;
+      font-weight: 600;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.mention-tag {
+  color: #2e89ff;
+  font-weight: 500;
+}

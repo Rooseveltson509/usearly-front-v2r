@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { apiService } from "@src/services/apiService";
 import { useAuth } from "@src/services/AuthContext";
 import CommentForm from "./CommentForm";
@@ -10,6 +10,8 @@ interface Comment {
   id: string;
   content: string;
   createdAt: string;
+  likesCount?: number;
+  userHasLiked?: boolean;
   user: {
     id: string;
     pseudo: string;
@@ -42,17 +44,19 @@ const CommentSection: React.FC<Props> = ({
     return `/coupdecoeurs/${descriptionId}/comments`;
   };
 
-  useEffect(() => {
-    const fetchComments = async () => {
-      try {
-        const res = await apiService.get(buildCommentEndpoint());
-        setComments(res.data.comments || []);
-      } catch (err) {
-        console.error("Erreur de chargement des commentaires :", err);
-      }
-    };
-    fetchComments();
+  // ✅ centralise la récupération des commentaires
+  const fetchComments = useCallback(async () => {
+    try {
+      const res = await apiService.get(buildCommentEndpoint());
+      setComments(res.data.comments || []);
+    } catch (err) {
+      console.error("Erreur de chargement des commentaires :", err);
+    }
   }, [descriptionId, type]);
+
+  useEffect(() => {
+    fetchComments();
+  }, [fetchComments]);
 
   const handleAdd = async (content: string) => {
     try {
@@ -113,6 +117,7 @@ const CommentSection: React.FC<Props> = ({
         setFilter={setFilter}
         onDelete={handleDelete}
         getFullAvatarUrl={getFullAvatarUrl}
+        // 🔁 on rafraîchira depuis ici plus tard si besoin (like, etc.)
       />
     </div>
   );

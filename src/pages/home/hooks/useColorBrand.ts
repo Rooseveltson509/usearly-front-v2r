@@ -1,6 +1,5 @@
-// useBrandColor.ts
 import { useMemo } from "react";
-import { brandColors } from "@src/utils/brandColors";
+import { getRandomBrandColor } from "@src/utils/brandColors";
 
 /**
  * Retourne la couleur hex de la marque (ou null si inconnue).
@@ -12,7 +11,7 @@ export function useColorBrand(selectedBrand?: string): string | null {
   );
 
   const color = useMemo(
-    () => (normalized ? (brandColors[normalized] ?? null) : null),
+    () => (normalized ? getRandomBrandColor(normalized) : null),
     [normalized],
   );
 
