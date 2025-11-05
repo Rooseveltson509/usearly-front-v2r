@@ -296,3 +296,15 @@ export const getAllBrands = async (): Promise<BrandWithSubCategories[]> => {
   const res = await apiService.get("/reportings/brands");
   return res.data.data || [];
 };
+
+export const toggleCommentLike = async (commentId: string) => {
+  return apiService.post(`/comments/${commentId}/like`);
+};
+
+export const getCommentLikesCount = async (commentId: string) => {
+  return apiService.get(`/comments/${commentId}/likes-count`);
+};
+
+export const fetchComments = async (type: string, parentId: string) => {
+  return apiService.get(`/comments/${type}/${parentId}`);
+};

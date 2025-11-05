@@ -1,9 +1,9 @@
 import { useMemo, useEffect, useState } from "react";
-import { brandColors } from "@src/utils/brandColors";
 import { hexToRgba } from "@src/utils/colorUtils";
 import { fetchValidBrandLogo } from "@src/utils/brandLogos";
 import type { FeedbackType } from "@src/components/user-profile/FeedbackTabs";
 import type { CoupDeCoeur, Suggestion } from "@src/types/Reports";
+import { getRandomBrandColor } from "@src/utils/brandColors";
 
 export function useBrandColors(
   activeTab: FeedbackType,
@@ -22,7 +22,7 @@ export function useBrandColors(
 
   const selectedBrandBaseColor = useMemo(() => {
     if (!normalizedBrand) return null;
-    return brandColors[normalizedBrand] ?? null;
+    return getRandomBrandColor(normalizedBrand);
   }, [normalizedBrand]);
 
   const brandBannerStyle = useMemo(() => {

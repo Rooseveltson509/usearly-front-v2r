@@ -1,12 +1,11 @@
-import { brandColors } from "@src/utils/brandColors";
+import { getRandomBrandColor } from "@src/utils/brandColors";
 
 /**
  * Retourne la couleur principale et une variante éclaircie pour chaque marque.
  * Gère aussi les cas extrêmes (fond noir/blanc) pour éviter les collisions visuelles.
  */
 export function getBrandThemeColor(brandName: string) {
-  const baseColor =
-    brandColors[brandName?.toLowerCase() || "default"] || brandColors.default;
+  const baseColor = getRandomBrandColor(brandName?.toLowerCase() || "default");
 
   const brightness = getBrightness(baseColor);
   const isDark = brightness < 128;

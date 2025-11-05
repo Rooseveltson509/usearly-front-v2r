@@ -2,11 +2,12 @@ import React, { useState, useEffect, useMemo } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 import Avatar from "../Avatar";
-import { brandColors } from "@src/utils/brandColors";
+//import { brandColors } from "@src/utils/brandColors";
 import { useBrandLogos } from "@src/hooks/useBrandLogos";
 import type { PublicSuggestion } from "@src/types/suggestion";
 import { capitalizeFirstLetter } from "@src/utils/stringUtils";
 import { FALLBACK_BRAND_PLACEHOLDER } from "@src/utils/brandLogos";
+import { getRandomBrandColor } from "@src/utils/brandColors";
 
 interface Props {
   item: PublicSuggestion & { type: "suggestion" };
@@ -64,7 +65,8 @@ const PublicSuggestionCard: React.FC<Props> = ({ item }) => {
   const shouldShowToggle =
     description.length > DESCRIPTION_LIMIT || item.capture;
   const brandKey = item.marque ? item.marque.toLowerCase() : "default";
-  const bgColor = brandColors[brandKey] || brandColors.default;
+  const bgColor = getRandomBrandColor(brandKey);
+  //const bgColor = brandColors[brandKey] || brandColors.default;
 
   const votes = item.votes ?? 0;
   const max = 300;
