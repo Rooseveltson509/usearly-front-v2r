@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import type { MouseEvent } from "react";
+import type { MouseEvent as ReactMouseEvent } from "react";
 import { ChevronDown } from "lucide-react";
 import { BrandSelect } from "@src/components/shared/BrandSelect";
 import "./FilterBar.scss";
@@ -140,7 +140,7 @@ export const FilterBarGeneric: React.FC<Props> = ({
   }
 
   function hotFilterOption(value: string) {
-    return (event?: MouseEvent<HTMLSpanElement>) => {
+    return (event?: ReactMouseEvent<HTMLSpanElement>) => {
       event?.stopPropagation();
       const wrapper = document.querySelector(".popup-hot-filter");
       wrapper?.classList.remove("is-open");
