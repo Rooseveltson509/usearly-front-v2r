@@ -16,7 +16,7 @@
 
     .subcategory-header {
       .subcategory-right {
-        margin-top: 5px;
+        margin-top: 2px;
         .subcategory-user-brand-info {
           .avatars-row {
             .avatar-wrapper-custom {
@@ -136,6 +136,9 @@
 
           .user-avatar-wrapper {
             z-index: 1;
+            .avatar-img-custom {
+              object-fit: cover !important;
+            }
           }
         }
 
