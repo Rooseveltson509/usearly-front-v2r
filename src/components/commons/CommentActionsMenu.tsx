@@ -14,7 +14,7 @@ const CommentActionsMenu: React.FC<Props> = ({ onDelete }) => {
           className="comment-actions-trigger"
           aria-label="Actions commentaire"
         >
-          <MoreHorizontal size={18} />
+          <MoreHorizontal size={12} />
         </button>
       </DropdownMenu.Trigger>
 

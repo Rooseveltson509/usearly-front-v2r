@@ -120,7 +120,6 @@
     .comment-item {
       display: flex;
       align-items: flex-start;
-      margin-bottom: 0.6rem;
       width: 100%;
 
       .comment-avatar {
@@ -263,6 +262,7 @@
 .comment-input-section {
   padding: 1rem;
   border-radius: 8px;
+  padding-bottom: 0;
 
   .comment-form {
     display: flex;
@@ -324,10 +324,20 @@
         border: 1px solid $dark;
         border-radius: 20px;
         padding: 4px 10px;
-        font-size: 13px;
+        font-size: 12px;
         font-family: "inter";
         background: white;
         cursor: pointer;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-color: #fafafa;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4 6l4 4 4-4' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: calc(100% - 10px) 60%;
+        background-size: 12px;
+        padding-right: 1.5rem;
+        white-space: nowrap;
 
         &:focus {
           outline: none;
@@ -369,15 +379,16 @@
             }
 
             .comment-time {
-              font-size: 0.8rem;
+              font-size: 11px;
               color: #888;
-              font-family: "Raleway";
+              font-family: "inter";
             }
           }
 
           .comment-actions {
             display: flex;
             align-items: center;
+            padding-left: 5px;
             gap: 0.4rem;
 
             button {
@@ -385,7 +396,7 @@
               border: none;
               color: #555;
               cursor: pointer;
-              font-size: 0.85rem;
+              font-size: 12px;
               padding: 0;
 
               &:hover {

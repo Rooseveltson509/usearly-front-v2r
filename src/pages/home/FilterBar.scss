@@ -117,7 +117,7 @@
 
       .cat-select__chev {
         position: absolute;
-        right: 0.65rem;
+        right: 1rem;
         top: 50%;
         transform: translateY(-50%);
         pointer-events: none;
@@ -325,7 +325,7 @@
       &:focus {
         border-color: #b8b8b8;
         box-shadow: 0 0 0 2px rgba(#b8b8b8, 0.15);
-        background: #fff;
+        background-color: #fff;
         outline: none;
       }
 
@@ -338,6 +338,15 @@
     select {
       overflow: hidden;
       text-overflow: ellipsis;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-color: #fafafa;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4 6l4 4 4-4' stroke='%23666' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 12px;
+      padding-right: 2rem;
       white-space: nowrap;
     }
 
@@ -416,7 +425,7 @@
 
   .cat-select__chev {
     position: absolute;
-    right: 10px;
+    right: 1rem;
     pointer-events: none;
     color: #666;
   }
@@ -453,7 +462,7 @@
 
   .cat-select__chev {
     position: absolute;
-    right: 10px;
+    right: 1rem;
     top: 50%;
     transform: translateY(-50%);
     color: #666;
@@ -584,11 +593,12 @@
         font-size: 14px;
         font-weight: 600;
         color: #111;
+        padding-right: 2.5rem;
       }
 
       .pill__chev {
         position: absolute;
-        right: 10px;
+        right: 1rem;
         top: 50%;
         transform: translateY(-50%);
         opacity: 0.6;

@@ -101,7 +101,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
             disabled={isLoading}
           >
             <ThumbsUp size={14} />
-            utile
+            <p> utile </p>
             {likesCount > 0 && <span>({likesCount})</span>}
           </button>
         </div>
