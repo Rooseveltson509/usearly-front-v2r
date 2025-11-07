@@ -248,13 +248,23 @@ const FeedbackLeft: React.FC<Props> = ({ item }) => {
                   __html: (() => {
                     let text = item.punchline;
                     const highlightedWords = item.meta?.highlightedWords ?? [];
+
                     highlightedWords.forEach((word) => {
+                      if (!word) return;
+
+                      // 🔒 Ignore les mots sensibles comme "style", "color", etc.
+                      if (["style", "class", "id"].includes(word.toLowerCase()))
+                        return;
+
                       const regex = new RegExp(`(${word})`, "gi");
-                      text = text.replace(
-                        regex,
-                        `<span class="${highlightEmojiClass}" style="color:${highlightEmojiColor}; font-weight:900;">$1</span>`,
-                      );
+                      if (regex.test(text)) {
+                        text = text.replace(
+                          regex,
+                          `<span class="${highlightEmojiClass}" style="color:${highlightEmojiColor}; font-weight:900;">$1</span>`,
+                        );
+                      }
                     });
+
                     return text;
                   })(),
                 }}
