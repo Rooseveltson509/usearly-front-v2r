@@ -523,6 +523,7 @@
         box-shadow: none;
         .brand-select__trigger {
           width: auto;
+          min-width: 175px;
           border: 1px solid $border-color;
           box-shadow: none;
         }

@@ -31,19 +31,27 @@ const UserStatsCard = () => {
           <span className="value">
             {loading ? "..." : (stats?.totalReports ?? 0)}
           </span>
-          <span className="label">Signalement</span>
+          <span className="label">
+            {(stats?.totalReports ?? 0) > 1 ? "Signalements" : "Signalement"}
+          </span>
         </div>
         <div className="stat-item large-item">
           <span className="value">
             {loading ? "..." : (stats?.totalCoupsDeCoeur ?? 0)}
           </span>
-          <span className="label">Coup de cœur</span>
+          <span className="label">
+            {(stats?.totalCoupsDeCoeur ?? 0) > 1
+              ? "Coups de cœur"
+              : "Coup de cœur"}
+          </span>
         </div>
         <div className="stat-item">
           <span className="value">
             {loading ? "..." : (stats?.totalSuggestions ?? 0)}
           </span>
-          <span className="label">Suggestion</span>
+          <span className="label">
+            {(stats?.totalSuggestions ?? 0) > 1 ? "Suggestions" : "Suggestion"}
+          </span>
         </div>
       </div>
 
