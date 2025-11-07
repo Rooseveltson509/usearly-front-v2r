@@ -1,11 +1,18 @@
 import React, { useMemo } from "react";
 import SqueletonAnime from "@src/components/loader/SqueletonAnime";
 import FlatSubcategoryBlock from "../../confirm-reportlist/FlatSubcategoryBlock";
+import {
+  matchesExplodedReportSearch,
+  normalizeSearchText,
+} from "@src/utils/reportSearch";
+import type { ExplodedGroupedReport } from "@src/types/Reports";
 
 interface ChronoSectionProps {
   chronoData: { data?: any[]; loading: boolean };
   reportData: { loading: boolean };
   loaderRef: React.RefObject<HTMLDivElement | null>;
+  searchTerm: string;
+  onClearSearchTerm?: () => void;
 }
 
 /**
@@ -19,15 +26,29 @@ const ChronoSection: React.FC<ChronoSectionProps> = ({
   chronoData,
   reportData,
   loaderRef,
+  searchTerm,
+  onClearSearchTerm,
 }) => {
+  const normalizedSearchTerm = searchTerm
+    ? normalizeSearchText(searchTerm)
+    : "";
+
+  const filteredReports = useMemo(() => {
+    const source = (chronoData.data ?? []) as ExplodedGroupedReport[];
+    if (!normalizedSearchTerm) return source;
+    return source.filter((report) =>
+      matchesExplodedReportSearch(report, normalizedSearchTerm),
+    );
+  }, [chronoData.data, normalizedSearchTerm]);
+
   const groupedByDate = useMemo(() => {
-    if (!chronoData.data) {
+    if (!filteredReports.length) {
       return [];
     }
 
     const groups = new Map<string, any[]>();
 
-    chronoData.data.forEach((report: any) => {
+    filteredReports.forEach((report: ExplodedGroupedReport) => {
       const key = report.date ?? "unknown";
       const existing = groups.get(key);
 
@@ -39,7 +60,7 @@ const ChronoSection: React.FC<ChronoSectionProps> = ({
     });
 
     return Array.from(groups.entries());
-  }, [chronoData.data]);
+  }, [filteredReports]);
 
   // 🕓 Chargement
   if (reportData.loading || chronoData.loading) {
@@ -53,11 +74,27 @@ const ChronoSection: React.FC<ChronoSectionProps> = ({
     );
   }
 
-  // ⚠️ Aucun signalement récent
   if (!chronoData.data || chronoData.data.length === 0) {
     return (
       <div style={{ padding: "20px", textAlign: "center", color: "#888" }}>
         Aucun signalement récent disponible.
+      </div>
+    );
+  }
+
+  if (filteredReports.length === 0 && normalizedSearchTerm) {
+    return (
+      <div className="no-search-results">
+        <p>Aucun résultat pour "{searchTerm}"</p>
+        {onClearSearchTerm && (
+          <button
+            type="button"
+            onClick={onClearSearchTerm}
+            className="clear-button"
+          >
+            Effacer
+          </button>
+        )}
       </div>
     );
   }

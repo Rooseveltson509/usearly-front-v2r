@@ -221,6 +221,7 @@ export interface ExplodedGroupedReport extends GroupedReport {
     count: number;
     descriptions: FeedbackDescription[];
   };
+  date?: string;
 }
 export interface PopularGroupedReport {
   reportingId: string;
