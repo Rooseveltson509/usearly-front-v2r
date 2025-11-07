@@ -139,7 +139,13 @@ const keywordMap: Record<string, string[]> = {
     "relance",
   ],
 
-  "error-message.png": ["popup", "alerte", "message système"],
+  "error-message.png": [
+    "popup",
+    "alerte",
+    "message système",
+    "erreur système",
+    "introuvable",
+  ],
   "restart.png": [
     "recommencer",
     "relancer",
