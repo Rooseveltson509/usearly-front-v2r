@@ -108,7 +108,7 @@
   position: relative;
   overflow: visible;
   background-color: var(--brand-banner-bg, #d6e0ff);
-  border: 1px solid var(--brand-banner-border, transparent);
+  border: 1px solid transparent;
   @media screen and (max-width: 1375px) {
     padding: 0 12px 24px 12px;
   }
@@ -205,7 +205,7 @@
   position: relative;
   height: 275px;
   background-color: var(--brand-banner-bg, #ffe9e9);
-  border: 1px solid var(--brand-banner-border, transparent);
+  border: 1px solid transparent;
 
   .right-panel {
     margin-top: 0;

@@ -1,6 +1,12 @@
+@use "@src/styles/base/_variables.scss" as *;
+
 .notifications-page {
-  max-width: 900px;
-  background: #f9f9fb;
+  width: fit-content;
+  gap: 97px;
+  display: flex;
+  border-radius: 24px;
+  padding: 32px 23px;
+  padding-right: 46px;
   position: relative;
 
   h2 {
@@ -15,21 +21,13 @@
   /* === BANDEAU PRINCIPAL === */
   .notifications-banner-container {
     position: relative;
-    width: calc(100% + 180px);
-    margin-left: -40px;
-    background-color: #d3d9f7;
-    border-radius: 24px;
-    padding: 60px 80px;
-    margin-top: 1rem;
-    margin-bottom: 4rem;
+    width: auto;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
+    flex-direction: column;
     min-height: 300px;
     box-sizing: border-box;
     align-items: flex-start; /* ✅ le contenu commence en haut */
-    padding-top: 2.5rem; /* on réduit un peu le haut */
-    padding-bottom: 8rem; /* on augmente le bas pour l’espace de chevauchement */
-
     position: relative; // <-- essentiel pour l'ancrage absolu
 
     .notif-inline-loader {
@@ -67,21 +65,18 @@
     }
 
     .notif-banner-content {
-      width: 100%;
-      max-width: 1200px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      gap: 2rem;
-      align-items: flex-start; /* ✅ place le titre tout en haut */
-      margin-top: 0;
+      align-items: flex-start;
+      padding-left: 25px;
+      margin-bottom: 27px;
 
       .notif-header-text {
-        margin-top: 0;
         h2 {
-          font-size: 2rem;
-          font-weight: 800;
-          color: #1b1b1b;
+          font-size: 36px;
+          font-weight: 700;
+          font-family: $font-family-3;
+          color: #1b1839;
           margin: 0;
         }
 
@@ -91,89 +86,62 @@
           margin-top: 0.35rem;
         }
       }
-
-      .notif-header-illustration {
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
-        margin-right: -60px; /* ✅ éloigne la cloche des cartes */
-
-        .notif-bubble {
-          position: absolute;
-          top: -25px;
-          left: -65px;
-          background: #fff;
-          border: 2px solid #000;
-          border-radius: 999px;
-          padding: 0.45rem 1.1rem;
-          font-weight: 600;
-          font-size: 0.95rem;
-          box-shadow: 3px 3px 0 #000;
-          transform: rotate(-3deg);
-          z-index: 3;
-        }
-
-        .notif-bell {
-          width: 160px;
-          height: auto;
-          stroke: #000;
-          fill: none;
-          margin-left: 1rem;
-          filter: drop-shadow(3px 3px 0 #000);
-        }
-
-        .notif-count {
-          position: absolute;
-          top: 22%;
-          right: 20%; /* ✅ décalage ajusté à droite */
-          transform: translate(50%, -50%);
-          background: #3b82f6;
-          color: #fff;
-          font-weight: 700;
-          border-radius: 50%;
-          width: 60px;
-          height: 60px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 1.05rem;
-          border: 2px solid black;
-          box-shadow: 0 3px 8px rgba(59, 130, 246, 0.4);
-        }
-      }
     }
   }
 
-  /* === FILTRES === */
-  .notif-filters {
+  .notif-header-illustration {
     position: relative;
-    z-index: 3;
     display: flex;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-    gap: 0.8rem;
-    margin-top: -20px;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    margin-top: 60px;
 
-    button {
-      padding: 0.6rem 1.4rem;
+    .notif-bubble {
+      position: absolute;
+      background-color: white;
+      padding: 10px 16px;
       border-radius: 999px;
-      border: 2px solid #000;
-      background: #fff;
-      font-weight: 600;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
+      border: 3px solid black;
+      text-wrap-mode: nowrap;
+      right: 75px;
+      top: -55px;
+      font-weight: 700;
+      font-family: $font-family-3;
 
-      &.active {
+      &::before,
+      &::after {
+        content: "";
+        position: absolute;
+        transform: translateY(-50%) rotate(180deg);
+        pointer-events: none;
+      }
+
+      &::before {
+        width: 20px;
+        height: 20px;
+        right: 39.5px;
+        top: 130%;
         background: #000;
-        color: #fff;
+        clip-path: polygon(0% 22%, 0% 100%, 100% 100%, 135% 127%);
       }
 
-      &:hover {
-        transform: translateY(-1px);
+      &::after {
+        width: 20px;
+        height: 20px;
+        right: 42px;
+        top: 116%;
+        background: inherit;
+        clip-path: polygon(0% 22%, 0% 100%, 100% 100%, 135% 127%);
       }
+    }
+
+    .notif-bell {
+      width: 160px;
+      height: auto;
+      stroke: #000;
+      fill: none;
+      filter: drop-shadow(3px 3px 0 #000);
     }
   }
 
@@ -184,11 +152,10 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    margin: -40px auto 0 auto;
     width: 700px;
 
     /*  z-index: 5; */
-    margin-top: -220px;
+    // margin-top: -220px;
 
     .notif-item {
       background: #fff;
@@ -202,11 +169,6 @@
       &:hover {
         transform: translateY(-2px);
         box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-      }
-
-      &.unread {
-        border-left: 4px solid #000;
-        background: #fdfdfd;
       }
 
       &.open {
@@ -246,7 +208,17 @@
         display: flex;
         align-items: center;
         gap: 12px;
-        margin-bottom: 0.8rem;
+
+        .notif-unread-dot {
+          // position: absolute;
+          left: 3px;
+          top: 3px;
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          background: #3b82f6;
+          box-shadow: 0 0 0 2px #fff;
+        }
 
         .notif-avatar {
           width: 48px;
@@ -276,8 +248,6 @@
       /* --- Contenu étendu --- */
       .notif-card-wrapper {
         border-top: 1px solid #eee;
-        margin-top: 0.8rem;
-        /* overflow: hidden; */
         transition: all 0.4s ease;
         max-height: 0;
         opacity: 0;
@@ -286,19 +256,37 @@
           max-height: 2000px; // assez grand pour contenir la carte complète
           opacity: 1;
           padding-top: 1rem;
+          margin-top: 1rem;
 
-          /* ✅ NE PAS UTILISER FLEX POUR CENTRER LES BLOCS (ça casse l’alignement) */
-          display: block;
-          width: 100%;
+          .notif-card-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+          }
 
-          /* Contenu interne (carte du renderer) */
-          .notification-card-content {
-            width: 100%; /* ✅ prend toute la largeur du parent */
+          .feedback-card {
+            width: 100%;
+            max-width: 655px;
+            margin: 0 auto;
+            margin-bottom: 0;
             background: #fff;
-            border-radius: 14px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            overflow: hidden;
-            margin: 0; /* retire tout décalage */
+            border-radius: 12px;
+            padding: 20px 16px 0 15px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            transition: box-shadow 0.2s ease;
+
+            &:hover {
+              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+            }
+
+            .feedback-type {
+              .feedback-left {
+                width: 269px;
+                height: 299px;
+                border-radius: 16px;
+                margin-bottom: 16px;
+              }
+            }
           }
 
           /* --- Bloc sender (en dessous, à droite) --- */
@@ -386,25 +374,25 @@
       height: 40px;
     }
   }
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 100%;
+    height: 335px;
+    border-radius: 18px;
+    background: #d3d9f7;
+    pointer-events: none;
+    z-index: 0;
+  }
+}
+
+.notifications-page > * {
+  z-index: 1;
 }
 
 /* === Ajustement final : bloc gauche carré et harmonieux === */
-.notifications-page {
-  .notif-card-wrapper.expanded {
-    .feedback-card {
-      display: grid;
-      grid-template-columns: 1.5fr 2fr;
-    }
-  }
-}
-.notifications-page {
-  .notif-card-wrapper.expanded {
-    .feedback-card {
-      border-radius: 16px;
-    }
-  }
-}
-
 /* === Animation badge "pop" === */
 @keyframes pop-badge {
   0% {
@@ -485,7 +473,6 @@
   transition:
     opacity 0.3s ease,
     transform 0.3s ease;
-  opacity: 0.85;
 }
 
 /* === Menu contextuel ⋮ === */
@@ -634,6 +621,86 @@
   .notifications-main {
     position: relative;
     z-index: 1;
+    /* === FILTRES === */
+    .notif-filters {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-bottom: 30px;
+
+      .notif-filters-select {
+        min-width: 160px;
+        padding: 10px 18px;
+        padding-right: 44px;
+        border-radius: 999px;
+        border: 1px solid $border-color;
+        background-color: white;
+        transition: all 0.25s ease;
+        position: relative;
+        cursor: pointer;
+
+        &::after {
+          content: "";
+          position: absolute;
+          top: 50%;
+          right: 18px;
+          width: 8px;
+          height: 8px;
+          border-right: 2px solid $black;
+          border-bottom: 2px solid $black;
+          transform: translateY(-60%) rotate(45deg);
+          transition: transform 0.2s ease;
+          pointer-events: none;
+        }
+
+        &.open::after {
+          transform: translateY(-20%) rotate(-135deg);
+        }
+      }
+      .notif-filters-select:focus-visible {
+        border: 2px solid $black;
+      }
+
+      .notif-filters-select-container-value {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        background-color: white;
+        padding: 12px;
+        border-radius: 6px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(8px) scale(0.98);
+        pointer-events: none;
+        transition:
+          opacity 0.25s ease,
+          transform 0.25s ease,
+          visibility 0s linear 0.25s;
+
+        .notif-filter-select-value {
+          padding: 10px 5px;
+          border-radius: 8px;
+        }
+        .notif-filter-select-value:hover {
+          background-color: rgba($primary, 0.1);
+        }
+
+        &.open {
+          opacity: 1;
+          visibility: visible;
+          transform: translateY(0) scale(1);
+          pointer-events: auto;
+          transition:
+            opacity 0.25s ease,
+            transform 0.25s ease,
+            visibility 0s linear 0s;
+        }
+      }
+    }
   }
 
   @media (max-width: 900px) {

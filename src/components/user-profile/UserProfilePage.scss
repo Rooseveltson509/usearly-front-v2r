@@ -150,6 +150,20 @@
     width: 65%;
     max-width: 655px;
   }
+  .right-panel {
+    align-items: flex-start;
+  }
+  .profile-filters-container {
+    .profile-filters {
+      .control {
+        .brand-select--profile {
+          .brand-select__trigger {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
 }
 
 // Colonne gauche
@@ -161,7 +175,6 @@
 .right-panel {
   width: 360px;
   margin-top: 26px;
-  align-self: center;
 
   .separator {
     height: 1px;

@@ -28,15 +28,15 @@
     top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
-    @media screen and (max-width: 750px) {
-      transform: translate(-85%, -50%);
-    }
     color: #fff;
     font-family: "Urbanist", sans-serif;
     font-size: 36px;
     font-weight: 200;
     line-height: 130%;
     z-index: 998;
+    @media screen and (max-width: 750px) {
+      transform: translate(-85%, -50%);
+    }
   }
 
   .feedback-tabs {
