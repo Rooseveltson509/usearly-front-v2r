@@ -182,6 +182,7 @@ export interface GroupedReport {
   category: string;
   marque: string;
   siteUrl?: string | null;
+  capture: string | null;
   totalCount: number;
   subCategories: {
     subCategory: string;
@@ -374,6 +375,7 @@ export interface PublicGroupedReportFromAPI {
   category: string;
   subCategory: string;
   siteUrl?: string | null;
+  capture: string | null;
   count: number;
   descriptions: FeedbackDescription[];
   date: string;
