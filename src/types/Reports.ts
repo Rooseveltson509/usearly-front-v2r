@@ -182,6 +182,7 @@ export interface GroupedReport {
   category: string;
   marque: string;
   siteUrl?: string | null;
+  capture?: string | null;
   totalCount: number;
   subCategories: {
     subCategory: string;
@@ -300,35 +301,6 @@ export interface UserGroupedReportDescription {
     userIds: string[];
   }[];
 }
-/* export interface PublicGroupedReport {
-  id: string;
-  reportingId: string;
-  category: string;
-  marque: string;
-  siteUrl?: string;
-  totalCount: number;
-  subCategories: {
-    subCategory: string;
-    count: number;
-    descriptions: {
-      id: string;
-      description: string;
-      emoji: string;
-      createdAt: string;
-      user?: {
-        id: string;
-        pseudo: string;
-        avatar: string | null;
-      };
-      capture: string | null;
-      reactions: {
-        emoji: string;
-        count: number;
-        userIds: string[];
-      }[];
-    }[];
-  }[];
-} */
 
 export interface PublicGroupedReport {
   id: string;
@@ -374,6 +346,7 @@ export interface PublicGroupedReportFromAPI {
   category: string;
   subCategory: string;
   siteUrl?: string | null;
+  capture: string | null;
   count: number;
   descriptions: FeedbackDescription[];
   date: string;

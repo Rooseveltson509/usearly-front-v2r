@@ -12,6 +12,7 @@ type FeedbackWithReport = FeedbackDescription & {
   reporting?: {
     id: string;
     marque: string;
+    capture?: string | null;
     categories: string[]; // ✅ on corrige ici
     reactions?: UserReaction[];
   };
@@ -94,6 +95,7 @@ const FilteredReportList = ({ brand, category, renderCard }: Props) => {
           reportingId: desc.reporting?.id || desc.id,
           marque: desc.reporting?.marque || "Autre",
           category: desc.reporting?.categories?.[0] || "Autre",
+          capture: desc.capture || desc.reporting?.capture || null,
           totalCount: 1,
           reactions: desc.reporting?.reactions || [],
           subCategory: {
