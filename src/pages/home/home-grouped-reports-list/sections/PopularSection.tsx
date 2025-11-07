@@ -5,6 +5,11 @@ import { FALLBACK_BRAND_PLACEHOLDER } from "@src/utils/brandLogos";
 import { capitalizeFirstLetter } from "@src/utils/stringUtils";
 import PopularReportList from "../../popular/PopularReportList";
 import { useBrandLogos } from "@src/hooks/useBrandLogos";
+import {
+  matchesPopularReportSearch,
+  normalizeSearchText,
+} from "@src/utils/reportSearch";
+import type { PopularReport } from "@src/types/Reports";
 
 interface PopularSectionProps {
   selectedBrand?: string;
@@ -19,6 +24,8 @@ interface PopularSectionProps {
   reportData: { data?: any; loading: boolean };
   popularEngagementData: { data?: any; loading: boolean };
   loaderRef: React.RefObject<HTMLDivElement | null>;
+  searchTerm: string;
+  setSearchTerm: (value: string) => void;
 }
 
 /**
@@ -35,6 +42,8 @@ const PopularSection: React.FC<PopularSectionProps> = ({
   reportData,
   popularEngagementData,
   loaderRef,
+  searchTerm,
+  setSearchTerm,
 }) => {
   // ✅ Tous les hooks doivent être avant tout return
   const brandsToLoad = useMemo(() => {
@@ -51,6 +60,32 @@ const PopularSection: React.FC<PopularSectionProps> = ({
 
   const logos = useBrandLogos(brandsToLoad);
 
+  const normalizedSearchTerm = searchTerm
+    ? normalizeSearchText(searchTerm)
+    : "";
+
+  const filteredPrimaryData = useMemo(() => {
+    const source = (reportData.data ?? []) as PopularReport[];
+    if (!normalizedSearchTerm) return source;
+    return source.filter((item) =>
+      matchesPopularReportSearch(item, normalizedSearchTerm),
+    );
+  }, [reportData.data, normalizedSearchTerm]);
+
+  const filteredEngagementData = useMemo(() => {
+    const source = (popularEngagementData.data ?? []) as PopularReport[];
+    if (!normalizedSearchTerm) return source;
+    return source.filter((item) =>
+      matchesPopularReportSearch(item, normalizedSearchTerm),
+    );
+  }, [popularEngagementData.data, normalizedSearchTerm]);
+
+  const hasAnyData =
+    (reportData.data?.length ?? 0) > 0 ||
+    (popularEngagementData.data?.length ?? 0) > 0;
+  const hasSearchResults =
+    filteredPrimaryData.length > 0 || filteredEngagementData.length > 0;
+
   // 🕓 État chargement
   if (reportData.loading) {
     return (
@@ -64,10 +99,25 @@ const PopularSection: React.FC<PopularSectionProps> = ({
   }
 
   // ⚠️ État vide
-  if (!reportData.data || (reportData.data ?? []).length === 0) {
+  if (!hasAnyData) {
     return (
       <div style={{ padding: "20px", textAlign: "center", color: "#888" }}>
         Aucun signalement populaire pour le moment.
+      </div>
+    );
+  }
+
+  if (!hasSearchResults && normalizedSearchTerm) {
+    return (
+      <div className="no-search-results">
+        <p>Aucun résultat pour "{searchTerm}"</p>
+        <button
+          type="button"
+          onClick={() => setSearchTerm("")}
+          className="clear-button"
+        >
+          Effacer
+        </button>
       </div>
     );
   }
@@ -77,7 +127,7 @@ const PopularSection: React.FC<PopularSectionProps> = ({
     <>
       {/* 🔹 Liste principale des signalements */}
       <PopularReportList
-        data={reportData.data}
+        data={filteredPrimaryData}
         expandedItems={expandedItems}
         handleToggle={(key: string) =>
           setExpandedItems((prev) => ({ ...prev, [key]: !prev[key] }))
@@ -124,7 +174,7 @@ const PopularSection: React.FC<PopularSectionProps> = ({
 
       {/* 🔹 Deuxième liste (engagement populaire) */}
       <PopularReportList
-        data={popularEngagementData.data}
+        data={filteredEngagementData}
         expandedItems={expandedItems}
         handleToggle={(key: string) =>
           setExpandedItems((prev) => ({ ...prev, [key]: !prev[key] }))

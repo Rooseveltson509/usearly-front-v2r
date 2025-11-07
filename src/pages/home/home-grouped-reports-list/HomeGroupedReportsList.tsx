@@ -321,6 +321,8 @@ const HomeGroupedReportsList: React.FC<Props> = ({
           reportData={reportData}
           popularEngagementData={popularEngagementData}
           loaderRef={loaderRef}
+          searchTerm={searchTermValue}
+          setSearchTerm={handleSearchTermChange}
         />
       ) : filter === "hot" ? (
         <HotSection
@@ -341,6 +343,8 @@ const HomeGroupedReportsList: React.FC<Props> = ({
           chronoData={chronoData}
           reportData={reportData}
           loaderRef={loaderRef}
+          searchTerm={searchTermValue}
+          onClearSearchTerm={() => handleSearchTermChange("")}
         />
       ) : (
         <div style={{ padding: 20, textAlign: "center", color: "#888" }}>

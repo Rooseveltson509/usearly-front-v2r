@@ -13,13 +13,10 @@ import FlatSubcategoryBlock from "./confirm-reportlist/FlatSubcategoryBlock";
 /* import { getBrandLogo } from "@src/utils/brandLogos"; */
 import SqueletonAnime from "@src/components/loader/SqueletonAnime";
 import "./countBarBrand.scss";
-
-const normalizeText = (value: string) =>
-  value
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .trim();
+import {
+  matchesExplodedReportSearch,
+  normalizeSearchText,
+} from "@src/utils/reportSearch";
 
 interface Props {
   filter: string;
@@ -148,13 +145,13 @@ const ReportListView: React.FC<Props> = ({
       return <p>Aucun report disponible pour ce filtre.</p>;
     }
 
-    const normalizedSearchTerm = searchTerm ? normalizeText(searchTerm) : "";
+    const normalizedSearchTerm = searchTerm
+      ? normalizeSearchText(searchTerm)
+      : "";
 
     const filteredExplodedReports = normalizedSearchTerm
       ? explodedReports.filter((item) =>
-          normalizeText(item.subCategory.subCategory || "").includes(
-            normalizedSearchTerm,
-          ),
+          matchesExplodedReportSearch(item, normalizedSearchTerm),
         )
       : explodedReports;
 
