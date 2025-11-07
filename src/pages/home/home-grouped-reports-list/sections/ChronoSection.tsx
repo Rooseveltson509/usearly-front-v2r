@@ -96,6 +96,7 @@ const ChronoSection: React.FC<ChronoSectionProps> = ({
                   siteUrl={report.siteUrl || undefined}
                   subcategory={report.subCategory.subCategory}
                   descriptions={report.subCategory.descriptions || []}
+                  capture={report.capture || null}
                   //brandLogoUrl={getBrandLogo(report.marque, report.siteUrl)}
                   hideFooter={true}
                 />
