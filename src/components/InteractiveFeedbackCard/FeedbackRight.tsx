@@ -115,55 +115,41 @@ const FeedbackRight: React.FC<Props> = ({
         </div>
 
         <div className="feedback-body">
-          {showFullText ? (
-            <p>
-              {description}
-              {item.capture && (
-                <div className="capture-wrapper">
-                  <img
-                    src={item.capture}
-                    alt="capture"
-                    className="capture"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openLightbox(item.capture!);
-                    }}
-                  />
-                </div>
-              )}
-              {shouldShowToggle && (
-                <button
-                  className="see-more"
+          <h2 className="cdc-post-title">{item.title}</h2>
+
+          <p>
+            {showFullText
+              ? description
+              : description.length > DESCRIPTION_LIMIT
+                ? `${description.slice(0, DESCRIPTION_LIMIT)}…`
+                : description}
+
+            {item.capture && showFullText && (
+              <div className="capture-wrapper">
+                <img
+                  src={item.capture}
+                  alt="capture"
+                  className="capture"
                   onClick={(e) => {
                     e.stopPropagation();
-                    toggleText();
+                    openLightbox(item.capture!);
                   }}
-                >
-                  Voir moins
-                </button>
-              )}
-            </p>
-          ) : (
-            <>
-              <h2 className="cdc-post-title">{item.title}</h2>
-              <p>
-                {description.length > DESCRIPTION_LIMIT
-                  ? `${description.slice(0, DESCRIPTION_LIMIT)}…`
-                  : description}
-                {shouldShowToggle && (
-                  <button
-                    className="see-more"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleText();
-                    }}
-                  >
-                    Voir plus
-                  </button>
-                )}
-              </p>
-            </>
-          )}
+                />
+              </div>
+            )}
+
+            {shouldShowToggle && (
+              <button
+                className="see-more"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleText();
+                }}
+              >
+                {showFullText ? "Voir moins" : "Voir plus"}
+              </button>
+            )}
+          </p>
         </div>
       </div>
 

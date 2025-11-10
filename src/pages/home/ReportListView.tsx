@@ -179,7 +179,7 @@ const ReportListView: React.FC<Props> = ({
             subcategory={item.subCategory.subCategory}
             descriptions={item.subCategory.descriptions}
             siteUrl={item.siteUrl || undefined}
-            capture={item.capture || null}
+            /* capture={item.capture || null} */
             hideFooter={true}
           />
         ))}

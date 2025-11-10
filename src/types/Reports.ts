@@ -182,7 +182,7 @@ export interface GroupedReport {
   category: string;
   marque: string;
   siteUrl?: string | null;
-  capture?: string | null;
+  /* capture?: string | null; */
   totalCount: number;
   subCategories: {
     subCategory: string;
