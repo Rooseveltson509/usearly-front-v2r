@@ -1,5 +1,4 @@
 import "./UserGroupedReportsList.scss";
-import { useAuth } from "@src/services/AuthContext";
 import { useState, useEffect, useRef, useMemo } from "react";
 import ChronologicalReportList from "@src/components/report-grouped/ChronologicalReportList";
 import ChronoReportCard from "@src/components/report-grouped/report-by-date/ChronoReportCard";
@@ -19,7 +18,6 @@ import { useBrandLogos } from "@src/hooks/useBrandLogos";
 type ViewMode = "brand" | "date";
 
 const UserGroupedReportsList: React.FC = () => {
-  const { userProfile } = useAuth();
   const [viewMode, setViewMode] = useState<ViewMode>("brand");
   const [expandedBrand, setExpandedBrand] = useState<string | null>(null);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -227,7 +225,7 @@ const UserGroupedReportsList: React.FC = () => {
               key={brand}
               brand={brand}
               reports={reports}
-              userProfile={userProfile}
+              /* userProfile={userProfile} */
               isOpen={expandedBrand === brand}
               siteUrl={reports[0]?.siteUrl || ""}
               onToggle={() =>

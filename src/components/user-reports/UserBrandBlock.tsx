@@ -4,7 +4,7 @@ import { getBrandLogo } from "@src/utils/brandLogos";
 import { getCategoryIconPathFromSubcategory } from "@src/utils/IconsUtils";
 import { formatDistance, formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
-import { ChevronDown, ChevronUp, Image } from "lucide-react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import type { UserGroupedReport } from "@src/types/Reports";
 import "./UserBrandBlock.scss";
 import ReportActionsBarWithReactions from "../shared/ReportActionsBarWithReactions";
@@ -13,13 +13,14 @@ import CommentSection from "../comments/CommentSection";
 import { parseISO, isAfter } from "date-fns";
 import Avatar from "../shared/Avatar";
 import { getBrandThemeColor } from "@src/utils/getBrandThemeColor";
-import { capitalizeFirstLetter } from "@src/utils/stringUtils";
+import { useAuth } from "@src/services/AuthContext";
+import UserBrandLine from "../shared/UserBrandLine";
 
 interface Props {
   brand: string;
   siteUrl: string;
   reports: UserGroupedReport[];
-  userProfile: { id?: string } | null;
+  //userProfile: { id?: string } | null;
   isOpen: boolean;
   onToggle: () => void;
 }
@@ -27,11 +28,13 @@ interface Props {
 const UserBrandBlock: React.FC<Props> = ({
   brand,
   reports,
-  userProfile,
+  //userProfile,
   isOpen,
   onToggle,
   siteUrl,
 }) => {
+  const { userProfile } = useAuth();
+
   const [expandedSub, setExpandedSub] = useState<string | null>(null);
   const [expandedOthers, setExpandedOthers] = useState<Record<string, boolean>>(
     {},
@@ -42,6 +45,8 @@ const UserBrandBlock: React.FC<Props> = ({
   const [showReactions, setShowReactions] = useState<Record<string, boolean>>(
     {},
   );
+  const [showFullText, setShowFullText] = useState<Record<string, boolean>>({});
+
   const [, setCommentsCounts] = useState<Record<string, number>>({});
   const [localCommentsCounts, setLocalCommentsCounts] = useState<
     Record<string, number>
@@ -222,9 +227,13 @@ const UserBrandBlock: React.FC<Props> = ({
                           />
                         </div>
                         <div className="user-brand-names">
-                          {initialDescription.user.pseudo}{" "}
-                          <span className="x">×</span> {""}
-                          <strong>{capitalizeFirstLetter(brand)}</strong>
+                          <UserBrandLine
+                            userId={initialDescription.user?.id}
+                            email={initialDescription.user?.email ?? undefined}
+                            pseudo={initialDescription.user?.pseudo}
+                            brand={brand}
+                            type="report"
+                          />
                         </div>
                       </div>
                     )}
@@ -241,36 +250,55 @@ const UserBrandBlock: React.FC<Props> = ({
                   <div className="subcategory-content">
                     <div className="main-description">
                       <p className="description-text">
-                        {initialDescription.description}
-                      </p>
-                      {initialDescription.capture && (
-                        <>
-                          <button
-                            className="show-capture-button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setModalImage(initialDescription.capture);
-                            }}
-                          >
-                            <Image size={16} style={{ marginRight: 6 }} />
-                            Voir la capture
-                          </button>
+                        {showFullText[sub.subCategory]
+                          ? `${initialDescription.description} ${initialDescription.emoji || ""}`
+                          : `${initialDescription.description.slice(0, 100)}${
+                              initialDescription.description.length > 100
+                                ? "…"
+                                : ""
+                            }`}
 
-                          {modalImage === initialDescription.capture && (
-                            <div
-                              className="capture-modal"
-                              onClick={() => setModalImage(null)}
+                        {(initialDescription.description.length > 100 ||
+                          initialDescription.capture) && (
+                          <span
+                            className="see-more-section"
+                            style={{ display: "inline" }}
+                          >
+                            {!showFullText[sub.subCategory] &&
+                              initialDescription.description.length > 100 &&
+                              "\u00A0"}
+                            <button
+                              className="see-more-button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setShowFullText((prev) => ({
+                                  ...prev,
+                                  [sub.subCategory]: !prev[sub.subCategory],
+                                }));
+                              }}
                             >
+                              {showFullText[sub.subCategory]
+                                ? "Voir moins"
+                                : "Voir plus"}
+                            </button>
+                          </span>
+                        )}
+
+                        {showFullText[sub.subCategory] &&
+                          initialDescription.capture && (
+                            <div className="inline-capture">
                               <img
-                                src={modalImage}
-                                alt="Capture"
-                                className="capture-modal-img"
-                                onClick={(e) => e.stopPropagation()}
+                                src={initialDescription.capture}
+                                alt="Capture du signalement"
+                                className="inline-capture-img"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setModalImage(initialDescription.capture);
+                                }}
                               />
                             </div>
                           )}
-                        </>
-                      )}
+                      </p>
                     </div>
 
                     <ReportActionsBarWithReactions
@@ -466,16 +494,13 @@ const UserBrandBlock: React.FC<Props> = ({
       )}
 
       {modalImage && (
-        <div
-          className="image-modal-overlay"
-          onClick={() => setModalImage(null)}
-        >
-          <img
-            src={modalImage}
-            alt="capture agrandie"
-            className="image-modal"
-            onClick={(e) => e.stopPropagation()}
-          />
+        <div className="capture-overlay" onClick={() => setModalImage(null)}>
+          <div className="capture-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="close-btn" onClick={() => setModalImage(null)}>
+              ✕
+            </button>
+            <img src={modalImage} alt="Aperçu capture" />
+          </div>
         </div>
       )}
     </div>

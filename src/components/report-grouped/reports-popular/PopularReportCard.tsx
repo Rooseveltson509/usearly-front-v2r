@@ -12,7 +12,7 @@ import "./PopularReportCard.scss";
 import "@src/pages/home/confirm-reportlist/FlatSubcategoryBlock.scss";
 import { getBrandLogo } from "@src/utils/brandLogos";
 import Avatar from "@src/components/shared/Avatar";
-import { capitalizeFirstLetter } from "@src/utils/stringUtils";
+import UserBrandLine from "@src/components/shared/UserBrandLine";
 
 interface Props {
   item: PopularGroupedReport;
@@ -38,9 +38,8 @@ const PopularReportCard: React.FC<Props> = ({
   const [localCommentsCounts, setLocalCommentsCounts] = useState<
     Record<string, number>
   >({});
-
+  const [showCapturePreview, setShowCapturePreview] = useState(false);
   const firstDescription = item.descriptions?.[0];
-
   const descriptionId = firstDescription?.id ?? "";
   const { comments, loading } = useCommentsForDescription(
     descriptionId,
@@ -88,10 +87,16 @@ const PopularReportCard: React.FC<Props> = ({
 
   if (!firstDescription) return null;
 
-  const author = firstDescription.user ?? {
+  const author: {
+    id: string;
+    pseudo: string;
+    avatar: string | null;
+    email?: string | null; // ✅ ajouté
+  } = firstDescription.user ?? {
     id: "",
     pseudo: "Utilisateur",
     avatar: null,
+    email: null, // ✅ ajouté ici aussi
   };
 
   const currentCount = localCommentsCounts[descriptionId] ?? 0;
@@ -99,6 +104,7 @@ const PopularReportCard: React.FC<Props> = ({
   const captureUrl = firstDescription.capture ?? null;
   const additionalDescriptions = item.descriptions.slice(1);
   const hasMoreThanTwo = additionalDescriptions.length > 2;
+  //const isCurrentUser = author.id === userProfile?.id;
 
   const handleHeaderClick = () => {
     onToggle();
@@ -171,10 +177,13 @@ const PopularReportCard: React.FC<Props> = ({
                 />
               </div>
               <div className="text-meta">
-                <span className="user-brand-line">
-                  {author.pseudo} <span className="cross">×</span>{" "}
-                  <strong>{capitalizeFirstLetter(item.marque)}</strong>
-                </span>
+                <UserBrandLine
+                  userId={author.id}
+                  email={author?.email}
+                  pseudo={author.pseudo}
+                  brand={item.marque}
+                  type="report"
+                />
               </div>
               <ChevronUp size={16} />
             </div>
@@ -210,6 +219,10 @@ const PopularReportCard: React.FC<Props> = ({
                     src={captureUrl}
                     alt="Capture du signalement"
                     className="inline-capture-img"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowCapturePreview(true);
+                    }}
                   />
                 </div>
               )}
@@ -337,6 +350,22 @@ const PopularReportCard: React.FC<Props> = ({
               )}
             </div>
           )}
+        </div>
+      )}
+      {showCapturePreview && (
+        <div
+          className="capture-overlay"
+          onClick={() => setShowCapturePreview(false)}
+        >
+          <div className="capture-modal" onClick={(e) => e.stopPropagation()}>
+            <button
+              className="close-btn"
+              onClick={() => setShowCapturePreview(false)}
+            >
+              ✕
+            </button>
+            <img src={captureUrl ?? ""} alt="Aperçu capture" />
+          </div>
         </div>
       )}
     </div>

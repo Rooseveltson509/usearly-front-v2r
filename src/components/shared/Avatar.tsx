@@ -73,8 +73,38 @@ const Avatar: React.FC<AvatarProps> = ({
         : null,
     [preferredBrandLogo],
   );
-
   const fullUrl = useMemo(() => {
+    if (type === "brand") {
+      // 1️⃣ Si on a un logo validé par le hook, on le garde
+      if (
+        resolvedBrandLogo &&
+        resolvedBrandLogo !== FALLBACK_BRAND_PLACEHOLDER
+      ) {
+        return resolvedBrandLogo;
+      }
+
+      // 2️⃣ Sinon on force une requête backend (même si useBrandLogos n’a rien trouvé)
+      if (siteUrl || pseudo) {
+        const domain =
+          siteUrl
+            ?.replace(/^https?:\/\//, "")
+            .replace(/^www\./, "")
+            .split("/")[0]
+            .toLowerCase() || `${pseudo?.toLowerCase().trim()}.com`;
+
+        const baseUrl = import.meta.env.VITE_API_BASE_URL;
+        return `${baseUrl}/api/logo?domain=${domain}`;
+      }
+
+      // 3️⃣ Sinon avatar basique
+      return avatar ?? null;
+    }
+
+    // 👤 Cas utilisateur normal
+    return getFullAvatarUrl(avatar);
+  }, [type, avatar, resolvedBrandLogo, siteUrl, pseudo]);
+
+  /*   const fullUrl = useMemo(() => {
     if (type === "brand") {
       if (preferBrandLogo) {
         return resolvedBrandLogo ?? avatar ?? null;
@@ -82,7 +112,7 @@ const Avatar: React.FC<AvatarProps> = ({
       return avatar ?? null;
     }
     return getFullAvatarUrl(avatar);
-  }, [type, avatar, preferBrandLogo, resolvedBrandLogo]);
+  }, [type, avatar, preferBrandLogo, resolvedBrandLogo]); */
 
   const isInvalidPlaceholder =
     !fullUrl ||

@@ -1,3 +1,6 @@
+@use "../../../styles/base/_variables.scss" as *;
+@use "../../../styles/components/_capturePreview.scss" as *;
+
 .badge-count {
   background-color: #8b5cf6;
   color: white;
@@ -42,13 +45,3 @@
     }
   }
 }
-
-// @keyframes flame-bounce {
-//   0%,
-//   100% {
-//     transform: translateY(0) scale(1);
-//   }
-//   50% {
-//     transform: translateY(-2px) scale(1.1);
-//   }
-// }

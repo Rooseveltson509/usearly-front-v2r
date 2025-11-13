@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { formatDistanceToNowStrict } from "date-fns";
 import { fr } from "date-fns/locale";
 import Avatar from "../shared/Avatar";
-import { capitalizeFirstLetter } from "@src/utils/stringUtils";
 import FeedbackProgressBar from "./FeedbackProgressBar";
 import SharedFooterCdcAndSuggest from "../shared/SharedFooterCdcAndSuggest";
+import UserBrandLine from "../shared/UserBrandLine";
 
 interface Props {
   item: any;
@@ -72,15 +72,19 @@ const FeedbackRight: React.FC<Props> = ({
     keys: Object.keys(item || {}),
   });
 
+  console.log("🧩 FEEDBACKRIGHT DEBUG AUTHOR", item.author);
   return (
     <div className="feedback-right" onClick={() => onToggle(item.id)}>
       <div className="feedback-content">
         <div className="feedback-header">
           <div className="feedback-meta">
-            <span className="user-brand">
-              {item.author?.pseudo} ×{" "}
-              <strong>{capitalizeFirstLetter(item.marque)}</strong>
-            </span>
+            <UserBrandLine
+              userId={item.author?.id}
+              pseudo={item.author?.pseudo}
+              email={item.author?.email}
+              brand={item.marque}
+              type={item.type}
+            />
             ⸱
             {isValidDate(item.createdAt) && (
               <span className="feedback-date">

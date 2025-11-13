@@ -14,7 +14,7 @@ import {
   FALLBACK_BRAND_PLACEHOLDER,
 } from "@src/utils/brandLogos";
 import { useBrandLogos } from "@src/hooks/useBrandLogos";
-import { capitalizeFirstLetter } from "@src/utils/stringUtils";
+import UserBrandLine from "@src/components/shared/UserBrandLine";
 
 interface Props {
   brand: string;
@@ -40,8 +40,8 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
   const [refreshKey, setRefreshKey] = useState(0);
   const [visibleDescriptionsCount, setVisibleDescriptionsCount] = useState(2);
   const [showFullText, setShowFullText] = useState(false);
-
   const initialDescription = descriptions?.[0];
+  const [showCapturePreview, setShowCapturePreview] = useState(false);
 
   // ✅ Appelé avant tout return
   const brandLogos = useBrandLogos([{ brand, siteUrl }]);
@@ -89,19 +89,6 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
   const resolvedLogo =
     possibleKeys.map((k) => brandLogos[k]).find(Boolean) ||
     FALLBACK_BRAND_PLACEHOLDER;
-
-  const logColor =
-    resolvedLogo === FALLBACK_BRAND_PLACEHOLDER
-      ? "color:orange"
-      : "color:lightgreen";
-
-  console.log(
-    `%c🧩 [FlatSubcategoryBlock] ${brand} → ${
-      resolvedLogo ? "✅ trouvé" : "❌ manquant"
-    }`,
-    logColor,
-    { siteUrl, normalizedDomain, availableKeys: Object.keys(brandLogos || {}) },
-  );
 
   return (
     <div
@@ -156,11 +143,13 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
                 />
               </div>
               <div className="text-meta">
-                <span className="user-brand-line">
-                  {initialDescription.user?.pseudo}{" "}
-                  <span className="cross">×</span> {""}
-                  <strong>{capitalizeFirstLetter(brand)}</strong>
-                </span>
+                <UserBrandLine
+                  userId={initialDescription.user?.id}
+                  email={initialDescription.user?.email}
+                  pseudo={initialDescription.user?.pseudo}
+                  brand={brand}
+                  type="report"
+                />
               </div>
               <ChevronUp size={16} />
             </div>
@@ -226,7 +215,31 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
                     src={captureUrl}
                     alt="Capture du signalement"
                     className="inline-capture-img"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowCapturePreview(true);
+                    }}
                   />
+
+                  {showCapturePreview && (
+                    <div
+                      className="capture-overlay"
+                      onClick={() => setShowCapturePreview(false)}
+                    >
+                      <div
+                        className="capture-modal"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <button
+                          className="close-btn"
+                          onClick={() => setShowCapturePreview(false)}
+                        >
+                          ✕
+                        </button>
+                        <img src={captureUrl} alt="Aperçu capture" />
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </p>
