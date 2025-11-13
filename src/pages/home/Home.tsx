@@ -8,8 +8,8 @@ import { useBrandColors } from "./hooks/useBrandColors";
 import { useCategories } from "./hooks/useCategories";
 
 import ReportTab from "./home-tabs/ReportTab";
-import CdcTab from "./home-tabs/CdcTab";
-import SuggestionTab from "./home-tabs/SuggestionTab";
+import CdcTabEnhanced from "./home-tabs/CdcTabEnhanced";
+import SuggestionTabEnhanced from "./home-tabs/SuggestionTabEnhanced";
 
 function Home() {
   const [activeTab, setActiveTab] = useState<FeedbackType>("report");
@@ -20,19 +20,22 @@ function Home() {
   const [suggestionSearch, setSuggestionSearch] = useState("");
   const [selectedSiteUrl, setSelectedSiteUrl] = useState<string | undefined>();
 
-  // ✅ Quand on choisit une marque, on la stocke simplement.
-  // L’URL du site sera fournie dynamiquement (par l’extension ou le backend).
+  // ✅ Gestion de la marque
   const handleSetBrand = useCallback((brand: string, siteUrl?: string) => {
     setSelectedBrand(brand);
-    setSelectedSiteUrl(siteUrl); // 🧠 c’est tout — pas de fallback manuel
+    setSelectedSiteUrl(siteUrl);
   }, []);
 
+  // ✅ Appel du hook au niveau du composant (conforme aux règles React)
   const {
     feedbackData,
     isLoading,
+    isInitialLoading,
     displayedCount,
     suggestionsForDisplay,
     coupDeCoeursForDisplay,
+    hasMore,
+    loadMore,
   } = useFeedbackData(
     activeTab,
     activeFilter,
@@ -41,8 +44,12 @@ function Home() {
     suggestionSearch,
   );
 
-  const { brandBannerStyle, suggestionBannerStyle /* , selectedBrandLogo */ } =
-    useBrandColors(activeTab, selectedBrand, feedbackData, selectedSiteUrl);
+  const { brandBannerStyle, suggestionBannerStyle } = useBrandColors(
+    activeTab,
+    selectedBrand,
+    feedbackData,
+    selectedSiteUrl,
+  );
 
   const { suggestionCategories, coupDeCoeurCategories } = useCategories(
     activeTab,
@@ -102,7 +109,7 @@ function Home() {
         )}
 
         {activeTab === "coupdecoeur" && (
-          <CdcTab
+          <CdcTabEnhanced
             activeFilter={activeFilter}
             setActiveFilter={setActiveFilter}
             selectedBrand={selectedBrand}
@@ -115,12 +122,16 @@ function Home() {
             totalCount={totalCount}
             filteredByCategory={filteredByCategory}
             selectedSiteUrl={selectedSiteUrl}
+            setSelectedSiteUrl={setSelectedSiteUrl}
             isLoading={isLoading}
+            isInitialLoading={isInitialLoading}
+            hasMore={hasMore}
+            loadMore={loadMore}
           />
         )}
 
         {activeTab === "suggestion" && (
-          <SuggestionTab
+          <SuggestionTabEnhanced
             activeFilter={activeFilter}
             setActiveFilter={setActiveFilter}
             selectedBrand={selectedBrand}
@@ -133,11 +144,9 @@ function Home() {
             suggestionBannerStyle={suggestionBannerStyle}
             brandBannerStyle={brandBannerStyle}
             suggestionsForDisplay={suggestionsForDisplay}
-            //displayedCount={displayedCount}
             totalCount={totalCount}
             filteredByCategory={filteredByCategory}
             selectedSiteUrl={selectedSiteUrl}
-            //selectedBrandLogo={selectedBrandLogo}
             isLoading={isLoading}
           />
         )}

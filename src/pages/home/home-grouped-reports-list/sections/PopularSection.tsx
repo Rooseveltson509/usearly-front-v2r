@@ -59,6 +59,20 @@ const PopularSection: React.FC<PopularSectionProps> = ({
   }, [selectedBrand, selectedSiteUrl, popularEngagementData]);
 
   const logos = useBrandLogos(brandsToLoad);
+  // 📌 Ouvrir toutes les cartes populaires par défaut
+  React.useEffect(() => {
+    const data = reportData?.data;
+    if (!data || data.length === 0) return;
+
+    const initial: Record<string, boolean> = {};
+
+    data.forEach((item: any) => {
+      const key = `${item.reportingId}-${item.id}`;
+      initial[key] = true; // 👈 Ouvert par défaut
+    });
+
+    setExpandedItems(initial);
+  }, [reportData.data]);
 
   const normalizedSearchTerm = searchTerm
     ? normalizeSearchText(searchTerm)

@@ -149,6 +149,7 @@ export interface FeedbackDescription {
   user: {
     id: string;
     pseudo: string;
+    email?: string | null;
     avatar: string | null;
   };
   capture: string | null;
@@ -293,6 +294,7 @@ export interface UserGroupedReportDescription {
   user: {
     id: string;
     pseudo: string;
+    email: string | null;
     avatar: string | null;
   };
   capture: string | null;

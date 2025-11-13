@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import type { CoupDeCoeur, Suggestion } from "@src/types/Reports";
 import type { FeedbackType } from "@src/components/user-profile/FeedbackTabs";
 import {
@@ -7,7 +7,7 @@ import {
 } from "@src/services/coupDeCoeurService";
 import { fetchFeedbackData } from "@src/services/feedbackFetcher";
 
-// 🔹 Utilitaire pour éviter les erreurs TS
+// 🔹 Extraction sécurisée du label
 const getSubCategoryLabel = (item: CoupDeCoeur | Suggestion): string => {
   const raw =
     (item as any).subCategory ??
@@ -29,110 +29,160 @@ const normalizeText = (value: string) =>
         .trim()
     : "";
 
+// ✅ Version corrigée du hook
 export function useFeedbackData(
   activeTab: FeedbackType,
   activeFilter: string,
   selectedBrand: string,
   selectedCategory: string,
   suggestionSearch: string,
-  page = 1,
+  initialPage = 1,
   limit = 20,
 ) {
   const [feedbackData, setFeedbackData] = useState<
     (CoupDeCoeur | Suggestion)[]
   >([]);
+  const [page, setPage] = useState(initialPage);
+  const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
 
-  // ⚡ Cache local { "tab-filter-brand" : data[] }
-  const cache = useRef<{ [key: string]: (CoupDeCoeur | Suggestion)[] }>({});
+  const isFetchingRef = useRef(false);
 
-  useEffect(() => {
-    let isMounted = true;
+  const prevTab = useRef<FeedbackType>(activeTab);
+  const prevBrand = useRef(selectedBrand);
+  const prevFilter = useRef(activeFilter);
 
-    // 🚫 Si onglet = "report" → on sort direct (pas de fetch ici)
-    if (activeTab === "report") {
-      return;
-    }
-
-    const key = `${activeTab}-${activeFilter}-${selectedBrand || "all"}-${page}-${limit}`;
-
-    // ⚡ Vérifier dans le cache
-    if (cache.current[key]) {
-      setFeedbackData(cache.current[key]);
-      return;
-    }
-
-    const fetchData = async () => {
+  /**
+   * 📥 Fonction de récupération de page
+   */
+  const fetchPage = useCallback(
+    async (currentPage: number, reset = false) => {
+      if (isFetchingRef.current) return;
+      isFetchingRef.current = true;
       setIsLoading(true);
+
+      console.log(`🔹 fetchPage(${currentPage}) lancé`);
+
       try {
         let result: any;
 
-        if (selectedBrand) {
-          // 🔹 Cas marque spécifique
-          if (activeTab === "coupdecoeur") {
-            result = await getCoupsDeCoeurByBrand(selectedBrand, page, limit);
-            if (isMounted) {
-              const typed = (result?.coupdeCoeurs || []).map((item: any) => ({
-                ...item,
-                type: item.type ?? "coupdecoeur",
-              }));
-              cache.current[key] = typed;
-              setFeedbackData(typed);
-            }
-          } else if (activeTab === "suggestion") {
-            result = await getSuggestionsByBrand(selectedBrand, page, limit);
-            if (isMounted) {
-              const typed = (result?.suggestions || []).map((item: any) => ({
-                ...item,
-                type: item.type ?? "suggestion",
-              }));
-              cache.current[key] = typed;
-              setFeedbackData(typed);
-            }
-          }
+        const normalizedBrand = selectedBrand?.toLowerCase().trim();
+        const hasBrand =
+          normalizedBrand &&
+          normalizedBrand !== "tous" &&
+          normalizedBrand !== "all";
+
+        if (activeTab === "coupdecoeur" && hasBrand) {
+          // 🔥 Filtrage par marque pour CDC
+          result = await getCoupsDeCoeurByBrand(
+            selectedBrand,
+            currentPage,
+            limit,
+          );
+        } else if (activeTab === "suggestion" && hasBrand) {
+          // 🔥 Filtrage par marque pour Suggestion
+          result = await getSuggestionsByBrand(
+            selectedBrand,
+            currentPage,
+            limit,
+          );
         } else {
-          // 🔹 Cas générique (pas de marque)
+          // 🔥 Cas normal — all brands, filtres : popular, enflammés, récents, etc.
           result = await fetchFeedbackData(
             activeFilter,
             activeTab,
-            page,
+            currentPage,
             limit,
           );
-          if (isMounted) {
-            let data = result.data || [];
-            if (activeTab === "coupdecoeur") {
-              data = data.map((item: any) => ({
-                ...item,
-                type: "coupdecoeur",
-              }));
-            } else if (activeTab === "suggestion") {
-              data = data.map((item: any) => ({ ...item, type: "suggestion" }));
-            }
-            cache.current[key] = data;
-            setFeedbackData(data);
-          }
         }
-      } catch (e) {
-        console.error("❌ Erreur chargement feedback:", e);
-        if (isMounted) setFeedbackData([]);
+
+        let data =
+          result?.data || result?.coupdeCoeurs || result?.suggestions || [];
+
+        data = data.map((item: any) => ({
+          ...item,
+          type:
+            item.type ??
+            (activeTab === "coupdecoeur"
+              ? "coupdecoeur"
+              : activeTab === "suggestion"
+                ? "suggestion"
+                : "report"),
+        }));
+
+        console.log(
+          `✅ Page ${currentPage} récupérée (${data.length} éléments)`,
+        );
+
+        if (reset) {
+          setFeedbackData(data);
+        } else {
+          // 🧩 Ajoute les nouvelles données sans perdre les anciennes
+          setFeedbackData((prev) => [...prev, ...data]);
+        }
+
+        setHasMore(result?.hasMore ?? data.length >= limit);
+      } catch (err) {
+        console.error("❌ Erreur fetchPage:", err);
+        setHasMore(false);
       } finally {
-        if (isMounted) setIsLoading(false);
+        isFetchingRef.current = false;
+        setIsLoading(false);
+        setIsInitialLoading(false);
       }
-    };
+    },
+    [activeTab, activeFilter, selectedBrand, limit],
+  );
 
-    fetchData();
+  /**
+   * 🧭 Gestion du reset intelligent
+   */
+  useEffect(() => {
+    const tabChanged = prevTab.current !== activeTab;
+    const filterChanged =
+      prevFilter.current !== activeFilter ||
+      prevBrand.current !== selectedBrand;
 
-    return () => {
-      isMounted = false;
-    };
-  }, [activeTab, activeFilter, selectedBrand, page, limit]);
+    if (tabChanged) {
+      console.log("🧹 Reset total (changement d'onglet)");
+      setFeedbackData([]); // 👈 vide immédiat
+      setPage(1);
+      setHasMore(true);
+      setIsInitialLoading(true);
+      fetchPage(1, true);
+    } else if (filterChanged) {
+      console.log("♻️ Rafraîchissement (filtre ou marque)");
+      setFeedbackData([]); // 👈 vide immédiat pour éviter affichage doublé
+      setPage(1);
+      setHasMore(true); // 👈 réinitialise la pagination
+      setIsInitialLoading(false); // 👈 garde un spinner léger (pas celui du tout début)
+      fetchPage(1, true);
+    }
 
-  // 🎯 Suggestions filtrées
+    prevTab.current = activeTab;
+    prevFilter.current = activeFilter;
+    prevBrand.current = selectedBrand;
+  }, [activeTab, activeFilter, selectedBrand]);
+
+  /**
+   * ⬇️ Scroll infini
+   */
+  const loadMore = useCallback(() => {
+    if (isFetchingRef.current || !hasMore) return;
+    const nextPage = page + 1;
+    console.log(`⬇️ Scroll détecté, chargement page ${nextPage}`);
+    setPage(nextPage);
+    fetchPage(nextPage, false);
+  }, [hasMore, page, fetchPage]);
+
+  /**
+   * 🎯 Filtrage suggestions
+   */
   const suggestionsForDisplay = useMemo(() => {
     if (activeTab !== "suggestion") return feedbackData;
     const query = normalizeText(suggestionSearch);
     return feedbackData.filter((item) => {
-      if ((item as any).type !== "suggestion") return true;
       const haystacks = [
         (item as any).title,
         (item as any).description,
@@ -143,17 +193,17 @@ export function useFeedbackData(
     });
   }, [activeTab, feedbackData, suggestionSearch]);
 
-  // 🎯 CDC filtrés
+  /**
+   * 🎯 Filtrage coups de cœur
+   */
   const coupDeCoeursForDisplay = useMemo(() => {
     if (activeTab !== "coupdecoeur") return feedbackData;
     if (!selectedCategory) return feedbackData;
-    return feedbackData.filter((i) => {
-      if ((i as any).type !== "coupdecoeur") return true;
-      return getSubCategoryLabel(i) === selectedCategory;
-    });
+    return feedbackData.filter(
+      (i) => getSubCategoryLabel(i) === selectedCategory,
+    );
   }, [activeTab, feedbackData, selectedCategory]);
 
-  // ✅ Compteur d’éléments affichés
   const displayedCount = useMemo(() => {
     if (activeTab === "suggestion") return suggestionsForDisplay.length;
     if (activeTab === "coupdecoeur") return coupDeCoeursForDisplay.length;
@@ -163,6 +213,9 @@ export function useFeedbackData(
   return {
     feedbackData,
     isLoading,
+    isInitialLoading,
+    hasMore,
+    loadMore,
     displayedCount,
     suggestionsForDisplay,
     coupDeCoeursForDisplay,

@@ -2,6 +2,7 @@ import GroupedReportList from "../report-grouped/GroupedReportList";
 import FlatReportList from "../report-grouped/FlatReportList";
 import ChronologicalReportList from "../report-grouped/ChronologicalReportList";
 import FilteredReportList from "../report-grouped/feedback-list-header/FilteredReportList";
+import SqueletonAnime from "../loader/SqueletonAnime";
 import { isToday, isYesterday, format } from "date-fns";
 import { fr } from "date-fns/locale";
 import type {
@@ -18,6 +19,7 @@ import {
 } from "@src/utils/feedbackListUtils";
 import type { FeedbackType } from "../user-profile/FeedbackTabs";
 import InteractiveFeedbackCard from "../InteractiveFeedbackCard/InteractiveFeedbackCard";
+import "./FeedbackView.scss";
 
 interface Props {
   activeTab: FeedbackType;
@@ -27,6 +29,7 @@ interface Props {
     loading: boolean;
     hasMore: boolean;
     error: string | null;
+    isInitialLoading?: boolean; // 👈 ajouté pour distinguer filtre/scroll
   };
   openId: string | null;
   setOpenId: (id: string | null) => void;
@@ -46,11 +49,13 @@ const FeedbackView = ({
   setGroupOpen,
   selectedBrand,
   selectedCategory,
-  /* selectedSiteUrl, */
   renderCard,
 }: Props) => {
   const [openId, setOpenId] = useState<string | null>(null);
-  const exploded = (currentState.data as GroupedReport[]).flatMap((report) =>
+
+  const { data, loading, error, isInitialLoading } = currentState;
+
+  const exploded = (data as GroupedReport[]).flatMap((report) =>
     Array.isArray(report.subCategories)
       ? report.subCategories.map((subCategory) => ({
           ...report,
@@ -58,49 +63,74 @@ const FeedbackView = ({
         }))
       : [],
   );
-  console.log("FeedbackView data:", currentState.data);
-  console.log("Loading:", currentState.loading);
 
-  if (currentState.loading) {
-    return null; // Le loader est géré par le parent (Home)
+  // 🧠 Cas 1 : chargement initial (changement d’onglet ou filtre)
+  if (isInitialLoading) {
+    return (
+      <div className="loading-more">
+        <div className="spinner" />
+        <p>
+          Chargement des{" "}
+          {activeTab === "coupdecoeur"
+            ? "coups de cœur"
+            : activeTab === "suggestion"
+              ? "suggestions"
+              : "contenus"}
+          ...
+        </p>
+      </div>
+    );
   }
 
-  if (
-    !currentState.loading &&
-    currentState.data.length === 0 &&
-    !currentState.error
-  ) {
-    return <div>Aucun contenu trouvé.</div>;
+  // 🧠 Cas 2 : aucune donnée
+  const showEmptyState = !loading && data.length === 0 && !error;
+  if (showEmptyState) {
+    return <div className="no-content">Aucun contenu trouvé.</div>;
   }
 
+  // 🧠 Cas 3 : Signalements
   if (activeTab === "report") {
     if (viewMode === "grouped") {
       const groupedByBrand = groupByBrandThenCategory(
-        groupByBrand(explodeGroupedReports(currentState.data)),
+        groupByBrand(explodeGroupedReports(data)),
       );
       return (
-        <GroupedReportList
-          grouped={groupedByBrand}
-          groupOpen={groupOpen}
-          setGroupOpen={setGroupOpen}
-          renderCard={renderCard}
-        />
+        <>
+          <GroupedReportList
+            grouped={groupedByBrand}
+            groupOpen={groupOpen}
+            setGroupOpen={setGroupOpen}
+            renderCard={renderCard}
+          />
+          {loading && !isInitialLoading && (
+            <div className="loading-more">
+              <div className="spinner" />
+              <p>Chargement de plus de signalements...</p>
+            </div>
+          )}
+        </>
       );
     }
 
     if (viewMode === "flat") {
       const groupedFlat = Object.entries(
-        groupByBrand(explodeGroupedReports(currentState.data)),
+        groupByBrand(explodeGroupedReports(data)),
       );
       return (
-        <div className="flat-report-list">
+        <>
           <FlatReportList
             grouped={groupedFlat}
             groupOpen={groupOpen}
             setGroupOpen={setGroupOpen}
             renderCard={renderCard}
           />
-        </div>
+          {loading && !isInitialLoading && (
+            <div className="loading-more">
+              <div className="spinner" />
+              <p>Chargement de plus de signalements...</p>
+            </div>
+          )}
+        </>
       );
     }
 
@@ -136,19 +166,23 @@ const FeedbackView = ({
         {} as Record<string, typeof chronoMapped>,
       );
 
-      return Object.entries(groupedByDay).length > 0 ? (
-        <ChronologicalReportList
-          groupedByDay={groupedByDay}
-          renderCard={(item, index) => {
-            const desc = item.subCategory.descriptions[0];
-            const cardId = `${item.reportingId}_${desc?.id || index}`;
-            return <div key={cardId}>{renderCard(item)}</div>;
-          }}
-        />
-      ) : (
-        <div style={{ color: "red", textAlign: "center", marginTop: "2rem" }}>
-          ❌ Aucune donnée avec createdAt valide
-        </div>
+      return (
+        <>
+          <ChronologicalReportList
+            groupedByDay={groupedByDay}
+            renderCard={(item, index) => {
+              const desc = item.subCategory.descriptions[0];
+              const cardId = `${item.reportingId}_${desc?.id || index}`;
+              return <div key={cardId}>{renderCard(item)}</div>;
+            }}
+          />
+          {loading && !isInitialLoading && (
+            <div className="loading-more">
+              <div className="spinner" />
+              <p>Chargement de plus de signalements...</p>
+            </div>
+          )}
+        </>
       );
     }
 
@@ -163,32 +197,40 @@ const FeedbackView = ({
     }
   }
 
-  // Coup de cœur & suggestions
+  // ❤️ Coup de cœur & 💡 Suggestions
   return (
     <>
-      {(currentState.data as (CoupDeCoeur | Suggestion)[]).map(
-        (item, index) => {
-          const siteUrl =
-            (item as any)?.siteUrl ??
-            (item as any)?.brandUrl ??
-            (item as any)?.site ??
-            undefined;
+      {(data as (CoupDeCoeur | Suggestion)[]).map((item, index) => {
+        const siteUrl =
+          (item as any)?.siteUrl ??
+          (item as any)?.brandUrl ??
+          (item as any)?.site ??
+          undefined;
 
-          const safeItem = {
-            ...item,
-            siteUrl,
-            marque: item.marque?.trim() ?? "",
-          };
+        const safeItem = {
+          ...item,
+          siteUrl,
+          marque: item.marque?.trim() ?? "",
+        };
 
-          return (
-            <InteractiveFeedbackCard
-              key={item.id || `feedback-${index}`}
-              item={safeItem}
-              isOpen={openId === item.id}
-              onToggle={(id) => setOpenId((prev) => (prev === id ? null : id))}
-            />
-          );
-        },
+        return (
+          <InteractiveFeedbackCard
+            key={item.id || `feedback-${index}`}
+            item={safeItem}
+            isOpen={openId === item.id}
+            onToggle={(id) => setOpenId((prev) => (prev === id ? null : id))}
+          />
+        );
+      })}
+
+      {/* 🌀 Loader scroll (en bas uniquement) */}
+      {loading && !isInitialLoading && (
+        <SqueletonAnime
+          loaderRef={{ current: null }}
+          loading={true}
+          hasMore={false}
+          error={null}
+        />
       )}
     </>
   );

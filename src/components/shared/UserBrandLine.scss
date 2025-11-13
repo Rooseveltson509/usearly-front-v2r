@@ -1,0 +1,64 @@
+.user-brand-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  color: var(--text-primary, #1a1a1a);
+
+  .cross {
+    opacity: 0.6;
+    font-weight: 400;
+  }
+
+  .user-name {
+    &.me-badge {
+      font-weight: 600;
+      font-size: 0.8rem;
+      padding: 1px 8px 2px;
+      border-radius: 999px;
+      line-height: 1.2;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: none;
+      border: none;
+    }
+
+    // 💙 Signalement
+    &.me-badge-report {
+      background: #e8f0fe;
+      color: #1a73e8;
+    }
+
+    // 💜 Coup de cœur
+    &.me-badge-coupdecoeur {
+      background: #f3e8fd;
+      color: #7b3fe4;
+    }
+
+    // 💚 Suggestion
+    &.me-badge-suggestion {
+      background: #e6f4ea;
+      color: #1e8e3e;
+    }
+
+    // 🌙 Mode sombre
+    :host(.dark) &.me-badge-report,
+    .dark &.me-badge-report {
+      background: rgba(100, 160, 255, 0.18);
+      color: #b4c9ff;
+    }
+
+    :host(.dark) &.me-badge-coupdecoeur,
+    .dark &.me-badge-coupdecoeur {
+      background: rgba(180, 120, 255, 0.18);
+      color: #d4b5ff;
+    }
+
+    :host(.dark) &.me-badge-suggestion,
+    .dark &.me-badge-suggestion {
+      background: rgba(120, 255, 180, 0.18);
+      color: #9be4b6;
+    }
+  }
+}

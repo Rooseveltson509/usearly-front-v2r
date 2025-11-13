@@ -4,7 +4,7 @@ import { getUserVotes } from "@src/services/suggestionService";
 import { useNavigate } from "react-router-dom";
 import { useBrandLogos } from "@src/hooks/useBrandLogos";
 import { FALLBACK_BRAND_PLACEHOLDER } from "@src/utils/brandLogos";
-import suggestIcon from "../../../public/assets/icons/suggestSimpleIcon.svg";
+import suggestIcon from "/assets/icons/suggestSimpleIcon.svg";
 
 interface Suggestion {
   id: string;
