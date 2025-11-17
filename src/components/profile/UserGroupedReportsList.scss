@@ -633,6 +633,11 @@
       font-weight: 400;
       color: #444;
       margin-top: 2px;
+
+      white-space: pre-wrap; /* préserve les retours à la ligne */
+      word-wrap: break-word; /* ancienne syntaxe compatible */
+      overflow-wrap: anywhere; /* nouvelle syntaxe — force la coupure si pas d'espace */
+      line-height: 1.5; /* pour un rendu plus aéré */
     }
   }
 
