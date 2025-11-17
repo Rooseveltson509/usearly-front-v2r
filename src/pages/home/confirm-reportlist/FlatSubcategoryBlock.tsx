@@ -304,7 +304,7 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
                     <div className="feedback-content">
                       <div className="feedback-meta">
                         <span className="pseudo">{desc.user.pseudo}</span>
-                        <span className="brand"> · {brand}</span>
+                        {/* <span className="brand"> · {brand}</span> */}
                         <span className="time">
                           ·{" "}
                           {formatDistanceToNow(new Date(desc.createdAt), {

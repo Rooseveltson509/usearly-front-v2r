@@ -5,6 +5,7 @@ import CdcCard from "./card/CdcCard";
 import SuggestCard from "./card/SuggestCard";
 import BrandCard from "./card/BrandCard";
 import PurpleBanner from "../home/components/purpleBanner/PurpleBanner";
+import Footer from "@src/components/layout/Footer";
 
 const NewHome: React.FC = () => {
   return (
@@ -17,6 +18,7 @@ const NewHome: React.FC = () => {
         </div>
         <SuggestCard />
         <BrandCard />
+        <Footer />
       </div>
     </div>
   );
