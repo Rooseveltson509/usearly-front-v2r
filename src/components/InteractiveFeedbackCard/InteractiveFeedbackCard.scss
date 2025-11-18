@@ -39,7 +39,7 @@
 
 .pg-expire {
   margin-left: 6px;
-  font-size: 0.85rem;
+  font-size: 13px;
   color: #666;
   font-weight: 500;
 
@@ -97,9 +97,9 @@
     .pg-count {
       min-width: 40px;
       text-align: center;
-      font-weight: 600;
+      font-weight: 700;
       color: #111;
-      font-size: 0.9rem;
+      font-size: 13px;
     }
   }
 }
@@ -358,7 +358,7 @@
         flex-direction: row;
         align-items: flex-start;
         gap: 5px;
-        font-size: 12px;
+        font-size: 11px;
         color: #777;
 
         .user-brand {
@@ -389,6 +389,7 @@
       line-height: normal;
       margin-bottom: 12px;
       padding-right: 45px;
+      margin-top: 24px;
 
       .see-more {
         border: none;
@@ -416,7 +417,7 @@
       .cdc-post-title {
         color: #000000;
         font-size: 18px;
-        font-weight: 800;
+        font-weight: 700;
         font-family: $font-family-2;
         line-height: normal;
       }
@@ -828,7 +829,7 @@
       border-radius: 999px;
       text-align: center;
       border: 2px solid rgba(0, 0, 0, 0.1);
-      font-family: "Ralleway", sans-serif;
+      font-family: "Raleway", sans-serif;
     }
 
     .bubble.secondary {
@@ -836,8 +837,8 @@
       color: var(--bubble-secondary-text, #fff);
       border-radius: 999px;
       text-align: center;
-      font-weight: 700;
-      font-family: "Ralleway", sans-serif;
+      font-weight: 600;
+      font-family: "Raleway", sans-serif;
       margin-top: -3px;
     }
   }
@@ -885,7 +886,7 @@
     color: inherit;
     font-size: clamp(14px, 1.75cqw, 23px);
     line-height: 1.4;
-    font-weight: 200;
+    font-weight: 600;
     text-align: center;
   }
 }

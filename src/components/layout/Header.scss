@@ -9,7 +9,7 @@
   // z-index: 2147483647;
   z-index: 999;
   width: 100%;
-  font-family: $font-family-2;
+  font-family: "Raleway", sans-serif;
   @media screen and (max-width: 1150px) {
     padding-left: 5%;
     padding-right: 5%;
@@ -111,12 +111,13 @@
       background: #fff;
 
       i {
-        font-size: 1rem;
+        font-size: 0.6rem;
         color: #000;
       }
 
       .header-user {
         font-weight: 500;
+        padding: 0 4px;
       }
     }
 
