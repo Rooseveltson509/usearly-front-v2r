@@ -120,7 +120,7 @@
             .avatar-img-custom {
               width: 100%;
               height: 100%;
-              object-fit: contain;
+              object-fit: cover;
               border-radius: 50%;
               border: 1px solid #f0f0f0;
             }
@@ -149,7 +149,7 @@
           .user-brand-line {
             display: block;
             font-size: 11px;
-            font-weight: 500;
+            font-weight: 400;
 
             .cross {
               margin: 0 4px;
@@ -339,7 +339,7 @@
 
     .user-brand-line {
       font-size: 11px;
-      font-weight: 500;
+      font-weight: 400;
 
       .cross {
         font-weight: 600;

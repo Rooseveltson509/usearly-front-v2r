@@ -16,6 +16,7 @@
     }
 
     .votes-title {
+      font-family: "Raleway";
       margin: 0;
       font-size: 1.35rem;
       font-weight: 700;
@@ -34,13 +35,20 @@
     max-height: none;
     overflow: hidden;
     scrollbar-width: thin;
-    scrollbar-color: rgba(148, 163, 184, 0.7) transparent;
+    scrollbar-color: rgb(218 218 218 / 70%) transparent;
     transition:
       max-height 0.35s ease,
       height 0.35s ease;
 
     &::-webkit-scrollbar {
-      width: 6px;
+      width: 6px; // ← essentiel !
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-button {
+      display: none !important;
+      width: 0;
+      height: 0;
     }
 
     &::-webkit-scrollbar-thumb {
@@ -97,8 +105,8 @@
 
         .vote-title {
           margin: 0;
-          font-weight: 500;
-          font-size: 14px;
+          font-weight: 400;
+          font-size: 13px;
           color: #13161b;
 
           &.clickable {
@@ -115,7 +123,7 @@
           display: flex;
           align-items: center;
           gap: 0.5rem;
-          font-size: 0.87rem;
+          font-size: 11px;
 
           .progress {
             display: inline-flex;
@@ -141,13 +149,9 @@
             }
 
             .progress-value {
-              padding: 5px 6px;
+              padding: 2px 6px;
               border-radius: 999px;
-              background: linear-gradient(
-                135deg,
-                rgba(99, 102, 241, 0.09),
-                rgba(62, 110, 252, 0.18)
-              );
+              background: #3e6efc12;
             }
           }
 
@@ -164,8 +168,8 @@
 
       .vote-brand {
         flex-shrink: 0;
-        width: 42px;
-        height: 42px;
+        width: 36px;
+        height: 36px;
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -197,7 +201,7 @@
       border-radius: 999px;
       color: black;
       font-weight: 500;
-      font-size: 1rem;
+      font-size: 13px;
       padding: 8px 12px;
       cursor: pointer;
       display: inline-flex;

@@ -62,11 +62,12 @@
     text-align: center;
     position: relative;
     .label {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 400;
       color: $secondary;
       display: block;
       margin-bottom: 0.3rem;
+      color: #777777;
     }
 
     .value {
@@ -126,6 +127,7 @@
       cursor: pointer;
       background: none;
       font-family: "Inter", sans-serif;
+      font-size: 13px;
     }
 
     img {

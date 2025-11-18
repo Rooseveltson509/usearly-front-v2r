@@ -13,10 +13,9 @@
   .user-name {
     &.me-badge {
       font-weight: 600;
-      font-size: 0.8rem;
-      padding: 1px 8px 2px;
+      font-size: 11px;
+      padding: 1px 8px;
       border-radius: 999px;
-      line-height: 1.2;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -26,19 +25,19 @@
 
     // 💙 Signalement
     &.me-badge-report {
-      background: #e8f0fe;
+      background: #f0f5ff;
       color: #1a73e8;
     }
 
     // 💜 Coup de cœur
     &.me-badge-coupdecoeur {
-      background: #f3e8fd;
-      color: #7b3fe4;
+      background: #f0f5ff;
+      color: #3e6efc;
     }
 
     // 💚 Suggestion
     &.me-badge-suggestion {
-      background: #e6f4ea;
+      background: #f0f5ff;
       color: #1e8e3e;
     }
 
