@@ -8,14 +8,13 @@ export const brandColors: Record<string, string[]> = {
   spotify: ["#1DB954", "#1ED760", "#18A558"],
   deepar: ["#113CCF", "#1E40AF", "#3B82F6"],
   huggingface: ["#F58220", "#FF9900", "#FFB347"],
-  linkedin: ["#0A66C2", "#004182", "#1475D1"],
   emcitv: ["#1246C7", "#0E37A3", "#1A5FFF"],
   canva: ["#3670E6", "#1F51B5", "#5E8EF5"],
   pinterest: ["#E60023", "#C70039", "#FF3355"],
   twitch: ["#9146FF", "#772CE8", "#A970FF"],
   reddit: ["#FF4500", "#FF5700", "#FF6A00"],
   decathlon: ["#002A5C", "#004AAD", "#0056D2"],
-  duolingo: ["#58CC02", "#060a04ff", "#a5a7a5ff"],
+  duolingo: ["#58CC02", "#58CC02", "#a5a7a5ff"],
   coursera: ["#0056D2", "#0044AA", "#1E63E9"],
   udemy: ["#EC5252", "#E63946", "#FF6B6B"],
   skillshare: ["#82CAFF", "#00C3FF", "#99DDFF"],
@@ -42,6 +41,7 @@ export const brandColors: Record<string, string[]> = {
   telegram: ["#0088CC", "#229ED9", "#00BFFF"],
   slack: ["#4A154B", "#611F69", "#7B2A87"],
   zoom: ["#2D8CFF", "#007AFF", "#1E90FF"],
+  linkedin: ["#0A66C2", "#004182", "#1475D1"],
 
   // Retail & Marketplaces
   walmart: ["#0071CE", "#005AA3", "#1E90FF"],
@@ -106,6 +106,7 @@ export const brandColors: Record<string, string[]> = {
   quick: ["#E40203", "#C70024", "#FF3344"],
   dominos: ["#0B5ED7", "#003A9F", "#3366CC"],
   pizzahut: ["#EE3124", "#C1272D", "#FF4433"],
+  burgerking: ["#D62700", "#FF8733", "#FFAA00"],
 
   // Travel & Transport
   airbnb: ["#FF5A5F", "#E91E63", "#FF7E82"],
@@ -126,6 +127,9 @@ export const brandColors: Record<string, string[]> = {
 
   // Default fallback
   default: ["#3B3B3C", "#4A4A4A", "#5A5A5A"],
+
+  // Autres
+  zenity: ["rgb(212, 169, 94)", "rgb(63, 195, 204)", "rgb(63, 195, 204)"],
 };
 
 // 🎲 Sélection aléatoire d’une couleur parmi les 3
