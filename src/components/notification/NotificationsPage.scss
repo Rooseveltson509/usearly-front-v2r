@@ -1,4 +1,4 @@
-@use "@src/styles/base/_variables.scss" as *;
+@use "../../styles/base/_variables.scss" as *;
 
 .notifications-page {
   width: fit-content;
@@ -269,6 +269,31 @@
             display: flex;
             justify-content: center;
             width: 100%;
+          }
+
+          .feedback-card {
+            width: 100%;
+            max-width: 655px;
+            margin: 0 auto;
+            margin-bottom: 0;
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px 16px 0 15px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            transition: box-shadow 0.2s ease;
+
+            &:hover {
+              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+            }
+
+            .feedback-type {
+              .feedback-left {
+                width: 269px;
+                height: 299px;
+                border-radius: 16px;
+                margin-bottom: 16px;
+              }
+            }
           }
 
           /* --- Bloc sender (en dessous, à droite) --- */
