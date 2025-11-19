@@ -16,17 +16,6 @@ interface BrandFilteredSectionProps {
   loaderRef: React.RefObject<HTMLDivElement | null>;
 }
 
-// 🔧 Fonction utilitaire pour normaliser le domaine
-function normalizeDomain(siteUrl?: string | null): string | undefined {
-  if (!siteUrl) return undefined;
-  return siteUrl
-    .replace(/^https?:\/\//, "")
-    .replace(/^www\d?\./, "")
-    .split("/")[0]
-    .trim()
-    .toLowerCase();
-}
-
 /**
  * 🏷️ Section BrandFiltered
  * Affiche les signalements d’une marque ou catégorie spécifique.
@@ -65,6 +54,33 @@ const BrandFilteredSection: React.FC<BrandFilteredSectionProps> = ({
       </div>
     );
   }
+
+  function groupReportsBySubCategory(reports: any[]) {
+    const map: Record<string, any> = {};
+
+    for (const r of reports) {
+      const sub = r.subCategory || "Autre";
+
+      if (!map[sub]) {
+        map[sub] = {
+          brand: r.marque,
+          siteUrl: r.siteUrl,
+          subCategory: sub,
+          capture: r.capture,
+          descriptions: [],
+        };
+      }
+
+      // ajoute toutes les descriptions (si déjà explodé)
+      if (Array.isArray(r.descriptions)) {
+        map[sub].descriptions.push(...r.descriptions);
+      }
+    }
+
+    return Object.values(map);
+  }
+
+  const groupedReports = groupReportsBySubCategory(reportsToDisplay);
 
   // ✅ Contenu principal
   return (
@@ -108,25 +124,17 @@ const BrandFilteredSection: React.FC<BrandFilteredSectionProps> = ({
       )}
 
       {/* ✅ Boucle principale avec fallback siteUrl */}
-      {reportsToDisplay.map((report, i) => {
-        // Normalisation du siteUrl — fallback automatique si absent
-        const normalizedDomain =
-          normalizeDomain(report.siteUrl) ||
-          `${report.marque?.toLowerCase().replace(/\s+/g, "")}.com`;
-        const safeSiteUrl = `https://${normalizedDomain}`;
-
-        return (
-          <FlatSubcategoryBlock
-            key={`${report.reportingId}-${report.subCategory}-${i}`}
-            brand={report.marque}
-            siteUrl={safeSiteUrl}
-            subcategory={report.subCategory}
-            descriptions={report.descriptions || []}
-            capture={report.capture}
-            hideFooter={true}
-          />
-        );
-      })}
+      {groupedReports.map((group, i) => (
+        <FlatSubcategoryBlock
+          key={`${group.subCategory}-${i}`}
+          brand={group.brand}
+          siteUrl={group.siteUrl}
+          subcategory={group.subCategory}
+          descriptions={group.descriptions}
+          capture={group.capture}
+          hideFooter={true}
+        />
+      ))}
     </div>
   );
 };

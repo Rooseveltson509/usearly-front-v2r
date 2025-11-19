@@ -143,7 +143,7 @@
 }
 
 .feedback-left {
-  flex: 0 0 200px; // largeur fixe pour garder la colonne gauche
+  flex: 0 0 40%; // largeur fixe pour garder la colonne gauche
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -271,7 +271,7 @@
 }
 
 .feedback-right {
-  flex: 1;
+  flex: 0 0 60%;
   padding: 16px;
   cursor: pointer;
 }
