@@ -1,8 +1,5 @@
 .cdc-card {
   width: 40%;
-  @media screen and (max-width: 1220px) {
-    width: 100%;
-  }
   min-height: 400px;
   background: #f6f5b3;
   border-radius: 16px;
@@ -12,6 +9,10 @@
   justify-content: space-between;
   padding: 40px;
   gap: 20px;
+
+  @media screen and (max-width: 1220px) {
+    width: 100%;
+  }
 
   .cdc-title {
     font-size: 36px;

@@ -41,11 +41,6 @@
          min 50px, milieu = 14% de la largeur du slide, max 225px */
       --stack-offset: clamp(50px, 14cqw, 225px);
 
-      /* fallback pour navigateurs sans cqw → viewport */
-      @supports not (width: 1cqw) {
-        --stack-offset: clamp(50px, 14vw, 225px);
-      }
-
       position: relative;
       display: flex;
       justify-content: center;
@@ -53,6 +48,10 @@
       box-sizing: border-box;
       // gap: 20px;
       height: 450px;
+
+      @supports not (width: 1cqw) {
+        --stack-offset: clamp(50px, 14vw, 225px);
+      }
 
       .feedback-card:first-child {
         position: relative;
