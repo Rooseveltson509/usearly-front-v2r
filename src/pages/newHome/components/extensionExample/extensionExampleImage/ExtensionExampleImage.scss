@@ -1,0 +1,38 @@
+.extension-example-image {
+  position: relative;
+  margin-top: -22.5px;
+
+  .logo-big-landing-page {
+    z-index: 1;
+    position: absolute;
+    top: -22px;
+    right: -160px;
+    transform: rotate(16deg);
+    transform-origin: 50% 50%;
+    will-change: transform;
+    animation: floatSway 4s ease-in-out infinite;
+  }
+
+  .extension-image {
+    position: relative;
+    z-index: 100;
+  }
+}
+
+/* Animation “flottante” */
+@keyframes floatSway {
+  0% {
+    transform: translateY(0) rotate(16deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(16deg);
+  }
+  100% {
+    transform: translateY(0) rotate(16deg);
+  }
+}
+
+/* Respecte la réduction des animations utilisateur */
+//   @media (prefers-reduced-motion: reduce) {
+//     .logo-big-landing-page { animation: none; }
+//   }

@@ -13,14 +13,18 @@ interface Props {
   item: (CoupDeCoeur | Suggestion) & { type: "suggestion" | "coupdecoeur" };
   isOpen: boolean;
   onToggle: (id: string) => void;
+  addClassName?: string;
 }
 
 const InteractiveFeedbackCard: React.FC<Props> = ({
   item,
   isOpen,
   onToggle,
+  addClassName,
 }) => {
-  const { userProfile } = useAuth();
+  const { userProfile, isLoading } = useAuth();
+  const userId = userProfile?.id ?? null;
+  const isGuest = !userId;
   const [votes, setVotes] = useState((item as Suggestion).votes || 0);
   const [expiresInDays, setExpiresInDays] = useState<number | null>(null);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -52,16 +56,15 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
 
   // --- votes
   useEffect(() => {
-    if (item.type === "suggestion") {
-      apiService
-        .get(`/suggestions/${item.id}/votes`)
-        .then((res) => {
-          setVotes(res.data.votes);
-          setExpiresInDays(res.data.expiresInDays);
-        })
-        .catch(() => {});
-    }
-  }, [item.id, item.type]);
+    if (isGuest || item.type !== "suggestion") return;
+    apiService
+      .get(`/suggestions/${item.id}/votes`)
+      .then((res) => {
+        setVotes(res.data.votes);
+        setExpiresInDays(res.data.expiresInDays);
+      })
+      .catch(() => {});
+  }, [item.id, item.type, isGuest]);
 
   // --- lightbox cleanup
   useEffect(() => {
@@ -97,9 +100,8 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
     }
   };
 
-  if (!userProfile?.id) return null;
-
   // 🧠 Normalise la marque et l’URL pour éviter le fallback .com
+  if (isLoading) return null;
   const siteUrl =
     (item as any)?.siteUrl ?? (item as any)?.brandUrl ?? undefined;
 
@@ -110,11 +112,12 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
   };
 
   return (
-    <div className={`feedback-card ${isOpen ? "open" : ""}`}>
+    <div
+      className={`feedback-card ${isOpen ? "open" : ""}${addClassName ? ` ${addClassName}` : ""}`}
+    >
       <div className="feedback-main">
         {/* === Bloc gauche === */}
         <FeedbackLeft item={item} />
-
         {/* === Bloc droit === */}
         <FeedbackRight
           item={safeItem}
@@ -129,23 +132,29 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
           thumbLeft={thumbLeft}
           expiresInDays={expiresInDays}
           starProgressBar={starProgressBar}
-          onVoteClick={item.type === "suggestion" ? handleVoteClick : undefined}
+          onVoteClick={
+            item.type !== "suggestion" || isGuest ? undefined : handleVoteClick
+          }
           showComments={showComments}
           onToggleComments={toggleComments}
           commentCount={commentCount}
+          isGuest={isGuest}
         />
       </div>
-
-      <div className={`feedback-comments ${showComments ? "open" : "hidden"}`}>
-        <DescriptionCommentSection
-          userId={userProfile.id}
-          descriptionId={item.id}
-          type={item.type}
-          hideFooter={true}
-          forceOpen={showComments}
-          onCommentCountChange={setCommentCount}
-        />
-      </div>
+      {!!userId && (
+        <div
+          className={`feedback-comments ${showComments ? "open" : "hidden"}`}
+        >
+          <DescriptionCommentSection
+            userId={userId}
+            descriptionId={item.id}
+            type={item.type}
+            hideFooter={true}
+            forceOpen={showComments}
+            onCommentCountChange={setCommentCount}
+          />
+        </div>
+      )}
 
       {selectedImage && (
         <div className="lightbox" onClick={() => setSelectedImage(null)}>

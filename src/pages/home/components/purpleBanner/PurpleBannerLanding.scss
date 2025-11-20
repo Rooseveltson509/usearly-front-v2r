@@ -1,0 +1,186 @@
+@use "@src/styles/base/variables" as *;
+
+/* ===============================
+   🎨 Bandeau violet haut
+   =============================== */
+.purple-banner-landing {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background: rgb(14, 4, 49);
+  @media screen and (max-width: 1150px) {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  &__content {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+    padding: 95px 0 200px 0;
+    .chat {
+      opacity: 0.1;
+      position: relative;
+      top: -4rem;
+      width: 330px;
+      @media screen and (max-width: 750px) {
+        display: none;
+      }
+    }
+    .text__container {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      .text {
+        position: initial;
+        transform: none;
+        color: #fff;
+        font-family: "Urbanist", sans-serif;
+        font-size: 48px;
+        font-weight: 200;
+        line-height: 130%;
+        z-index: 998;
+        @media screen and (max-width: 750px) {
+          transform: translate(-85%, -50%);
+        }
+      }
+      .subtext {
+        color: white;
+        font-size: 26px;
+        font-weight: 200;
+        z-index: 998;
+        &-bold {
+          font-weight: 700;
+        }
+      }
+      .button {
+        button {
+          width: fit-content;
+          padding: 10px 25px;
+          border-radius: 999px;
+          background-color: transparent;
+          border: 1px solid white;
+          color: white;
+          font-size: 20px;
+          z-index: 998;
+        }
+      }
+    }
+
+    .feedback-tabs {
+      display: flex;
+      gap: 1rem;
+      top: 11.5rem;
+      margin-bottom: 1.5rem;
+      justify-content: center;
+      position: absolute;
+      left: 35%;
+      @media screen and (max-width: 1150px) {
+        left: 0;
+        right: 0;
+        width: 100%;
+        transform: none;
+      }
+    }
+
+    .text__decoration {
+      position: relative;
+      display: inline-block;
+
+      .emoji {
+        position: absolute;
+        bottom: 35px;
+        right: -4px;
+
+        animation: float2 5.2s ease-in-out infinite alternate;
+        will-change: transform;
+        translate: 0;
+
+        &:hover {
+          animation-play-state: paused;
+          transform: scale(1.25);
+        }
+      }
+
+      .bulle {
+        margin: 0 10px -27.5px 5px;
+        width: 300px;
+      }
+    }
+
+    .right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+
+      .decorative-logos {
+        position: absolute;
+        top: 7rem;
+        right: -60px;
+        width: clamp(320px, 34vw, 480px);
+        height: clamp(190px, 26vw, 300px);
+        z-index: 1; // float the icons above the banner background
+        pointer-events: none; // keep the logos from catching mouse events
+        @media screen and (max-width: 750px) {
+          top: -70px;
+          right: -10px;
+          width: 240px;
+          height: 200px;
+        }
+
+        .logo {
+          position: absolute;
+          animation: float 3s ease-in-out infinite;
+          opacity: 0.75;
+          filter: drop-shadow(0 18px 36px rgba(12, 5, 45, 0.45));
+
+          &.logo-big {
+            top: -55px;
+            right: 135px;
+            width: clamp(200px, 17vw, 280px);
+          }
+
+          &.logo-medium {
+            top: 75px;
+            right: 350px;
+            width: clamp(150px, 13vw, 220px);
+            animation-delay: 1s;
+          }
+
+          &.logo-small {
+            top: 170px;
+            right: 290px;
+            width: clamp(120px, 11vw, 180px);
+            animation-delay: 2s;
+          }
+
+          &.logo-badge {
+            opacity: 1;
+            left: 50px;
+          }
+        }
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-5px);
+        }
+      }
+    }
+  }
+}
+
+@keyframes float2 {
+  from {
+    transform: translate3d(0, -4px, 0) rotate(-8deg);
+  }
+  to {
+    transform: translate3d(0, 4px, 0) rotate(8deg);
+  }
+}

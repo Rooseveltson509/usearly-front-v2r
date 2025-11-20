@@ -15,7 +15,7 @@
   }
 
   .punchline-typography {
-    font-size: 1.8rem;
+    font-size: clamp(16px, 1vw, 1.8rem);
     line-height: 1.6;
     font-weight: 500;
 

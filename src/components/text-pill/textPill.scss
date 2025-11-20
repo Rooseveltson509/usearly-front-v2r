@@ -1,0 +1,41 @@
+.text-pill {
+  --pill-bg: #4549ef;
+  --pill-fg: #ffffff;
+  --pill-hover-fg: var(--pill-bg);
+  padding: 0px 10px;
+  height: 40px;
+  border-radius: 999px;
+
+  // pour l'animation/transition
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background-color: var(--pill-bg);
+  color: var(--pill-fg);
+  background-image: radial-gradient(
+    circle,
+    var(--pill-fg) 100%,
+    var(--pill-fg) 100%
+  );
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 0% 0%;
+  transition:
+    color 0.3s ease,
+    background-size 0.35s ease,
+    background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.text-pill:hover,
+.text-pill:focus-visible {
+  color: var(--pill-hover-fg);
+  background-size: 150% 150%;
+}
+
+.text-pill.is-active:hover,
+.text-pill.is-active:focus-visible {
+  color: var(--pill-fg);
+  background-size: 0% 0%;
+}

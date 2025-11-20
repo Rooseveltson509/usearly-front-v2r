@@ -12,6 +12,7 @@ interface AvatarProps {
   wrapperClassName?: string;
   preferBrandLogo?: boolean;
   siteUrl?: string;
+  sizeHW?: number;
 }
 
 const Avatar: React.FC<AvatarProps> = ({
@@ -22,6 +23,7 @@ const Avatar: React.FC<AvatarProps> = ({
   wrapperClassName = "",
   preferBrandLogo = true,
   siteUrl,
+  sizeHW = 50,
 }) => {
   const [imgError, setImgError] = useState(false);
 
@@ -132,6 +134,7 @@ const Avatar: React.FC<AvatarProps> = ({
     <div className={`avatar-wrapper-custom ${wrapperClassName}`}>
       {shouldShowImage ? (
         <img
+          style={{ width: sizeHW, height: sizeHW }}
           src={fullUrl || ""}
           alt={pseudo || "Avatar"}
           onError={() => setImgError(true)}
@@ -143,6 +146,7 @@ const Avatar: React.FC<AvatarProps> = ({
         />
       ) : (
         <div
+          style={{ width: sizeHW, height: sizeHW }}
           className={`avatar-fallback-custom ${colorClass} ${className} ${
             type === "brand" ? "brand-fallback" : ""
           }`}

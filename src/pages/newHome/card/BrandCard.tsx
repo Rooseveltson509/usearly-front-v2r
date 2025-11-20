@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import "./BrandCard.scss";
 import brandHead from "/assets/icons/brand-head.svg";
-import { fetchValidBrandLogo } from "../../../utils/brandLogos";
+import InfiniteSlider from "../../../components/infiniteSlider/InfiniteSlider";
+import Buttons from "@src/components/buttons/Buttons";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@src/services/AuthContext";
 
 const BrandCard: React.FC = () => {
-  const [logos, setLogos] = useState<Record<string, string>>({});
-
   // Liste des marques
   const brands = [
     "Netflix",
@@ -20,27 +21,16 @@ const BrandCard: React.FC = () => {
     "Tesla",
   ];
 
-  const infiniteBrands = [
-    ...brands,
-    ...brands,
-    ...brands,
-    ...brands,
-    ...brands,
-  ];
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
-  // Charger les logos dynamiquement
-  useEffect(() => {
-    const loadBrandLogos = async () => {
-      const entries = await Promise.all(
-        brands.map(async (brand) => {
-          const logoUrl = await fetchValidBrandLogo(brand);
-          return [brand, logoUrl] as [string, string];
-        }),
-      );
-      setLogos(Object.fromEntries(entries));
-    };
-    loadBrandLogos();
-  }, []);
+  const handleButtonClick = () => {
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+    navigate("/feedback");
+  };
 
   return (
     <div className="brand-card">
@@ -49,20 +39,14 @@ const BrandCard: React.FC = () => {
         <img src={brandHead} alt="Brand Head" />
       </div>
       <div className="brand-main">
-        <div className="brand-slider">
-          {infiniteBrands.map((brand, index) => (
-            <div key={`${brand}-${index}`} className="brand-item">
-              <img
-                src={logos[brand] || ""}
-                alt={brand}
-                className="brand-logo"
-              />
-            </div>
-          ))}
-        </div>
+        <InfiniteSlider brandsArray={brands} />
       </div>
       <div className="brand-footer">
-        <button className="brand-btn">En savoir plus</button>
+        <Buttons
+          addClassName="brand-btn"
+          title="En savoir plus"
+          onClick={handleButtonClick}
+        />
       </div>
     </div>
   );

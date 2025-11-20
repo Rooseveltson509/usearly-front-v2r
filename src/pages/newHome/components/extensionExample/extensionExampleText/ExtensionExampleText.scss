@@ -1,0 +1,18 @@
+@use "@src/styles/base/variables" as *;
+
+.extension-example-text-container {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  gap: 48px;
+  .extension-example-title {
+    font-family: $font-family-4;
+    font-size: 34px;
+  }
+  .extension-example-description {
+    font-size: 24px;
+    font-family: $font-family;
+    font-weight: 300;
+    line-height: 193%;
+  }
+}

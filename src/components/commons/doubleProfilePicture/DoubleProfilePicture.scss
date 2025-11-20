@@ -1,0 +1,18 @@
+.signalement-post-minimal-pp {
+  &-photos {
+    display: flex;
+    justify-content: center;
+    &-container {
+      img {
+        border-radius: 999px;
+        object-fit: cover;
+      }
+    }
+    &-container:last-child {
+      margin-left: -20px;
+    }
+  }
+  &-name {
+    white-space: nowrap;
+  }
+}

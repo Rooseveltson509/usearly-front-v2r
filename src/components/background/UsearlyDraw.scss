@@ -29,8 +29,11 @@
   /* Animation “dessin” */
   stroke-dasharray: 1; /* 100% de la longueur (grâce à pathLength="1") */
   stroke-dashoffset: 1; /* caché au départ */
-  animation: usearly-draw 45s ease-out forwards;
   will-change: stroke-dashoffset;
+}
+
+.usearly-path.animate {
+  animation: usearly-draw var(--usearly-duration, 45s) ease-out forwards;
 }
 
 @keyframes usearly-draw {

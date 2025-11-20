@@ -6,13 +6,25 @@
     justify-content: center;
     flex-direction: column;
     gap: 24px;
-    width: 80%;
+    // width: 80%;
+    width: 90%;
     margin: 24px auto;
     max-width: 1200px;
     .new-home-main-top {
       display: flex;
       gap: 24px;
-      flex-wrap: wrap;
+      @media screen and (max-width: 1220px) {
+        flex-wrap: wrap;
+      }
+    }
+    .usearly-drawing-container {
+      .usearly-wrap {
+        .usearly-svg {
+          max-width: 1200px;
+        }
+      }
     }
   }
 }
+
+// 237 x 299

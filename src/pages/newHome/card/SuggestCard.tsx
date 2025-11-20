@@ -1,24 +1,45 @@
 import React, { useState } from "react";
 import "./SuggestCard.scss";
 import suggestHead from "/assets/icons/suggest-head.svg";
-import suggest1 from "/assets/tmp/suggest1.png";
-import suggest2 from "/assets/tmp/suggest2.png";
+import InteractiveFeedbackCard from "@src/components/InteractiveFeedbackCard/InteractiveFeedbackCard";
 import { useNavigate } from "react-router-dom";
+import type { Suggestion } from "@src/types/Reports";
+import Buttons from "@src/components/buttons/Buttons";
+import { useAuth } from "@src/services/AuthContext";
+import SliderDots from "@src/components/shared/sliderDots/sliderDots";
+import fakeSuggestionsData from "@src/data/suggestions/suggestionFakeData.json";
 
 const SuggestCard: React.FC = () => {
-  const slides = [
-    [suggest1, suggest2],
-    [suggest2, suggest1],
-    [suggest1, suggest2],
-  ];
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const fakeSuggestions = fakeSuggestionsData.map((suggestion) => ({
+    ...suggestion,
+    type: "suggestion",
+  })) as unknown as (Suggestion & { type: "suggestion" })[];
 
-  // 100 / 3 = 33.333…
-  const slideWidth = 100 / slides.length;
+  const { isAuthenticated } = useAuth();
+  const suggestions = fakeSuggestions;
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [openCardId, setOpenCardId] = useState<string | null>(null);
+
+  const slideCount = suggestions.length;
+  const slideWidth = slideCount > 0 ? 100 / slideCount : 100;
   const navigate = useNavigate();
 
-  const handleButtonClick = () => {
+  const handleButtonClick = (e?: React.MouseEvent<HTMLElement>) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      (e.nativeEvent as any).stopImmediatePropagation?.();
+    }
+
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
     navigate("/feedback");
+  };
+
+  const handleToggleCard = (id: string) => {
+    setOpenCardId((prev) => (prev === id ? null : id));
   };
   return (
     <div className="suggest-card">
@@ -27,40 +48,48 @@ const SuggestCard: React.FC = () => {
         <img src={suggestHead} alt="suggestHead" />
       </div>
 
-      <div className="suggest-main">
+      <div className="suggest-main" onClickCapture={() => handleButtonClick()}>
         <div
           className="suggest-slider"
           style={{
-            width: `${slides.length * 100}%`, // 300 %
-            transform: `translateX(-${currentSlide * slideWidth}%)`, // -0, -33.333, -66.666
+            width: `${slideCount * 100}%`,
+            transform: `translateX(-${currentSlide * slideWidth}%)`,
           }}
         >
-          {slides.map((slide, i) => (
+          {suggestions.map((suggestion) => (
             <div
-              key={i}
+              key={suggestion.id}
               className="suggest-slide"
               style={{ width: `${slideWidth}%` }} // 33.333 %
             >
-              <img src={slide[0]} alt={`suggest-${i}-1`} />
-              <img src={slide[1]} alt={`suggest-${i}-2`} />
+              <InteractiveFeedbackCard
+                item={suggestion}
+                isOpen={openCardId === suggestion.id}
+                onToggle={handleToggleCard}
+                addClassName="guest-mode"
+              />
+              <InteractiveFeedbackCard
+                item={suggestion}
+                isOpen={openCardId === suggestion.id}
+                onToggle={handleToggleCard}
+                addClassName="guest-mode"
+              />
             </div>
           ))}
         </div>
       </div>
 
       <div className="suggest-footer">
-        <button className="suggest-btn" onClick={handleButtonClick}>
-          En voir plus
-        </button>
-        <div className="slider-dots">
-          {slides.map((_, i) => (
-            <button
-              key={i}
-              className={`dot ${currentSlide === i ? "active" : ""}`}
-              onClick={() => setCurrentSlide(i)}
-            />
-          ))}
-        </div>
+        <Buttons
+          addClassName="suggest-btn"
+          title="En voir plus"
+          onClick={handleButtonClick}
+        />
+        <SliderDots
+          count={suggestions.length}
+          current={currentSlide}
+          onChange={setCurrentSlide}
+        />
       </div>
     </div>
   );

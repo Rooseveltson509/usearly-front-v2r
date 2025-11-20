@@ -8,7 +8,7 @@ import ShareModal from "./share-modal/ShareModal";
 import ShareCoupDeCoeurModal from "./share-modal/ShareCoupDeCoeurModal";
 
 interface Props {
-  userId: string;
+  userId?: string;
   descriptionId: string;
   type: "coupdecoeur" | "suggestion";
   statusLabel?: string;
@@ -18,6 +18,8 @@ interface Props {
   commentCount: number;
   showComments: boolean;
   onToggleComments: () => void;
+  isGuest?: boolean;
+  onGuestCTA?: () => void;
 }
 
 const SharedFooterCdcAndSuggest: React.FC<Props> = ({
@@ -29,16 +31,19 @@ const SharedFooterCdcAndSuggest: React.FC<Props> = ({
   commentCount,
   showComments,
   onToggleComments,
+  isGuest = false,
 }) => {
   const emojis = getEmojisForType(type);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   let hoverTimeout: NodeJS.Timeout;
+  const isGuestMode = isGuest || !userId;
 
   const { getCount, handleReact } = useReactionsForDescription(
-    userId,
+    userId || "",
     descriptionId,
     type,
+    { enabled: !isGuestMode },
   );
 
   const allReactions = emojis
@@ -47,7 +52,11 @@ const SharedFooterCdcAndSuggest: React.FC<Props> = ({
     .sort((a, b) => b.count - a.count);
 
   const topThree = allReactions.slice(0, 3);
-  const totalCount = allReactions.reduce((acc, r) => acc + r.count, 0);
+  const totalCount = isGuestMode
+    ? allReactions.reduce((acc, r) => acc + r.count, 0)
+    : 0;
+
+  commentCount = isGuestMode ? 0 : commentCount;
 
   const handleAddReaction = async (emoji: string) => {
     await handleReact(emoji);
@@ -118,7 +127,7 @@ const SharedFooterCdcAndSuggest: React.FC<Props> = ({
                   <EmojiUrlyReactionPicker
                     onSelect={handleAddReaction}
                     type={type}
-                    userId={userId}
+                    userId={userId || ""}
                     descriptionId={descriptionId}
                   />
                 </div>

@@ -5,6 +5,7 @@ import "./Header.scss";
 import Logo from "@src/assets/logo.svg";
 import { useAuth } from "@src/services/AuthContext";
 import { getNotifications } from "@src/services/notificationService";
+import Buttons from "@src/components/buttons/Buttons";
 
 const Header = () => {
   const { isAuthenticated, userProfile, logout } = useAuth();
@@ -87,10 +88,10 @@ const Header = () => {
             </NavLink>
           )}
           <NavLink to="/marque" className="link">
-            Marques
+            {isAuthenticated ? "Marques" : "Vous êtes une entreprise ?"}
           </NavLink>
           <NavLink to="/impact" className="link">
-            Impact
+            {isAuthenticated ? "Impact" : "Marques à l’écoute"}
           </NavLink>
         </nav>
 
@@ -115,23 +116,31 @@ const Header = () => {
           )}
 
           {/* 👤 Menu utilisateur */}
-          <div
-            className={`user-toggle ${userMenuOpen ? "open" : ""}`}
-            onClick={(e) => {
-              e.stopPropagation();
-              setUserMenuOpen((prev) => !prev);
-            }}
-          >
-            <i className="far fa-user" />
-            <span className="header-user">
-              {isAuthenticated
-                ? `Bonjour ${userProfile?.pseudo || "Utilisateur"}`
-                : "Mon compte"}
-            </span>
-            <i
-              className={`fa fa-chevron-down ${userMenuOpen ? "rotated" : ""}`}
+          {isAuthenticated ? (
+            <div
+              className={`user-toggle ${userMenuOpen ? "open" : ""}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                setUserMenuOpen((prev) => !prev);
+              }}
+            >
+              <i className="far fa-user" />
+              <span className="header-user">
+                {isAuthenticated
+                  ? `Bonjour ${userProfile?.pseudo || "Utilisateur"}`
+                  : "Mon compte"}
+              </span>
+              <i
+                className={`fa fa-chevron-down ${userMenuOpen ? "rotated" : ""}`}
+              />
+            </div>
+          ) : (
+            <Buttons
+              onClick={() => navigate("/lookup")}
+              addClassName="header-nav-button"
+              title="S'inscrire"
             />
-          </div>
+          )}
 
           {userMenuOpen && (
             <div className="user-dropdown-menu">

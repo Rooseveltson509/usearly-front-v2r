@@ -1,0 +1,277 @@
+.new-home-video-container {
+  z-index: 2;
+  margin-top: -150px;
+  text-align: center;
+
+  .new-home-video-wrapper {
+    position: relative;
+    display: inline-grid;
+    margin: 0 auto;
+    justify-items: center;
+    --cinema-btn-right: 35px;
+    --cinema-btn-bottom: 31px;
+    cursor: pointer;
+
+    .new-home-video {
+      border-radius: 18px;
+      height: 436px;
+      transition: height 0.3s ease-in-out;
+    }
+
+    .playIcon {
+      z-index: 3;
+      width: 90px;
+      height: 90px;
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      border: 0;
+      background: transparent;
+      padding: 0;
+      cursor: pointer;
+      transition:
+        opacity 0.25s ease,
+        transform 0.25s ease;
+      will-change: opacity, transform;
+
+      &.is-visible {
+        opacity: 1;
+        transform: translate(-50%, 0) scale(1);
+      }
+      &.is-hidden {
+        opacity: 0;
+        transform: translate(-50%, 150%) scale(0.5);
+        pointer-events: none;
+      }
+
+      &:hover {
+        transform: translateX(-50%) scale(1.2);
+      }
+    }
+  }
+
+  /* Agrandissement au hover (hors mode cinéma) */
+  &:not(.cinema) .new-home-video-wrapper:hover .new-home-video {
+    height: 636px;
+  }
+
+  /* ===== Mode CINÉMA ===== */
+  &.cinema {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0;
+
+    &::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.92);
+      pointer-events: none;
+    }
+
+    .new-home-video-wrapper {
+      width: min(90vw, 1280px);
+    }
+    .new-home-video {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+    }
+    .playIcon {
+      display: none;
+    }
+  }
+
+  /* ===== Contrôles custom (volume + cinema) ===== */
+  .custom-controls {
+    position: absolute;
+    right: var(--cinema-btn-right);
+    bottom: var(--cinema-btn-bottom);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 3;
+    transition:
+      opacity 0.18s ease,
+      transform 0.18s ease;
+
+    &.is-hidden {
+      opacity: 0;
+      transform: translateY(6px);
+      pointer-events: none;
+    }
+  }
+
+  .volume-control {
+    position: relative;
+    height: 36px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* Fond noir quand le volume est ouvert (hover/focus) */
+  .volume-control:hover .volume-btn,
+  .volume-control:focus-within .volume-btn {
+    background: #000 !important;
+  }
+
+  /* Boutons ronds (volume + cinéma) */
+  .volume-btn,
+  .cinema-btn {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    border: 0;
+    padding: 0;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+
+    background: color-mix(in oklab, #000 45%, transparent);
+    color: #fff;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    transition:
+      background 0.2s ease,
+      transform 0.12s ease,
+      opacity 0.2s ease;
+    transform: translateZ(0) scale(1);
+    transform-origin: bottom right;
+
+    svg {
+      width: 18px;
+      height: 18px;
+      display: block;
+    }
+
+    &:hover {
+      background: color-mix(in oklab, #000 55%, transparent);
+    }
+    &:active {
+      transform: translateZ(0) scale(0.96);
+    }
+    &:focus-visible {
+      outline: 2px solid #ffffff88;
+      outline-offset: 2px;
+    }
+
+    &.is-hidden {
+      opacity: 0;
+      transform: translateZ(0) scale(0.96);
+      pointer-events: none;
+    }
+
+    @media (prefers-color-scheme: light) {
+      background: color-mix(in oklab, #000 35%, transparent);
+      &:hover {
+        background: color-mix(in oklab, #000 45%, transparent);
+      }
+    }
+  }
+
+  /* Petit lift visuel au hover du wrapper */
+  .new-home-video-wrapper:hover .cinema-btn,
+  .new-home-video-wrapper:hover .volume-btn {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+
+  .volume-btn span {
+    font-size: 14px;
+    line-height: 1;
+  }
+
+  /* Slider de volume */
+  .volume-slider {
+    --track-size: 6px;
+    --thumb-size: 10px;
+    position: absolute;
+    left: 50%;
+    bottom: 46px;
+    width: 28px;
+    height: 150px;
+    padding: 14px 0px;
+    display: grid;
+    place-items: center;
+
+    background-color: rgba(0, 0, 0, 0.25); /* noir léger */
+
+    writing-mode: bt-lr;
+    appearance: slider-vertical;
+    -webkit-appearance: slider-vertical;
+    transform: translate(-50%, 8px);
+    transform-origin: bottom;
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      opacity 0.18s ease,
+      transform 0.18s ease;
+    accent-color: #ffffffcc;
+  }
+
+  .volume-control:hover .volume-slider,
+  .volume-control:focus-within .volume-slider {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(-50%, 0);
+  }
+
+  .volume-slider::-webkit-slider-runnable-track,
+  .volume-slider::-moz-range-track {
+    width: var(--track-size);
+    height: 100%;
+    background: linear-gradient(180deg, #ffffffc0 0%, #ffffff55 100%);
+    border-radius: 999px;
+    border: 1px solid #ffffff33;
+  }
+
+  .volume-slider::-webkit-slider-thumb,
+  .volume-slider::-moz-range-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: var(--thumb-size);
+    height: var(--thumb-size);
+    border-radius: 50%;
+    border: 1px solid #ffffffaa;
+    background: #fff;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+    cursor: pointer;
+  }
+
+  .volume-slider:focus-visible {
+    outline: 2px solid #ffffff88;
+    outline-offset: 4px;
+  }
+}
+
+/* ===== Natif : ne garder que Play + Timeline (WebKit) ===== */
+.new-home-video {
+  &::-webkit-media-controls-enclosure {
+    overflow: hidden;
+  }
+  &::-webkit-media-controls-play-button {
+    display: block !important;
+  }
+  &::-webkit-media-controls-timeline {
+    display: block !important;
+  }
+
+  &::-webkit-media-controls-mute-button,
+  &::-webkit-media-controls-fullscreen-button,
+  &::-webkit-media-controls-picture-in-picture-button,
+  &::-webkit-media-controls-closed-captions-button,
+  &::-webkit-media-controls-toggle-closed-captions-button,
+  &::-webkit-media-controls-seek-back-button,
+  &::-webkit-media-controls-seek-forward-button,
+  &::-webkit-media-controls-playback-rate-button,
+  &::-webkit-media-controls-download-button,
+  &::-webkit-media-controls-cast-button {
+    display: none !important;
+  }
+}
