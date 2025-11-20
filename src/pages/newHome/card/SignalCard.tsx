@@ -6,9 +6,14 @@ import signal2 from "/assets/tmp/signal2.png";
 import signal3 from "/assets/tmp/signal1.png";
 import signal4 from "/assets/tmp/signal2.png";
 import { useNavigate } from "react-router-dom";
+import SignalementPostMinimal from "@src/components/commons/signalements/SignalementPostMinimal";
+import Buttons from "@src/components/buttons/Buttons";
+import SliderDots from "@src/components/shared/sliderDots/sliderDots";
+import { useAuth } from "@src/services/AuthContext";
 
 const SignalCard: React.FC = () => {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const images = [signal1, signal2, signal3, signal4];
@@ -17,6 +22,14 @@ const SignalCard: React.FC = () => {
 
   // Décalage = 100 / nombre d'images (25 % pour 4 images)
   const step = 100 / images.length;
+
+  const handleButtonClick = () => {
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+    navigate("/feedback");
+  };
 
   return (
     <div className="signal-card">
@@ -31,29 +44,27 @@ const SignalCard: React.FC = () => {
             className="signal-slider"
             style={{ transform: `translateY(-${currentSlide * step}%)` }}
           >
-            {images.map((img, i) => (
-              <div className="signal-slide" key={i}>
-                <img src={img} alt={`signal-${i}`} />
-              </div>
-            ))}
+            <div className="signal-slide">
+              <SignalementPostMinimal />
+              <SignalementPostMinimal />
+              <SignalementPostMinimal />
+              <SignalementPostMinimal />
+            </div>
           </div>
         </div>
-
-        <div className="slider-dots-vertical">
-          {[...Array(totalSteps)].map((_, i) => (
-            <button
-              key={i}
-              className={`dot ${currentSlide === i ? "active" : ""}`}
-              onClick={() => setCurrentSlide(i)}
-              aria-label={`Aller au slide ${i + 1}`}
-            />
-          ))}
-        </div>
+        <SliderDots
+          count={totalSteps}
+          current={currentSlide}
+          onChange={setCurrentSlide}
+          orientation="vertical"
+        />
       </div>
 
-      <button className="signal-btn" onClick={() => navigate("/feedback")}>
-        Découvrir
-      </button>
+      <Buttons
+        addClassName="signal-btn"
+        title="Découvrir"
+        onClick={handleButtonClick}
+      />
     </div>
   );
 };

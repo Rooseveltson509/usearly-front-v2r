@@ -2,15 +2,21 @@ import { apiService } from "@src/services/apiService";
 import type { UserReaction } from "@src/types/reaction";
 import { useEffect, useState } from "react";
 
+interface Options {
+  enabled?: boolean;
+}
+
 export const useReactionsForDescription = (
   userId: string,
   id: string,
   type?: "coupdecoeur" | "suggestion",
+  options?: Options,
 ) => {
   const [reactions, setReactions] = useState<UserReaction[]>([]);
+  const enabled = options?.enabled ?? true;
 
   useEffect(() => {
-    if (!id) return;
+    if (!id || !enabled) return;
 
     const fetchReactions = async () => {
       try {
@@ -28,7 +34,7 @@ export const useReactionsForDescription = (
     };
 
     fetchReactions();
-  }, [id, type]);
+  }, [id, type, enabled]);
 
   const getCount = (emoji: string) =>
     reactions.filter((r) => r.emoji === emoji).length;
@@ -37,6 +43,7 @@ export const useReactionsForDescription = (
     reactions.some((r) => r.userId === userId && r.emoji === emoji);
 
   const handleReact = async (emoji: string) => {
+    if (!enabled) return;
     try {
       const endpoint = type
         ? type === "coupdecoeur"

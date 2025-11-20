@@ -1,5 +1,8 @@
 .cdc-card {
-  flex: 2;
+  width: 40%;
+  @media screen and (max-width: 1220px) {
+    width: 100%;
+  }
   min-height: 400px;
   background: #f6f5b3;
   border-radius: 16px;
@@ -112,6 +115,7 @@
     width: 100%;
 
     .cdc-btn {
+      max-width: 106px;
       background: #000;
       color: #fff;
       border: none;
@@ -121,29 +125,6 @@
       font-family: Inter;
       font-weight: 600;
       font-size: 14px;
-    }
-
-    .slider-dots {
-      display: flex;
-      gap: 8px;
-
-      .dot {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        border: none;
-        background: #fff;
-        cursor: pointer;
-        transition: background 0.3s ease;
-
-        &.active {
-          border: 1px solid #000;
-        }
-
-        &:hover {
-          background: rgb(0, 0, 0);
-        }
-      }
     }
   }
 }

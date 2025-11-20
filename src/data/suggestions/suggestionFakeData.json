@@ -1,0 +1,83 @@
+[
+  {
+    "id": "662854e6-9d2a-4059-80a6-39dba29b85e2",
+    "marque": "vercel",
+    "descriptionId": "suggestion-desc-1",
+    "emplacement": "category_page",
+    "emoji": "🚀",
+    "title": "Optimisation de la connexion",
+    "punchline": "Simplifier la connexion pour éviter les erreurs frustrantes.",
+    "description": "Je rencontre des difficultés pour me connecter à mon compte. Un message d’erreur s’affiche ou l’identifiant/mot de passe semble incorrect malgré plusieurs tentatives.Je rencontre des difficultés pour me connecter à mon compte. Un message d’erreur s’affiche ou l’identifiant/mot de passe semble incorrect malgré plusieurs tentatives.Je rencontre des difficultés pour me connecter à mon compte. Un message d’erreur s’affiche ou l’identifiant/mot de passe semble incorrect malgré plusieurs tentatives.Je rencontre des difficultés pour me connecter à mon compte. Un message d’erreur s’affiche ou l’identifiant/mot de passe semble incorrect malgré plusieurs tentatives.Je rencontre des difficultés pour me connecter à mon compte. Un message d’erreur s’affiche ou l’identifiant/mot de passe semble incorrect malgré plusieurs tentatives.Je rencontre des difficultés pour me connecter à mon compte. Un message d’erreur s’affiche ou l’identifiant/mot de passe semble incorrect malgré plusieurs tentatives.Je rencontre des difficultés pour me connecter à mon compte. Un message d’erreur s’affiche ou l’identifiant/mot de passe semble incorrect malgré plusieurs tentatives.Je rencontre des difficultés pour me connecter à mon compte. Un message d’erreur s’affiche ou l’identifiant/mot de passe semble incorrect malgré plusieurs tentatives.Je rencontre des difficultés pour me connecter à mon compte. Un message d’erreur s’affiche ou l’identifiant/mot de passe semble incorrect malgré plusieurs tentatives, ç'est énervant.",
+    "siteUrl": "usearly-front-v2r.vercel.app",
+    "capture": "",
+    "meta": {
+      "axe": "typography",
+      "layoutType": "single-line",
+      "highlightedWords": ["connexion", "erreurs"]
+    },
+    "createdAt": "2025-11-16T14:39:59.000Z",
+    "updatedAt": "2025-11-16T14:39:59.000Z",
+    "reactions": [],
+    "type": "suggestion",
+    "duplicateCount": 0,
+    "author": {
+      "pseudo": "Sheldon",
+      "email": "coopersheldon@yopmail.com",
+      "avatar": "https://res.cloudinary.com/dwbxssltw/image/upload/v1762338471/avatars/users/cm90yuohqcnxaalrpy3u.jpg"
+    }
+  },
+  {
+    "id": "50812eba-a2e2-4339-b611-5058649107e9",
+    "marque": "",
+    "descriptionId": "suggestion-desc-2",
+    "emplacement": "home",
+    "emoji": "🚀",
+    "title": "Amélioration de l'expérience utilisateur",
+    "punchline": "Et si un code de réduction facile à utiliser pour chaque nouvel...",
+    "description": "Je reçois un bon de réduction de 10€ pour ma première utilisation de l'App Amazon. Je décide d'en profiter pour un achat durant le black week, sauf que je ne trouve aucun endroit pour renseigner mon code ENJOY10... Je vais jusqu'au paiement, ça interroge ma banque, du coup je refuse la double validation bancaire. Ca annule ma commande (avec l'autre souci signalé que la commande est créée puis annulée 3 minutes plus tard...). Je suis obligé d'échanger avec une personne du service client pour comprendre, via Chat. En fait ils remboursent les 10€ après livraison de l'article... pas clair, pas du tout intuitif et nécessite du temps pour échanger...",
+    "siteUrl": "",
+    "capture": null,
+    "meta": {
+      "axe": "typography",
+      "layoutType": "single-line",
+      "highlightedWords": ["réduction", "achat"]
+    },
+    "createdAt": "2025-11-16T14:32:16.000Z",
+    "updatedAt": "2025-11-16T14:32:16.000Z",
+    "reactions": [],
+    "type": "suggestion",
+    "duplicateCount": 0,
+    "author": {
+      "pseudo": "LeRelou",
+      "email": "sevrard@zenity.fr",
+      "avatar": "https://res.cloudinary.com/dwbxssltw/image/upload/v1762338471/avatars/users/cm90yuohqcnxaalrpy3u.jpg"
+    }
+  },
+  {
+    "id": "b942b537-9383-49e3-ade7-014bfe2b34fd",
+    "marque": "amazon",
+    "descriptionId": "suggestion-desc-3",
+    "emplacement": "home",
+    "emoji": "🚀",
+    "title": "Gestion des commandes sur Amazon",
+    "punchline": "Des commandes confirmées sans stress, pour une expérience fluide.",
+    "description": "Quand on passe une commande sur Amazon et qu'on a une double vérification bancaire, si sur le site de ma banque j'ai refusé le paiement, la commande est quand même créée sur Amazon, je reçois un mail de confirmation puis 2 minutes plus tard un autre mail d'annulation de commande. Mais pendant ce temps on stresse et on ne comprend pas pourquoi la commande est quand même validée...",
+    "siteUrl": "amazon.fr",
+    "capture": "",
+    "meta": {
+      "axe": "typography",
+      "layoutType": "single-line",
+      "highlightedWords": ["commandes", "stress"]
+    },
+    "createdAt": "2025-11-16T14:23:05.000Z",
+    "updatedAt": "2025-11-16T14:23:05.000Z",
+    "reactions": [],
+    "type": "suggestion",
+    "duplicateCount": 0,
+    "author": {
+      "pseudo": "LeRelou",
+      "email": "sevrard@zenity.fr",
+      "avatar": "https://res.cloudinary.com/dwbxssltw/image/upload/v1762338471/avatars/users/cm90yuohqcnxaalrpy3u.jpg"
+    }
+  }
+]

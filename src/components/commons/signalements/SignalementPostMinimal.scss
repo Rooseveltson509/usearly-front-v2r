@@ -1,0 +1,71 @@
+@use "@src/styles/base/variables" as *;
+
+.signalement-post-minimal {
+  background-color: white;
+  display: flex;
+  justify-content: space-between;
+  min-height: 87px;
+  border-radius: 8px;
+  padding: 8px 5px;
+  &-main {
+    display: flex;
+    &-icon {
+      width: 57px;
+      justify-items: center;
+      img {
+        max-width: 40px;
+      }
+    }
+    &-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      &-top {
+        display: flex;
+        gap: 8px;
+        &-text {
+          font-family: $font-family;
+          font-size: 14px;
+          font-weight: 800;
+          color: $dark;
+        }
+        &-count {
+          height: fit-content;
+          font-size: 14px;
+          border: 1px solid #000;
+          border-radius: 999px;
+          padding: 1px 10px;
+        }
+      }
+      &-bottom {
+        display: flex;
+        font-family: $font-family;
+        font-size: 12px;
+        color: $gray-600;
+        &-reactions {
+          display: flex;
+          align-items: center;
+          gap: 7px;
+          &-icons {
+            display: flex;
+            img {
+              width: 32px;
+              height: 32px;
+              border-radius: 999px;
+              border: 2px solid white;
+            }
+            img:last-child {
+              margin-left: -10px;
+            }
+          }
+        }
+        &-commentaire {
+          display: flex;
+          margin-left: 20px;
+          align-items: center;
+          gap: 5px;
+        }
+      }
+    }
+  }
+}

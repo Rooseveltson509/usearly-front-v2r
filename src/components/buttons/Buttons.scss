@@ -1,24 +1,64 @@
 @use "@styles/base/variables" as *;
 
-$buttonColor: #2d1e2c;
-
 .btn-primary {
-  background-color: $dark;
+  position: relative;
+  overflow: hidden;
   width: 100%;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 16px 96px;
+  outline: 0.5px solid transparent;
+  border-radius: 8px;
+  padding: 12px 20px;
   font-size: 1rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  color: #fff;
+  background: $dark;
+  border: none;
+  transition:
+    color 0.25s ease,
+    outline-color 0.25s ease;
+
+  > * {
+    position: relative;
+    z-index: 1;
+    color: inherit;
+  }
+
+  .btn-primary__label {
+    position: relative;
+    z-index: 1;
+    color: inherit;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    font: inherit;
+    text-align: center;
+  }
+
+  /* Voile blanc qui “pousse” depuis les bords */
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: #fff;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.35s cubic-bezier(0.2, 0.6, 0.2, 1);
+    z-index: 0;
+  }
 
   &:hover {
-    background-color: #1b1c1d;
+    color: $dark !important;
+    outline-color: $dark;
+
+    > * {
+      color: $dark !important;
+    }
+  }
+  &:hover::before {
+    transform: scaleX(1);
   }
 
   &:disabled {
-    background-color: $dark;
     opacity: 0.8;
     cursor: not-allowed;
   }

@@ -711,14 +711,14 @@
 }
 
 .feedback-card {
-  width: 100%; // ✅ occupe toute la largeur du parent
+  // width: 100%;
   margin-bottom: 0; // ✅ retiré, on utilise `gap` dans le parent maintenant
   border-radius: $border-radius-md;
   overflow: hidden;
   transition: box-shadow 0.3s ease;
-  @media screen and (max-width: 1350px) {
-    max-width: none;
-  }
+  // @media screen and (max-width: 1350px) {
+  //   max-width: none;
+  // }
 
   &.open {
     .card-header {

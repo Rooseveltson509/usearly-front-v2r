@@ -14,16 +14,20 @@
   width: 700px;
   .feedback-card {
     border-radius: 12px;
-    padding: 20px 16px 0px 15px;
+    padding: 20px 16px 16px 15px;
 
     .feedback-type {
       flex: none;
-      width: 269px;
-      height: 299px;
+      width: 43%;
+      // width: 269px;
+      // height: 299px;
       border-radius: 16px;
       padding-bottom: 16px;
 
       .feedback-left {
+        width: 100%;
+        // width: 269px;
+        // height: 299px;
         border-radius: 16px;
       }
     }

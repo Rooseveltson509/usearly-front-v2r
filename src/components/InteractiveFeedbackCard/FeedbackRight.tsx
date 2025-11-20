@@ -23,6 +23,7 @@ interface Props {
   showComments: boolean;
   onToggleComments: () => void;
   commentCount: number;
+  isGuest: boolean;
 }
 
 const isValidDate = (value: any) => {
@@ -47,8 +48,10 @@ const FeedbackRight: React.FC<Props> = ({
   showComments,
   onToggleComments,
   commentCount,
+  isGuest,
 }) => {
   const [showFullText, setShowFullText] = useState(false);
+  const safeUserId = userProfile?.id;
   const DESCRIPTION_LIMIT = 100;
   const rawDescription = item.description || "";
   const description = rawDescription.trim();
@@ -73,6 +76,7 @@ const FeedbackRight: React.FC<Props> = ({
   });
 
   console.log("🧩 FEEDBACKRIGHT DEBUG AUTHOR", item.author);
+
   return (
     <div className="feedback-right" onClick={() => onToggle(item.id)}>
       <div className="feedback-content">
@@ -174,7 +178,7 @@ const FeedbackRight: React.FC<Props> = ({
         onClick={(e) => e.stopPropagation()}
       >
         <SharedFooterCdcAndSuggest
-          userId={userProfile.id}
+          userId={safeUserId}
           descriptionId={item.id}
           type={item.type}
           onVoteClick={item.type === "suggestion" ? onVoteClick : undefined}
@@ -182,6 +186,7 @@ const FeedbackRight: React.FC<Props> = ({
           commentCount={commentCount}
           showComments={showComments}
           onToggleComments={onToggleComments}
+          isGuest={isGuest}
         />
       </div>
     </div>

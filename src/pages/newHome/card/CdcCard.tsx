@@ -6,9 +6,14 @@ import brand1 from "/assets/tmp/brand1.png";
 import profile2 from "/assets/tmp/profile2.jpg";
 import brand2 from "/assets/tmp/brand2.png";
 import { useNavigate } from "react-router-dom";
+import DoubleProfilePicture from "@src/components/commons/doubleProfilePicture/DoubleProfilePicture";
+import Button from "@src/components/buttons/Buttons";
+import SliderDots from "@src/components/shared/sliderDots/sliderDots";
+import { useAuth } from "@src/services/AuthContext";
 
 const CdcCard: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const { isAuthenticated } = useAuth();
 
   const cards = [
     { id: 1, title: "Gros crush pour l'app", profile: profile1, brand: brand1 },
@@ -23,6 +28,10 @@ const CdcCard: React.FC = () => {
   const navigate = useNavigate();
 
   const handleButtonClick = () => {
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
     navigate("/feedback");
   };
   return (
@@ -45,27 +54,27 @@ const CdcCard: React.FC = () => {
           {cards.map((card) => (
             <div key={card.id} className="cdc-main-content">
               <div className="cdc-main-title">{card.title}</div>
-              <div className="cdc-main-img">
-                <img src={card.profile} alt={`profile${card.id}`} />
-                <img src={card.brand} alt={`brand${card.id}`} />
-              </div>
+              <DoubleProfilePicture
+                UserPicture={card.profile}
+                BrandPicture={card.brand}
+                pseudoVisible={false}
+                sizeHW={80}
+              />
             </div>
           ))}
         </div>
       </div>
       <div className="cdc-footer">
-        <button className="cdc-btn" onClick={handleButtonClick}>
-          Découvrir
-        </button>
-        <div className="slider-dots">
-          {[0, 1, 2].map((index) => (
-            <button
-              key={index}
-              className={`dot ${currentSlide === index ? "active" : ""}`}
-              onClick={() => handleSlideClick(index)}
-            />
-          ))}
-        </div>
+        <Button
+          addClassName="cdc-btn"
+          title="Découvrir"
+          onClick={handleButtonClick}
+        />
+        <SliderDots
+          count={3}
+          current={currentSlide}
+          onChange={handleSlideClick}
+        />
       </div>
     </div>
   );
