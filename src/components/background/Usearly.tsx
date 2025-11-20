@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import type { CSSProperties } from "react";
 import "./UsearlyDraw.scss";
 
 type UsearlyDrawProps = {
@@ -37,12 +38,13 @@ export default function UsearlyDraw({
     observer.observe(target);
     return () => observer.disconnect();
   }, []);
-
   return (
     <div
       ref={wrapRef}
       className="usearly-wrap"
-      style={{ ["--usearly-duration" as const]: resolvedDuration }}
+      style={
+        { ["--usearly-duration" as any]: resolvedDuration } as CSSProperties
+      }
     >
       <svg
         className="usearly-svg"
