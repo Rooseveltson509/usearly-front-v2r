@@ -52,19 +52,17 @@ const InputText = forwardRef<HTMLInputElement, Props>(
           required={required}
           aria-invalid={!!error}
           className={`${className} ${isFilled ? "filled" : ""}`}
-          value={value}
-          defaultValue={defaultValue}
           {...registration}
           onChange={handleChange}
           ref={(el) => {
             registration?.ref?.(el);
             if (typeof ref === "function") ref(el);
-            else if (ref)
-              (ref as React.MutableRefObject<HTMLInputElement | null>).current =
-                el;
+            else if (ref) (ref as any).current = el;
           }}
+          defaultValue={defaultValue}
           {...rest}
         />
+
         {label && <label htmlFor={id}>{label}</label>}
       </div>
     );

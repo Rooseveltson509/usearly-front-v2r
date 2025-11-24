@@ -16,6 +16,7 @@ import PenModifyIcon from "@src/assets/images/pen-modify-circle.svg";
 import InputTextAccount from "@src/components/inputs/inputsGlobal/InputTextAccount";
 import SelectAccount from "@src/components/inputs/selectGlobal/SelectAccount";
 import Buttons from "@src/components/buttons/Buttons";
+import { genderLabel } from "@src/components/InteractiveFeedbackCard/utils/genderLabel";
 
 /** Convertit une date string en valeur compatible <input type="date"> (YYYY-MM-DD). */
 function toInputDate(src: string | null | undefined): string {
@@ -35,12 +36,6 @@ function toInputDate(src: string | null | undefined): string {
     return `${yyyy}-${mm}-${dd}`;
   }
   return "";
-}
-
-/** Convertit la valeur de l’input (YYYY-MM-DD) vers DD-MM-YYYY pour l’API. */
-function toFRDateForApi(inputVal: string): string {
-  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(inputVal);
-  return m ? `${m[3]}-${m[2]}-${m[1]}` : inputVal || "";
 }
 
 function UserAccountInformations() {
@@ -84,17 +79,49 @@ function UserAccountInformations() {
 
   const handleProfileUpdate = async () => {
     try {
+      // --- VALIDATION FRONTEND ---
+      // 1. Pseudo format
+      const pseudoRegex = /^[a-zA-Z0-9]{3,50}$/;
+      if (!pseudoRegex.test(pseudo)) {
+        showToast(
+          "Pseudo invalide : lettres/chiffres, sans espace (3–50).",
+          "error",
+        );
+        return;
+      }
+
+      // 2. Date de naissance (ISO)
+      if (!birthdate) {
+        showToast("Veuillez renseigner votre date de naissance.", "error");
+        return;
+      }
+
+      // 3. Âge minimum 18 ans
+      const userBirth = new Date(birthdate);
+      const now = new Date();
+      let age = now.getFullYear() - userBirth.getFullYear();
+      const hasNotHadBirthday =
+        now.getMonth() < userBirth.getMonth() ||
+        (now.getMonth() === userBirth.getMonth() &&
+          now.getDate() < userBirth.getDate());
+      if (hasNotHadBirthday) age--;
+
+      if (age < 18) {
+        showToast("Vous devez avoir au moins 18 ans.", "error");
+        return;
+      }
+
+      // --- BUILDING FORMDATA ---
       const formData = new FormData();
       formData.append("pseudo", pseudo);
-      // l’API attend DD-MM-YYYY : on convertit depuis la valeur input YYYY-MM-DD
-      formData.append("born", toFRDateForApi(birthdate));
-      // formData.append("gender", gender);
+      formData.append("born", birthdate); // ISO directement
+      formData.append("gender", gender); // remet le genre
       if (avatarFile) formData.append("image", avatarFile);
 
       await updateUserProfile(formData);
       await fetchUserProfile();
-      setMessage("Profil mis à jour avec succès.");
-      showToast("✅ profile mise à jour avec succès !", "success");
+
+      showToast("✅ Profil mis à jour avec succès !", "success");
       navigate("/profile");
     } catch (err: any) {
       showToast(err.message, "error");
@@ -216,9 +243,9 @@ function UserAccountInformations() {
         <div className="form-group">
           <SelectAccount
             id="gender"
-            title={gender || "N/A"}
-            disabled={true}
-            options={["Homme", "Femme", "Autre"]}
+            title={genderLabel(gender)}
+            disabled={false}
+            options={["monsieur", "madame", "N/A"]}
             onChange={(value) => setGender(value)}
           />
         </div>
