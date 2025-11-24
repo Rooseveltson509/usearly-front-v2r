@@ -9,6 +9,7 @@ export const errorMessages: Record<string, string> = {
     "⚠️ Le mot de passe doit contenir au moins 8 caractères, un chiffre et un caractère spécial.",
   PASSWORD_MISMATCH: "⚠️ Les mots de passe ne correspondent pas.",
   ACCOUNT_EXISTS: "⚠️ Ce compte existe déjà.",
+  PSEUDO_TAKEN: "⚠️ Pseudo déjà existe.",
   CONFIRMATION_REQUIRED:
     "⚠️ Ce compte existe mais n'est pas confirmé. Vérifiez vos mails.",
   SERVER_ERROR: "❌ Une erreur interne est survenue. Réessayez plus tard.",

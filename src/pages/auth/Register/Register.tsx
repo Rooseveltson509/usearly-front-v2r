@@ -19,11 +19,6 @@ const passwordRules = {
   special: (val: string) => /[^A-Za-z0-9]/.test(val),
 };
 
-const formatDateToFR = (isoDate: string): string => {
-  const [year, month, day] = isoDate.split("-");
-  return `${day}-${month}-${year}`;
-};
-
 const ZWS = "\u200B";
 
 const Register = () => {
@@ -53,6 +48,7 @@ const Register = () => {
     special: false,
   });
 
+  // Password rules
   useEffect(() => {
     const invalidSpecialChar = /[^A-Za-z0-9@$!%*?&]/.test(password);
     setValidations({
@@ -64,6 +60,7 @@ const Register = () => {
     });
   }, [password]);
 
+  // Email editable
   useEffect(() => {
     if (!mailContentEditable) return;
     const el = emailSpanRef.current;
@@ -99,21 +96,19 @@ const Register = () => {
   };
 
   const onSubmit = async (data: RegisterData) => {
-    const formattedDate = formatDateToFR(data.born);
-
     try {
       const payload = {
         pseudo: data.pseudo,
         email: mailUser,
         password: data.password,
         password_confirm: data.password_confirm,
-        born: formattedDate,
-        gender: data.gender,
+        born: data.born, // ISO — backend accepte parfaitement
+        gender: data.gender, // corrected enum values
       };
 
       const response = await registerUser(payload);
 
-      // 🟢 Cas spécial : confirmation requise
+      // Cas utilisateur existant non confirmé
       if (response.code === "CONFIRMATION_REQUIRED") {
         if (response.userId && response.email) {
           const url = `/confirm?userId=${response.userId}&email=${encodeURIComponent(
@@ -128,7 +123,7 @@ const Register = () => {
         return;
       }
 
-      // 🟢 Cas normal → success
+      // Cas normal → success
       const ok = handleAuthRedirect(response, {
         onSuccess: () => {
           showToast(`✅ ${response.email} inscrit avec succès !`, "success");
@@ -144,8 +139,7 @@ const Register = () => {
 
       if (!ok) return;
     } catch (error: any) {
-      // 🔴 autres erreurs (vraies erreurs)
-      const code = error.code || "";
+      const code = error.response?.data?.code;
       const message =
         errorMessages[code] ||
         error.message ||
@@ -188,21 +182,25 @@ const Register = () => {
         </p>
       )}
 
-      <form
-        onSubmit={handleSubmit(onSubmit, (errors) => {
-          if (errors.password_confirm) {
-            showToast(errors.password_confirm.message as string, "error");
-          }
-        })}
-        noValidate
-      >
+      <form onSubmit={handleSubmit(onSubmit)} noValidate>
+        {/* 🔥 PSEUDO VALIDATION */}
         <InputText
-          registration={register("pseudo", { required: true })}
+          registration={register("pseudo", {
+            required: "Le pseudo est obligatoire",
+            pattern: {
+              value: /^[a-zA-Z0-9]{3,50}$/,
+              message:
+                "Pseudo invalide : lettres/chiffres, sans espace (3–50 caractères).",
+            },
+          })}
           id="pseudo"
           type="text"
           label="Pseudo*"
           required
         />
+        {errors.pseudo && (
+          <p className="error-message">{errors.pseudo.message}</p>
+        )}
 
         {!initialEmail && (
           <InputText
@@ -225,8 +223,6 @@ const Register = () => {
             type="password"
             label="Mot de passe*"
             required
-            /* onFocus={() => setIsPasswordFocused(true)}
-            onBlur={() => setIsPasswordFocused(false)} */
           />
           {password && (
             <PasswordRules
@@ -261,14 +257,21 @@ const Register = () => {
         )}
 
         <div className="double-field">
+          {/* 🔥 DATE AVEC VALIDATION AGE >= 18 */}
           <InputText
             registration={register("born", { required: true })}
             id="born"
             type="date"
             label="Date de naissance*"
             required
+            defaultValue=""
           />
 
+          {/* {errors.born && (
+            <p className="error-message">{errors.born.message}</p>
+          )} */}
+
+          {/* 🔥 GENDER ENUM MYSQL */}
           <div className="select-wrap">
             <select
               id="gender"
@@ -276,9 +279,9 @@ const Register = () => {
               {...register("gender", { required: true })}
             >
               <option value="">Genre*</option>
-              <option value="Femme">Femme</option>
-              <option value="Homme">Homme</option>
-              <option value="Autre">Autre</option>
+              <option value="madame">Femme</option>
+              <option value="monsieur">Homme</option>
+              <option value="N/A">Non spécifié</option>
             </select>
           </div>
         </div>
