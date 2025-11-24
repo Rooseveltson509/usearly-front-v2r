@@ -11,6 +11,7 @@ import NotificationCardRenderer from "./NotificationCardRenderer";
 import Avatar from "../shared/Avatar";
 import PurpleBanner from "../../pages/home/components/purpleBanner/PurpleBanner";
 import UserStatsCard from "../user-profile/UserStatsCard";
+import Champs, { type SelectFilterOption } from "@src/components/champs/Champs";
 
 interface Notification {
   id: string;
@@ -37,17 +38,20 @@ const sortNotifications = (list: Notification[]) =>
     return a.read ? 1 : -1;
   });
 
+type NotificationFilterValue = "all" | "suggestion" | "coupdecoeur" | "report";
+
+const NOTIF_FILTER_OPTIONS: SelectFilterOption<NotificationFilterValue>[] = [
+  { value: "all", label: "Toutes" },
+  { value: "suggestion", label: "Suggestions" },
+  { value: "coupdecoeur", label: "Coup de cœur" },
+  { value: "report", label: "Signalements" },
+];
+
 const NotificationsPage: React.FC = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const [filter, setFilter] = useState<
-    "all" | "suggestion" | "coupdecoeur" | "report"
-  >("all");
-  const [filterName, setFilterName] = useState<
-    "Toutes" | "Suggestions" | "Coup de coeur" | "Signalements"
-  >("Toutes");
-  const [displaySetFilter, setDisplaySetFilter] = useState(false);
+  const [filter, setFilter] = useState<NotificationFilterValue>("all");
   const [loading, setLoading] = useState(false);
   const [openNotifId, setOpenNotifId] = useState<string | null>(null);
   const observer = useRef<IntersectionObserver | null>(null);
@@ -190,30 +194,6 @@ const NotificationsPage: React.FC = () => {
     if (!notif.read) await handleMarkAsRead(notif.id);
   };
 
-  useEffect(() => {
-    switch (filter) {
-      case "all":
-        setFilterName("Toutes");
-        break;
-      case "suggestion":
-        setFilterName("Suggestions");
-        break;
-      case "coupdecoeur":
-        setFilterName("Coup de coeur");
-        break;
-      case "report":
-        setFilterName("Signalements");
-        break;
-    }
-  }, [filter]);
-
-  const heightFilterButton = document.querySelector(
-    ".notif-filters-select",
-  )?.scrollHeight;
-  const widthFilterButton = document.querySelector(
-    ".notif-filters-select",
-  )?.scrollWidth;
-
   return (
     <>
       <PurpleBanner navOn={false} />
@@ -226,66 +206,13 @@ const NotificationsPage: React.FC = () => {
         {/* 📩 Contenu notifications (inchangé) */}
         <section className="notifications-main">
           <div className="notif-filters">
-            <div
-              className={`notif-filters-select ${displaySetFilter ? "open" : ""}`}
-              onClick={() => setDisplaySetFilter(!displaySetFilter)}
-            >
-              {filterName}
-            </div>
-            <div
-              style={{
-                marginTop: heightFilterButton ? heightFilterButton + 8 : 50,
-                width: widthFilterButton ? widthFilterButton : "auto",
-              }}
-              className={`notif-filters-select-container-value ${displaySetFilter ? "open" : ""}`}
-            >
-              <span
-                className="notif-filter-select-value"
-                onClick={() => {
-                  setFilter("all");
-                  setDisplaySetFilter(false);
-                }}
-              >
-                All
-              </span>
-              <span
-                className="notif-filter-select-value"
-                onClick={() => {
-                  setFilter("suggestion");
-                  setDisplaySetFilter(false);
-                }}
-              >
-                Suggestion
-              </span>
-              <span
-                className="notif-filter-select-value"
-                onClick={() => {
-                  setFilter("coupdecoeur");
-                  setDisplaySetFilter(false);
-                }}
-              >
-                Coup de cœur
-              </span>
-              <span
-                className="notif-filter-select-value"
-                onClick={() => {
-                  setFilter("report");
-                  setDisplaySetFilter(false);
-                }}
-              >
-                Signalements
-              </span>
-            </div>
-            {/* <select
+            <Champs
+              options={NOTIF_FILTER_OPTIONS}
               value={filter}
-              onChange={(e) => setFilter(e.target.value as any)}
-              className="notif-filters-select"
-            >
-              <option value="all">Toutes</option>
-              <option value="suggestion">Suggestion</option>
-              <option value="coupdecoeur">Coup de cœur</option>
-              <option value="report">Signalements</option>
-            </select> */}
+              onChange={setFilter}
+              minWidth={150}
+              iconVisible={false}
+            />
           </div>
           <div className="notifications-page">
             {/* === Filtres === */}

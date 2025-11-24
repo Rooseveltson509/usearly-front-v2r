@@ -638,73 +638,13 @@
       gap: 0.8rem;
       margin-bottom: 30px;
 
-      .notif-filters-select {
-        min-width: 160px;
-        padding: 10px 18px;
-        padding-right: 44px;
-        border-radius: 999px;
-        border: 1px solid $border-color;
-        background-color: white;
-        transition: all 0.25s ease;
-        position: relative;
-        cursor: pointer;
+      .notif-filter-control {
+        min-width: 200px;
 
-        &::after {
-          content: "";
-          position: absolute;
-          top: 50%;
-          right: 18px;
-          width: 8px;
-          height: 8px;
-          border-right: 2px solid $black;
-          border-bottom: 2px solid $black;
-          transform: translateY(-60%) rotate(45deg);
-          transition: transform 0.2s ease;
-          pointer-events: none;
-        }
-
-        &.open::after {
-          transform: translateY(-20%) rotate(-135deg);
-        }
-      }
-      .notif-filters-select:focus-visible {
-        border: 2px solid $black;
-      }
-
-      .notif-filters-select-container-value {
-        position: absolute;
-        display: flex;
-        flex-direction: column;
-        background-color: white;
-        padding: 12px;
-        border-radius: 6px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-        opacity: 0;
-        visibility: hidden;
-        transform: translateY(8px) scale(0.98);
-        pointer-events: none;
-        transition:
-          opacity 0.25s ease,
-          transform 0.25s ease,
-          visibility 0s linear 0.25s;
-
-        .notif-filter-select-value {
-          padding: 10px 5px;
-          border-radius: 8px;
-        }
-        .notif-filter-select-value:hover {
-          background-color: rgba($primary, 0.1);
-        }
-
-        &.open {
-          opacity: 1;
-          visibility: visible;
-          transform: translateY(0) scale(1);
-          pointer-events: auto;
-          transition:
-            opacity 0.25s ease,
-            transform 0.25s ease,
-            visibility 0s linear 0s;
+        .select-filter-display {
+          border-radius: 999px;
+          border-color: $border-color;
+          font-weight: 600;
         }
       }
     }

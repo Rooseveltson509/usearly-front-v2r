@@ -144,10 +144,18 @@
     transform: translateZ(0) scale(1);
     transform-origin: bottom right;
 
-    svg {
-      width: 18px;
-      height: 18px;
-      display: block;
+    span {
+      justify-items: center;
+
+      svg {
+        width: 18px;
+        height: 18px;
+        display: block;
+      }
+
+      img {
+        width: 75%;
+      }
     }
 
     &:hover {
@@ -195,8 +203,7 @@
     left: 50%;
     bottom: 46px;
     width: 28px;
-    height: 150px;
-    padding: 14px 0px;
+    height: 130px;
     display: grid;
     place-items: center;
 

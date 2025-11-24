@@ -226,6 +226,8 @@ const HomeGroupedReportsList: React.FC<Props> = ({
     return grouped;
   }, [filteredReports]);
 
+  const isFeedLoading = Boolean(reportData?.loading || loadingFiltered);
+
   // === Initial loading ===
   if (initializing) {
     return (
@@ -267,6 +269,7 @@ const HomeGroupedReportsList: React.FC<Props> = ({
         availableSubCategoriesByBrandAndCategory={
           availableSubCategoriesByBrandAndCategory
         }
+        isFeedLoading={isFeedLoading}
       />
 
       {selectedBrand || selectedCategory ? (

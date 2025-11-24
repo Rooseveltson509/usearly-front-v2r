@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo } from "react";
+import { useState, useMemo } from "react";
 import FilterBarGeneric from "./genericFilters/FilterBarGeneric";
 import { useBrands } from "@src/hooks/useBrands"; // ✅ on réutilise ton hook existant
 import "./HomeFiltersCdc.scss";
@@ -29,9 +29,6 @@ const HomeFiltersCdc = ({
   const [viewMode, setViewMode] = useState<"flat" | "chrono" | "confirmed">(
     "flat",
   );
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
   // ✅ récupération dynamique des marques depuis useBrands
   const { brands, loading } = useBrands("coupdecoeur");
 
@@ -68,9 +65,6 @@ const HomeFiltersCdc = ({
         setSelectedCategory={setSelectedCategory}
         selectedBrand={selectedBrand}
         availableBrands={availableBrands}
-        dropdownRef={dropdownRef}
-        isDropdownOpen={isDropdownOpen}
-        setIsDropdownOpen={setIsDropdownOpen}
         withBrands={!loading}
         brandFocusFilter="brandSolo"
         baseFilterValue="all"

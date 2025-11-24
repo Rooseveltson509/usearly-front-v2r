@@ -19,12 +19,21 @@ import { getCommentsCountForDescription } from "@src/services/commentService";
 import { getFullAvatarUrl } from "@src/utils/avatarUtils";
 import Avatar from "../shared/Avatar";
 import { capitalizeFirstLetter } from "@src/utils/stringUtils";
+import Champs, { type SelectFilterOption } from "@src/components/champs/Champs";
 
 interface Props {
   brand: string;
   siteUrl: string;
   reports: PublicGroupedReport[];
 }
+
+type SignalementFilterValue = "pertinent" | "recents" | "anciens";
+
+const signalementFilterOptions: SelectFilterOption<SignalementFilterValue>[] = [
+  { value: "pertinent", label: "Les plus pertinents" },
+  { value: "recents", label: "Les plus récents" },
+  { value: "anciens", label: "Les plus anciens" },
+];
 
 const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
   const [expandedSub, setExpandedSub] = useState<string | null>(null);
@@ -46,12 +55,22 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
   >({});
   const [openBrands, setOpenBrands] = useState<Record<string, boolean>>({});
   const [signalementFilters, setSignalementFilters] = useState<
-    Record<string, "pertinent" | "recents" | "anciens">
+    Record<string, SignalementFilterValue>
   >({});
   const toggleBrand = (brand: string) => {
     setOpenBrands((prev) => ({
       ...prev,
       [brand]: !prev[brand],
+    }));
+  };
+
+  const handleSignalementFilterChange = (
+    subCategory: string,
+    value: SignalementFilterValue,
+  ) => {
+    setSignalementFilters((prev) => ({
+      ...prev,
+      [subCategory]: value,
     }));
   };
 
@@ -157,7 +176,8 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
             const initialDescription = sub.descriptions[0];
             const additionalDescriptions = sub.descriptions.slice(1);
             const hasMoreThanTwo = additionalDescriptions.length > 2;
-            const filter = signalementFilters[sub.subCategory] || "pertinent";
+            const filter: SignalementFilterValue =
+              signalementFilters[sub.subCategory] ?? "pertinent";
 
             const sortedDescriptions = [...additionalDescriptions].sort(
               (a, b) => {
@@ -359,32 +379,18 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
                       <>
                         <div className="other-descriptions">
                           <div className="signalement-filter">
-                            <label
-                              htmlFor={`filter-${sub.subCategory}`}
-                              className="filter-label"
-                            >
-                              Trier par :
-                            </label>
-                            <select
-                              id={`filter-${sub.subCategory}`}
+                            <span className="filter-label">Trier par :</span>
+                            <Champs
+                              options={signalementFilterOptions}
                               value={filter}
-                              onChange={(e) =>
-                                setSignalementFilters((prev) => ({
-                                  ...prev,
-                                  [sub.subCategory]: e.target.value as
-                                    | "pertinent"
-                                    | "recents"
-                                    | "anciens",
-                                }))
+                              onChange={(value) =>
+                                handleSignalementFilterChange(
+                                  sub.subCategory,
+                                  value,
+                                )
                               }
-                              className="filter-select"
-                            >
-                              <option value="pertinent">
-                                Les plus pertinents
-                              </option>
-                              <option value="recents">Les plus récents</option>
-                              <option value="anciens">Les plus anciens</option>
-                            </select>
+                              className="signalement-filter-select"
+                            />
                           </div>
 
                           {displayedDescriptions.map((desc) => (

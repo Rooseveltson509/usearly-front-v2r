@@ -63,7 +63,7 @@ export default function PurpleBanner({
             </p>
           </div>
           <div className="button">
-            <Buttons title="S'inscrire" onClick={() => navigate("/lookup")} />
+            <Buttons title="Se connecter" onClick={() => navigate("/lookup")} />
           </div>
         </div>
 

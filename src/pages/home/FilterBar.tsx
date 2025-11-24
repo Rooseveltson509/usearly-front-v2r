@@ -1,9 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
-import type { MouseEvent as ReactMouseEvent } from "react";
-import { SlidersHorizontal, ChevronDown } from "lucide-react";
-import BrandSelect from "@src/components/shared/BrandSelect";
 import "./FilterBar.scss";
-import CategoryDropdown from "@src/components/shared/CategoryDropdown";
+import Champs, { type SelectFilterOption } from "@src/components/champs/Champs";
+import { categoryIcons } from "@src/utils/categoriesIcon";
 
 interface Props {
   filter:
@@ -45,11 +43,11 @@ interface Props {
   availableCategories: string[];
   labelOverride?: string;
   setSelectedSiteUrl: (url?: string) => void;
-  siteUrl?: string;
   availableSubCategoriesByBrandAndCategory?: Record<
     string, // marque
     Record<string, string[]> // catégorie principale -> sous-catégories
   >;
+  isFeedLoading?: boolean;
 }
 
 const normalize = (str: string) =>
@@ -60,6 +58,16 @@ const normalize = (str: string) =>
     .replace(/[’']/g, "'")
     .replace(/[\s.]+$/g, "")
     .trim();
+
+const normalizeBrandName = (value: string) =>
+  value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim();
+
+const DEFAULT_CATEGORY_ICON =
+  categoryIcons["Autre souci"] || "/assets/categories-icons/other.png";
 
 const filterOptions = [
   {
@@ -108,17 +116,14 @@ const FilterBar: React.FC<Props> = ({
   selectedMainCategory: externalSelectedMainCategory,
   setSelectedMainCategory: externalSetSelectedMainCategory,
   availableBrands,
-  siteUrl,
   availableCategories,
   setSelectedSiteUrl,
   availableSubCategoriesByBrandAndCategory,
+  isFeedLoading = false,
 }) => {
-  const [, setBrandSearch] = useState("");
   const [categorySearch, setCategorySearch] = useState("");
-  const [filterHotactive, setFilterHotactive] = useState(false);
-  const [heightSelectFilter, setHeightSelectFilter] = useState<number | null>(
-    null,
-  );
+  const [disableBrandOnce, setDisableBrandOnce] = useState(true);
+
   const normalizedSelectValue = useMemo<FilterOptionValue>(() => {
     if (filter === "confirmed" || filter === "") {
       return "hot";
@@ -134,21 +139,22 @@ const FilterBar: React.FC<Props> = ({
 
     return "hot";
   }, [filter]);
-  const selectedOption =
-    filterOptions.find((option) => option.value === normalizedSelectValue) ??
-    filterOptions[0];
-
-  // const filteredBrands = useMemo(() => {
-  //   if (!brandSearch.trim()) return availableBrands;
-  //   const query = normalize(brandSearch);
-  //   return availableBrands.filter((brand) => normalize(brand).includes(query));
-  // }, [availableBrands, brandSearch]);
 
   const normalizedCategories = useMemo(() => {
     if (!categorySearch.trim()) return availableCategories;
     const query = normalize(categorySearch);
     return availableCategories.filter((cat) => normalize(cat).includes(query));
   }, [availableCategories, categorySearch]);
+  const signalementOptions = useMemo(
+    () => [
+      { value: "" as const, label: "Type de signalements" },
+      ...normalizedCategories.map((cat) => ({ value: cat, label: cat })),
+    ],
+    [normalizedCategories],
+  );
+  const hasSignalementOptions = signalementOptions.length > 0;
+
+  const filtersDisabled = Boolean(isFeedLoading);
 
   const [internalSelectedMainCategory, setInternalSelectedMainCategory] =
     useState("");
@@ -158,6 +164,148 @@ const FilterBar: React.FC<Props> = ({
 
   const setSelectedMainCategory =
     externalSetSelectedMainCategory ?? setInternalSelectedMainCategory;
+
+  type BrandEntry = {
+    value: string;
+    label: string;
+    siteUrl?: string;
+  };
+
+  const { brandEntries, brandSiteUrlMap } = useMemo(() => {
+    const canonicalMap = new Map<string, BrandEntry>();
+
+    availableBrands.forEach((entry) => {
+      const brandName =
+        typeof entry === "string" ? entry : (entry?.brand ?? "");
+      if (!brandName.trim()) return;
+      const normalizedKey = normalizeBrandName(brandName);
+      const nextEntry: BrandEntry = {
+        value: brandName,
+        label: brandName,
+        siteUrl: typeof entry === "object" ? entry.siteUrl : undefined,
+      };
+
+      if (!canonicalMap.has(normalizedKey)) {
+        canonicalMap.set(normalizedKey, nextEntry);
+      } else if (
+        typeof entry === "object" &&
+        entry.siteUrl &&
+        !canonicalMap.get(normalizedKey)?.siteUrl
+      ) {
+        const existing = canonicalMap.get(normalizedKey);
+        if (existing) existing.siteUrl = entry.siteUrl;
+      }
+    });
+
+    const sorted = Array.from(canonicalMap.values()).sort((a, b) =>
+      a.label.localeCompare(b.label, "fr", { sensitivity: "base" }),
+    );
+
+    const siteUrlMap = new Map<string, string | undefined>();
+    sorted.forEach(({ value, siteUrl }) => {
+      siteUrlMap.set(value, siteUrl);
+    });
+
+    return { brandEntries: sorted, brandSiteUrlMap: siteUrlMap };
+  }, [availableBrands]);
+
+  const brandOptions = useMemo<SelectFilterOption[]>(() => {
+    const placeholder: SelectFilterOption = {
+      value: "",
+      label: "Choisir une marque",
+    };
+    const decorated = brandEntries.map((entry) => {
+      return {
+        value: entry.value,
+        label: entry.label,
+        iconAlt: entry.label,
+        iconFallback: entry.label,
+        siteUrl: entry.siteUrl,
+      };
+    });
+    return [placeholder, ...decorated];
+  }, [brandEntries]);
+
+  const resolvedBrandValue = useMemo(() => {
+    if (!selectedBrand) return "";
+    const normalizedSelected = normalizeBrandName(selectedBrand);
+    const found = brandOptions.find(
+      (opt) =>
+        Boolean(opt.value) &&
+        normalizeBrandName(opt.value) === normalizedSelected,
+    );
+    return found?.value ?? "";
+  }, [brandOptions, selectedBrand]);
+  const subCategoryOptions = useMemo<SelectFilterOption[]>(() => {
+    const placeholder: SelectFilterOption = {
+      value: "",
+      label: "Sous-catégorie",
+      iconUrl: DEFAULT_CATEGORY_ICON,
+      iconAlt: "Sous-catégorie",
+      iconFallback: "SC",
+    };
+
+    if (!selectedBrand || !selectedMainCategory) {
+      return [placeholder];
+    }
+
+    const subCategories =
+      availableSubCategoriesByBrandAndCategory?.[selectedBrand]?.[
+        selectedMainCategory
+      ] || [];
+
+    if (!subCategories.length) {
+      return [placeholder];
+    }
+
+    return [
+      placeholder,
+      ...subCategories.map((sub) => ({
+        value: sub,
+        label: sub,
+        iconUrl: categoryIcons[sub] ?? DEFAULT_CATEGORY_ICON,
+        iconAlt: sub,
+        iconFallback: sub,
+      })),
+    ];
+  }, [
+    availableSubCategoriesByBrandAndCategory,
+    selectedBrand,
+    selectedMainCategory,
+  ]);
+
+  const mainCategoryOptions = useMemo<SelectFilterOption[]>(() => {
+    const placeholder: SelectFilterOption = {
+      value: "",
+      label: "Catégorie principale",
+      iconUrl: DEFAULT_CATEGORY_ICON,
+      iconAlt: "Catégorie principale",
+      iconFallback: "CP",
+    };
+
+    if (!selectedBrand) {
+      return [placeholder];
+    }
+
+    const categories = Object.keys(
+      availableSubCategoriesByBrandAndCategory?.[selectedBrand] ?? {},
+    );
+
+    if (!categories.length) {
+      return [placeholder];
+    }
+
+    return [
+      placeholder,
+      ...categories.map((cat) => ({
+        value: cat,
+        label: cat,
+        iconUrl: categoryIcons[cat] ?? DEFAULT_CATEGORY_ICON,
+        iconAlt: cat,
+        iconFallback: cat,
+      })),
+    ];
+  }, [availableSubCategoriesByBrandAndCategory, selectedBrand]);
 
   const resetBrandFilters = () => {
     if (selectedBrand) {
@@ -169,72 +317,42 @@ const FilterBar: React.FC<Props> = ({
     if (selectedMainCategory) {
       setSelectedMainCategory("");
     }
-    setBrandSearch("");
     setCategorySearch("");
   };
 
-  function clickFilterHot(className: string) {
-    const el = document.querySelector(className);
+  const handleFilterSelect = (value: FilterOptionValue) => {
+    resetBrandFilters();
 
-    setFilterHotactive((prev) => {
-      const next = !prev;
+    if (value === "chrono") {
+      setFilter("chrono");
+      setViewMode("chrono");
+      onViewModeChange?.("chrono");
+      setActiveFilter("chrono");
+    } else if (value === "hot") {
+      setFilter("hot");
+      setViewMode("confirmed");
+      onViewModeChange?.("confirmed");
+      setActiveFilter("confirmed");
+    } else if (["rage", "popular", "urgent"].includes(value)) {
+      setFilter(value);
+      setViewMode("chrono");
+      onViewModeChange?.("chrono");
+      setActiveFilter(value);
+    } else {
+      setFilter("");
+      setViewMode("flat");
+      onViewModeChange?.("flat");
+      setActiveFilter("");
+    }
+  };
 
-      if (next) {
-        el?.classList.add("hot-active");
-        let h = el?.scrollHeight ?? 0;
-        if (h > 50) {
-          h = 45;
-        }
-        setHeightSelectFilter(h);
-      } else {
-        el?.classList.remove("hot-active");
-      }
-      return next;
-    });
-
-    setTimeout(() => {
-      setHeightSelectFilter(null);
-      console.log("reset height");
-    }, 200);
-  }
-
-  function hotFilterOption(value: FilterOptionValue) {
-    return (event?: ReactMouseEvent<HTMLSpanElement>) => {
-      event?.stopPropagation();
-      const wrapper = document.querySelector(".popup-hot-filter");
-      wrapper?.classList.remove("is-open");
-
-      setHeightSelectFilter(45);
-      setTimeout(() => {
-        setHeightSelectFilter(null);
-      }, 200);
-
-      setFilterHotactive(false);
-      resetBrandFilters();
-
-      if (value === "chrono") {
-        setFilter("chrono");
-        setViewMode("chrono");
-        onViewModeChange?.("chrono");
-        setActiveFilter("chrono");
-      } else if (value === "hot") {
-        setFilter("hot");
-        setViewMode("confirmed");
-        onViewModeChange?.("confirmed");
-        setActiveFilter("confirmed");
-      } else if (["rage", "popular", "urgent"].includes(value)) {
-        setFilter(value);
-        setViewMode("chrono");
-        onViewModeChange?.("chrono");
-        setActiveFilter(value);
-      } else {
-        setFilter("");
-        setViewMode("flat");
-        onViewModeChange?.("flat");
-        setActiveFilter("");
-      }
-    };
-  }
+  const handleCategorySelect = (category: string) => {
+    setSelectedCategory(category);
+    setViewMode("flat");
+    setFilter("");
+    onViewModeChange?.("flat");
+    setActiveFilter("");
+  };
 
   useEffect(() => {
     const handleClickOutside = (e: Event) => {
@@ -297,170 +415,77 @@ const FilterBar: React.FC<Props> = ({
     setFilter("chrono");
     onViewModeChange?.("chrono");
     setActiveFilter("chrono");
-    setFilterHotactive(false);
-    setHeightSelectFilter(null);
   };
+
+  const handleBrandSelectChange = (value: string) => {
+    if (!value) {
+      clearBrand();
+      return;
+    }
+
+    const siteUrl = brandSiteUrlMap.get(value);
+    handleBrandSelect(value, siteUrl);
+  };
+
+  useEffect(() => {
+    if (disableBrandOnce && !isFeedLoading) {
+      setDisableBrandOnce(false);
+    }
+  }, [isFeedLoading, disableBrandOnce]);
+
   if (!selectedBrand) {
     return (
-      <div className="filter-container">
+      <div
+        className="filter-container"
+        data-has-category-options={hasSignalementOptions}
+      >
         <div className="primary-filters">
-          <div
-            className={`select-filter-wrapper ${normalizedSelectValue === "hot" ? "hot-active" : ""}`}
-            onClick={() => clickFilterHot(".select-filter-wrapper")}
-          >
-            <div
-              style={{
-                marginTop: heightSelectFilter
-                  ? `${heightSelectFilter + 5}px`
-                  : "50px",
-              }}
-              className={`popup-hot-filter ${filterHotactive ? "is-open" : ""}`}
-            >
-              <div className="popup-hot-filter-container">
-                {filterOptions.map((option) => (
-                  <span
-                    key={option.value}
-                    data-value={option.value}
-                    onClick={hotFilterOption(option.value)}
-                  >
-                    {`${option.emoji} ${option.label}`}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <select
-              style={{ display: "none" }}
-              className="select-filter"
-              value={normalizedSelectValue}
-              onChange={(e) => {
-                const value = e.target.value as FilterOptionValue;
-                resetBrandFilters();
-
-                if (value === "chrono") {
-                  setFilter("chrono");
-                  setViewMode("chrono");
-                  onViewModeChange?.("chrono");
-                  setActiveFilter("chrono");
-                } else if (value === "hot") {
-                  setFilter("hot");
-                  setViewMode("confirmed");
-                  onViewModeChange?.("confirmed");
-                  setActiveFilter("confirmed");
-                } else if (["rage", "popular", "urgent"].includes(value)) {
-                  setFilter(value);
-                  setViewMode("chrono");
-                  onViewModeChange?.("chrono");
-                  setActiveFilter(value);
-                } else {
-                  setFilter("");
-                  setViewMode("flat");
-                  onViewModeChange?.("flat");
-                  setActiveFilter("");
-                }
-              }}
-            >
-              {filterOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {`${option.emoji} ${option.label}`}
-                </option>
-              ))}
-            </select>
-            <span className="select-filter-display" aria-hidden="true">
-              <span className="select-filter-content">
-                <span className="select-filter-emoji">
-                  {selectedOption?.emoji ?? ""}
-                </span>
-                <span className="select-filter-label">
-                  {selectedOption?.label ?? ""}
-                </span>
-              </span>
-              <ChevronDown size={16} className="select-filter-chevron" />
-            </span>
-          </div>
+          <Champs
+            options={filterOptions}
+            value={normalizedSelectValue}
+            onChange={handleFilterSelect}
+            activeOnValue="hot"
+            activeClassName="hot-active"
+            align="left"
+          />
         </div>
         <div className="secondary-filters-container">
-          <BrandSelect
-            brands={availableBrands}
-            selectedBrand={selectedBrand}
-            onSelect={(brand, siteUrl) => handleBrandSelect(brand, siteUrl)}
-            onClear={() => clearBrand()}
-            placeholder="Choisir une marque"
-            siteUrl={siteUrl}
+          <Champs
+            options={brandOptions}
+            value={resolvedBrandValue}
+            onChange={handleBrandSelectChange}
+            className="brand-select-inline"
+            disabled={disableBrandOnce}
+            brandSelect={true}
           />
-          <div className="filter-dropdown-wrapper" ref={dropdownRef}>
-            <button
-              className="filter-toggle"
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            >
-              <SlidersHorizontal size={18} style={{ marginRight: "6px" }} />
-              Filtrer
-            </button>
-
-            {isDropdownOpen && (
-              <div className="filter-dropdown">
-                <select
-                  value={selectedCategory}
-                  onChange={(e) => {
-                    setSelectedCategory(e.target.value);
-                    setViewMode("flat");
-                    setFilter("");
-                    onViewModeChange?.("flat");
-                    setActiveFilter("");
-                  }}
-                  disabled={!selectedBrand}
-                >
-                  <option value="">Type de signalements</option>
-                  {normalizedCategories.map((cat) => (
-                    <option key={cat} value={cat}>
-                      {cat}
-                    </option>
-                  ))}
-                </select>
-
-                {(selectedBrand || selectedCategory) && (
-                  <button
-                    className="reset"
-                    onClick={() => {
-                      clearBrand();
-                      setCategorySearch("");
-                    }}
-                  >
-                    Réinitialiser
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
         </div>
       </div>
     );
   } else if (selectedBrand) {
     return (
-      <div className="filters">
+      <div
+        className="filters"
+        data-has-category-options={hasSignalementOptions}
+      >
         <div className="filters__row">
           {/* Pill 1 : Marque (toujours visible) */}
           <div className="filters__pill filters__pill--brand">
-            <BrandSelect
-              brands={availableBrands}
-              selectedBrand={selectedBrand}
-              onSelect={(brand) => handleBrandSelect(brand)}
-              onClear={() => clearBrand()}
-              placeholder="Choisir une marque"
+            <Champs
+              options={brandOptions}
+              value={resolvedBrandValue}
+              onChange={handleBrandSelectChange}
               className="pill__control"
-              siteUrl={siteUrl}
+              brandSelect={true}
             />
           </div>
 
           {/* Pill 2 : Catégorie principale (affichée si une marque est choisie) */}
           {selectedBrand && (
             <div className="filters__pill filters__pill--maincat">
-              <CategoryDropdown
-                categories={Object.keys(
-                  availableSubCategoriesByBrandAndCategory?.[selectedBrand] ||
-                    {},
-                )}
-                selected={selectedMainCategory}
-                onSelect={(cat) => {
+              <Champs
+                options={mainCategoryOptions}
+                value={selectedMainCategory || ""}
+                onChange={(cat) => {
                   setSelectedMainCategory(cat);
                   setSelectedCategory("");
                   setViewMode("flat");
@@ -468,6 +493,9 @@ const FilterBar: React.FC<Props> = ({
                   onViewModeChange?.("flat");
                   setActiveFilter("");
                 }}
+                className="pill__select"
+                variant="grid"
+                disabled={filtersDisabled}
               />
             </div>
           )}
@@ -475,31 +503,14 @@ const FilterBar: React.FC<Props> = ({
           {/* Pill 3 : Sous-catégorie (si cat principale choisie) */}
           {selectedBrand && selectedMainCategory && (
             <div className="filters__pill filters__pill--subcat">
-              <div className="pill__select">
-                <select
-                  value={selectedCategory}
-                  onChange={(e) => {
-                    setSelectedCategory(e.target.value);
-                    setViewMode("flat");
-                    setFilter("");
-                    onViewModeChange?.("flat");
-                    setActiveFilter("");
-                  }}
-                  aria-label="Sous-catégorie"
-                >
-                  <option value="">Sous-catégorie</option>
-                  {(
-                    availableSubCategoriesByBrandAndCategory?.[selectedBrand]?.[
-                      selectedMainCategory
-                    ] || []
-                  ).map((sub) => (
-                    <option key={sub} value={sub}>
-                      {sub}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown size={16} className="pill__chev" aria-hidden />
-              </div>
+              <Champs
+                options={subCategoryOptions}
+                value={selectedCategory}
+                onChange={handleCategorySelect}
+                className="pill__select"
+                variant="grid"
+                disabled={filtersDisabled}
+              />
             </div>
           )}
         </div>
