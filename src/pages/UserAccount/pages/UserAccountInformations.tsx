@@ -16,7 +16,7 @@ import PenModifyIcon from "@src/assets/images/pen-modify-circle.svg";
 import InputTextAccount from "@src/components/inputs/inputsGlobal/InputTextAccount";
 import SelectAccount from "@src/components/inputs/selectGlobal/SelectAccount";
 import Buttons from "@src/components/buttons/Buttons";
-import { genderLabel } from "@src/components/InteractiveFeedbackCard/utils/genderLabel";
+//import { genderLabel } from "@src/components/InteractiveFeedbackCard/utils/genderLabel";
 
 /** Convertit une date string en valeur compatible <input type="date"> (YYYY-MM-DD). */
 function toInputDate(src: string | null | undefined): string {
@@ -243,10 +243,15 @@ function UserAccountInformations() {
         <div className="form-group">
           <SelectAccount
             id="gender"
-            title={genderLabel(gender)}
+            title="Genre"
             disabled={false}
-            options={["monsieur", "madame", "N/A"]}
-            onChange={(value) => setGender(value)}
+            value={gender} // 👈 valeur contrôlée
+            onChange={setGender} // 👈 met à jour ton state
+            options={[
+              { value: "monsieur", label: "Homme" },
+              { value: "madame", label: "Femme" },
+              { value: "N/A", label: "Non spécifié" },
+            ]}
           />
         </div>
 

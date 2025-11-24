@@ -1,9 +1,11 @@
 export function genderLabel(value: string) {
   switch (value) {
     case "monsieur":
-      return "Monsieur";
+      return "Homme";
     case "madame":
-      return "Madame";
+      return "Femme";
+    case "N/A":
+      return "Non spécifié";
     default:
       return "Non spécifié";
   }

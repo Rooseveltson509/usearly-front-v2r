@@ -1,19 +1,19 @@
 import "./SelectAccount.scss";
-import type { UseFormRegisterReturn } from "react-hook-form";
+//import type { UseFormRegisterReturn } from "react-hook-form";
 
 function SelectAccount({
   id,
   title,
   options,
-  registration,
   disabled,
+  value,
   onChange,
 }: {
   id: string;
   title: string;
-  options: string[];
+  value: string;
+  options: { value: string; label: string }[];
   disabled: boolean;
-  registration?: UseFormRegisterReturn;
   onChange: (value: string) => void;
 }) {
   return (
@@ -23,14 +23,14 @@ function SelectAccount({
         <select
           id={id}
           className="select"
-          {...registration}
           disabled={disabled}
+          value={value}
           onChange={(e) => onChange(e.target.value)}
         >
-          <option value="">{title}</option>
+          {!value && <option value="">Sélectionner un genre</option>}
           {options.map((option) => (
-            <option key={option} value={option}>
-              {option}
+            <option key={option.value} value={option.value}>
+              {option.label}
             </option>
           ))}
         </select>
