@@ -182,92 +182,21 @@
     align-items: center;
     gap: 12px;
     flex-wrap: wrap;
-  }
-
-  .sort-dropdown {
-    position: relative;
-    display: inline-flex;
-    min-width: 220px;
-
-    .dropdown-toggle {
-      width: 100%;
-      height: 44px;
-      padding: 0 14px;
-      border-radius: 6px;
-      border: 1px solid $border-color;
-      background: #fff;
-      display: flex;
+    .view-mode-select {
+      display: inline-flex;
       align-items: center;
       gap: 10px;
+      min-height: 54px;
       font-size: 14px;
       font-weight: 600;
       color: #333;
-      cursor: pointer;
-      transition: all 0.2s ease;
 
-      svg {
-        width: 18px;
-        height: 18px;
-        color: #666;
-        flex-shrink: 0;
-
-        &:last-of-type {
-          margin-left: auto;
-        }
-      }
-
-      span {
+      &__label {
         color: inherit;
       }
 
-      strong {
-        font-weight: 700;
-        color: #333;
-      }
-
-      &:hover {
-        border-color: #bbb;
-        background: #f9f9f9;
-      }
-    }
-
-    .dropdown-menu {
-      display: flex;
-      flex-direction: column;
-      position: absolute;
-      top: calc(100% + 6px);
-      right: 0;
-      min-width: 160px;
-      padding: 8px 8px;
-      border: 1px solid #ddd;
-      border-radius: 12px;
-      background: #fff;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-      z-index: 20;
-      gap: 2px;
-
-      button {
-        width: 100%;
-        padding: 10px 16px;
-        background: none;
-        border: none;
-        border-radius: 6px;
-        text-align: left;
-        font-size: 14px;
-        font-weight: 500;
-        color: #333;
-        cursor: pointer;
-        transition: background 0.2s ease;
-
-        &.active {
-          background: #eaf3ff;
-          color: #1f3fb2;
-          font-weight: 600;
-        }
-
-        &:hover {
-          background: #f1f5f9;
-        }
+      &__control {
+        flex: 1;
       }
     }
   }

@@ -164,6 +164,7 @@ function UserAccountInformations() {
                   avatar={avatarPreview}
                   pseudo={pseudo || userProfile?.pseudo || "?"}
                   className="large-avatar"
+                  sizeHW={120}
                 />
                 <img
                   src={PenModifyIcon}

@@ -21,6 +21,7 @@ const UserStatsCard = () => {
         pseudo={getDisplayName(userProfile.pseudo, userProfile.email)}
         className="avatar" // classe appliquée à l’image OU au fallback
         wrapperClassName="avatar-wrapper" // classe appliquée à la div parent
+        sizeHW={100}
       />
 
       <h2 className="username">{userProfile.pseudo}</h2>

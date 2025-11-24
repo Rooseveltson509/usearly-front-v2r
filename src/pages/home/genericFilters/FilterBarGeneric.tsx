@@ -1,7 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import type { MouseEvent as ReactMouseEvent } from "react";
-import { ChevronDown } from "lucide-react";
-import { BrandSelect } from "@src/components/shared/BrandSelect";
+import { useMemo } from "react";
+import Champs, { type SelectFilterOption } from "@src/components/champs/Champs";
 import "./FilterBar.scss";
 
 export interface FilterOption {
@@ -21,9 +19,6 @@ interface Props {
   options: FilterOption[];
   withBrands?: boolean;
   availableBrands?: (string | { brand: string; siteUrl?: string })[];
-  dropdownRef: React.RefObject<HTMLDivElement | null>;
-  isDropdownOpen?: boolean;
-  setIsDropdownOpen?: (val: boolean) => void;
   selectedBrand?: string;
   labelOverride?: string;
   locationInfo?: string | null;
@@ -43,6 +38,24 @@ const splitLeadingEmoji = (label: string) => {
   return { emoji: "", text: trimmed };
 };
 
+const normalizeBrandName = (value: string) =>
+  value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim();
+
+const brandInitials = (label: string) => {
+  const parts = label.trim().split(/\s+/);
+  const initials = parts
+    .slice(0, 2)
+    .map((part) => part.charAt(0))
+    .join("");
+  return (initials || label.slice(0, 2)).toUpperCase();
+};
+
+type BrandEntry = { value: string; label: string; siteUrl?: string };
+
 export const FilterBarGeneric: React.FC<Props> = ({
   filter,
   setFilter,
@@ -54,112 +67,123 @@ export const FilterBarGeneric: React.FC<Props> = ({
   options,
   withBrands = false,
   availableBrands = [],
-  dropdownRef,
-  isDropdownOpen = false,
-  setIsDropdownOpen = () => {},
   selectedBrand = "",
   locationInfo = null,
   brandFocusFilter = "",
   baseFilterValue,
-  siteUrl,
 }) => {
-  const [filterHotactive, setFilterHotactive] = useState(false);
-  const [heightSelectFilter, setHeightSelectFilter] = useState<number | null>(
-    null,
-  );
-  const parsedOptions = useMemo(() => {
+  const selectOptions = useMemo<SelectFilterOption[]>(() => {
     return options.map((opt) => {
       const { emoji, text } = splitLeadingEmoji(opt.label);
-      return { ...opt, emoji, displayLabel: text };
+      return {
+        value: opt.value,
+        label: text || opt.label,
+        emoji: emoji || undefined,
+      };
     });
   }, [options]);
 
-  const fallbackOption = useMemo(() => {
-    if (baseFilterValue)
-      return parsedOptions.find((opt) => opt.value === baseFilterValue);
-    return parsedOptions[0];
-  }, [parsedOptions, baseFilterValue]);
+  const resolvedFilterValue = useMemo(() => {
+    const valueExists = selectOptions.some((opt) => opt.value === filter);
+    if (valueExists) return filter;
 
-  const selectedOption = useMemo(() => {
-    return (
-      parsedOptions.find((opt) => opt.value === filter) ??
-      fallbackOption ?? { value: "", label: "", emoji: "", displayLabel: "" }
-    );
-  }, [parsedOptions, filter, fallbackOption]);
+    if (
+      baseFilterValue &&
+      selectOptions.some((opt) => opt.value === baseFilterValue)
+    ) {
+      return baseFilterValue;
+    }
 
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node)
+    return selectOptions[0]?.value ?? "";
+  }, [selectOptions, filter, baseFilterValue]);
+
+  const { brandEntries, brandSiteUrlMap } = useMemo(() => {
+    const canonicalMap = new Map<string, BrandEntry>();
+
+    availableBrands.forEach((entry) => {
+      const brandName =
+        typeof entry === "string" ? entry : (entry?.brand ?? "");
+      if (!brandName.trim()) return;
+      const normalized = normalizeBrandName(brandName);
+      const nextEntry: BrandEntry = {
+        value: brandName,
+        label: brandName,
+        siteUrl: typeof entry === "object" ? entry.siteUrl : undefined,
+      };
+
+      if (!canonicalMap.has(normalized)) {
+        canonicalMap.set(normalized, nextEntry);
+      } else if (
+        typeof entry === "object" &&
+        entry.siteUrl &&
+        !canonicalMap.get(normalized)?.siteUrl
       ) {
-        setIsDropdownOpen(false);
+        const existing = canonicalMap.get(normalized);
+        if (existing) existing.siteUrl = entry.siteUrl;
       }
+    });
+
+    const sorted = Array.from(canonicalMap.values()).sort((a, b) =>
+      a.label.localeCompare(b.label, "fr", { sensitivity: "base" }),
+    );
+
+    const siteUrlMap = new Map<string, string | undefined>();
+    sorted.forEach(({ value, siteUrl }) => {
+      siteUrlMap.set(value, siteUrl);
+    });
+
+    return { brandEntries: sorted, brandSiteUrlMap: siteUrlMap };
+  }, [availableBrands]);
+
+  const brandOptions = useMemo<SelectFilterOption[]>(() => {
+    const placeholder: SelectFilterOption = {
+      value: "",
+      label: "Choisir une marque",
     };
-    if (isDropdownOpen)
-      document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isDropdownOpen, setIsDropdownOpen, dropdownRef]);
+    const decorated = brandEntries.map((entry) => {
+      return {
+        value: entry.value,
+        label: entry.label,
+        iconAlt: entry.label,
+        iconFallback: brandInitials(entry.label),
+        siteUrl: entry.siteUrl,
+      };
+    });
+    return [placeholder, ...decorated];
+  }, [brandEntries]);
+
+  const resolvedBrandValue = useMemo(() => {
+    if (!selectedBrand) return "";
+    const normalizedSelected = normalizeBrandName(selectedBrand);
+    const found = brandOptions.find(
+      (opt) =>
+        Boolean(opt.value) &&
+        normalizeBrandName(opt.value) === normalizedSelected,
+    );
+    return found?.value ?? "";
+  }, [brandOptions, selectedBrand]);
 
   const brandFilterValue = useMemo(() => {
     if (brandFocusFilter) return brandFocusFilter;
-    return parsedOptions[0]?.value ?? "";
-  }, [brandFocusFilter, parsedOptions]);
+    return selectOptions[0]?.value ?? "";
+  }, [brandFocusFilter, selectOptions]);
 
   const fallbackFilterValue = useMemo(() => {
     if (baseFilterValue) return baseFilterValue;
-    const alternative = parsedOptions.find(
+    const alternative = selectOptions.find(
       (opt) => opt.value !== brandFilterValue,
     );
-    return alternative?.value ?? parsedOptions[0]?.value ?? "";
-  }, [baseFilterValue, parsedOptions, brandFilterValue]);
+    return alternative?.value ?? selectOptions[0]?.value ?? "";
+  }, [baseFilterValue, selectOptions, brandFilterValue]);
 
-  function clickFilterHot(className: string) {
-    const el = document.querySelector(className);
-
-    setFilterHotactive((prev) => {
-      const next = !prev;
-
-      if (next) {
-        el?.classList.add("hot-active");
-        let h = el?.scrollHeight ?? 0;
-        if (h > 50) {
-          h = 45;
-        }
-        setHeightSelectFilter(h);
-      } else {
-        el?.classList.remove("hot-active");
-      }
-      return next;
-    });
-
-    setTimeout(() => {
-      setHeightSelectFilter(null);
-      console.log("reset height");
-    }, 200);
-  }
-
-  function hotFilterOption(value: string) {
-    return (event?: ReactMouseEvent<HTMLSpanElement>) => {
-      event?.stopPropagation();
-      const wrapper = document.querySelector(".popup-hot-filter");
-      wrapper?.classList.remove("is-open");
-
-      setHeightSelectFilter(45);
-      setTimeout(() => {
-        setHeightSelectFilter(null);
-      }, 200);
-
-      setFilterHotactive(false);
-
-      setSelectedBrand("");
-      setSelectedCategory?.("");
-      setFilter(value);
-      setActiveFilter?.(value);
-      setViewMode("chrono");
-      onViewModeChange?.("chrono");
-    };
-  }
+  const handleFilterChange = (value: string) => {
+    setSelectedBrand("");
+    setSelectedCategory?.("");
+    setFilter(value);
+    setActiveFilter?.(value);
+    setViewMode("chrono");
+    onViewModeChange?.("chrono");
+  };
 
   const handleBrandChange = (brand: string, brandSiteUrl?: string) => {
     setSelectedBrand(brand, brandSiteUrl);
@@ -176,85 +200,38 @@ export const FilterBarGeneric: React.FC<Props> = ({
       setViewMode("chrono");
       onViewModeChange?.("chrono");
     }
-
-    setIsDropdownOpen(false);
   };
 
+  const handleBrandSelectChange = (value: string) => {
+    if (!value) {
+      handleBrandChange("");
+      return;
+    }
+
+    const siteUrl = brandSiteUrlMap.get(value);
+    handleBrandChange(value, siteUrl);
+  };
   return (
     <div className="filter-bar-generic-container">
-      {/* 🔹 Menu déroulant de tri */}
-      <div
-        className="select-filter-wrapper"
-        onClick={() =>
-          clickFilterHot(".filter-bar-generic-container .select-filter-wrapper")
-        }
-      >
-        <div
-          style={{
-            marginTop: heightSelectFilter
-              ? `${heightSelectFilter + 5}px`
-              : "50px",
-          }}
-          className={`popup-hot-filter ${filterHotactive ? "is-open" : ""}`}
-        >
-          <div className="popup-hot-filter-container">
-            {options.map((option) => (
-              <span
-                key={option.value}
-                data-value={option.value}
-                onClick={hotFilterOption(option.value)}
-              >
-                {`${option.label}`}
-              </span>
-            ))}
-          </div>
-        </div>
-        <select
-          style={{ display: "none" }}
-          className={`select-filter ${locationInfo === "cdc" ? "cdc-style" : ""}`}
-          value={filter}
-          onChange={(e) => {
-            const value = e.target.value;
-            setSelectedBrand("");
-            setSelectedCategory?.("");
-            setFilter(value);
-            setActiveFilter?.(value);
-            setViewMode("chrono");
-            onViewModeChange?.("chrono");
-          }}
-        >
-          {options.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
-        <span className="select-filter-display" aria-hidden="true">
-          <span className="select-filter-content">
-            {selectedOption?.emoji && (
-              <span className="select-filter-emoji">
-                {selectedOption.emoji}
-              </span>
-            )}
-            <span className="select-filter-label">
-              {selectedOption?.displayLabel || selectedOption?.label || ""}
-            </span>
-          </span>
-          <ChevronDown size={16} className="select-filter-chevron" />
-        </span>
-      </div>
+      <Champs
+        options={selectOptions}
+        value={resolvedFilterValue}
+        onChange={handleFilterChange}
+        activeClassName="hot-active"
+        className={locationInfo === "cdc" ? "cdc-style" : ""}
+        align="left"
+      />
 
       {/* 🔹 Sélecteur de marque */}
       {withBrands && (
         <div className="filter-bar-generic-actions">
-          <BrandSelect
-            brands={availableBrands}
-            selectedBrand={selectedBrand}
-            onSelect={handleBrandChange} // ✅ transmet (brand, siteUrl)
-            onClear={() => handleBrandChange("")}
-            placeholder="Choisir une marque"
+          <Champs
+            options={brandOptions}
+            value={resolvedBrandValue}
+            onChange={handleBrandSelectChange}
             className="brand-select-inline"
-            siteUrl={siteUrl}
+            disabled={!brandEntries.length}
+            brandSelect={true}
           />
         </div>
       )}

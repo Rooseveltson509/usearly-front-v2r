@@ -12,9 +12,6 @@
   // width: 655px;
   // min-width: 655px;
   max-width: 655px;
-  height: 335px;
-  min-height: 335px;
-  max-height: 335px;
   transition: box-shadow 0.3s ease;
   padding: 16px;
 
@@ -777,6 +774,7 @@
   justify-content: center;
 
   min-height: 220px;
+  max-height: 335px;
   padding: 36px;
   //color: var(--brand-color);
 

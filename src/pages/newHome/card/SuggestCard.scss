@@ -53,6 +53,12 @@
         --stack-offset: clamp(50px, 14vw, 225px);
       }
 
+      .feedback-card {
+        height: 335px;
+        min-height: 335px;
+        max-height: 335px;
+      }
+
       .feedback-card:first-child {
         position: relative;
         top: 35px;

@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo } from "react";
+import { useState, useMemo } from "react";
 import FilterBarGeneric from "./genericFilters/FilterBarGeneric";
 import { useBrands } from "@src/hooks/useBrands";
 import "./HomeFiltersSuggestion.scss";
@@ -32,9 +32,6 @@ const HomeFiltersSuggestion = ({
   const [viewMode, setViewMode] = useState<"flat" | "chrono" | "confirmed">(
     "flat",
   );
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
   // ✅ hook partagé avec reports et CDC
   const { brands, loading } = useBrands("suggestion");
   const availableBrands = useMemo(
@@ -70,9 +67,6 @@ const HomeFiltersSuggestion = ({
         setSelectedCategory={setSelectedCategory}
         selectedBrand={selectedBrand}
         availableBrands={availableBrands}
-        dropdownRef={dropdownRef}
-        isDropdownOpen={isDropdownOpen}
-        setIsDropdownOpen={setIsDropdownOpen}
         withBrands={!loading}
         brandFocusFilter="brandSolo"
         baseFilterValue="allSuggest"

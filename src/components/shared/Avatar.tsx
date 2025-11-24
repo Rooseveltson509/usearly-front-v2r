@@ -13,6 +13,7 @@ interface AvatarProps {
   preferBrandLogo?: boolean;
   siteUrl?: string;
   sizeHW?: number;
+  fallbackInitial?: string;
 }
 
 const Avatar: React.FC<AvatarProps> = ({
@@ -24,13 +25,19 @@ const Avatar: React.FC<AvatarProps> = ({
   preferBrandLogo = true,
   siteUrl,
   sizeHW = 50,
+  fallbackInitial,
 }) => {
   const [imgError, setImgError] = useState(false);
 
-  const initial = useMemo(
+  const baseInitial = useMemo(
     () => (pseudo?.trim()?.charAt(0) || "?").toUpperCase(),
     [pseudo],
   );
+
+  const displayInitial = useMemo(() => {
+    const override = fallbackInitial?.trim()?.charAt(0);
+    return (override || baseInitial).toUpperCase();
+  }, [fallbackInitial, baseInitial]);
 
   const brandKey = type === "brand" ? pseudo?.trim() || "" : "";
 
@@ -77,44 +84,33 @@ const Avatar: React.FC<AvatarProps> = ({
   );
   const fullUrl = useMemo(() => {
     if (type === "brand") {
-      // 1️⃣ Si on a un logo validé par le hook, on le garde
-      if (
-        resolvedBrandLogo &&
-        resolvedBrandLogo !== FALLBACK_BRAND_PLACEHOLDER
-      ) {
-        return resolvedBrandLogo;
+      if (preferBrandLogo) {
+        if (
+          resolvedBrandLogo &&
+          resolvedBrandLogo !== FALLBACK_BRAND_PLACEHOLDER
+        ) {
+          return resolvedBrandLogo;
+        }
+
+        if (siteUrl || pseudo) {
+          const domain =
+            siteUrl
+              ?.replace(/^https?:\/\//, "")
+              .replace(/^www\./, "")
+              .split("/")[0]
+              .toLowerCase() || `${pseudo?.toLowerCase().trim()}.com`;
+
+          const baseUrl = import.meta.env.VITE_API_BASE_URL;
+          return `${baseUrl}/api/logo?domain=${domain}`;
+        }
       }
 
-      // 2️⃣ Sinon on force une requête backend (même si useBrandLogos n’a rien trouvé)
-      if (siteUrl || pseudo) {
-        const domain =
-          siteUrl
-            ?.replace(/^https?:\/\//, "")
-            .replace(/^www\./, "")
-            .split("/")[0]
-            .toLowerCase() || `${pseudo?.toLowerCase().trim()}.com`;
-
-        const baseUrl = import.meta.env.VITE_API_BASE_URL;
-        return `${baseUrl}/api/logo?domain=${domain}`;
-      }
-
-      // 3️⃣ Sinon avatar basique
       return avatar ?? null;
     }
 
     // 👤 Cas utilisateur normal
     return getFullAvatarUrl(avatar);
-  }, [type, avatar, resolvedBrandLogo, siteUrl, pseudo]);
-
-  /*   const fullUrl = useMemo(() => {
-    if (type === "brand") {
-      if (preferBrandLogo) {
-        return resolvedBrandLogo ?? avatar ?? null;
-      }
-      return avatar ?? null;
-    }
-    return getFullAvatarUrl(avatar);
-  }, [type, avatar, preferBrandLogo, resolvedBrandLogo]); */
+  }, [type, avatar, preferBrandLogo, resolvedBrandLogo, siteUrl, pseudo]);
 
   const isInvalidPlaceholder =
     !fullUrl ||
@@ -124,7 +120,7 @@ const Avatar: React.FC<AvatarProps> = ({
   const shouldShowImage =
     !imgError && !isInvalidPlaceholder && (type !== "brand" || preferBrandLogo);
 
-  const colorIndex = initial.charCodeAt(0) % 6;
+  const colorIndex = displayInitial.charCodeAt(0) % 6;
   const colorClass =
     type === "brand"
       ? `avatar-brand-color-${colorIndex}`
@@ -153,7 +149,7 @@ const Avatar: React.FC<AvatarProps> = ({
           title={pseudo}
           aria-label={pseudo || "Avatar fallback"}
         >
-          {initial}
+          {displayInitial}
         </div>
       )}
     </div>

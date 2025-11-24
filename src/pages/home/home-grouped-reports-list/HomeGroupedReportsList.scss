@@ -72,12 +72,12 @@
   }
 }
 
-@media screen and (min-width: 1120px) {
-  .report-banner-container
-    .home-grouped-reports-list:has(.filters__pill--subcat) {
-    margin-top: 40px;
-  }
-}
+// @media screen and (min-width: 1120px) {
+//   .report-banner-container
+//     .home-grouped-reports-list:has(.filters__pill--subcat) {
+//     margin-top: 30px;
+//   }
+// }
 
 .no-popular-results {
   text-align: center;
@@ -122,13 +122,6 @@
         }
       }
     }
-  }
-
-  .reset-filters-button {
-    background: none;
-    border: none;
-    margin-top: 4px;
-    cursor: pointer;
   }
 
   .profile-filters {

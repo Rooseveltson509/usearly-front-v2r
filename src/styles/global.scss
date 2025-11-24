@@ -47,3 +47,8 @@ iframe {
 .text-highlight-usearly {
   color: #4549ef;
 }
+
+.svgOrImgBlackToWhite {
+  filter: invert(93%) sepia(93%) saturate(28%) hue-rotate(119deg)
+    brightness(107%) contrast(106%);
+}

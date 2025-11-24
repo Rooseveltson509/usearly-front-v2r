@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import "./videoContainerLanding.scss";
-import VideoZenityLanding from "../../../../../public/assets/video/ZenityVideoLanding.mp4";
+import VideoZenityLanding from "/assets/video/ZenityVideoLanding.mp4";
 import VideoTextContainer from "./videoTextContainer/videoTextContainer";
-import PlayerIcon from "../../../../../public/assets/icons/player-icon.svg";
-import EnterFullScreenIcon from "../../../../../public/assets/icons/enterFullScreenIcon.svg?react";
-import ExitFullScreenIcon from "../../../../../public/assets/icons/exitFullScreenIcon.svg?react";
-import MuteIcon from "../../../../../public/assets/icons/muteIcon.svg?react";
-import VolumeIcon from "../../../../../public/assets/icons/volumeIcon.svg?react";
+import PlayerIcon from "/assets/icons/player-icon.svg";
+import EnterFullScreenIcon from "/assets/icons/enterFullScreenIcon.svg";
+import ExitFullScreenIcon from "/assets/icons/exitFullScreenIcon.svg";
+import MuteIcon from "/assets/icons/muteIcon.svg";
+import VolumeIcon from "/assets/icons/volumeIcon.svg";
 
 const VideoContainerLanding = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -187,7 +187,7 @@ const VideoContainerLanding = () => {
               onClick={toggleMute}
             >
               <span aria-hidden="true">
-                {volume === 0 ? <MuteIcon /> : <VolumeIcon />}
+                <img src={volume === 0 ? MuteIcon : VolumeIcon} alt="test" />
               </span>
             </button>
             <input
@@ -207,7 +207,11 @@ const VideoContainerLanding = () => {
             className={`cinema-btn ${hideControls ? "is-hidden" : ""}`}
             onClick={() => setCinema((v) => !v)}
           >
-            {cinema ? <ExitFullScreenIcon /> : <EnterFullScreenIcon />}
+            <img
+              className="svgOrImgBlackToWhite"
+              src={cinema === false ? EnterFullScreenIcon : ExitFullScreenIcon}
+              alt="test"
+            />
           </button>
         </div>
       </div>
