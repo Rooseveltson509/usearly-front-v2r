@@ -1,5 +1,5 @@
 import "./DoubleProfilePicture.scss";
-import fakeAvatar1 from "../../../../public/assets/icons/signal-head.svg";
+import fakeAvatar1 from "/assets/icons/signal-head.svg";
 import type { PropsDoubleProfilePicture } from "@src/types/profile";
 import Avatar from "@src/components/shared/Avatar";
 

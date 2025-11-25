@@ -1,6 +1,6 @@
 import "./videoTextContainer.scss";
-import downloadApple from "../../../../../../public/assets/images/appleDownload.svg";
-import downloadGoogle from "../../../../../../public/assets/images/googleDownload.svg";
+import downloadApple from "/assets/images/appleDownload.svg";
+import downloadGoogle from "/assets/images/googleDownload.svg";
 
 const VideoTextContainer = () => {
   return (

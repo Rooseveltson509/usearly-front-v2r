@@ -1,5 +1,5 @@
 import "./ExtensionExampleImage.scss";
-import ExtensionTabSignalement from "../../../../../../public/assets/images/extensionImageSignalement.svg";
+import ExtensionTabSignalement from "/assets/images/extensionImageSignalement.svg";
 import { LogoBig } from "@src/components/shared/DecorativeLogos";
 
 const ExtensionExampleImage = () => {
