@@ -68,14 +68,28 @@ export default function SelectFilter<V extends string = string>({
     [options, value],
   );
 
-  const isBrandSelect = useMemo(
-    () =>
-      options.some(
-        (opt) =>
-          normalize(opt.label) === PLACEHOLDER_LABEL &&
-          (!opt.value || `${opt.value}`.length === 0),
-      ),
+  const placeholderOption = useMemo(
+    () => options.find((opt) => !opt.value),
     [options],
+  );
+
+  const isBrandSelect = useMemo(() => {
+    if (typeof brandSelect === "boolean") return brandSelect;
+    if (!placeholderOption) return false;
+    const normalizedPlaceholder = normalize(placeholderOption.label);
+    const hasEmptyValue =
+      !placeholderOption.value || `${placeholderOption.value}`.length === 0;
+    return hasEmptyValue && normalizedPlaceholder === PLACEHOLDER_LABEL;
+  }, [brandSelect, placeholderOption]);
+
+  const brandOptionsWithoutPlaceholder = useMemo(
+    () => options.filter((opt) => Boolean(opt.value)),
+    [options],
+  );
+
+  const displayOptions = useMemo(
+    () => (isBrandSelect ? brandOptionsWithoutPlaceholder : options),
+    [brandOptionsWithoutPlaceholder, isBrandSelect, options],
   );
 
   const normalizedSearch = useMemo(() => normalize(searchValue), [searchValue]);
@@ -91,21 +105,18 @@ export default function SelectFilter<V extends string = string>({
   );
 
   const filteredOptions = useMemo(() => {
-    if (!isBrandSelect || !normalizedSearch) return options;
+    if (!isBrandSelect || !normalizedSearch) return displayOptions;
 
-    return options.filter((opt) => {
-      if (!opt.value) return true;
-      return matchesSearch(opt, normalizedSearch);
-    });
-  }, [isBrandSelect, matchesSearch, normalizedSearch, options]);
+    return displayOptions.filter((opt) => matchesSearch(opt, normalizedSearch));
+  }, [displayOptions, isBrandSelect, matchesSearch, normalizedSearch]);
 
   const hasBrandResults = useMemo(() => {
     if (!isBrandSelect || !normalizedSearch) return true;
 
-    return options.some(
-      (opt) => opt.value && matchesSearch(opt, normalizedSearch),
-    );
-  }, [isBrandSelect, matchesSearch, normalizedSearch, options]);
+    return displayOptions.some((opt) => matchesSearch(opt, normalizedSearch));
+  }, [displayOptions, isBrandSelect, matchesSearch, normalizedSearch]);
+
+  const showResetButton = Boolean(isBrandSelect && placeholderOption && value);
 
   const renderBrandAvatar = useCallback(
     (
@@ -297,6 +308,20 @@ export default function SelectFilter<V extends string = string>({
               inputRef={searchInputRef}
             />
           )}
+          {showResetButton && placeholderOption && (
+            <button
+              type="button"
+              className="select-filter-reset"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                pick(placeholderOption.value as V, e);
+              }}
+            >
+              Réinitialiser
+            </button>
+          )}
+
           {filteredOptions.map((opt) => {
             let optionVisual: React.ReactNode = null;
             if (iconVisible) {

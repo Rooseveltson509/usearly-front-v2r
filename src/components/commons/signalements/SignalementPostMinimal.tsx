@@ -1,6 +1,6 @@
 import "./SignalementPostMinimal.scss";
-import testIcon from "../../../../public/assets/icons/heart-head.svg";
-import checkIcon from "../../../../public/assets/icons/check-icon.svg";
+import testIcon from "/assets/icons/heart-head.svg";
+import checkIcon from "/assets/icons/check-icon.svg";
 import { MessageCircle } from "lucide-react";
 import DoubleProfilePicture from "../doubleProfilePicture/DoubleProfilePicture";
 
