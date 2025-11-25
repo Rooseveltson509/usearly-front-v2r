@@ -97,8 +97,9 @@ const ProfileFilters: React.FC<Props> = ({
           onChange={handleBrandChange}
           className="brand-select--profile"
           brandSelect
-          minWidth={200}
+          minWidth={225}
           minWidthPart="2"
+          align="left"
         />
         <Champs
           options={categoryOptions}
