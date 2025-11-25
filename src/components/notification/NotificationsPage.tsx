@@ -213,6 +213,7 @@ const NotificationsPage: React.FC = () => {
               minWidth={150}
               minWidthPart="2"
               iconVisible={false}
+              align="left"
             />
           </div>
           <div className="notifications-page">
