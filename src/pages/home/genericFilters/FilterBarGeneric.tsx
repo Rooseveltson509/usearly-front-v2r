@@ -232,6 +232,8 @@ export const FilterBarGeneric: React.FC<Props> = ({
             className="brand-select-inline"
             disabled={!brandEntries.length}
             brandSelect={true}
+            minWidth={200}
+            minWidthPart="2"
           />
         </div>
       )}
