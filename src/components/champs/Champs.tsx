@@ -34,6 +34,7 @@ type Props<V extends string = string> = {
   brandSelect?: boolean;
   iconVisible?: boolean;
   minWidth?: number;
+  minWidthPart?: "1" | "2" | "both";
   align?: "left" | "center" | "right";
 };
 
@@ -53,6 +54,7 @@ export default function SelectFilter<V extends string = string>({
   iconVisible = true,
   minWidth = 0,
   align = "center",
+  minWidthPart = "both",
 }: Props<V>) {
   const [open, setOpen] = useState(false);
   const [offset, setOffset] = useState<number | null>(null);
@@ -254,6 +256,20 @@ export default function SelectFilter<V extends string = string>({
   const cssMinW = typeof minWidth === "number" ? `${minWidth}px` : minWidth;
   const cssAlign = typeof align === "string" ? align : "center";
 
+  const wrapperStyle: React.CSSProperties = {
+    ["--text-align" as any]: cssAlign,
+    ...(minWidthPart === "both" || minWidthPart === "1"
+      ? { minWidth: cssMinW }
+      : {}),
+  };
+
+  const popupStyle: React.CSSProperties = {
+    marginTop: offset ? `${offset}px` : "60px",
+    ...(minWidthPart === "both" || minWidthPart === "2"
+      ? { minWidth: cssMinW }
+      : {}),
+  };
+
   return (
     <div
       ref={wrapperRef}
@@ -261,14 +277,11 @@ export default function SelectFilter<V extends string = string>({
       onClick={disabled ? undefined : toggleOpen}
       aria-expanded={open}
       aria-haspopup="listbox"
-      style={{ ["--min-w" as any]: cssMinW, ["--text-align" as any]: cssAlign }}
+      style={wrapperStyle}
     >
       <div
         className={`popup-hot-filter ${open ? "is-open" : ""}`}
-        style={{
-          ["--min-w" as any]: cssMinW,
-          marginTop: offset ? `${offset}px` : "60px",
-        }}
+        style={popupStyle}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="popup-hot-filter-container" role="listbox">

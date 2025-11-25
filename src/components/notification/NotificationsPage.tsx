@@ -211,6 +211,7 @@ const NotificationsPage: React.FC = () => {
               value={filter}
               onChange={setFilter}
               minWidth={150}
+              minWidthPart="2"
               iconVisible={false}
             />
           </div>

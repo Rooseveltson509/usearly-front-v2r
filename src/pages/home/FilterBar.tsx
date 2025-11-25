@@ -457,6 +457,8 @@ const FilterBar: React.FC<Props> = ({
             className="brand-select-inline"
             disabled={disableBrandOnce}
             brandSelect={true}
+            minWidth={200}
+            minWidthPart="2"
           />
         </div>
       </div>
@@ -476,6 +478,8 @@ const FilterBar: React.FC<Props> = ({
               onChange={handleBrandSelectChange}
               className="pill__control"
               brandSelect={true}
+              minWidth={200}
+              minWidthPart="2"
             />
           </div>
 
