@@ -14,24 +14,22 @@ const SearchBar = ({
   onChange,
   placeholder = "Rechercher...",
 }: SearchBarProps) => {
-  const [isActive, setIsActive] = useState(false);
+  const [isActive, setIsActive] = useState(() => Boolean(value));
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const previousValueRef = useRef(value);
 
   useEffect(() => {
-    if (value && !isActive) {
-      setIsActive(true);
+    if (value !== previousValueRef.current) {
+      previousValueRef.current = value;
+      if (value) {
+        setIsActive(true);
+      }
     }
-  }, [value, isActive]);
+  }, [value]);
 
   const toggleActive = () => {
-    if (isActive) {
-      setIsActive(false);
-      onChange("");
-      return;
-    }
-
-    setIsActive(true);
-    setTimeout(() => inputRef.current?.focus(), 0);
+    setIsActive(!isActive);
+    onChange("");
   };
 
   return (

@@ -57,9 +57,10 @@
   }
 
   .input.active {
-    width: 150px;
+    width: 230px;
     max-width: 100%;
     padding: 0 14px;
+    padding-right: 0px;
     opacity: 1;
     pointer-events: auto;
     border-color: $border-color;

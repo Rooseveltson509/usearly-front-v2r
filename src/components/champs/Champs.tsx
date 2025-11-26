@@ -36,6 +36,7 @@ type Props<V extends string = string> = {
   minWidth?: number;
   minWidthPart?: "1" | "2" | "both";
   align?: "left" | "center" | "right";
+  placeholderResetLabel?: string;
 };
 
 const normalize = (label?: string) => label?.toLowerCase().trim() ?? "";
@@ -55,6 +56,7 @@ export default function SelectFilter<V extends string = string>({
   minWidth = 0,
   align = "center",
   minWidthPart = "both",
+  placeholderResetLabel,
 }: Props<V>) {
   const [open, setOpen] = useState(false);
   const [offset, setOffset] = useState<number | null>(null);
@@ -82,14 +84,24 @@ export default function SelectFilter<V extends string = string>({
     return hasEmptyValue && normalizedPlaceholder === PLACEHOLDER_LABEL;
   }, [brandSelect, placeholderOption]);
 
-  const brandOptionsWithoutPlaceholder = useMemo(
-    () => options.filter((opt) => Boolean(opt.value)),
+  const optionsWithoutPlaceholder = useMemo(
+    () =>
+      options.filter((opt) => {
+        const val = `${opt.value ?? ""}`;
+        return val.length > 0;
+      }),
     [options],
   );
 
+  const resolvedResetLabel =
+    placeholderResetLabel ?? (isBrandSelect ? "Réinitialiser" : undefined);
+
+  const shouldHidePlaceholder =
+    isBrandSelect || Boolean(resolvedResetLabel && placeholderOption);
+
   const displayOptions = useMemo(
-    () => (isBrandSelect ? brandOptionsWithoutPlaceholder : options),
-    [brandOptionsWithoutPlaceholder, isBrandSelect, options],
+    () => (shouldHidePlaceholder ? optionsWithoutPlaceholder : options),
+    [options, optionsWithoutPlaceholder, shouldHidePlaceholder],
   );
 
   const normalizedSearch = useMemo(() => normalize(searchValue), [searchValue]);
@@ -116,7 +128,9 @@ export default function SelectFilter<V extends string = string>({
     return displayOptions.some((opt) => matchesSearch(opt, normalizedSearch));
   }, [displayOptions, isBrandSelect, matchesSearch, normalizedSearch]);
 
-  const showResetButton = Boolean(isBrandSelect && placeholderOption && value);
+  const showResetButton = Boolean(
+    placeholderOption && value && resolvedResetLabel,
+  );
 
   const renderBrandAvatar = useCallback(
     (
@@ -256,6 +270,10 @@ export default function SelectFilter<V extends string = string>({
     variant === "grid"
       ? "select-filter-wrapper--grid"
       : "select-filter-wrapper";
+  const resetClass =
+    variant === "grid"
+      ? "popup-hot-filter-footer grid"
+      : "popup-hot-filter-footer";
   const wrapperCls = [
     baseClass,
     shouldApplyActiveClass ? resolvedActiveClass : "",
@@ -308,19 +326,6 @@ export default function SelectFilter<V extends string = string>({
               inputRef={searchInputRef}
             />
           )}
-          {showResetButton && placeholderOption && (
-            <button
-              type="button"
-              className="select-filter-reset"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                pick(placeholderOption.value as V, e);
-              }}
-            >
-              Réinitialiser
-            </button>
-          )}
 
           {filteredOptions.map((opt) => {
             let optionVisual: React.ReactNode = null;
@@ -372,6 +377,21 @@ export default function SelectFilter<V extends string = string>({
             <span className="select-filter-empty">Aucune marque trouvée</span>
           )}
         </div>
+        {showResetButton && placeholderOption && (
+          <div className={resetClass}>
+            <button
+              type="button"
+              className="select-filter-reset"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                pick(placeholderOption.value as V, e);
+              }}
+            >
+              {resolvedResetLabel}
+            </button>
+          </div>
+        )}
       </div>
 
       <Select

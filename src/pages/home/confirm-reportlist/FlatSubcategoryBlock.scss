@@ -212,6 +212,8 @@
   .subcategory-content {
     .main-description {
       margin-bottom: 12px;
+      max-height: 400px;
+      overflow: auto;
 
       .description-text {
         font-size: 14px;

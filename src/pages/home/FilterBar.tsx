@@ -502,6 +502,7 @@ const FilterBar: React.FC<Props> = ({
                 className="pill__select"
                 variant="grid"
                 disabled={filtersDisabled}
+                placeholderResetLabel="Réinitialiser"
               />
             </div>
           )}
@@ -516,6 +517,7 @@ const FilterBar: React.FC<Props> = ({
                 className="pill__select"
                 variant="grid"
                 disabled={filtersDisabled}
+                placeholderResetLabel="Réinitialiser"
               />
             </div>
           )}
