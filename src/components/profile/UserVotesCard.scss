@@ -34,27 +34,9 @@
     background: #ffffff;
     max-height: none;
     overflow: hidden;
-    scrollbar-width: thin;
-    scrollbar-color: rgb(218 218 218 / 70%) transparent;
     transition:
       max-height 0.35s ease,
       height 0.35s ease;
-
-    &::-webkit-scrollbar {
-      width: 6px; // ← essentiel !
-      background: transparent;
-    }
-
-    &::-webkit-scrollbar-button {
-      display: none !important;
-      width: 0;
-      height: 0;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background-color: rgba(148, 163, 184, 0.7);
-      border-radius: 4px;
-    }
 
     &.collapsed {
       overflow: hidden;

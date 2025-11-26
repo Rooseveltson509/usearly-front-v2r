@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import FilterBarGeneric from "./genericFilters/FilterBarGeneric";
 import { useBrands } from "@src/hooks/useBrands";
 import "./HomeFiltersSuggestion.scss";
-import { CiSearch } from "react-icons/ci";
+// import { CiSearch } from "react-icons/ci";
 
 interface Props {
   filter: string;
@@ -25,7 +25,7 @@ const HomeFiltersSuggestion = ({
   /* selectedCategory, */
   setSelectedCategory,
   /* availableCategories, */
-  searchQuery,
+  // searchQuery,
   onSearchChange,
   siteUrl,
 }: Props) => {
@@ -73,7 +73,7 @@ const HomeFiltersSuggestion = ({
         siteUrl={siteUrl}
       />
 
-      {selectedBrand && (
+      {/* {selectedBrand && (
         <div className="suggestion-search">
           <CiSearch />
           <input
@@ -92,7 +92,7 @@ const HomeFiltersSuggestion = ({
             </button>
           )}
         </div>
-      )}
+      )} */}
     </div>
   );
 };

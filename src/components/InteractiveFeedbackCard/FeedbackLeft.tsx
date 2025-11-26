@@ -6,6 +6,7 @@ import { BrandSvg } from "../shared/BrandSvg";
 
 interface Props {
   item: (CoupDeCoeur | Suggestion) & { type: "suggestion" | "coupdecoeur" };
+  isExpanded?: boolean;
 }
 
 export const getBrightness = (hex: string, bg: string = "#ffffff"): number => {
@@ -113,7 +114,7 @@ function reflowPreferTwoLines(html: string, fallbackCount?: number): string {
   return second ? `${first}<br/>${second}` : first;
 }
 
-const FeedbackLeft: React.FC<Props> = ({ item }) => {
+const FeedbackLeft: React.FC<Props> = ({ item, isExpanded = false }) => {
   const brandName = item.marque?.trim() ?? "";
   const { base, light, isDark } = getBrandThemeColor(brandName);
 
@@ -191,7 +192,7 @@ const FeedbackLeft: React.FC<Props> = ({ item }) => {
   }, [lines]);
 
   return (
-    <div className="feedback-type">
+    <div className={`feedback-type${isExpanded ? " is-expanded" : ""}`}>
       {item.punchline ? (
         <div
           className="feedback-left"

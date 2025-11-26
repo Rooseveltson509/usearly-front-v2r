@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { formatDistanceToNowStrict } from "date-fns";
 import { fr } from "date-fns/locale";
 import Avatar from "../shared/Avatar";
@@ -24,6 +24,7 @@ interface Props {
   onToggleComments: () => void;
   commentCount: number;
   isGuest: boolean;
+  onExpandedChange?: (expanded: boolean) => void;
 }
 
 const isValidDate = (value: any) => {
@@ -49,8 +50,12 @@ const FeedbackRight: React.FC<Props> = ({
   onToggleComments,
   commentCount,
   isGuest,
+  onExpandedChange,
 }) => {
   const [showFullText, setShowFullText] = useState(false);
+  const cardRef = useRef<HTMLDivElement | null>(null);
+  const previousHeightRef = useRef<number | null>(null);
+  const animationCleanupRef = useRef<(() => void) | null>(null);
   const safeUserId = userProfile?.id;
   const DESCRIPTION_LIMIT = 100;
   const rawDescription = item.description || "";
@@ -63,7 +68,15 @@ const FeedbackRight: React.FC<Props> = ({
   const siteUrl = item?.siteUrl ?? undefined;
   /* const brandEntries = brandName ? [{ brand: brandName, siteUrl }] : []; */
 
-  const toggleText = () => setShowFullText((prev) => !prev);
+  const toggleText = () => {
+    if (animationCleanupRef.current) {
+      animationCleanupRef.current();
+    }
+    previousHeightRef.current = cardRef.current
+      ? cardRef.current.offsetHeight
+      : null;
+    setShowFullText((prev) => !prev);
+  };
   const openLightbox = (imageSrc: string) => {
     setSelectedImage(imageSrc);
     document.body.classList.add("lightbox-open");
@@ -77,8 +90,78 @@ const FeedbackRight: React.FC<Props> = ({
 
   console.log("🧩 FEEDBACKRIGHT DEBUG AUTHOR", item.author);
 
+  useEffect(() => {
+    return () => {
+      if (animationCleanupRef.current) {
+        animationCleanupRef.current();
+      }
+    };
+  }, []);
+
+  useLayoutEffect(() => {
+    const element = cardRef.current;
+    const startHeight = previousHeightRef.current;
+
+    if (!element || startHeight === null) {
+      return;
+    }
+
+    const endHeight = element.offsetHeight;
+
+    if (startHeight === endHeight) {
+      previousHeightRef.current = null;
+      animationCleanupRef.current = null;
+      return;
+    }
+
+    element.classList.add("is-resizing");
+    element.style.height = `${startHeight}px`;
+    element.style.transition = "none";
+
+    const rafId = window.requestAnimationFrame(() => {
+      element.style.transition = "height 320ms cubic-bezier(0.4, 0, 0.2, 1)";
+      element.style.height = `${endHeight}px`;
+    });
+
+    const finishAnimation = () => {
+      element.classList.remove("is-resizing");
+      element.style.removeProperty("height");
+      element.style.removeProperty("transition");
+      previousHeightRef.current = null;
+      animationCleanupRef.current = null;
+    };
+
+    const handleTransitionEnd = (event: TransitionEvent) => {
+      if (event.propertyName !== "height") return;
+      element.removeEventListener("transitionend", handleTransitionEnd);
+      window.cancelAnimationFrame(rafId);
+      finishAnimation();
+    };
+
+    element.addEventListener("transitionend", handleTransitionEnd);
+
+    animationCleanupRef.current = () => {
+      element.removeEventListener("transitionend", handleTransitionEnd);
+      window.cancelAnimationFrame(rafId);
+      finishAnimation();
+    };
+
+    return () => {
+      element.removeEventListener("transitionend", handleTransitionEnd);
+      window.cancelAnimationFrame(rafId);
+    };
+  }, [showFullText]);
+
+  useEffect(() => {
+    onExpandedChange?.(showFullText);
+  }, [showFullText, onExpandedChange]);
+
   return (
-    <div className="feedback-right" onClick={() => onToggle(item.id)}>
+    <div
+      ref={cardRef}
+      className={`feedback-right${showFullText ? " is-expanded" : ""}`}
+      onClick={() => onToggle(item.id)}
+    >
       <div className="feedback-content">
         <div className="feedback-header">
           <div className="feedback-meta">
@@ -125,7 +208,9 @@ const FeedbackRight: React.FC<Props> = ({
         <div className="feedback-body">
           <h2 className="cdc-post-title">{item.title}</h2>
 
-          <p>
+          <p
+            className={`feedback-body-text ${showFullText ? " is-expanded" : ""}`}
+          >
             {showFullText
               ? description
               : description.length > DESCRIPTION_LIMIT

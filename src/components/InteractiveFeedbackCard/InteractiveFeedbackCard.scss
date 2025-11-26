@@ -12,6 +12,7 @@
   // width: 655px;
   // min-width: 655px;
   max-width: 655px;
+  // max-height: 505px;
   transition: box-shadow 0.3s ease;
   padding: 16px;
 
@@ -50,6 +51,7 @@
               font-size: clamp(14px, 1vw, 18px);
             }
             p {
+              overflow: hidden;
               font-size: clamp(12px, 1vw, 15px);
             }
           }
@@ -64,6 +66,7 @@
         width: 47%;
         .feedback-left {
           width: 100%;
+          height: 100%;
         }
       }
     }
@@ -337,13 +340,11 @@
 
 /* Wrapper de la colonne gauche (enfant direct de .feedback-card) */
 .feedback-type {
-  width: 43%;
   display: flex; // permet à l’enfant de prendre 100% en hauteur
 }
 
 /* Colonne gauche colorée */
 .feedback-type > .feedback-left {
-  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -351,9 +352,20 @@
   padding: 16px;
   min-height: 180px; // plancher visuel
   border-radius: 12px 0 0 12px;
+  height: 299px;
+  transition:
+    height 0.35s ease,
+    padding-bottom 0.35s ease;
 
   .feedback-icon {
     font-size: 32px;
+  }
+}
+
+.feedback-type.is-expanded {
+  padding-bottom: 16px;
+  .feedback-left {
+    height: 100%;
   }
 }
 
@@ -366,17 +378,25 @@
   flex-direction: column;
   justify-content: space-between;
   padding-bottom: 0px;
-  padding-left: 15px;
+  padding-left: 20px;
   padding-right: 8px;
+  padding-top: 0px;
+  height: 299px;
   min-height: 0;
+  transition: transform 0.35s ease;
 
   .feedback-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
     gap: 22.5px;
 
     .feedback-header {
       display: flex;
       justify-content: space-between;
       width: 100%;
+      padding-top: 8px;
 
       .avatar-with-brand {
         position: relative;
@@ -441,12 +461,17 @@
     }
 
     .feedback-body {
-      width: 80%;
+      width: 100%;
       font-size: 15px;
       color: #333;
       font-weight: 300;
       line-height: normal;
       margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: auto;
 
       .see-more {
         border: none;
@@ -462,8 +487,8 @@
       }
 
       .capture-wrapper {
-        margin-top: 12px;
-
+        margin-top: 42px;
+        margin-bottom: 10px;
         img {
           max-width: 100%;
           border-radius: 8px;
@@ -472,6 +497,7 @@
       }
 
       .cdc-post-title {
+        width: 80%;
         color: #000000;
         font-size: 18px;
         font-weight: 700;
@@ -485,12 +511,48 @@
         font-family: $font-family-3;
       }
 
-      p {
+      .feedback-body-text {
+        width: 80%;
         font-size: 15px;
         font-weight: 300;
+        flex: 1 1 auto;
+        min-height: 0;
+        height: 100%;
+        overflow-y: auto;
+        max-height: 100%;
+        margin: 0;
+
+        &.is-expanded {
+          overflow-y: auto;
+          width: 90%;
+          max-height: 250px;
+        }
       }
     }
   }
+}
+
+.feedback-right.is-expanded {
+  transform: translateY(-1px);
+  height: 100%;
+  padding-bottom: 16px;
+  .feedback-content {
+    .feedback-body {
+      margin-bottom: 16px;
+      .feedback-body-text {
+        padding-right: 12px;
+      }
+    }
+  }
+  .shared-footer-cdc {
+    .footer-bottom {
+      padding-top: 7px;
+    }
+  }
+}
+
+.feedback-right.is-resizing {
+  overflow: hidden;
 }
 
 /* Lightbox image */
@@ -774,7 +836,6 @@
   justify-content: center;
 
   min-height: 220px;
-  max-height: 335px;
   padding: 36px;
   //color: var(--brand-color);
 

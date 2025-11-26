@@ -35,6 +35,7 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
   const max = 300;
   const thumbSize = 24;
   const isExpired = expiresInDays !== null && expiresInDays <= 0;
+  const [isFeedbackExpanded, setIsFeedbackExpanded] = useState(false);
 
   // --- progression
   useLayoutEffect(() => {
@@ -117,7 +118,7 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
     >
       <div className="feedback-main">
         {/* === Bloc gauche === */}
-        <FeedbackLeft item={item} />
+        <FeedbackLeft item={item} isExpanded={isFeedbackExpanded} />
         {/* === Bloc droit === */}
         <FeedbackRight
           item={safeItem}
@@ -139,6 +140,7 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
           onToggleComments={toggleComments}
           commentCount={commentCount}
           isGuest={isGuest}
+          onExpandedChange={setIsFeedbackExpanded}
         />
       </div>
       {!!userId && (

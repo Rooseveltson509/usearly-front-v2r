@@ -52,3 +52,27 @@ iframe {
   filter: invert(93%) sepia(93%) saturate(28%) hue-rotate(119deg)
     brightness(107%) contrast(106%);
 }
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: variables.$scrollBarColor transparent;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: variables.$scrollBarColor;
+    border-radius: 999px;
+  }
+
+  &::-webkit-scrollbar-button {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+}
