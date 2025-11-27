@@ -17,6 +17,7 @@ type YouTubePlayer = {
   destroy: () => void;
   setPlaybackQuality?: (quality: YTPlaybackQuality) => void;
   getAvailableQualityLevels?: () => YTPlaybackQuality[];
+  getPlaybackQuality?: () => YTPlaybackQuality;
 
   // 👇 nécessaires pour la barre de progression
   getCurrentTime: () => number;
@@ -44,6 +45,10 @@ type YTPlayerOptions = {
   events?: {
     onReady?: (event: { target: YouTubePlayer }) => void;
     onStateChange?: (event: { data: number; target: YouTubePlayer }) => void;
+    onPlaybackQualityChange?: (event: {
+      data: YTPlaybackQuality;
+      target: YouTubePlayer;
+    }) => void;
   };
 };
 
@@ -68,11 +73,23 @@ const YT_PLAYER_STATE = {
   CUED: 5,
 } as const;
 
+const SUGGESTED_QUALITY: YTPlaybackQuality = "hd2160";
+const QUALITY_ENFORCEMENT_ATTEMPTS = 20;
+const QUALITY_ENFORCEMENT_DELAY = 400;
+
 const PREFERRED_QUALITIES: YTPlaybackQuality[] = [
   "highres",
+  "hd2880",
+  "hd2160",
+  "hd1440",
   "hd1080",
   "hd720",
   "large",
+  "medium",
+  "small",
+  "tiny",
+  "default",
+  "auto",
 ];
 
 let youtubeAPIPromise: Promise<void> | null = null;
@@ -96,13 +113,17 @@ const loadYouTubeAPI = () => {
   return youtubeAPIPromise;
 };
 
+const resolvePreferredQuality = (available: YTPlaybackQuality[]) =>
+  PREFERRED_QUALITIES.find((quality) => available.includes(quality)) ??
+  available[0] ??
+  PREFERRED_QUALITIES[0];
+
 const applyPreferredQuality = (player: YouTubePlayer) => {
   if (!player?.setPlaybackQuality) return;
   const available = player.getAvailableQualityLevels?.() ?? [];
-  const chosen =
-    available.find((quality) => PREFERRED_QUALITIES.includes(quality)) ??
-    PREFERRED_QUALITIES[0];
+  const chosen = resolvePreferredQuality(available);
   player.setPlaybackQuality(chosen);
+  return chosen;
 };
 
 const VideoContainerLanding = () => {
@@ -126,11 +147,48 @@ const VideoContainerLanding = () => {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const volumeHideTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const controlZoneTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const qualityEnforceIntervalRef = useRef<ReturnType<
+    typeof setInterval
+  > | null>(null);
 
   // const videoZenityLandingId = "t6ORDd4ZpXg";
-  const videoZenityLandingId = "HGbynZfWT0s";
+  const videoZenityLandingId = "K4h5Juh-w9o";
   const latestVolumeRef = useRef(volume);
   const latestForceMutedRef = useRef(forceMuted);
+
+  const stopQualityEnforcement = () => {
+    if (qualityEnforceIntervalRef.current) {
+      clearInterval(qualityEnforceIntervalRef.current);
+      qualityEnforceIntervalRef.current = null;
+    }
+  };
+
+  const enforcePreferredQuality = (target?: YouTubePlayer) => {
+    const player = target ?? playerRef.current;
+    if (!player?.setPlaybackQuality) return false;
+    const chosen = applyPreferredQuality(player);
+    if (!chosen) return false;
+    const current = player.getPlaybackQuality?.();
+    return current === chosen;
+  };
+
+  const startQualityEnforcement = (
+    target?: YouTubePlayer,
+    attempts = QUALITY_ENFORCEMENT_ATTEMPTS,
+    delay = QUALITY_ENFORCEMENT_DELAY,
+  ) => {
+    stopQualityEnforcement();
+    let remaining = attempts;
+    const tick = () => {
+      const satisfied = enforcePreferredQuality(target);
+      remaining -= 1;
+      if (satisfied || remaining <= 0) {
+        stopQualityEnforcement();
+      }
+    };
+    tick();
+    qualityEnforceIntervalRef.current = window.setInterval(tick, delay);
+  };
 
   const togglePlay = () => {
     const player = playerRef.current;
@@ -173,6 +231,7 @@ const VideoContainerLanding = () => {
       if (volumeHideTimeout.current) clearTimeout(volumeHideTimeout.current);
       if (controlZoneTimeout.current) clearTimeout(controlZoneTimeout.current);
       if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
+      stopQualityEnforcement();
     };
   }, []);
 
@@ -228,6 +287,7 @@ const VideoContainerLanding = () => {
             rel: 0,
             playsinline: 1,
             iv_load_policy: 3,
+            vq: SUGGESTED_QUALITY,
           },
           events: {
             onReady: (event) => {
@@ -263,20 +323,34 @@ const VideoContainerLanding = () => {
               }
 
               event.target.playVideo();
-              applyPreferredQuality(event.target);
+              startQualityEnforcement(event.target);
             },
             onStateChange: (event) => {
               if (canceled) return;
               if (event.data === YT_PLAYER_STATE.PLAYING) {
-                applyPreferredQuality(event.target);
+                startQualityEnforcement(event.target);
                 setIsPaused(false);
                 startProgressLoop();
+              } else if (event.data === YT_PLAYER_STATE.BUFFERING) {
+                startQualityEnforcement(event.target);
               } else if (
                 event.data === YT_PLAYER_STATE.PAUSED ||
                 event.data === YT_PLAYER_STATE.ENDED
               ) {
                 setIsPaused(true);
                 stopProgressLoop();
+                stopQualityEnforcement();
+              }
+            },
+            onPlaybackQualityChange: (event) => {
+              if (canceled) return;
+              const available =
+                event.target.getAvailableQualityLevels?.() ?? [];
+              const preferred = resolvePreferredQuality(available);
+              if (event.data !== preferred) {
+                startQualityEnforcement(event.target);
+              } else {
+                stopQualityEnforcement();
               }
             },
           },
@@ -289,6 +363,7 @@ const VideoContainerLanding = () => {
     return () => {
       canceled = true;
       stopProgressLoop();
+      stopQualityEnforcement();
       if (playerRef.current) {
         playerRef.current.destroy();
         playerRef.current = null;
