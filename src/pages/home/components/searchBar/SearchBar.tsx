@@ -16,6 +16,7 @@ const SearchBar = ({
 }: SearchBarProps) => {
   const [isActive, setIsActive] = useState(() => Boolean(value));
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const previousValueRef = useRef(value);
 
   useEffect(() => {
@@ -27,13 +28,39 @@ const SearchBar = ({
     }
   }, [value]);
 
+  useEffect(() => {
+    if (!isActive) {
+      return;
+    }
+
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        setIsActive(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
+  }, [isActive]);
+
   const toggleActive = () => {
     setIsActive(!isActive);
     onChange("");
   };
 
   return (
-    <div className={`search-bar ${isActive ? "active" : ""}`}>
+    <div
+      ref={containerRef}
+      className={`search-bar ${isActive ? "active" : ""}`}
+    >
       <span
         className={`icon ${isActive ? "active" : ""}`}
         onClick={toggleActive}

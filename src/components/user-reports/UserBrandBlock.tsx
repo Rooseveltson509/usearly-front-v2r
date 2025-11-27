@@ -264,11 +264,13 @@ const UserBrandBlock: React.FC<Props> = ({
                             className="see-more-section"
                             style={{ display: "inline" }}
                           >
+                            {showFullText && <br />}
                             {!showFullText[sub.subCategory] &&
                               initialDescription.description.length > 100 &&
                               "\u00A0"}
                             <button
                               className="see-more-button"
+                              style={showFullText ? { marginTop: "5px" } : {}}
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setShowFullText((prev) => ({

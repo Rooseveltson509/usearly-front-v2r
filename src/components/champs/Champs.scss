@@ -294,6 +294,10 @@
   min-width: var(--min-w);
   cursor: pointer;
 
+  &.is-loading {
+    display: none !important;
+  }
+
   .popup-hot-filter {
     z-index: 999;
     position: absolute;
@@ -509,8 +513,7 @@
 
   &:hover {
     .select-filter-display {
-      // background-color: #f3f3f3;
-      border: 1px solid #b8b8b8;
+      border: 1px solid #e6e6e6;
     }
   }
 }
@@ -523,6 +526,10 @@
   align-items: stretch;
   height: 54px;
   cursor: pointer;
+
+  &.is-loading {
+    display: none !important;
+  }
 
   .popup-hot-filter {
     z-index: 999;
@@ -756,4 +763,29 @@
     letter-spacing: normal;
     text-transform: none;
   }
+}
+
+.select-filter-leading-placeholder {
+  display: inline-flex;
+  width: 32px;
+  height: 32px;
+}
+
+.select-filter-measurements {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  z-index: -1;
+  display: flex;
+  flex-direction: column;
+}
+
+.select-filter-measure-item {
+  width: auto !important;
+  min-width: 0 !important;
+  height: auto !important;
+  position: relative;
 }

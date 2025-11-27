@@ -1,6 +1,7 @@
 import React from "react";
 import { capitalizeFirstLetter } from "@src/utils/stringUtils";
 import { useAuth } from "@src/services/AuthContext";
+import { truncate } from "@src/utils/stringUtils";
 import "./UserBrandLine.scss";
 
 interface UserBrandLineProps {
@@ -40,10 +41,10 @@ const UserBrandLine: React.FC<UserBrandLineProps> = ({
       <span
         className={`user-name ${isCurrentUser ? `me-badge ${typeClass}` : ""}`}
       >
-        {displayName}
+        {truncate(displayName)}
       </span>{" "}
       <span className="cross">×</span>{" "}
-      <strong>{capitalizeFirstLetter(brand)}</strong>
+      <strong>{truncate(capitalizeFirstLetter(brand))}</strong>
     </span>
   );
 };

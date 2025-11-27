@@ -38,15 +38,10 @@
       .mention-tag {
         color: #1a73e8;
         font-weight: 600;
-        background-color: rgba(26, 115, 232, 0.08);
         border-radius: 6px;
         padding: 1px 5px;
         cursor: pointer;
         transition: background 0.2s ease;
-
-        &:hover {
-          background-color: rgba(26, 115, 232, 0.15);
-        }
       }
     }
   }

@@ -194,11 +194,13 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
                   className="see-more-section"
                   style={{ display: "inline" }}
                 >
+                  {showFullText && <br />}
                   {!showFullText &&
                     initialDescription.description.length > 100 &&
                     "\u00A0"}
                   <button
                     className="see-more-button"
+                    style={showFullText ? { marginTop: "5px" } : {}}
                     onClick={(e) => {
                       e.stopPropagation();
                       setShowFullText((prev) => !prev);
@@ -338,12 +340,14 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
                       Voir plus
                     </button>
                   ) : (
-                    <button
-                      className="see-more-descriptions"
-                      onClick={() => setVisibleDescriptionsCount(2)}
-                    >
-                      Voir moins
-                    </button>
+                    <>
+                      <button
+                        className="see-more-descriptions"
+                        onClick={() => setVisibleDescriptionsCount(2)}
+                      >
+                        Voir moins
+                      </button>
+                    </>
                   )}
                 </div>
               )}

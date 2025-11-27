@@ -81,7 +81,7 @@ const ReportTab: React.FC<Props> = ({
         <SearchBar
           value={searchTerm}
           onChange={handleSearchTermChange}
-          placeholder="Rechercher un signalement..."
+          placeholder="Rechercher un signalement"
         />
         <FilterIllustration
           filter={activeFilter}

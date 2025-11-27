@@ -166,9 +166,11 @@ const PublicSuggestionCard: React.FC<Props> = ({ item }) => {
                 </div>
               )}
               {shouldShowToggle && (
-                <button className="see-more" onClick={toggleText}>
-                  Voir moins
-                </button>
+                <>
+                  <button className="see-more" onClick={toggleText}>
+                    Voir moins
+                  </button>
+                </>
               )}
             </p>
           ) : (

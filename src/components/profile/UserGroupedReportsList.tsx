@@ -155,6 +155,9 @@ const UserGroupedReportsList: React.FC = () => {
             onChange={handleDisplayChange}
             className="view-mode-select__control"
             iconVisible={false}
+            minWidth={150}
+            minWidthPart="2"
+            align="left"
           />
         </div>
       </div>
