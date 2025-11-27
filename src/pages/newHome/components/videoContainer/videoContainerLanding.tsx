@@ -18,6 +18,10 @@ type YouTubePlayer = {
   setPlaybackQuality?: (quality: YTPlaybackQuality) => void;
   getAvailableQualityLevels?: () => YTPlaybackQuality[];
   getPlaybackQuality?: () => YTPlaybackQuality;
+  setPlaybackQualityRange?: (
+    suggestedLowQuality: YTPlaybackQuality,
+    suggestedHighQuality: YTPlaybackQuality,
+  ) => void;
 
   // 👇 nécessaires pour la barre de progression
   getCurrentTime: () => number;
@@ -74,7 +78,6 @@ const YT_PLAYER_STATE = {
 } as const;
 
 const SUGGESTED_QUALITY: YTPlaybackQuality = "hd2160";
-const QUALITY_ENFORCEMENT_ATTEMPTS = 20;
 const QUALITY_ENFORCEMENT_DELAY = 400;
 
 const PREFERRED_QUALITIES: YTPlaybackQuality[] = [
@@ -91,6 +94,26 @@ const PREFERRED_QUALITIES: YTPlaybackQuality[] = [
   "default",
   "auto",
 ];
+
+const QUALITY_PRIORITY: Record<YTPlaybackQuality, number> = {
+  highres: 12,
+  hd2880: 11,
+  hd2160: 10,
+  hd1440: 9,
+  hd1080: 8,
+  hd720: 7,
+  large: 6,
+  medium: 5,
+  small: 4,
+  tiny: 3,
+  default: 2,
+  auto: 1,
+};
+
+const MIN_LOCKED_QUALITY: YTPlaybackQuality = "hd2160";
+const getQualityRank = (quality?: YTPlaybackQuality) =>
+  quality ? (QUALITY_PRIORITY[quality] ?? 0) : 0;
+const MIN_LOCKED_RANK = getQualityRank(MIN_LOCKED_QUALITY);
 
 let youtubeAPIPromise: Promise<void> | null = null;
 const loadYouTubeAPI = () => {
@@ -113,18 +136,33 @@ const loadYouTubeAPI = () => {
   return youtubeAPIPromise;
 };
 
-const resolvePreferredQuality = (available: YTPlaybackQuality[]) =>
-  PREFERRED_QUALITIES.find((quality) => available.includes(quality)) ??
-  available[0] ??
-  PREFERRED_QUALITIES[0];
+const resolvePreferredQuality = (available: YTPlaybackQuality[]) => {
+  if (!available.length) return PREFERRED_QUALITIES[0];
+  const sorted = [...available].sort(
+    (a, b) => getQualityRank(b) - getQualityRank(a),
+  );
+  return sorted[0];
+};
 
 const applyPreferredQuality = (player: YouTubePlayer) => {
-  if (!player?.setPlaybackQuality) return;
+  if (!player?.setPlaybackQuality) {
+    return {
+      available: [],
+      chosen: undefined as YTPlaybackQuality | undefined,
+    };
+  }
   const available = player.getAvailableQualityLevels?.() ?? [];
   const chosen = resolvePreferredQuality(available);
   player.setPlaybackQuality(chosen);
-  return chosen;
+  player.setPlaybackQualityRange?.(chosen, "highres");
+  return { available, chosen };
 };
+
+const hasTargetQualityAvailable = (available: YTPlaybackQuality[]) =>
+  available.some((quality) => getQualityRank(quality) >= MIN_LOCKED_RANK);
+
+const meetsLockedQuality = (quality?: YTPlaybackQuality) =>
+  getQualityRank(quality) >= MIN_LOCKED_RANK;
 
 const VideoContainerLanding = () => {
   const playerRef = useRef<YouTubePlayer | null>(null);
@@ -147,9 +185,7 @@ const VideoContainerLanding = () => {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const volumeHideTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const controlZoneTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const qualityEnforceIntervalRef = useRef<ReturnType<
-    typeof setInterval
-  > | null>(null);
+  const qualityEnforceIntervalRef = useRef<number | null>(null);
 
   // const videoZenityLandingId = "t6ORDd4ZpXg";
   const videoZenityLandingId = "K4h5Juh-w9o";
@@ -166,23 +202,22 @@ const VideoContainerLanding = () => {
   const enforcePreferredQuality = (target?: YouTubePlayer) => {
     const player = target ?? playerRef.current;
     if (!player?.setPlaybackQuality) return false;
-    const chosen = applyPreferredQuality(player);
-    if (!chosen) return false;
+    const { available } = applyPreferredQuality(player);
     const current = player.getPlaybackQuality?.();
-    return current === chosen;
+    if (hasTargetQualityAvailable(available)) {
+      return meetsLockedQuality(current);
+    }
+    return false;
   };
 
   const startQualityEnforcement = (
     target?: YouTubePlayer,
-    attempts = QUALITY_ENFORCEMENT_ATTEMPTS,
     delay = QUALITY_ENFORCEMENT_DELAY,
   ) => {
     stopQualityEnforcement();
-    let remaining = attempts;
     const tick = () => {
       const satisfied = enforcePreferredQuality(target);
-      remaining -= 1;
-      if (satisfied || remaining <= 0) {
+      if (satisfied) {
         stopQualityEnforcement();
       }
     };
@@ -346,12 +381,10 @@ const VideoContainerLanding = () => {
               if (canceled) return;
               const available =
                 event.target.getAvailableQualityLevels?.() ?? [];
-              const preferred = resolvePreferredQuality(available);
-              if (event.data !== preferred) {
-                startQualityEnforcement(event.target);
-              } else {
-                stopQualityEnforcement();
-              }
+              const hasTarget = hasTargetQualityAvailable(available);
+              const meetsTarget = hasTarget && meetsLockedQuality(event.data);
+              if (meetsTarget) stopQualityEnforcement();
+              else startQualityEnforcement(event.target);
             },
           },
         });
