@@ -4,6 +4,7 @@ import React, {
   useState,
   useRef,
   useEffect,
+  useLayoutEffect,
 } from "react";
 import "./Champs.scss";
 import Avatar from "../shared/Avatar";
@@ -11,6 +12,7 @@ import Trigger from "./Trigger/Trigger";
 import { SearchBar } from "./SearchBar/SearchBar";
 import SelectOption from "./SelectOption/SelectOption";
 import Select from "@src/components/selectInput/Select";
+import { truncate } from "@src/utils/stringUtils";
 
 export type SelectFilterOption<V extends string = string> = {
   value: V;
@@ -37,6 +39,8 @@ type Props<V extends string = string> = {
   minWidthPart?: "1" | "2" | "both";
   align?: "left" | "center" | "right";
   placeholderResetLabel?: string;
+  maxLength?: number;
+  loading?: boolean;
 };
 
 const normalize = (label?: string) => label?.toLowerCase().trim() ?? "";
@@ -57,18 +61,25 @@ export default function SelectFilter<V extends string = string>({
   align = "center",
   minWidthPart = "both",
   placeholderResetLabel,
+  loading = false,
 }: Props<V>) {
   const [open, setOpen] = useState(false);
   const [offset, setOffset] = useState<number | null>(null);
   const [searchValue, setSearchValue] = useState("");
+  const [autoMinWidth, setAutoMinWidth] = useState<number | null>(null);
 
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const searchInputRef = useRef<HTMLInputElement | null>(null);
+  const optionsContainerRef = useRef<HTMLDivElement | null>(null);
+  const measurementRef = useRef<HTMLDivElement | null>(null);
 
   const selected = useMemo(
     () => options.find((o) => o.value === value) ?? options[0],
     [options, value],
   );
+
+  const isLoading = Boolean(loading);
+  const hasSelectedValue = Boolean(value);
 
   const placeholderOption = useMemo(
     () => options.find((opt) => !opt.value),
@@ -84,6 +95,9 @@ export default function SelectFilter<V extends string = string>({
     return hasEmptyValue && normalizedPlaceholder === PLACEHOLDER_LABEL;
   }, [brandSelect, placeholderOption]);
 
+  const shouldHideForLoading =
+    isLoading && !(isBrandSelect && hasSelectedValue);
+
   const optionsWithoutPlaceholder = useMemo(
     () =>
       options.filter((opt) => {
@@ -96,12 +110,46 @@ export default function SelectFilter<V extends string = string>({
   const resolvedResetLabel =
     placeholderResetLabel ?? (isBrandSelect ? "Réinitialiser" : undefined);
 
-  const shouldHidePlaceholder =
-    isBrandSelect || Boolean(resolvedResetLabel && placeholderOption);
+  const shouldHidePlaceholder = useMemo(() => {
+    if (!placeholderOption) return false;
+    if (isBrandSelect) {
+      return !hasSelectedValue;
+    }
+    return Boolean(resolvedResetLabel);
+  }, [hasSelectedValue, isBrandSelect, placeholderOption, resolvedResetLabel]);
 
   const displayOptions = useMemo(
     () => (shouldHidePlaceholder ? optionsWithoutPlaceholder : options),
     [options, optionsWithoutPlaceholder, shouldHidePlaceholder],
+  );
+
+  const measurementCandidates = useMemo(() => {
+    if (!isBrandSelect) return [];
+    if (shouldHidePlaceholder) {
+      if (optionsWithoutPlaceholder.length) {
+        return optionsWithoutPlaceholder;
+      }
+      if (placeholderOption) {
+        return [placeholderOption as SelectFilterOption<V>];
+      }
+      return options;
+    }
+    return options;
+  }, [
+    isBrandSelect,
+    options,
+    optionsWithoutPlaceholder,
+    placeholderOption,
+    shouldHidePlaceholder,
+  ]);
+
+  const getDisplayLabel = useCallback(
+    (rawLabel?: string) => {
+      const label = rawLabel ?? "";
+      if (!isBrandSelect) return label;
+      return truncate(label, 20);
+    },
+    [isBrandSelect],
   );
 
   const normalizedSearch = useMemo(() => normalize(searchValue), [searchValue]);
@@ -213,6 +261,52 @@ export default function SelectFilter<V extends string = string>({
     selected,
   ]);
 
+  useLayoutEffect(() => {
+    if (
+      shouldHideForLoading ||
+      !isBrandSelect ||
+      !measurementCandidates.length
+    ) {
+      setAutoMinWidth(null);
+      return;
+    }
+    if (typeof window === "undefined") return;
+
+    const measure = () => {
+      if (!measurementRef.current) return;
+      const items = Array.from(
+        measurementRef.current.querySelectorAll<HTMLElement>(
+          ".select-filter-measure-item",
+        ),
+      );
+      if (!items.length) return;
+      const maxWidth = items.reduce((max, el) => {
+        const width = el.getBoundingClientRect().width;
+        return width > max ? width : max;
+      }, 0);
+      if (!maxWidth) return;
+      setAutoMinWidth((prev) => {
+        const next = Math.ceil(maxWidth);
+        return prev === next ? prev : next;
+      });
+    };
+
+    measure();
+    const handleResize = () => measure();
+    window.addEventListener("resize", handleResize);
+
+    let resizeObserver: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== "undefined" && measurementRef.current) {
+      resizeObserver = new ResizeObserver(() => measure());
+      resizeObserver.observe(measurementRef.current);
+    }
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      resizeObserver?.disconnect();
+    };
+  }, [iconVisible, isBrandSelect, measurementCandidates, shouldHideForLoading]);
+
   useEffect(() => {
     if (!open) return;
     const onDocDown = (e: MouseEvent) => {
@@ -222,6 +316,12 @@ export default function SelectFilter<V extends string = string>({
     document.addEventListener("mousedown", onDocDown);
     return () => document.removeEventListener("mousedown", onDocDown);
   }, [open]);
+
+  useEffect(() => {
+    if (shouldHideForLoading && open) {
+      setOpen(false);
+    }
+  }, [open, shouldHideForLoading]);
 
   useEffect(() => {
     if (!open && searchValue) {
@@ -235,9 +335,20 @@ export default function SelectFilter<V extends string = string>({
     }
   }, [open, isBrandSelect]);
 
+  useEffect(() => {
+    if (!open) return;
+    requestAnimationFrame(() => {
+      if (optionsContainerRef.current) {
+        optionsContainerRef.current.scrollTop = 0;
+      }
+    });
+  }, [open]);
+
+  const interactionDisabled = disabled || shouldHideForLoading;
+
   // Gestion ouverture + mesure (évite cumul de marginTop)
   const toggleOpen = () => {
-    if (disabled) return;
+    if (interactionDisabled) return;
     setOpen((prev) => {
       const next = !prev;
 
@@ -277,34 +388,48 @@ export default function SelectFilter<V extends string = string>({
   const wrapperCls = [
     baseClass,
     shouldApplyActiveClass ? resolvedActiveClass : "",
+    shouldHideForLoading ? "is-loading" : "",
     className,
   ]
     .filter(Boolean)
     .join(" ");
 
-  const cssMinW = typeof minWidth === "number" ? `${minWidth}px` : minWidth;
+  const numericMinWidth = typeof minWidth === "number" ? minWidth : 0;
+  const computedMinWidth = Math.max(
+    numericMinWidth,
+    isBrandSelect && typeof autoMinWidth === "number" ? autoMinWidth : 0,
+  );
+  const cssMinW = computedMinWidth
+    ? `${computedMinWidth}px`
+    : typeof minWidth === "string"
+      ? minWidth
+      : undefined;
   const cssAlign = typeof align === "string" ? align : "center";
+
+  const shouldApplyWrapperMinWidth =
+    minWidthPart === "both" ||
+    minWidthPart === "1" ||
+    (isBrandSelect && computedMinWidth > 0);
+  const shouldApplyPopupMinWidth =
+    minWidthPart === "both" || minWidthPart === "2";
 
   const wrapperStyle: React.CSSProperties = {
     ["--text-align" as any]: cssAlign,
-    ...(minWidthPart === "both" || minWidthPart === "1"
-      ? { minWidth: cssMinW }
-      : {}),
+    ...(shouldApplyWrapperMinWidth && cssMinW ? { minWidth: cssMinW } : {}),
+    ...(shouldHideForLoading ? { display: "none" } : {}),
   };
 
   const popupStyle: React.CSSProperties = {
     marginTop: offset ? `${offset}px` : "60px",
-    ...(minWidthPart === "both" || minWidthPart === "2"
-      ? { minWidth: cssMinW }
-      : {}),
+    ...(shouldApplyPopupMinWidth && cssMinW ? { minWidth: cssMinW } : {}),
   };
 
   return (
     <div
       ref={wrapperRef}
       className={wrapperCls}
-      onClick={disabled ? undefined : toggleOpen}
-      aria-expanded={open}
+      onClick={interactionDisabled ? undefined : toggleOpen}
+      aria-expanded={shouldHideForLoading ? false : open}
       aria-haspopup="listbox"
       style={wrapperStyle}
     >
@@ -313,7 +438,11 @@ export default function SelectFilter<V extends string = string>({
         style={popupStyle}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="popup-hot-filter-container" role="listbox">
+        <div
+          className="popup-hot-filter-container"
+          role="listbox"
+          ref={optionsContainerRef}
+        >
           {isBrandSelect && (
             <SearchBar
               value={searchValue}
@@ -364,7 +493,7 @@ export default function SelectFilter<V extends string = string>({
               <SelectOption
                 key={opt.value}
                 value={opt.value}
-                label={opt.label}
+                label={getDisplayLabel(opt.label)}
                 leading={optionVisual}
                 selected={opt.value === value}
                 isPlaceholder={!opt.value}
@@ -398,10 +527,33 @@ export default function SelectFilter<V extends string = string>({
         options={options}
         value={value}
         onChange={onChange}
-        disabled={disabled}
+        disabled={interactionDisabled}
         className={"select-filter"}
       />
-      <Trigger leading={selectedVisual} label={selected?.label ?? ""} />
+      <Trigger
+        leading={selectedVisual}
+        label={getDisplayLabel(selected?.label)}
+      />
+      {isBrandSelect && measurementCandidates.length > 0 && (
+        <div
+          className="select-filter-measurements"
+          aria-hidden
+          ref={measurementRef}
+        >
+          {measurementCandidates.map((opt, idx) => (
+            <Trigger
+              key={`measure-${opt.value ?? idx}-${opt.label}-${idx}`}
+              leading={
+                iconVisible ? (
+                  <span className="select-filter-leading-placeholder" />
+                ) : undefined
+              }
+              label={getDisplayLabel(opt.label)}
+              className="select-filter-measure-item"
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

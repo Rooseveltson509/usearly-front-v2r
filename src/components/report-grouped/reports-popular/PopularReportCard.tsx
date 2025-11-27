@@ -230,13 +230,16 @@ const PopularReportCard: React.FC<Props> = ({
                 DESCRIPTION_PREVIEW_LENGTH ||
                 captureUrl) && (
                 <div className="see-more-section">
+                  {showFullText && <br />}
                   <button
                     className="see-more-button"
+                    style={showFullText ? { marginTop: "5px" } : {}}
                     onClick={(e) => {
                       e.stopPropagation();
                       setShowFullText((prev) => !prev);
                     }}
                   >
+                    {showFullText && <br />}
                     {showFullText ? "Voir moins" : "Voir plus"}
                   </button>
                 </div>
@@ -339,12 +342,14 @@ const PopularReportCard: React.FC<Props> = ({
                       Voir plus
                     </button>
                   ) : (
-                    <button
-                      className="see-more-descriptions"
-                      onClick={() => setVisibleDescriptionsCount(2)}
-                    >
-                      Voir moins
-                    </button>
+                    <>
+                      <button
+                        className="see-more-descriptions"
+                        onClick={() => setVisibleDescriptionsCount(2)}
+                      >
+                        Voir moins
+                      </button>
+                    </>
                   )}
                 </div>
               )}

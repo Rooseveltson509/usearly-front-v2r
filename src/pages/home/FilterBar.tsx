@@ -460,6 +460,7 @@ const FilterBar: React.FC<Props> = ({
             minWidth={225}
             minWidthPart="2"
             align="left"
+            loading={Boolean(isFeedLoading)}
           />
         </div>
       </div>
@@ -482,6 +483,7 @@ const FilterBar: React.FC<Props> = ({
               minWidth={225}
               minWidthPart="2"
               align="left"
+              loading={Boolean(isFeedLoading)}
             />
           </div>
 
@@ -503,6 +505,7 @@ const FilterBar: React.FC<Props> = ({
                 variant="grid"
                 disabled={filtersDisabled}
                 placeholderResetLabel="Réinitialiser"
+                loading={filtersDisabled}
               />
             </div>
           )}
@@ -518,6 +521,7 @@ const FilterBar: React.FC<Props> = ({
                 variant="grid"
                 disabled={filtersDisabled}
                 placeholderResetLabel="Réinitialiser"
+                loading={filtersDisabled}
               />
             </div>
           )}
