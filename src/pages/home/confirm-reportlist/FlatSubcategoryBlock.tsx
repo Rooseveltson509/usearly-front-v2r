@@ -15,6 +15,7 @@ import {
 } from "@src/utils/brandLogos";
 import { useBrandLogos } from "@src/hooks/useBrandLogos";
 import UserBrandLine from "@src/components/shared/UserBrandLine";
+import CloseButton from "@src/components/buttons/CloseButtons";
 
 interface Props {
   brand: string;
@@ -225,19 +226,17 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
 
                   {showCapturePreview && (
                     <div
-                      className="capture-overlay"
+                      className="lightbox"
                       onClick={() => setShowCapturePreview(false)}
                     >
                       <div
-                        className="capture-modal"
+                        className="lightbox-content"
                         onClick={(e) => e.stopPropagation()}
                       >
-                        <button
-                          className="close-btn"
-                          onClick={() => setShowCapturePreview(false)}
-                        >
-                          ✕
-                        </button>
+                        <CloseButton
+                          stateSetter={setShowCapturePreview}
+                          stateValue={false}
+                        />
                         <img src={captureUrl} alt="Aperçu capture" />
                       </div>
                     </div>

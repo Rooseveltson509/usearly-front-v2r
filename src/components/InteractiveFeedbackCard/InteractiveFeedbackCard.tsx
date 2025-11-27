@@ -8,6 +8,7 @@ import FeedbackLeft from "./FeedbackLeft";
 import FeedbackRight from "./FeedbackRight";
 import DescriptionCommentSection from "../report-desc-comment/DescriptionCommentSection";
 import type { CoupDeCoeur, Suggestion } from "@src/types/Reports";
+import CloseButton from "@src/components/buttons/CloseButtons";
 
 interface Props {
   item: (CoupDeCoeur | Suggestion) & { type: "suggestion" | "coupdecoeur" };
@@ -160,11 +161,13 @@ const InteractiveFeedbackCard: React.FC<Props> = ({
 
       {selectedImage && (
         <div className="lightbox" onClick={() => setSelectedImage(null)}>
-          <img
-            src={selectedImage}
-            alt="Zoom"
+          <div
+            className="lightbox-content"
             onClick={(e) => e.stopPropagation()}
-          />
+          >
+            <CloseButton stateSetter={setSelectedImage} stateValue={null} />
+            <img src={selectedImage} alt="Zoom" />
+          </div>
         </div>
       )}
     </div>

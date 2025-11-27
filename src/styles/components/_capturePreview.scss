@@ -33,22 +33,6 @@
     object-fit: contain;
     display: block;
   }
-
-  .close-btn {
-    position: absolute;
-    top: 8px;
-    right: 10px;
-    background: rgba(255, 255, 255, 0.85);
-    border: none;
-    font-size: 1.2rem;
-    cursor: pointer;
-    border-radius: 50%;
-    padding: 4px 8px;
-    transition: background 0.2s;
-    &:hover {
-      background: rgba(255, 255, 255, 1);
-    }
-  }
 }
 
 @keyframes fadeIn {

@@ -13,6 +13,7 @@ import "@src/pages/home/confirm-reportlist/FlatSubcategoryBlock.scss";
 import { getBrandLogo } from "@src/utils/brandLogos";
 import Avatar from "@src/components/shared/Avatar";
 import UserBrandLine from "@src/components/shared/UserBrandLine";
+import CloseButton from "@src/components/buttons/CloseButtons";
 
 interface Props {
   item: PopularGroupedReport;
@@ -358,17 +359,15 @@ const PopularReportCard: React.FC<Props> = ({
         </div>
       )}
       {showCapturePreview && (
-        <div
-          className="capture-overlay"
-          onClick={() => setShowCapturePreview(false)}
-        >
-          <div className="capture-modal" onClick={(e) => e.stopPropagation()}>
-            <button
-              className="close-btn"
-              onClick={() => setShowCapturePreview(false)}
-            >
-              ✕
-            </button>
+        <div className="lightbox" onClick={() => setShowCapturePreview(false)}>
+          <div
+            className="lightbox-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <CloseButton
+              stateSetter={setShowCapturePreview}
+              stateValue={false}
+            />
             <img src={captureUrl ?? ""} alt="Aperçu capture" />
           </div>
         </div>

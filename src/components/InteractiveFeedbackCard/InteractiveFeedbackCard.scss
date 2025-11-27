@@ -565,10 +565,17 @@
   justify-content: center;
   z-index: 1000;
 
+  .lightbox-content {
+    position: relative;
+    display: inline-flex;
+    align-items: flex-start;
+  }
+
   img {
-    max-width: 40%;
-    max-height: 40%;
+    max-width: min(90vw, 720px);
+    max-height: min(90vh, 720px);
     border-radius: 12px;
+    display: block;
   }
 }
 

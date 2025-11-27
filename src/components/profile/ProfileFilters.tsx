@@ -67,6 +67,14 @@ const ProfileFilters: React.FC<Props> = ({
     [setSelectedBrand, setSelectedCategory],
   );
 
+  const handleCategoryChange = React.useCallback(
+    (value: string) => {
+      const next = !value || isTous(value) ? "Tous" : value;
+      setSelectedCategory(next);
+    },
+    [setSelectedCategory],
+  );
+
   const categoryOptions = React.useMemo<SelectFilterOption[]>(() => {
     const placeholder: SelectFilterOption = {
       value: "",
@@ -104,9 +112,10 @@ const ProfileFilters: React.FC<Props> = ({
         <Champs
           options={categoryOptions}
           value={selectedCategory}
-          onChange={setSelectedCategory}
+          onChange={handleCategoryChange}
           className="profile-filters__category"
           disabled={!availableCategories.length}
+          placeholderResetLabel="Réinitialiser"
           variant="grid"
         />
       </div>
