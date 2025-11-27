@@ -15,6 +15,7 @@ import Avatar from "../shared/Avatar";
 import { getBrandThemeColor } from "@src/utils/getBrandThemeColor";
 import { useAuth } from "@src/services/AuthContext";
 import UserBrandLine from "../shared/UserBrandLine";
+import CloseButton from "../buttons/CloseButtons";
 
 interface Props {
   brand: string;
@@ -496,11 +497,15 @@ const UserBrandBlock: React.FC<Props> = ({
       )}
 
       {modalImage && (
-        <div className="capture-overlay" onClick={() => setModalImage(null)}>
-          <div className="capture-modal" onClick={(e) => e.stopPropagation()}>
-            <button className="close-btn" onClick={() => setModalImage(null)}>
+        <div className="lightbox" onClick={() => setModalImage(null)}>
+          <div
+            className="lightbox-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <CloseButton stateSetter={setModalImage} stateValue={null} />
+            {/* <button className="close-btn" onClick={() => setModalImage(null)}>
               ✕
-            </button>
+            </button> */}
             <img src={modalImage} alt="Aperçu capture" />
           </div>
         </div>

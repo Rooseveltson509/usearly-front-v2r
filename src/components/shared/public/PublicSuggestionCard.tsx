@@ -8,6 +8,7 @@ import type { PublicSuggestion } from "@src/types/suggestion";
 import { capitalizeFirstLetter } from "@src/utils/stringUtils";
 import { FALLBACK_BRAND_PLACEHOLDER } from "@src/utils/brandLogos";
 import { getRandomBrandColor } from "@src/utils/brandColors";
+import CloseButton from "@src/components/buttons/CloseButtons";
 
 interface Props {
   item: PublicSuggestion & { type: "suggestion" };
@@ -211,11 +212,13 @@ const PublicSuggestionCard: React.FC<Props> = ({ item }) => {
 
       {selectedImage && (
         <div className="lightbox" onClick={closeLightbox}>
-          <img
-            src={selectedImage}
-            alt="Zoom"
+          <div
+            className="lightbox-content"
             onClick={(e) => e.stopPropagation()}
-          />
+          >
+            <CloseButton closeFunction={closeLightbox} />
+            <img src={selectedImage} alt="Zoom" />
+          </div>
         </div>
       )}
     </div>
