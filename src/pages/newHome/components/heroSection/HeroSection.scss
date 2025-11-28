@@ -56,9 +56,11 @@
 
 .cursor {
   display: inline-block;
-  margin-left: 4px;
+  width: 10px; // ← curseur très fin
+  height: 1em;
+  background: currentColor;
+  margin-left: 6px;
   animation: blink 1.2s infinite;
-  opacity: 1;
 }
 
 @keyframes blink {

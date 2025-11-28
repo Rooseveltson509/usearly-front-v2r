@@ -49,7 +49,7 @@ export default function TypingFullWord({ words }: TypingProps) {
   return (
     <span className="typing-fullword">
       {words[index].substring(0, subIndex)}
-      <span className="cursor">|</span>
+      {/* <span className="cursor" /> */}
     </span>
   );
 }
