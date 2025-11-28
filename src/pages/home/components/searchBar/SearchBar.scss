@@ -54,6 +54,15 @@
       padding 0.2s ease,
       opacity 0.15s ease,
       border-color 0.2s ease;
+    appearance: none;
+
+    &::-webkit-search-decoration,
+    &::-webkit-search-cancel-button,
+    &::-webkit-search-results-button,
+    &::-webkit-search-results-decoration {
+      -webkit-appearance: none;
+      appearance: none;
+    }
   }
 
   .input.active {

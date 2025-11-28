@@ -122,8 +122,8 @@ const SuggestionTab: React.FC<Props> = ({
           />
         ) : (
           <div className="feedback-view-container">
-            <div className="selected-brand-heading">
-              {selectedBrand && (
+            {selectedBrand && (
+              <div className="selected-brand-heading">
                 <div className="selected-brand-summary">
                   <div className="selected-brand-summary__brand">
                     <div className="selected-brand-summary__logo">
@@ -161,8 +161,8 @@ const SuggestionTab: React.FC<Props> = ({
                     </div>
                   </div>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
             <FeedbackView
               activeTab="suggestion"

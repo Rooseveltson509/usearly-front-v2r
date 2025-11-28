@@ -1,6 +1,6 @@
 ﻿import "./SearchBar.scss";
 
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 interface SearchBarProps {
@@ -51,9 +51,25 @@ const SearchBar = ({
     };
   }, [isActive]);
 
-  const toggleActive = () => {
-    setIsActive(!isActive);
-    onChange("");
+  const hasValue = Boolean(value);
+  const showClearIcon = isActive && hasValue;
+
+  const handleIconClick = () => {
+    if (showClearIcon) {
+      onChange("");
+      inputRef.current?.focus();
+      return;
+    }
+
+    setIsActive((previous) => {
+      const nextState = !previous;
+      if (!previous) {
+        requestAnimationFrame(() => {
+          inputRef.current?.focus();
+        });
+      }
+      return nextState;
+    });
   };
 
   return (
@@ -63,9 +79,9 @@ const SearchBar = ({
     >
       <span
         className={`icon ${isActive ? "active" : ""}`}
-        onClick={toggleActive}
+        onClick={handleIconClick}
       >
-        <Search size={16} />
+        {showClearIcon ? <X size={16} /> : <Search size={16} />}
       </span>
       <input
         ref={inputRef}
