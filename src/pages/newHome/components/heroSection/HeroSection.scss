@@ -48,3 +48,25 @@
   z-index: 10;
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
 }
+
+.typing-fullword {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.cursor {
+  display: inline-block;
+  margin-left: 4px;
+  animation: blink 1.2s infinite;
+  opacity: 1;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
