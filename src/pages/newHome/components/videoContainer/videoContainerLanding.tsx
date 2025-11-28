@@ -7,28 +7,7 @@ import ExitFullScreenIcon from "/assets/icons/exitFullScreenIcon.svg";
 import MuteIcon from "/assets/icons/muteIcon.svg";
 import VolumeIcon from "/assets/icons/volumeIcon.svg";
 
-type YouTubePlayer = {
-  playVideo: () => void;
-  pauseVideo: () => void;
-  mute: () => void;
-  unMute: () => void;
-  setVolume: (volume: number) => void;
-  getPlayerState: () => number;
-  destroy: () => void;
-  setPlaybackQuality?: (quality: YTPlaybackQuality) => void;
-  getAvailableQualityLevels?: () => YTPlaybackQuality[];
-  getPlaybackQuality?: () => YTPlaybackQuality;
-  setPlaybackQualityRange?: (
-    suggestedLowQuality: YTPlaybackQuality,
-    suggestedHighQuality: YTPlaybackQuality,
-  ) => void;
-
-  // 👇 nécessaires pour la barre de progression
-  getCurrentTime: () => number;
-  getDuration: () => number;
-  seekTo: (seconds: number, allowSeekAhead: boolean) => void;
-};
-
+/* ---------------- Types YouTube ---------------- */
 type YTPlaybackQuality =
   | "highres"
   | "hd2880"
@@ -42,6 +21,24 @@ type YTPlaybackQuality =
   | "tiny"
   | "default"
   | "auto";
+
+type YouTubePlayer = {
+  playVideo: () => void;
+  pauseVideo: () => void;
+  mute: () => void;
+  unMute: () => void;
+  setVolume: (volume: number) => void;
+  getPlayerState: () => number;
+  destroy: () => void;
+  // progress
+  getCurrentTime: () => number;
+  getDuration: () => number;
+  seekTo: (seconds: number, allowSeekAhead: boolean) => void;
+  // quality (selon IFrame API)
+  setPlaybackQuality?: (quality: YTPlaybackQuality) => void;
+  getAvailableQualityLevels?: () => YTPlaybackQuality[];
+  getPlaybackQuality?: () => YTPlaybackQuality;
+};
 
 type YTPlayerOptions = {
   videoId: string;
@@ -67,6 +64,7 @@ declare global {
   }
 }
 
+/* ---------------- Constantes ---------------- */
 const YT_API_SRC = "https://www.youtube.com/iframe_api";
 const YT_PLAYER_STATE = {
   UNSTARTED: -1,
@@ -77,23 +75,9 @@ const YT_PLAYER_STATE = {
   CUED: 5,
 } as const;
 
+const VIDEO_ID = "K4h5Juh-w9o"; // ton ID
 const SUGGESTED_QUALITY: YTPlaybackQuality = "hd2160";
-const QUALITY_ENFORCEMENT_DELAY = 400;
-
-const PREFERRED_QUALITIES: YTPlaybackQuality[] = [
-  "highres",
-  "hd2880",
-  "hd2160",
-  "hd1440",
-  "hd1080",
-  "hd720",
-  "large",
-  "medium",
-  "small",
-  "tiny",
-  "default",
-  "auto",
-];
+const QUALITY_TICK_MS = 400;
 
 const QUALITY_PRIORITY: Record<YTPlaybackQuality, number> = {
   highres: 12,
@@ -110,14 +94,15 @@ const QUALITY_PRIORITY: Record<YTPlaybackQuality, number> = {
   auto: 1,
 };
 
+const rank = (q?: YTPlaybackQuality) => (q ? (QUALITY_PRIORITY[q] ?? 0) : 0);
 const MIN_LOCKED_QUALITY: YTPlaybackQuality = "hd2160";
-const getQualityRank = (quality?: YTPlaybackQuality) =>
-  quality ? (QUALITY_PRIORITY[quality] ?? 0) : 0;
-const MIN_LOCKED_RANK = getQualityRank(MIN_LOCKED_QUALITY);
+const MIN_LOCKED_RANK = rank(MIN_LOCKED_QUALITY);
 
+/* ---------------- Utils chargement API ---------------- */
 let youtubeAPIPromise: Promise<void> | null = null;
-const loadYouTubeAPI = () => {
-  if (window.YT && window.YT.Player) return Promise.resolve();
+
+function loadYouTubeAPI() {
+  if (window.YT?.Player) return Promise.resolve();
   if (youtubeAPIPromise) return youtubeAPIPromise;
 
   youtubeAPIPromise = new Promise<void>((resolve) => {
@@ -126,47 +111,36 @@ const loadYouTubeAPI = () => {
       prev?.();
       resolve();
     };
+
     if (!document.querySelector(`script[src="${YT_API_SRC}"]`)) {
-      const script = document.createElement("script");
-      script.src = YT_API_SRC;
-      script.async = true;
-      document.head.appendChild(script);
+      const s = document.createElement("script");
+      s.src = YT_API_SRC;
+      s.async = true;
+      document.head.appendChild(s);
     }
   });
   return youtubeAPIPromise;
-};
+}
 
-const resolvePreferredQuality = (available: YTPlaybackQuality[]) => {
-  if (!available.length) return PREFERRED_QUALITIES[0];
-  const sorted = [...available].sort(
-    (a, b) => getQualityRank(b) - getQualityRank(a),
-  );
-  return sorted[0];
-};
+/* ---------------- Qualité préférée ---------------- */
+function bestAvailable(available: YTPlaybackQuality[]) {
+  return [...available].sort((a, b) => rank(b) - rank(a))[0];
+}
 
-const applyPreferredQuality = (player: YouTubePlayer) => {
-  if (!player?.setPlaybackQuality) {
-    return {
-      available: [],
-      chosen: undefined as YTPlaybackQuality | undefined,
-    };
-  }
+function trySetPreferredQuality(player: YouTubePlayer) {
+  if (!player.setPlaybackQuality) return { ok: false };
   const available = player.getAvailableQualityLevels?.() ?? [];
-  const chosen = resolvePreferredQuality(available);
+  if (!available.length) return { ok: false };
+  const chosen = bestAvailable(available);
   player.setPlaybackQuality(chosen);
-  player.setPlaybackQualityRange?.(chosen, "highres");
-  return { available, chosen };
-};
+  const ok = rank(chosen) >= MIN_LOCKED_RANK;
+  return { ok };
+}
 
-const hasTargetQualityAvailable = (available: YTPlaybackQuality[]) =>
-  available.some((quality) => getQualityRank(quality) >= MIN_LOCKED_RANK);
-
-const meetsLockedQuality = (quality?: YTPlaybackQuality) =>
-  getQualityRank(quality) >= MIN_LOCKED_RANK;
-
+/* ---------------- Composant ---------------- */
 const VideoContainerLanding = () => {
   const playerRef = useRef<YouTubePlayer | null>(null);
-  const playerContainerRef = useRef<HTMLIFrameElement | null>(null);
+  const playerContainerRef = useRef<HTMLDivElement | null>(null);
 
   const [isPaused, setIsPaused] = useState(false);
   const [cinema, setCinema] = useState(false);
@@ -176,116 +150,34 @@ const VideoContainerLanding = () => {
   const [forceMuted, setForceMuted] = useState(true);
   const isMuted = forceMuted || volume === 0;
 
-  // 🔵 Barre de progression
+  // Progress
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const rafIdRef = useRef<number | null>(null);
   const isScrubbingRef = useRef(false);
 
   const wrapperRef = useRef<HTMLDivElement | null>(null);
-  const volumeHideTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const controlZoneTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const qualityEnforceIntervalRef = useRef<number | null>(null);
+  const controlsFadeTimeout = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
+  const qualityIntervalRef = useRef<number | null>(null);
 
-  // const videoZenityLandingId = "t6ORDd4ZpXg";
-  const videoZenityLandingId = "K4h5Juh-w9o";
+  // garder valeurs à jour pour onReady
   const latestVolumeRef = useRef(volume);
-  const latestForceMutedRef = useRef(forceMuted);
-
-  const stopQualityEnforcement = () => {
-    if (qualityEnforceIntervalRef.current) {
-      clearInterval(qualityEnforceIntervalRef.current);
-      qualityEnforceIntervalRef.current = null;
-    }
-  };
-
-  const enforcePreferredQuality = (target?: YouTubePlayer) => {
-    const player = target ?? playerRef.current;
-    if (!player?.setPlaybackQuality) return false;
-    const { available } = applyPreferredQuality(player);
-    const current = player.getPlaybackQuality?.();
-    if (hasTargetQualityAvailable(available)) {
-      return meetsLockedQuality(current);
-    }
-    return false;
-  };
-
-  const startQualityEnforcement = (
-    target?: YouTubePlayer,
-    delay = QUALITY_ENFORCEMENT_DELAY,
-  ) => {
-    stopQualityEnforcement();
-    const tick = () => {
-      const satisfied = enforcePreferredQuality(target);
-      if (satisfied) {
-        stopQualityEnforcement();
-      }
-    };
-    tick();
-    qualityEnforceIntervalRef.current = window.setInterval(tick, delay);
-  };
-
-  const togglePlay = () => {
-    const player = playerRef.current;
-    if (!player) return;
-    const state = player.getPlayerState();
-    if (
-      state === YT_PLAYER_STATE.PLAYING ||
-      state === YT_PLAYER_STATE.BUFFERING
-    ) {
-      player.pauseVideo();
-    } else {
-      player.playVideo();
-    }
-  };
-
-  // Plein écran natif bloqué
-  useEffect(() => {
-    const onFs = () => {
-      if (document.fullscreenElement) {
-        document.exitFullscreen().catch(() => {});
-      }
-    };
-    document.addEventListener("fullscreenchange", onFs);
-    return () => document.removeEventListener("fullscreenchange", onFs);
-  }, []);
-
-  // Scroll lock en mode cinéma
-  useEffect(() => {
-    const { body } = document;
-    if (!cinema) return;
-    const prev = body.style.overflow;
-    body.style.overflow = "hidden";
-    return () => {
-      body.style.overflow = prev;
-    };
-  }, [cinema]);
-
-  useEffect(() => {
-    return () => {
-      if (volumeHideTimeout.current) clearTimeout(volumeHideTimeout.current);
-      if (controlZoneTimeout.current) clearTimeout(controlZoneTimeout.current);
-      if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
-      stopQualityEnforcement();
-    };
-  }, []);
-
+  const latestMutedRef = useRef(forceMuted);
   useEffect(() => {
     latestVolumeRef.current = volume;
   }, [volume]);
-
   useEffect(() => {
-    latestForceMutedRef.current = forceMuted;
+    latestMutedRef.current = forceMuted;
   }, [forceMuted]);
 
-  // ⏱️ loop de mise à jour du temps courant
   const startProgressLoop = () => {
     if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
     const tick = () => {
       const p = playerRef.current;
       if (p && !isScrubbingRef.current) {
-        const t = p.getCurrentTime?.() ?? 0;
-        setCurrentTime(t);
+        setCurrentTime(p.getCurrentTime?.() ?? 0);
         if (!duration) {
           const d = p.getDuration?.() ?? 0;
           if (d > 0) setDuration(d);
@@ -295,15 +187,68 @@ const VideoContainerLanding = () => {
     };
     rafIdRef.current = requestAnimationFrame(tick);
   };
-
   const stopProgressLoop = () => {
-    if (rafIdRef.current) {
-      cancelAnimationFrame(rafIdRef.current);
-      rafIdRef.current = null;
+    if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
+    rafIdRef.current = null;
+  };
+
+  const stopQualityLoop = () => {
+    if (qualityIntervalRef.current) clearInterval(qualityIntervalRef.current);
+    qualityIntervalRef.current = null;
+  };
+  const startQualityLoop = (target?: YouTubePlayer) => {
+    stopQualityLoop();
+    const player = target ?? playerRef.current;
+    if (!player) return;
+    const tick = () => {
+      const { ok } = trySetPreferredQuality(player);
+      if (ok) stopQualityLoop();
+    };
+    tick();
+    qualityIntervalRef.current = window.setInterval(tick, QUALITY_TICK_MS);
+  };
+
+  const togglePlay = () => {
+    const p = playerRef.current;
+    if (!p) return;
+    const s = p.getPlayerState();
+    if (s === YT_PLAYER_STATE.PLAYING || s === YT_PLAYER_STATE.BUFFERING) {
+      p.pauseVideo();
+    } else {
+      p.playVideo();
     }
   };
 
-  // Chargement YouTube + init player
+  /* Plein écran natif off (tu as un mode ciné custom) */
+  useEffect(() => {
+    const onFs = () => {
+      if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+    };
+    document.addEventListener("fullscreenchange", onFs);
+    return () => document.removeEventListener("fullscreenchange", onFs);
+  }, []);
+
+  /* Scroll lock en mode cinéma */
+  useEffect(() => {
+    if (!cinema) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [cinema]);
+
+  /* Cleanup global */
+  useEffect(() => {
+    return () => {
+      if (controlsFadeTimeout.current)
+        clearTimeout(controlsFadeTimeout.current);
+      stopProgressLoop();
+      stopQualityLoop();
+    };
+  }, []);
+
+  /* Init YouTube player */
   useEffect(() => {
     let canceled = false;
 
@@ -312,11 +257,11 @@ const VideoContainerLanding = () => {
         if (canceled || !playerContainerRef.current || !window.YT) return;
 
         playerRef.current = new window.YT.Player(playerContainerRef.current, {
-          videoId: videoZenityLandingId,
+          videoId: VIDEO_ID,
           playerVars: {
-            autoplay: 1,
+            autoplay: 1, // pas de gros bouton
             mute: 1,
-            controls: 0,
+            controls: 0, // on gère nos contrôles
             disablekb: 1,
             fs: 0,
             modestbranding: 1,
@@ -326,123 +271,98 @@ const VideoContainerLanding = () => {
             vq: SUGGESTED_QUALITY,
           },
           events: {
-            onReady: (event) => {
+            onReady: (e) => {
               if (canceled) return;
-              playerRef.current = event.target;
+              const p = (playerRef.current = e.target);
 
-              // volume/mute init
-              event.target.setVolume(Math.round(latestVolumeRef.current * 100));
-              if (
-                latestForceMutedRef.current ||
-                latestVolumeRef.current === 0
-              ) {
-                event.target.mute();
+              p.setVolume(Math.round(latestVolumeRef.current * 100));
+              if (latestMutedRef.current || latestVolumeRef.current === 0) {
+                p.mute();
               } else {
-                event.target.unMute();
+                p.unMute();
               }
 
-              // récup duration (peut être 0 au début, on boucle un peu)
-              const tryDuration = () => {
-                const d = event.target.getDuration?.() ?? 0;
-                if (d > 0) {
-                  setDuration(d);
-                  return true;
-                }
-                return false;
-              };
-              if (!tryDuration()) {
-                const id = setInterval(() => {
-                  if (tryDuration()) clearInterval(id);
-                }, 200);
-                // clean si unmount
-                setTimeout(() => clearInterval(id), 5000);
-              }
+              // duration peut être 0 au début
+              const d = p.getDuration?.() ?? 0;
+              if (d > 0) setDuration(d);
 
-              event.target.playVideo();
-              startQualityEnforcement(event.target);
+              p.playVideo();
+              startQualityLoop(p);
             },
-            onStateChange: (event) => {
+            onStateChange: (e) => {
               if (canceled) return;
-              if (event.data === YT_PLAYER_STATE.PLAYING) {
-                startQualityEnforcement(event.target);
+              if (e.data === YT_PLAYER_STATE.PLAYING) {
                 setIsPaused(false);
                 startProgressLoop();
-              } else if (event.data === YT_PLAYER_STATE.BUFFERING) {
-                startQualityEnforcement(event.target);
+                startQualityLoop(e.target);
+              } else if (e.data === YT_PLAYER_STATE.BUFFERING) {
+                startQualityLoop(e.target);
               } else if (
-                event.data === YT_PLAYER_STATE.PAUSED ||
-                event.data === YT_PLAYER_STATE.ENDED
+                e.data === YT_PLAYER_STATE.PAUSED ||
+                e.data === YT_PLAYER_STATE.ENDED
               ) {
                 setIsPaused(true);
                 stopProgressLoop();
-                stopQualityEnforcement();
+                stopQualityLoop();
               }
             },
-            onPlaybackQualityChange: (event) => {
-              if (canceled) return;
-              const available =
-                event.target.getAvailableQualityLevels?.() ?? [];
-              const hasTarget = hasTargetQualityAvailable(available);
-              const meetsTarget = hasTarget && meetsLockedQuality(event.data);
-              if (meetsTarget) stopQualityEnforcement();
-              else startQualityEnforcement(event.target);
+            onPlaybackQualityChange: () => {
+              // relance un tick si YouTube baisse la qualité
+              startQualityLoop(playerRef.current ?? undefined);
             },
           },
         });
       })
-      .catch((err) => {
-        console.error("YouTube API failed to load", err);
-      });
+      .catch((err) => console.error("YouTube API failed to load", err));
 
     return () => {
       canceled = true;
       stopProgressLoop();
-      stopQualityEnforcement();
-      if (playerRef.current) {
-        playerRef.current.destroy();
-        playerRef.current = null;
-      }
+      stopQualityLoop();
+      playerRef.current?.destroy();
+      playerRef.current = null;
     };
-  }, [videoZenityLandingId]);
-
-  // Appliquer volume/mute aux changements
+  }, []);
   useEffect(() => {
-    const player = playerRef.current;
-    if (!player) return;
-    player.setVolume(Math.round(volume * 100));
-    if (forceMuted || volume === 0) player.mute();
-    else player.unMute();
-  }, [volume, forceMuted]);
+    const p = playerRef.current;
+    if (!p) return;
+    p.setVolume(Math.round(volume * 100));
+    if (isMuted) {
+      p.mute();
+    } else {
+      p.unMute();
+    }
+  }, [volume, isMuted]);
 
-  // Volume handlers
+  /* Volume UI */
   const handleVolumeSlider = (e: React.ChangeEvent<HTMLInputElement>) => {
     const next = Number(e.target.value);
     setVolume(next);
     setForceMuted(false);
     setIsUsingVolume(true);
-    if (controlZoneTimeout.current) clearTimeout(controlZoneTimeout.current);
-    controlZoneTimeout.current = setTimeout(
+    if (controlsFadeTimeout.current) clearTimeout(controlsFadeTimeout.current);
+    controlsFadeTimeout.current = setTimeout(
       () => setIsUsingVolume(false),
       1000,
     );
   };
-
   const toggleMute = () => {
     if (isMuted) {
       setForceMuted(false);
       setVolume((v) => (v === 0 ? 0.6 : v));
-      return;
+    } else {
+      setVolume(0);
+      setIsUsingVolume(true);
+      if (controlsFadeTimeout.current)
+        clearTimeout(controlsFadeTimeout.current);
+      controlsFadeTimeout.current = setTimeout(
+        () => setIsUsingVolume(false),
+        1000,
+      );
     }
-    setVolume(0);
-    setIsUsingVolume(true);
-    if (controlZoneTimeout.current) clearTimeout(controlZoneTimeout.current);
-    controlZoneTimeout.current = setTimeout(
-      () => setIsUsingVolume(false),
-      1000,
-    );
   };
 
-  // 🎚️ Scrub handlers (seek)
+  /* Scrub (seek) */
   const onScrubStart = () => {
     isScrubbingRef.current = true;
     stopProgressLoop();
@@ -458,23 +378,18 @@ const VideoContainerLanding = () => {
   };
 
   const hideControls = !isPaused && !isHovered && !isUsingVolume;
-
-  // (optionnel) petite fonction pour afficher le temps à côté du slider
-  const fmt = (s: number) => {
-    const m = Math.floor(s / 60);
-    const ss = Math.floor(s % 60)
+  const fmt = (s: number) =>
+    `${Math.floor(s / 60)}:${Math.floor(s % 60)
       .toString()
-      .padStart(2, "0");
-    return `${m}:${ss}`;
-  };
+      .padStart(2, "0")}`;
 
   return (
     <div
       className={`new-home-video-container ${cinema ? "cinema" : ""}`}
       onClick={(e) => {
         if (!cinema) return;
-        const wrapper = wrapperRef.current;
-        if (wrapper && !wrapper.contains(e.target as Node)) setCinema(false);
+        const w = wrapperRef.current;
+        if (w && !w.contains(e.target as Node)) setCinema(false);
       }}
     >
       <div
@@ -496,16 +411,8 @@ const VideoContainerLanding = () => {
         </button>
 
         <div className="new-home-video">
-          <iframe
-            ref={playerContainerRef}
-            width="560"
-            height="315"
-            src="https://www.youtube.com/embed/K4h5Juh-w9o?si=AU2MGsDypn1VmIMO&enablejsapi=1&autoplay=1&mute=1&1oop=1&controls=0&color=white&modestbranding=0&rel=0&playsinline=1&enablejsapi=1&playlist=K4h5Juh-w9o"
-            title="YouTube video player"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; web-share"
-            referrerPolicy="strict-origin-when-cross-origin"
-            allowFullScreen
-          />
+          {/* L’API IFrame va injecter l’iframe ici */}
+          <div ref={playerContainerRef} className="new-home-video-player" />
           <div
             className="new-home-video-overlay"
             role="presentation"
@@ -518,7 +425,7 @@ const VideoContainerLanding = () => {
           />
         </div>
 
-        {/* 🎞️ Barre de progression */}
+        {/* Progress bar */}
         <div className={`progress ${hideControls ? "is-hidden" : ""}`}>
           <input
             className="progress-slider"
@@ -539,6 +446,7 @@ const VideoContainerLanding = () => {
           </div>
         </div>
 
+        {/* Controls */}
         <div className={`custom-controls ${hideControls ? "is-hidden" : ""}`}>
           <div
             className="volume-control"
