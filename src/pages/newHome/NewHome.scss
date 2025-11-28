@@ -27,4 +27,14 @@
   }
 }
 
-// 237 x 299
+.scroll-section {
+  width: 100%;
+  max-width: 1100px; // ou 1200px selon ton design
+  margin: 0 auto;
+  padding: 140px 20px; // espace autour
+  text-align: center;
+
+  @media (max-width: 768px) {
+    padding: 80px 16px;
+  }
+}

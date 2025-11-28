@@ -1,0 +1,50 @@
+.hero-section {
+  position: relative;
+  padding: 160px 0 240px;
+  background: #989dff;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.hero-title {
+  text-align: center;
+  font-size: 150px;
+  font-weight: 900;
+  line-height: 1.05;
+  color: #000;
+}
+
+.mouse-images-zone {
+  position: absolute;
+  inset: 0;
+  pointer-events: auto;
+}
+
+.mouse-reveal-img {
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 24px;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+.mouse-reveal-section {
+  width: 100%;
+  position: relative;
+  padding: 200px 0;
+  background: #c8b7ff;
+  overflow: hidden;
+}
+
+.mouse-image {
+  position: fixed;
+  width: 260px;
+  height: 260px;
+  border-radius: 25px;
+  object-fit: cover;
+  pointer-events: none;
+  z-index: 10;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+}
