@@ -7,7 +7,12 @@ import { useAuth } from "@src/services/AuthContext";
 import { getNotifications } from "@src/services/notificationService";
 import Buttons from "@src/components/buttons/Buttons";
 
-const Header = () => {
+interface HeaderProps {
+  heroMode?: boolean;
+  children?: React.ReactNode;
+}
+
+const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
   const { isAuthenticated, userProfile, logout } = useAuth();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [notifications, setNotifications] = useState<any[]>([]);
@@ -69,7 +74,7 @@ const Header = () => {
   };
 
   return (
-    <header className="header">
+    <header className={`header ${heroMode ? "hero-mode" : ""}`}>
       <div className="header-container">
         {/* Logo */}
         <div className="logo" onClick={() => navigate("/home")}>
@@ -186,6 +191,8 @@ const Header = () => {
           )}
         </div>
       </div>
+      {/* 🟦 Slot Hero uniquement en homepage */}
+      {heroMode && <div className="header-hero-slot">{children}</div>}
     </header>
   );
 };
