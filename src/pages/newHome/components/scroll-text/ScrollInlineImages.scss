@@ -1,0 +1,24 @@
+.scroll-inline-wrapper {
+  width: 100%;
+  text-align: center;
+}
+
+.inline-line {
+  font-size: clamp(26px, 4vw, 62px);
+  font-weight: 800;
+  line-height: 1.15;
+  margin-block: clamp(12px, 2vw, 20px);
+}
+
+.img-slot {
+  display: inline-flex;
+  align-items: center;
+  overflow: hidden; /* IMPORTANT — empêche l’espace */
+}
+
+.inline-photo {
+  width: clamp(40px, 4vw, 65px);
+  height: clamp(40px, 4vw, 65px);
+  border-radius: 16px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+}

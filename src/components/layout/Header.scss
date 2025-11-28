@@ -6,6 +6,7 @@
   padding-left: max(5.5rem, 5%);
   padding-right: max(5.5rem, 5%);
   position: fixed;
+  //background: transparent;
   // z-index: 2147483647;
   z-index: 999;
   width: 100%;
@@ -329,6 +330,48 @@
       }
     }
   }
+}
+
+/* Style HERO pour la Home */
+.header.hero-mode {
+  background: transparent;
+}
+
+.header.hero-mode .nav-links .link {
+  color: white; /* 🔥 Couleur des textes dans NewHome */
+}
+
+.header.hero-mode .nav-links .link.active {
+  color: white;
+  border-color: white; /* ▼ la petite barre underline */
+}
+.header.hero-mode {
+  position: relative;
+}
+
+/* Mode hero */
+.header.hero-mode .notif-button i {
+  color: white;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.header.hero-mode .notif-count {
+  background: white; /* badge clair */
+  color: #000; /* chiffre noir */
+}
+
+.header-hero-slot {
+  position: relative;
+  width: 100%;
+  z-index: 1;
+}
+
+.header.hero-mode {
+  position: absolute;
+  background: transparent;
+  box-shadow: none;
+  color: #fff; // si besoin
+  z-index: 20;
 }
 
 /* === Animation cloche du header === */

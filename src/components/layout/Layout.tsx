@@ -1,10 +1,20 @@
 import Header from "./Header";
 import { type ReactNode, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 // exported header height in pixels; will be calculated at runtime
 export let headerheight = 0;
 
-const Layout = ({ children }: { children: ReactNode }) => {
+interface LayoutProps {
+  children: ReactNode;
+}
+
+const Layout = ({ children }: LayoutProps) => {
+  const location = useLocation();
+
+  // 🟣 heroMode automatique : actif UNIQUEMENT sur /home
+  const heroMode = location.pathname === "/home";
+
   const [HeaderHeight, setHeaderHeight] = useState<number>(headerheight);
 
   useEffect(() => {
@@ -16,12 +26,12 @@ const Layout = ({ children }: { children: ReactNode }) => {
       const newHeight = element
         ? Math.ceil(element.getBoundingClientRect().height)
         : 0;
+
       headerheight = newHeight;
       setHeaderHeight(newHeight);
     };
 
     compute();
-
     window.addEventListener("resize", compute);
 
     const headerElement = getHeader();
@@ -43,11 +53,12 @@ const Layout = ({ children }: { children: ReactNode }) => {
 
   return (
     <>
-      <Header />
+      <Header heroMode={heroMode} />
+
       <main
         style={{
           minHeight: "100vh",
-          paddingTop: HeaderHeight,
+          paddingTop: heroMode ? 0 : HeaderHeight, // Hero = header collé
         }}
       >
         {children}
