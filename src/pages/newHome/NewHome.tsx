@@ -26,16 +26,16 @@ const NewHome: React.FC = () => {
         <div className="scroll-section">
           <ScrollInlineImages
             lines={[
-              "DANS UN MONDE DE BRUIT,",
-              "NOUS AIDONS LES À SE",
-              "DISTINGUER AVEC DES IDÉES CLAIRES",
-              "ET UN DESIGN QUI LAISSE UNE EMPREINTE.",
+              "NOUS CONNECTONS",
+              "LES UTILISATEURS",
+              "AUX MARQUES POUR CRÉER ENSEMBLE",
+              "DES EXPÉRIENCES POSITIVES.",
             ]}
             images={[
-              { line: 0, wordIndex: 4, src: "/assets/images/p1.png" },
-              { line: 1, wordIndex: 3, src: "/assets/images/p2.png" },
+              { line: 0, wordIndex: 1, src: "/assets/images/p1.png" },
+              { line: 1, wordIndex: 1, src: "/assets/images/p2.png" },
               { line: 2, wordIndex: 2, src: "/assets/images/p3.png" },
-              { line: 3, wordIndex: 1, src: "/assets/images/p4.png" },
+              { line: 3, wordIndex: 2, src: "/assets/images/p4.png" },
             ]}
           />
         </div>

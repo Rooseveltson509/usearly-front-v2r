@@ -1,3 +1,4 @@
+import TypingFullWord from "../typing-text/TypingWords";
 import "./HeroSection.scss";
 import MouseRevealImages from "./MouseRevealImages";
 
@@ -7,7 +8,15 @@ const HeroSection = () => {
       <h1 className="hero-title">
         AMÉLIORER <br />
         L’EXPÉRIENCE <br />
-        ENSEMBLE
+        <TypingFullWord
+          words={[
+            "ENSEMBLE",
+            "DIGITAL",
+            "UTILISATEUR",
+            "CLIENT",
+            "ÉMOTIONNELLE",
+          ]}
+        />
       </h1>
 
       <MouseRevealImages
