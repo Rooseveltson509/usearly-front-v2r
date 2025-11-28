@@ -2,46 +2,22 @@ import React, { useRef, useLayoutEffect, useState, useMemo } from "react";
 import { decideIllustration } from "@src/utils/getIllustrationDecision";
 import { getBrandThemeColor } from "@src/utils/getBrandThemeColor";
 import type { CoupDeCoeur, Suggestion } from "@src/types/Reports";
-import { BrandSvg } from "../shared/BrandSvg";
+import { BrandSvg } from "../../shared/BrandSvg";
+import { getOfficialPalette, pickSvgColor } from "@src/utils/brandColorUtils";
+import TypographyBlock from "./blocks/TypographyBlock";
+import EmojiBlock from "./blocks/EmojiBlock";
+import { countWordsFromHTML, htmlToWords } from "../utils/textFormatUtils";
+import {
+  breakAtBestVisualWidth,
+  reflowPreferTwoLines,
+} from "../utils/layoutUtils";
+import { getTextColorForBackground } from "../utils/feedbackColors";
+import { getBrightness } from "../utils/colorUtils";
 
 interface Props {
   item: (CoupDeCoeur | Suggestion) & { type: "suggestion" | "coupdecoeur" };
   isExpanded?: boolean;
 }
-
-export const getBrightness = (hex: string, bg: string = "#ffffff"): number => {
-  if (!hex) return 0;
-  let c = hex.replace("#", "").trim();
-
-  if (/^[0-9a-f]{3}$/i.test(c)) {
-    c = c
-      .split("")
-      .map((ch) => ch + ch)
-      .join("");
-  }
-  const parseRGB = (h: string) => ({
-    r: parseInt(h.slice(0, 2), 16),
-    g: parseInt(h.slice(2, 4), 16),
-    b: parseInt(h.slice(4, 6), 16),
-  });
-
-  if (/^[0-9a-f]{8}$/i.test(c)) {
-    const { r, g, b } = parseRGB(c);
-    const a = parseInt(c.slice(6, 8), 16) / 255;
-    const bgC = parseRGB(bg.replace("#", ""));
-    const R = Math.round((1 - a) * bgC.r + a * r);
-    const G = Math.round((1 - a) * bgC.g + a * g);
-    const B = Math.round((1 - a) * bgC.b + a * b);
-    return Math.max(0, Math.min(255, (R * 299 + G * 587 + B * 114) / 1000));
-  }
-
-  if (!/^[0-9a-f]{6}$/i.test(c)) return 0;
-  const { r, g, b } = parseRGB(c);
-  return Math.max(0, Math.min(255, (r * 299 + g * 587 + b * 114) / 1000));
-};
-
-const getTextColorForBackground = (hex: string): string =>
-  getBrightness(hex) > 150 ? "#000" : "#fff";
 
 /** ✅ Mesure la hauteur réelle et décide wrap si > seuil (par défaut 50px) */
 function shouldWrapByHeight(el: HTMLElement, threshold = 50): boolean {
@@ -50,79 +26,22 @@ function shouldWrapByHeight(el: HTMLElement, threshold = 50): boolean {
   return h > threshold;
 }
 
-/** ✅ Compte les mots en nettoyant le HTML */
-function countWordsFromHTML(html: string): number {
-  const txt = html
-    .replace(/<[^>]*>/g, " ")
-    .replace(/&nbsp;/gi, " ")
-    .trim();
-  if (!txt) return 0;
-  return (txt.match(/\S+/g) || []).length;
-}
-
-/** 🔤 Extrait les mots (texte nu) depuis un HTML simple */
-function htmlToWords(html: string): string[] {
-  const txt = html
-    .replace(/<[^>]*>/g, " ")
-    .replace(/&nbsp;/gi, " ")
-    .trim();
-  return txt ? txt.match(/\S+/g) || [] : [];
-}
-
-/** 🎯 Coupe “visuellement équilibrée” : cherche k qui équilibre la largeur px des 2 lignes */
-function breakAtBestVisualWidth(el: HTMLElement, words: string[]): number {
-  const cs = getComputedStyle(el);
-  const ctx = document.createElement("canvas").getContext("2d")!;
-  const font = `${cs.fontStyle || "normal"} ${cs.fontWeight || "500"} ${cs.fontSize || "17px"} ${cs.fontFamily || "Ralleway"}`;
-  ctx.font = font;
-
-  const measure = (arr: string[]) => ctx.measureText(arr.join(" ")).width;
-
-  let bestK = 2; // au moins 2 mots en 1re ligne
-  let bestDiff = Infinity;
-  for (let k = 2; k < words.length; k++) {
-    const left = measure(words.slice(0, k));
-    const right = measure(words.slice(k));
-    const diff = Math.abs(left - right);
-    if (diff < bestDiff) {
-      bestDiff = diff;
-      bestK = k;
-    }
-  }
-  return bestK;
-}
-
-/**
- * 🧩 Fallback : préférence **2 lignes** quand ça wrap
- *  - <br/> après k = max(2, ceil(n/2)) mots
- */
-function reflowPreferTwoLines(html: string, fallbackCount?: number): string {
-  if (/<br\s*\/?>/i.test(html)) return html; // déjà formaté
-
-  const words = htmlToWords(html);
-  const n = Number.isFinite(fallbackCount as number)
-    ? (fallbackCount as number)
-    : words.length;
-
-  if (words.length <= 2) return html;
-
-  let k = Math.max(2, Math.ceil(n / 2));
-  if (k >= words.length) k = Math.max(2, words.length - 1);
-
-  const first = words.slice(0, k).join(" ");
-  const second = words.slice(k).join(" ");
-  return second ? `${first}<br/>${second}` : first;
-}
-
 const FeedbackLeft: React.FC<Props> = ({ item, isExpanded = false }) => {
   const brandName = item.marque?.trim() ?? "";
   const { base, light, isDark } = getBrandThemeColor(brandName);
+  // 🎨 Palette 3 couleurs cohérente
+  const palette = getOfficialPalette(brandName);
 
   const brightness = getBrightness(base);
   const isTooLight = brightness > 235;
   const adjustedBase = base;
   const adjustedLight = light;
   const themeMode = isDark ? "dark" : "light";
+
+  // 🎨 La bulle utilise déjà base
+  const bubbleColor = adjustedBase;
+  // 🎨 SVG = couleur différente + jamais noire + cohérente
+  const svgColor = pickSvgColor(palette, bubbleColor);
 
   const illustration = decideIllustration(
     item.title,
@@ -208,69 +127,25 @@ const FeedbackLeft: React.FC<Props> = ({ item, isExpanded = false }) => {
         >
           {/* === AXE TYPO === */}
           {item.meta?.axe === "typography" ? (
-            <div
-              className="punchline-typography"
-              dangerouslySetInnerHTML={{
-                __html: (() => {
-                  let text = item.punchline;
-                  const highlightedWords = item.meta?.highlightedWords ?? [];
-                  const highlightTextColor =
-                    getTextColorForBackground(adjustedBase);
-                  highlightedWords.forEach((word) => {
-                    const regex = new RegExp(`(${word})`, "gi");
-                    text = text.replace(
-                      regex,
-                      `<span class="highlight-bubble" style="background:${adjustedBase};color:${highlightTextColor};">${word}</span>`,
-                    );
-                  });
-                  return text;
-                })(),
-              }}
+            <TypographyBlock
+              punchline={item.punchline}
+              highlightedWords={item.meta?.highlightedWords}
+              baseColor={adjustedBase}
+              getTextColorForBackground={getTextColorForBackground}
             />
           ) : item.meta?.axe === "emoji" ? (
-            <div
-              className="feedback-left"
-              style={{
-                backgroundColor: backgroundVariant,
-                color: "#000",
-                ["--brand-color" as any]: adjustedBase,
-                ["--brand-color-light" as any]: adjustedLight,
-              }}
-              data-axe="emoji"
-              data-theme={themeMode}
-              data-highlight-emoji={
-                highlightEmojiNeedsContrast ? "dark" : "brand"
-              }
-            >
-              <div className="feedback-icon">{item.emoji}</div>
-              <div
-                className="emoji-text"
-                dangerouslySetInnerHTML={{
-                  __html: (() => {
-                    let text = item.punchline;
-                    const highlightedWords = item.meta?.highlightedWords ?? [];
-
-                    highlightedWords.forEach((word) => {
-                      if (!word) return;
-
-                      // 🔒 Ignore les mots sensibles comme "style", "color", etc.
-                      if (["style", "class", "id"].includes(word.toLowerCase()))
-                        return;
-
-                      const regex = new RegExp(`(${word})`, "gi");
-                      if (regex.test(text)) {
-                        text = text.replace(
-                          regex,
-                          `<span class="${highlightEmojiClass}" style="color:${highlightEmojiColor}; font-weight:900;">$1</span>`,
-                        );
-                      }
-                    });
-
-                    return text;
-                  })(),
-                }}
-              />
-            </div>
+            <EmojiBlock
+              punchline={item.punchline}
+              emoji={item.emoji}
+              highlightedWords={item.meta?.highlightedWords}
+              highlightEmojiClass={highlightEmojiClass}
+              highlightEmojiColor={highlightEmojiColor}
+              backgroundVariant={backgroundVariant}
+              baseColor={adjustedBase}
+              lightColor={adjustedLight}
+              themeMode={themeMode}
+              highlightEmojiNeedsContrast={highlightEmojiNeedsContrast}
+            />
           ) : (
             <>
               <div className="punchlines" ref={punchlinesRef}>
@@ -346,7 +221,7 @@ const FeedbackLeft: React.FC<Props> = ({ item, isExpanded = false }) => {
                   {item.type === "coupdecoeur" ? (
                     <BrandSvg
                       src={illustration}
-                      brandColor={adjustedBase}
+                      brandColor={svgColor} // ⭐ Couleur différente automatiquement
                       className="illu-image"
                       alt="Illustration de la marque"
                     />

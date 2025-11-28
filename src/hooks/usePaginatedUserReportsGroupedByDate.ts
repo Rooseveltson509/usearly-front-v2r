@@ -54,6 +54,7 @@ export const usePaginatedUserReportsGroupedByDate = (enabled: boolean) => {
                 category: report.category,
                 marque: report.marque,
                 siteUrl: report.siteUrl || null, // ✅ conserve siteUrl
+                capture: report.capture || null,
                 totalCount: report.count,
                 subCategory: {
                   subCategory: report.subCategory,

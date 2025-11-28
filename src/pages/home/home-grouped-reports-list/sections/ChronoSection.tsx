@@ -6,6 +6,9 @@ import {
   normalizeSearchText,
 } from "@src/utils/reportSearch";
 import type { ExplodedGroupedReport } from "@src/types/Reports";
+import { formatFullDate } from "@src/utils/dateUtils";
+import { CalendarDays } from "lucide-react";
+import "./ChronoSection.scss";
 
 interface ChronoSectionProps {
   chronoData: { data?: any[]; loading: boolean };
@@ -114,16 +117,15 @@ const ChronoSection: React.FC<ChronoSectionProps> = ({
             return "Date inconnue";
           }
 
-          return parsedDate.toLocaleDateString("fr-FR", {
-            day: "2-digit",
-            month: "long",
-            year: "numeric",
-          });
+          return formatFullDate(parsedDate);
         })();
 
         return (
-          <div key={dateKey} className="recent-reports-group">
-            <div className="recent-report-date">🗓️ {formattedDate}</div>
+          <div key={dateKey} className="date-group">
+            <div className="date-header">
+              <CalendarDays size={18} className="calendar-icon" />
+              <h3 className="date-title">{formattedDate}</h3>
+            </div>
 
             <div className="recent-report-items">
               {reports.map((report: any, index: number) => (

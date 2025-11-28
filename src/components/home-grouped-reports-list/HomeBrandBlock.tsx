@@ -150,10 +150,11 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
     <div className={`brand-block ${openBrands[brand] ? "open" : "close"}`}>
       <div className="brand-header" onClick={() => toggleBrand(brand)}>
         <Avatar
-          avatar={getBrandLogo(brand, siteUrl)}
+          avatar={null}
           pseudo={brand}
           type="brand"
-          wrapperClassName="brand-logo"
+          siteUrl={siteUrl} // ✅ domaine propre
+          preferBrandLogo={true}
         />
         <p className="brand-reports-count">
           <strong>{uniqueSubCategories.length}</strong> signalement
