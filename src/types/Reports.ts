@@ -8,6 +8,28 @@ export interface BrandWithSubCategories {
   subCategories: string[];
 }
 
+export interface ProfileChronoReport {
+  reportingId: string;
+  marque: string;
+  siteUrl?: string | null;
+  capture?: string | null;
+  category: string;
+  subCategory: string;
+  count: number;
+  descriptions: {
+    id: string;
+    description: string;
+    emoji?: string | null;
+    createdAt: string;
+    reactions: { emoji: string; userId: string }[];
+    user: {
+      id: string;
+      pseudo: string;
+      avatar: string | null;
+    } | null;
+  }[];
+}
+
 export interface GetConfirmedResponse {
   currentPage: number;
   total: number;
@@ -183,7 +205,7 @@ export interface GroupedReport {
   category: string;
   marque: string;
   siteUrl?: string | null;
-  /* capture?: string | null; */
+  capture?: string | null;
   totalCount: number;
   subCategories: {
     subCategory: string;

@@ -1,4 +1,4 @@
-@use "@src/styles/base/variables" as *;
+@use "../../../styles/base/variables" as *;
 
 .report-card {
   background-color: #ffffff;
@@ -203,4 +203,19 @@
   font-size: 15px;
   position: relative;
   top: -40px;
+}
+
+.subcategory-content {
+  animation: fadeSlideIn 0.25s ease-out;
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

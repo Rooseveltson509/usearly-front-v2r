@@ -129,7 +129,7 @@ export const brandColors: Record<string, string[]> = {
   default: ["#3B3B3C", "#4A4A4A", "#5A5A5A"],
 
   // Autres
-  zenity: ["rgb(212, 169, 94)", "rgb(63, 195, 204)", "rgb(63, 195, 204)"],
+  zenity: ["rgb(212, 169, 94)", "rgb(63, 195, 204)", "#2F3F45"],
 };
 
 // 🎲 Sélection aléatoire d’une couleur parmi les 3

@@ -41,9 +41,7 @@ const UserProfilePage: React.FC = () => {
         </div>
 
         <aside className="right-panel">
-          <UserVotesCard />
-          {/* <div className="separator"></div>
-          <UserImpact /> */}
+          {activeTab === "suggestion" && <UserVotesCard />}
         </aside>
       </main>
     </div>

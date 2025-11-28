@@ -4,7 +4,7 @@ import { useAuth } from "@src/services/AuthContext";
 import { apiService } from "@src/services/apiService";
 import { showToast } from "@src/utils/toastUtils";
 import starProgressBar from "/assets/icons/icon-progress-bar.svg";
-import FeedbackLeft from "./FeedbackLeft";
+import FeedbackLeft from "./feedback-left/FeedbackLeft";
 import FeedbackRight from "./FeedbackRight";
 import DescriptionCommentSection from "../report-desc-comment/DescriptionCommentSection";
 import type { CoupDeCoeur, Suggestion } from "@src/types/Reports";
