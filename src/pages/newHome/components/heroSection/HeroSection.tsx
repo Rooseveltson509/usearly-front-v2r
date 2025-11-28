@@ -11,7 +11,7 @@ const HeroSection = () => {
         <TypingFullWord
           words={[
             "ENSEMBLE",
-            "DIGITAL",
+            "DIGITALE",
             "UTILISATEUR",
             "CLIENT",
             "ÉMOTIONNELLE",
