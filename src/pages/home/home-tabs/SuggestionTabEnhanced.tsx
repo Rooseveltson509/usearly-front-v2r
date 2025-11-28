@@ -133,8 +133,8 @@ const SuggestionTabEnhanced: React.FC<Props> = ({
         ) : (
           <>
             {/* Header */}
-            <div className="selected-brand-heading">
-              {selectedBrand && (
+            {selectedBrand && (
+              <div className="selected-brand-heading">
                 <div className="selected-brand-summary">
                   <div className="selected-brand-summary__brand">
                     <div className="selected-brand-summary__logo">
@@ -173,8 +173,8 @@ const SuggestionTabEnhanced: React.FC<Props> = ({
                     </div>
                   </div>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
             {/* Liste */}
             <FeedbackView

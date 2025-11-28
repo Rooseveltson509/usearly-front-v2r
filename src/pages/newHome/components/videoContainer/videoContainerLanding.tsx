@@ -166,7 +166,7 @@ const meetsLockedQuality = (quality?: YTPlaybackQuality) =>
 
 const VideoContainerLanding = () => {
   const playerRef = useRef<YouTubePlayer | null>(null);
-  const playerContainerRef = useRef<HTMLDivElement | null>(null);
+  const playerContainerRef = useRef<HTMLIFrameElement | null>(null);
 
   const [isPaused, setIsPaused] = useState(false);
   const [cinema, setCinema] = useState(false);
@@ -315,6 +315,7 @@ const VideoContainerLanding = () => {
           videoId: videoZenityLandingId,
           playerVars: {
             autoplay: 1,
+            mute: 1,
             controls: 0,
             disablekb: 1,
             fs: 0,
@@ -495,7 +496,16 @@ const VideoContainerLanding = () => {
         </button>
 
         <div className="new-home-video">
-          <div ref={playerContainerRef} className="new-home-video-player" />
+          <iframe
+            ref={playerContainerRef}
+            width="560"
+            height="315"
+            src="https://www.youtube.com/embed/K4h5Juh-w9o?si=AU2MGsDypn1VmIMO&enablejsapi=1&autoplay=1&mute=1&1oop=1&controls=0&color=white&modestbranding=0&rel=0&playsinline=1&enablejsapi=1&playlist=K4h5Juh-w9o"
+            title="YouTube video player"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; web-share"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+          />
           <div
             className="new-home-video-overlay"
             role="presentation"

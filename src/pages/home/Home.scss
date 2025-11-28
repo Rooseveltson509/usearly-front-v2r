@@ -101,7 +101,7 @@
   border-radius: 24px;
   padding: 0 0px 24px 13px;
   margin-bottom: 32px;
-  margin-top: 4rem;
+  margin-top: 61px;
   box-sizing: border-box;
   max-height: 400px;
   height: 275px;
@@ -164,7 +164,7 @@
   .feedback-list-wrapper {
     margin-top: -90px;
     .home-grouped-reports-list {
-      margin-top: 25px;
+      margin-top: 15px;
     }
   }
 }
@@ -174,7 +174,7 @@
   .feedback-list-wrapper {
     margin-top: -90px;
     .home-grouped-reports-list {
-      margin-top: 25px;
+      margin-top: 15px;
     }
   }
 }
@@ -222,7 +222,7 @@
     flex: 1;
     position: relative;
     z-index: 2;
-    margin-top: -80px;
+    margin-top: -90px;
     gap: 0px;
 
     .selected-brand-heading {
@@ -332,7 +332,7 @@
     flex: 1;
     position: relative;
     z-index: 2;
-    margin-top: -80px; // ✅ cartes par-dessus
+    margin-top: -90px; // ✅ cartes par-dessus
     gap: 0px;
 
     .selected-brand-heading {
