@@ -1,11 +1,10 @@
 import React from "react";
 
 import Champs, { type SelectFilterOption } from "@src/components/champs/Champs";
-import { categoryIcons } from "@src/utils/categoriesIcon";
+import { getCategoryIconPathFromSubcategory } from "@src/utils/IconsUtils";
 import "./ProfileFilters.scss";
 
-const DEFAULT_CATEGORY_ICON =
-  categoryIcons["Autre souci"] || "/assets/categories-icons/other.png";
+const DEFAULT_CATEGORY_ICON = getCategoryIconPathFromSubcategory(undefined);
 
 interface Props {
   availableBrands: string[];
@@ -89,7 +88,7 @@ const ProfileFilters: React.FC<Props> = ({
       ...availableCategories.map((cat) => ({
         value: cat,
         label: cat,
-        iconUrl: categoryIcons[cat] ?? DEFAULT_CATEGORY_ICON,
+        iconUrl: getCategoryIconPathFromSubcategory(cat),
         iconAlt: cat,
         iconFallback: cat,
       })),
