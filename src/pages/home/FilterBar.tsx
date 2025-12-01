@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import "./FilterBar.scss";
 import Champs, { type SelectFilterOption } from "@src/components/champs/Champs";
-import { categoryIcons } from "@src/utils/categoriesIcon";
+import { getCategoryIconPathFromSubcategory } from "@src/utils/IconsUtils";
 
 interface Props {
   filter:
@@ -66,8 +66,7 @@ const normalizeBrandName = (value: string) =>
     .replace(/[\u0300-\u036f]/g, "")
     .trim();
 
-const DEFAULT_CATEGORY_ICON =
-  categoryIcons["Autre souci"] || "/assets/categories-icons/other.png";
+const DEFAULT_CATEGORY_ICON = getCategoryIconPathFromSubcategory(undefined);
 
 const filterOptions = [
   {
@@ -263,7 +262,7 @@ const FilterBar: React.FC<Props> = ({
       ...subCategories.map((sub) => ({
         value: sub,
         label: sub,
-        iconUrl: categoryIcons[sub] ?? DEFAULT_CATEGORY_ICON,
+        iconUrl: getCategoryIconPathFromSubcategory(sub),
         iconAlt: sub,
         iconFallback: sub,
       })),
@@ -300,7 +299,7 @@ const FilterBar: React.FC<Props> = ({
       ...categories.map((cat) => ({
         value: cat,
         label: cat,
-        iconUrl: categoryIcons[cat] ?? DEFAULT_CATEGORY_ICON,
+        iconUrl: getCategoryIconPathFromSubcategory(cat),
         iconAlt: cat,
         iconFallback: cat,
       })),
