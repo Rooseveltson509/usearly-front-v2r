@@ -13,6 +13,7 @@ import { SearchBar } from "./SearchBar/SearchBar";
 import SelectOption from "./SelectOption/SelectOption";
 import Select from "@src/components/selectInput/Select";
 import { truncate } from "@src/utils/stringUtils";
+import type { LucideIcon } from "lucide-react";
 
 export type SelectFilterOption<V extends string = string> = {
   value: V;
@@ -22,6 +23,7 @@ export type SelectFilterOption<V extends string = string> = {
   iconFallback?: string;
   iconAlt?: string;
   siteUrl?: string;
+  IconComponent?: LucideIcon;
 };
 
 type Props<V extends string = string> = {
@@ -111,12 +113,12 @@ export default function SelectFilter<V extends string = string>({
     placeholderResetLabel ?? (isBrandSelect ? "Réinitialiser" : undefined);
 
   const shouldHidePlaceholder = useMemo(() => {
-    if (!placeholderOption) return false;
+    if (!placeholderOption) return true;
     if (isBrandSelect) {
-      return !hasSelectedValue;
+      return true;
     }
     return Boolean(resolvedResetLabel);
-  }, [hasSelectedValue, isBrandSelect, placeholderOption, resolvedResetLabel]);
+  }, [isBrandSelect, placeholderOption, resolvedResetLabel]);
 
   const displayOptions = useMemo(
     () => (shouldHidePlaceholder ? optionsWithoutPlaceholder : options),
@@ -209,6 +211,15 @@ export default function SelectFilter<V extends string = string>({
 
   const renderLeadingVisual = useCallback((opt?: SelectFilterOption<V>) => {
     if (!opt) return null;
+
+    if (opt.IconComponent) {
+      const Icon = opt.IconComponent;
+      return (
+        <span className="select-filter-icon select-filter-icon--lucide">
+          <Icon size={18} />
+        </span>
+      );
+    }
 
     if (opt.emoji) {
       return <span className="select-filter-emoji">{opt.emoji}</span>;

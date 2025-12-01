@@ -14,12 +14,13 @@ import SqueletonAnime from "../loader/SqueletonAnime";
 import { useInfiniteGroupedReports } from "@src/hooks/useInfiniteGroupedReports";
 import { useBrandLogos } from "@src/hooks/useBrandLogos";
 import Champs, { type SelectFilterOption } from "@src/components/champs/Champs";
+import { ArrowDownWideNarrow, CalendarArrowDown } from "lucide-react";
 
 type ViewMode = "brand" | "date";
 
 const VIEW_MODE_OPTIONS: SelectFilterOption<ViewMode>[] = [
-  { value: "brand", label: "Marques" },
-  { value: "date", label: "Date" },
+  { value: "brand", label: "Marques", IconComponent: ArrowDownWideNarrow },
+  { value: "date", label: "Date", IconComponent: CalendarArrowDown },
 ];
 
 const UserGroupedReportsList: React.FC = () => {
@@ -154,7 +155,6 @@ const UserGroupedReportsList: React.FC = () => {
             value={viewMode}
             onChange={handleDisplayChange}
             className="view-mode-select__control"
-            iconVisible={false}
             minWidth={150}
             minWidthPart="2"
             align="left"

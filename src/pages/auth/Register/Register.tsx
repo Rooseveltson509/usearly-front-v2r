@@ -10,6 +10,7 @@ import InputText from "../../../components/inputs/inputsGlobal/InputText";
 import Buttons from "@src/components/buttons/Buttons";
 import { useHandleAuthRedirect } from "@src/hooks/useHandleAuthRedirect";
 import { errorMessages } from "@src/utils/errorMessages";
+import { toDMY } from "@src/utils/dateUtils";
 
 const passwordRules = {
   length: (val: string) => val.length >= 8,
@@ -96,13 +97,18 @@ const Register = () => {
   };
 
   const onSubmit = async (data: RegisterData) => {
+    const bornDate = new Date(data.born);
+    if (Number.isNaN(bornDate.getTime())) throw new Error("Date invalide");
+
+    const bornFr = toDMY(bornDate);
+
     try {
       const payload = {
         pseudo: data.pseudo,
         email: mailUser,
         password: data.password,
         password_confirm: data.password_confirm,
-        born: data.born, // ISO — backend accepte parfaitement
+        born: bornFr,
         gender: data.gender, // corrected enum values
       };
 

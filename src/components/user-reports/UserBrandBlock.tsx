@@ -270,7 +270,7 @@ const UserBrandBlock: React.FC<Props> = ({
                               initialDescription.description.length > 100 &&
                               "\u00A0"}
                             <button
-                              className="see-more-button"
+                              className={`see-more-button ${showFullText ? "expanded" : "not-expanded"}`}
                               style={showFullText ? { marginTop: "5px" } : {}}
                               onClick={(e) => {
                                 e.stopPropagation();

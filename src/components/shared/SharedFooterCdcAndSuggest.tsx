@@ -92,12 +92,13 @@ const SharedFooterCdcAndSuggest: React.FC<Props> = ({
               descriptionId={descriptionId}
               type={type}
               disabled={isExpired}
+              addClassName="like-btn-centre"
               onSelect={handleAddReaction}
             />
 
             {/* Commenter */}
             <button
-              className={`comment-toggle-btn ${showComments ? "active" : ""}`}
+              className={`comment-toggle-btn comment-btn-centre ${showComments ? "active" : ""}`}
               aria-pressed={showComments}
               onClick={toggleComments}
               disabled={isExpired}
@@ -111,7 +112,7 @@ const SharedFooterCdcAndSuggest: React.FC<Props> = ({
 
             {/* Partager */}
             <button
-              className="share-btn"
+              className="share-btn share-btn-centre"
               onClick={() => setShowShareModal(true)}
               disabled={isExpired}
             >
