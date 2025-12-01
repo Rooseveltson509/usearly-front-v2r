@@ -1,3 +1,6 @@
+/* ===========================================================
+   CONTAINER PRINCIPAL
+=========================================================== */
 .new-home-video-container {
   z-index: 2;
   margin-top: -150px;
@@ -6,30 +9,37 @@
   .new-home-video-wrapper {
     position: relative;
     display: inline-grid;
+    width: 90%;
     margin: 0 auto;
     justify-items: center;
-    --cinema-btn-right: 35px;
-    --cinema-btn-bottom: 31px;
-    width: 90%;
     cursor: pointer;
 
-    .new-home-video {
-      --video-h: 436px;
-      border-radius: 18px;
-      position: relative;
-      overflow: hidden;
-      height: var(--video-h);
-      width: 100%;
-      transition:
-        height 0.3s ease-in-out,
-        width 0.3s ease-in-out;
+    --cinema-btn-right: 35px;
+    --cinema-btn-bottom: 31px;
 
-      .new-home-video-player,
-      iframe {
-        width: 100%;
-        height: 100%;
-        display: block;
-        border: 0;
+    /* ===========================================================
+       VIDEO (16:9 FIX)
+    ========================================================== */
+    .new-home-video {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9; /* <<< THE FIX */
+      border-radius: 18px;
+      overflow: hidden;
+
+      .youtube-player-container {
+        position: relative;
+
+        iframe {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          border: 0;
+          z-index: 1;
+          display: block;
+          object-fit: cover;
+        }
       }
 
       .new-home-video-overlay {
@@ -38,93 +48,105 @@
         border-radius: inherit;
         cursor: pointer;
         z-index: 2;
+        pointer-events: auto;
+        mask-image: linear-gradient(
+          to bottom,
+          transparent 0%,
+          transparent calc(100% - 80px),
+          black calc(100% - 80px),
+          black 100%
+        );
       }
     }
 
+    /* ===========================================================
+       BOUTON PLAY (au centre)
+    ========================================================== */
     .playIcon {
-      z-index: 3;
+      position: absolute;
+      top: 50%;
+      left: 50%;
       width: 90px;
       height: 90px;
-      position: absolute;
-      top: 40%;
-      left: 50%;
+      padding: 0;
       border: 0;
       background: transparent;
-      padding: 0;
       cursor: pointer;
+
+      transform: translate(-50%, -50%) scale(1);
       transition:
         opacity 0.25s ease,
         transform 0.25s ease;
+      z-index: 3;
       will-change: opacity, transform;
 
       &.is-visible {
         opacity: 1;
-        transform: translate(-50%, 0) scale(1);
       }
+
       &.is-hidden {
         opacity: 0;
-        transform: translate(-50%, 150%) scale(0.5);
+        transform: translate(-50%, -50%) scale(0.5);
         pointer-events: none;
       }
 
       &:hover {
-        transform: translateX(-50%) scale(1.2);
+        transform: translate(-50%, -50%) scale(1.15);
       }
     }
   }
 
-  /* Agrandissement au hover (hors mode cinéma) */
-  &:not(.cinema) .new-home-video-wrapper:hover .new-home-video {
-    height: calc(var(--video-h) + 100px);
-    width: 110%;
-  }
-
-  /* ===== Mode CINÉMA ===== */
+  /* ===========================================================
+     MODE CINÉMA
+  ========================================================== */
   &.cinema {
     position: fixed;
     inset: 0;
+    margin-top: 0;
     z-index: 9999;
+
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 0;
 
     &::before {
       content: "";
       position: fixed;
       inset: 0;
       background: rgba(0, 0, 0, 0.92);
-      pointer-events: none;
     }
 
     .new-home-video-wrapper {
-      display: flex;
       width: min(90vw, 1280px);
-      height: 100%;
     }
+
     .new-home-video {
       width: 100%;
-      height: auto;
       border-radius: 12px;
       box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
     }
+
     .playIcon {
       display: none;
     }
   }
 
-  /* ===== Barre de progression (timeline) ===== */
+  /* ===========================================================
+     BARRE DE PROGRESSION
+  ========================================================== */
   .progress {
     position: absolute;
     left: 0;
     right: 0;
     bottom: 6px;
+    padding: 0 14px;
+
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 0 14px;
-    z-index: 3; /* au même niveau que les contrôles, ils passent devant si placés après dans le DOM */
+
+    z-index: 5; /* passe devant */
+    pointer-events: auto; /* rend cliquable */
     transition:
       opacity 0.18s ease,
       transform 0.18s ease;
@@ -135,54 +157,68 @@
       pointer-events: none;
     }
 
-    .progress-slider {
+    /*     .progress-slider {
       flex: 1;
       height: 4px;
       appearance: none;
       background: transparent;
       cursor: pointer;
+
+      &::-webkit-slider-runnable-track,
+      &::-moz-range-track {
+        height: 4px;
+        border-radius: 999px;
+        background: #ffffff66;
+      }
+
+      &::-webkit-slider-thumb,
+      &::-moz-range-thumb {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #fff;
+        appearance: none;
+        margin-top: -4px;
+        box-shadow: 0 0 0 2px #0004;
+      }
+    } */
+
+    .progress-slider {
+      position: relative;
+      width: 100%;
+      background: transparent;
     }
 
-    .progress-slider::-webkit-slider-runnable-track {
+    .progress-slider::before {
+      content: "";
+      position: absolute;
       height: 4px;
+      left: 0;
+      bottom: 50%;
+      transform: translateY(50%);
+      width: calc(100% * (var(--progress, 0)));
+      background: #ffffffcc; /* barre remplie */
       border-radius: 999px;
-      background: #ffffff66;
-    }
-    .progress-slider::-moz-range-track {
-      height: 4px;
-      border-radius: 999px;
-      background: #ffffff66;
-    }
-
-    .progress-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: #fff;
-      margin-top: -4px; /* centre le thumb */
-      box-shadow: 0 0 0 2px #0004;
-    }
-    .progress-slider::-moz-range-thumb {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: #fff;
-      box-shadow: 0 0 0 2px #0004;
-      border: none;
+      pointer-events: none;
     }
 
     .progress-time {
       font-size: 12px;
       color: #fff;
       text-shadow: 0 1px 2px #0008;
-      white-space: nowrap;
       user-select: none;
     }
   }
 
-  /* ===== Contrôles custom (volume + cinema) ===== */
+  /* ===========================================================
+     CONTRÔLES VOLUME + CINÉMA
+  ========================================================== */
+  .progress,
+  .custom-controls {
+    z-index: 5;
+    pointer-events: auto;
+  }
+
   .custom-controls {
     position: absolute;
     right: var(--cinema-btn-right);
@@ -190,7 +226,8 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    z-index: 3;
+
+    z-index: 5;
     transition:
       opacity 0.18s ease,
       transform 0.18s ease;
@@ -198,7 +235,7 @@
     &.is-hidden {
       opacity: 0;
       transform: translateY(6px);
-      pointer-events: none;
+      pointer-events: auto;
     }
   }
 
@@ -207,113 +244,100 @@
     height: 36px;
     display: flex;
     align-items: center;
+
+    &:hover .volume-btn,
+    &:focus-within .volume-btn {
+      background: #000 !important;
+    }
   }
 
-  /* Fond noir quand le volume est ouvert (hover/focus) */
-  .volume-control:hover .volume-btn,
-  .volume-control:focus-within .volume-btn {
-    background: #000 !important;
-  }
-
-  /* Boutons ronds (volume + cinéma) */
   .volume-btn,
   .cinema-btn {
-    position: relative;
     width: 30px;
     height: 30px;
-    border: 0;
     padding: 0;
+    border: 0;
     border-radius: 50%;
+    cursor: pointer;
     display: grid;
     place-items: center;
-    cursor: pointer;
 
     background: color-mix(in oklab, #000 45%, transparent);
     color: #fff;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     transition:
-      background 0.2s ease,
-      transform 0.12s ease,
-      opacity 0.2s ease;
-    transform: translateZ(0) scale(1);
-    transform-origin: bottom right;
+      background 0.2s,
+      transform 0.12s,
+      opacity 0.2s;
 
-    span {
-      justify-items: center;
-
-      svg {
-        width: 18px;
-        height: 18px;
-        display: block;
-      }
-
-      img {
-        width: 75%;
-      }
+    img {
+      width: 75%;
     }
 
     &:hover {
       background: color-mix(in oklab, #000 55%, transparent);
     }
+
     &:active {
-      transform: translateZ(0) scale(0.96);
-    }
-    &:focus-visible {
-      outline: 2px solid #ffffff88;
-      outline-offset: 2px;
+      transform: scale(0.96);
     }
 
     &.is-hidden {
       opacity: 0;
-      transform: translateZ(0) scale(0.96);
       pointer-events: none;
-    }
-
-    @media (prefers-color-scheme: light) {
-      background: color-mix(in oklab, #000 35%, transparent);
-      &:hover {
-        background: color-mix(in oklab, #000 45%, transparent);
-      }
+      transform: scale(0.96);
     }
   }
 
-  /* Petit lift visuel au hover du wrapper */
   .new-home-video-wrapper:hover .cinema-btn,
   .new-home-video-wrapper:hover .volume-btn {
     transform: scale(1.05);
-    opacity: 1;
   }
 
-  .volume-btn span {
-    font-size: 14px;
-    line-height: 1;
-  }
-
-  /* Slider de volume */
+  /* ===========================================================
+     SLIDER VOLUME
+  ========================================================== */
   .volume-slider {
     --track-size: 6px;
     --thumb-size: 10px;
+
     position: absolute;
-    left: 50%;
     bottom: 46px;
+    left: 50%;
     width: 28px;
     height: 130px;
-    display: grid;
-    place-items: center;
-
-    background-color: rgba(0, 0, 0, 0.25); /* noir léger */
-
-    writing-mode: bt-lr;
-    appearance: slider-vertical;
-    -webkit-appearance: slider-vertical;
     transform: translate(-50%, 8px);
-    transform-origin: bottom;
+
     opacity: 0;
     pointer-events: none;
+
+    appearance: slider-vertical;
+    -webkit-appearance: slider-vertical;
+
+    background: rgba(0, 0, 0, 0.25);
     transition:
-      opacity 0.18s ease,
-      transform 0.18s ease;
-    accent-color: #ffffffcc;
+      opacity 0.18s,
+      transform 0.18s;
+
+    &::-webkit-slider-runnable-track,
+    &::-moz-range-track {
+      background: linear-gradient(180deg, #ffffffc0 0%, #ffffff55 100%);
+      border-radius: 999px;
+      width: 100%;
+      height: 100%;
+      border: 1px solid #ffffff33;
+    }
+
+    &::-webkit-slider-thumb,
+    &::-moz-range-thumb {
+      width: var(--thumb-size);
+      height: var(--thumb-size);
+      border-radius: 50%;
+      border: 1px solid #ffffffaa;
+      background: #fff;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+      cursor: pointer;
+      appearance: none;
+    }
   }
 
   .volume-control:hover .volume-slider,
@@ -323,30 +347,75 @@
     transform: translate(-50%, 0);
   }
 
-  .volume-slider::-webkit-slider-runnable-track,
-  .volume-slider::-moz-range-track {
-    width: var(--track-size);
-    height: 100%;
-    background: linear-gradient(180deg, #ffffffc0 0%, #ffffff55 100%);
-    border-radius: 999px;
-    border: 1px solid #ffffff33;
+  /* Vidéo + contrôles plus petits au repos */
+  &:not(.cinema) .new-home-video-wrapper {
+    transform: scale(0.85); /* ⬅️ réduis tout le composant */
+    transform-origin: center;
+    transition: transform 0.35s ease;
   }
 
-  .volume-slider::-webkit-slider-thumb,
-  .volume-slider::-moz-range-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: var(--thumb-size);
-    height: var(--thumb-size);
-    border-radius: 50%;
-    border: 1px solid #ffffffaa;
-    background: #fff;
-    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
-    cursor: pointer;
+  /* Taille normale au hover */
+  &:not(.cinema) .new-home-video-wrapper:hover {
+    transform: scale(1); /* ⬅️ revient à la taille normale */
+  }
+}
+
+/* ===========================================================
+   SCROLL INLINE TEXT (inchangé, juste mis propre)
+=========================================================== */
+
+.scroll-inline-wrapper {
+  width: 100%;
+  text-align: center;
+}
+
+.inline-line {
+  font-size: 80px;
+  font-weight: 900;
+  line-height: 1.12;
+  color: #888;
+  display: inline-block;
+  padding-inline: 18px;
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+
+    background: linear-gradient(
+      75deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.28) 45%,
+      rgba(255, 255, 255, 0) 100%
+    );
+
+    transform: translateX(-140%);
+    transition:
+      transform 0.65s ease-out,
+      opacity 0.25s ease-out;
   }
 
-  .volume-slider:focus-visible {
-    outline: 2px solid #ffffff88;
-    outline-offset: 4px;
+  &.sheen-active::after {
+    opacity: 1;
+    transform: translateX(140%);
   }
+
+  &.active {
+    color: #000;
+  }
+}
+
+.img-slot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inline-photo {
+  width: 130px;
+  border-radius: 6px;
+  object-fit: cover;
 }

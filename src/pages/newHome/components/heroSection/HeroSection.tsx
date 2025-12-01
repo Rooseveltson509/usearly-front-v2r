@@ -1,6 +1,7 @@
 import TypingFullWord from "../typing-text/TypingWords";
 import "./HeroSection.scss";
-import MouseRevealImages from "./MouseRevealImages";
+//import MouseRevealImages from "./MouseRevealImages";
+import MouseTrail from "./MouseTrail";
 
 const HeroSection = () => {
   return (
@@ -19,7 +20,7 @@ const HeroSection = () => {
         />
       </h1>
 
-      <MouseRevealImages
+      <MouseTrail
         images={[
           "/assets/images/p1.png",
           "/assets/images/p2.png",
@@ -27,6 +28,12 @@ const HeroSection = () => {
           "/assets/images/p4.png",
           "/assets/images/p5.png",
           "/assets/images/p6.png",
+          "/assets/images/p7.png",
+          "/assets/images/p8.png",
+          "/assets/images/p9.png",
+          "/assets/images/p10.png",
+          "/assets/images/p11.png",
+          "/assets/images/p12.png",
         ]}
       />
     </section>

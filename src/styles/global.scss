@@ -34,8 +34,14 @@ html {
 
 img,
 video,
-canvas,
-iframe {
+canvas {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ⚠️ N’applique pas de style global aux iframes */
+iframe:not(.youtube-player-raw) {
   max-width: 100%;
   height: auto;
   display: block;

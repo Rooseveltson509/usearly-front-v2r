@@ -4,21 +4,60 @@
 }
 
 .inline-line {
-  font-size: clamp(26px, 4vw, 62px);
-  font-weight: 800;
-  line-height: 1.15;
-  margin-block: clamp(12px, 2vw, 20px);
+  font-size: 80px;
+  font-weight: 900;
+  text-align: center;
+  line-height: 1.12;
+  color: #888;
+  position: relative;
+  display: inline-block;
+  padding-inline: 18px;
+
+  /* Reflet glossy */
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    background: linear-gradient(
+      75deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.28) 45%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    transform: translateX(-140%);
+    transition:
+      transform 0.65s ease-out,
+      opacity 0.25s ease-out;
+  }
+
+  &.sheen-active::after {
+    opacity: 1;
+    transform: translateX(140%);
+  }
 }
 
+/* ⭐ Quand la ligne entre en vue → noir */
+.inline-line.active {
+  color: #000;
+}
+
+/* ⭐ SLOT DE L’IMAGE — FIX MAJEUR */
 .img-slot {
-  display: inline-flex;
-  align-items: center;
-  overflow: hidden; /* IMPORTANT — empêche l’espace */
+  display: inline-block; /* ⬅ PAS inline-flex */
+  vertical-align: middle; /* ⬅ Centre parfaitement entre les mots */
+  line-height: 0; /* ⬅ Évite le "gap" sous l’image */
 }
 
+/* ⭐ L’IMAGE — taille dynamique basée sur le texte */
 .inline-photo {
-  width: clamp(40px, 4vw, 65px);
-  height: clamp(40px, 4vw, 65px);
-  border-radius: 16px;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+  display: block;
+  height: 0.9em; /* ⬅ Suit EXACTEMENT la hauteur du texte */
+  width: auto;
+  border-radius: 6px;
+  object-fit: cover;
+  backface-visibility: hidden;
+  border: none;
+  box-shadow: none;
 }
