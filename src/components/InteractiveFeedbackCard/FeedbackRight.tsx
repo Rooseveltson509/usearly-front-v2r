@@ -232,15 +232,18 @@ const FeedbackRight: React.FC<Props> = ({
             )}
 
             {shouldShowToggle && (
-              <button
-                className="see-more"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  toggleText();
-                }}
-              >
-                {showFullText ? "Voir moins" : "Voir plus"}
-              </button>
+              <>
+                <br />
+                <button
+                  className="see-more"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleText();
+                  }}
+                >
+                  {showFullText ? "Voir moins" : "Voir plus"}
+                </button>
+              </>
             )}
           </p>
         </div>

@@ -32,3 +32,11 @@ export function formatRelative(dateInput: string | Date): string {
     addSuffix: true,
   }).replace("environ ", "");
 }
+
+export const toDMY = (d: Date, sep = "/", useUTC = false) => {
+  const y = useUTC ? d.getUTCFullYear() : d.getFullYear();
+  const m = (useUTC ? d.getUTCMonth() : d.getMonth()) + 1;
+  const day = useUTC ? d.getUTCDate() : d.getDate();
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${pad(day)}${sep}${pad(m)}${sep}${y}`; // 01/12/2025
+};

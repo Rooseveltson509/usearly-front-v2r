@@ -278,6 +278,13 @@
     object-fit: contain;
     display: block;
   }
+
+  &--lucide {
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
 }
 
 .select-filter-wrapper {

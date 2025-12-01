@@ -9,6 +9,7 @@ interface Props {
   descriptionId: string;
   type: TypeKind;
   disabled?: boolean;
+  addClassName?: string;
   onSelect: (emoji: string) => Promise<void> | void;
 }
 
@@ -16,6 +17,7 @@ export default function ReactionPickerTrigger({
   userId = "",
   descriptionId,
   type,
+  addClassName = "",
   disabled = false,
   onSelect,
 }: Props) {
@@ -45,7 +47,7 @@ export default function ReactionPickerTrigger({
 
   return (
     <div
-      className="react-hover-area"
+      className={"react-hover-area " + addClassName}
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}
     >

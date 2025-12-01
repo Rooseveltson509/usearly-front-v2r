@@ -83,7 +83,7 @@
         cursor: pointer;
         font-size: 13px;
         position: relative;
-        align-items: center;
+        align-items: flex-end;
 
         &:hover {
           color: #0f0f0f;
@@ -150,6 +150,14 @@
         gap: 27px;
         justify-content: flex-start;
         opacity: 1;
+
+        .like-btn-centre {
+          button {
+            span {
+              margin-bottom: -1px;
+            }
+          }
+        }
       }
     }
   }

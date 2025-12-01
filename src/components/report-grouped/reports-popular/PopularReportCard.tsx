@@ -240,7 +240,6 @@ const PopularReportCard: React.FC<Props> = ({
                       setShowFullText((prev) => !prev);
                     }}
                   >
-                    {showFullText && <br />}
                     {showFullText ? "Voir moins" : "Voir plus"}
                   </button>
                 </div>

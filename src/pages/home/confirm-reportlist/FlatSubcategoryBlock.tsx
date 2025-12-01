@@ -198,7 +198,7 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
                   {showFullText && <br />}
                   {!showFullText &&
                     initialDescription.description.length > 100 &&
-                    "\u00A0"}
+                    " "}
                   <button
                     className="see-more-button"
                     style={showFullText ? { marginTop: "5px" } : {}}

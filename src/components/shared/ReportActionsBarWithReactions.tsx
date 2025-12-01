@@ -113,7 +113,7 @@ const ReportActionsBarWithReactions: React.FC<Props> = ({
           >
             <button type="button">
               <ThumbsUp size={18} />
-              <span>Réagir</span>
+              <span className="reagir-span-btn">Réagir</span>
             </button>
             {showEmojiPicker && (
               <div className="emoji-picker-container">
@@ -129,11 +129,11 @@ const ReportActionsBarWithReactions: React.FC<Props> = ({
 
           <button onClick={onCommentClick}>
             <MessageCircle size={18} />
-            <span>Commenter</span>
+            <span className="commenter-span-btn">Commenter</span>
           </button>
           <button>
             <Share2 size={18} />
-            <span>Partager</span>
+            <span className="partager-span-btn">Partager</span>
           </button>
         </div>
         <div className="status-right">

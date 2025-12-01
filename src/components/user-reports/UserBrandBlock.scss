@@ -224,12 +224,14 @@ img.inline-capture-img {
   cursor: pointer;
   font-size: 0.85rem;
   font-weight: 600;
-  margin-left: 2px;
   padding: 0.25rem 0;
   text-align: left;
 
   &:hover {
     text-decoration: underline;
+  }
+  &.not-expanded {
+    margin-left: 0px;
   }
 }
 
