@@ -375,11 +375,11 @@
   }
 }
 .header.hero-mode .nav-links .link {
-  color: white; /* 🔥 Couleur des textes dans NewHome */
+  color: #000; /* 🔥 Couleur des textes dans NewHome */
 }
 
 .header.hero-mode .nav-links .link.active {
-  color: white;
+  color: #000;
   border-color: white; /* ▼ la petite barre underline */
 }
 .header.hero-mode {
@@ -388,10 +388,13 @@
 
 /* Mode hero */
 .header.hero-mode .notif-button i {
-  color: white;
+  color: #000;
   border-color: rgba(255, 255, 255, 0.4);
 }
 
+.header.hero-mode .logo-text {
+  color: #000;
+}
 .header.hero-mode .notif-button {
   color: white;
   border-color: rgba(255, 255, 255, 0.4);
