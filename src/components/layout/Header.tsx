@@ -93,7 +93,7 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
             </NavLink>
           )}
           <NavLink to="/marque" className="link">
-            {isAuthenticated ? "Marques" : "Vous êtes une entreprise ?"}
+            {isAuthenticated ? "Marques" : "A propos"}
           </NavLink>
           <NavLink to="/impact" className="link">
             {isAuthenticated ? "Impact" : "Marques à l’écoute"}
@@ -140,11 +140,18 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
               />
             </div>
           ) : (
-            <Buttons
-              onClick={() => navigate("/lookup")}
-              addClassName="header-nav-button"
-              title="S'inscrire"
-            />
+            <>
+              <Buttons
+                onClick={() => navigate("/lookup")}
+                addClassName="header-nav-button login-button"
+                title="Connecter"
+              />
+              <Buttons
+                onClick={() => navigate("/lookup")}
+                addClassName="header-nav-button signup-button"
+                title="S'inscrire"
+              />
+            </>
           )}
 
           {userMenuOpen && (

@@ -6,7 +6,6 @@ import SuggestCard from "./card/SuggestCard";
 import BrandCard from "./card/BrandCard";
 import Footer from "@src/components/layout/Footer";
 import VideoContainerLanding from "./components/videoContainer/videoContainerLanding";
-import PurpleBannerLanding from "../home/components/purpleBanner/PurpleBannerLanding";
 import ExtensionExample from "./components/extensionExample/ExtensionExample";
 import UsearlyDrawing from "@src/components/background/Usearly";
 import HeroSection from "./components/heroSection/HeroSection";
@@ -16,8 +15,6 @@ const NewHome: React.FC = () => {
   return (
     <div className="new-home-page">
       <HeroSection />
-      <PurpleBannerLanding navOn={false} />
-
       <div className="new-home-main">
         <VideoContainerLanding />
         <ExtensionExample />
@@ -32,10 +29,15 @@ const NewHome: React.FC = () => {
               "DES EXPÉRIENCES POSITIVES.",
             ]}
             images={[
-              { line: 0, wordIndex: 1, src: "/assets/images/p1.png" },
-              { line: 1, wordIndex: 1, src: "/assets/images/p2.png" },
-              { line: 2, wordIndex: 2, src: "/assets/images/p3.png" },
-              { line: 3, wordIndex: 2, src: "/assets/images/p4.png" },
+              /*               { line: 0, wordIndex: 1, src: "/assets/images/p7.jpg" }, */
+              { line: 1, wordIndex: 1, src: "/assets/images/txt1.png" },
+              { line: 2, wordIndex: 3, src: "/assets/images/txt2.png" },
+              {
+                line: 3,
+                wordIndex: 1,
+                src: "/assets/images/txt3.png",
+                rotate: true,
+              },
             ]}
           />
         </div>

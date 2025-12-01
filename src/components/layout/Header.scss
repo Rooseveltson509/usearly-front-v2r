@@ -101,6 +101,29 @@
       }
     }
 
+    /* login-button border black */
+    .login-button {
+      border: 1px solid #000;
+    }
+    .signup-button {
+      padding: 0.5rem 1rem;
+    }
+
+    .login-button {
+      padding: 0.5rem 1rem;
+      border: 1px solid #0f0303;
+      background: transparent;
+      color: #000;
+      //border-radius: 999px;
+      //background: #fff;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: #f9f9f9;
+      }
+    }
     .user-toggle {
       display: flex;
       align-items: center;
@@ -337,6 +360,20 @@
   background: transparent;
 }
 
+.header.hero-mode .header-right .login-button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #0f0303;
+  background: transparent;
+  //border-radius: 999px;
+  //background: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #f9f9f9;
+  }
+}
 .header.hero-mode .nav-links .link {
   color: white; /* 🔥 Couleur des textes dans NewHome */
 }
@@ -353,6 +390,14 @@
 .header.hero-mode .notif-button i {
   color: white;
   border-color: rgba(255, 255, 255, 0.4);
+}
+
+.header.hero-mode .notif-button {
+  color: white;
+  border-color: rgba(255, 255, 255, 0.4);
+  &:hover {
+    background-color: #989dff;
+  }
 }
 
 .header.hero-mode .notif-count {
