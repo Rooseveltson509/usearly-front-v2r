@@ -37,7 +37,7 @@ export default function PurpleBanner({
           <img src={bulleIcon} alt="bulle" className="bulle" />
           <img src={emojiIcon} alt="emoji" className="emoji" />
         </div>
-        <span>les marques !</span>
+        <span>les marques{"\u00A0"}!</span>
       </div>
 
       {/* right decorative logos */}

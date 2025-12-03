@@ -1,11 +1,87 @@
-import React, { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./ExtensionExampleText.scss";
 import TextPill from "@src/components/text-pill/textPill";
+import type { ExtensionScenario } from "../extensionExample.types";
 
-const ExtensionExampleText = () => {
-  type Option = "signalez" | "suggérez" | "félicitez";
+const exprimationIndexByOption: Record<ExtensionScenario, number> = {
+  signalez: 0,
+  suggérez: 1,
+  félicitez: 2,
+};
 
-  const [selected, setSelected] = useState<Option>("signalez");
+type ExtensionExampleTextProps = {
+  selected: ExtensionScenario;
+  setSelected: (scenario: ExtensionScenario) => void;
+};
+
+const ExtensionExampleText = ({
+  selected,
+  setSelected,
+}: ExtensionExampleTextProps) => {
+  const [valueExprimation, setValueExprimation] = useState<number>(
+    exprimationIndexByOption[selected],
+  );
+
+  const exprimationOptions = [
+    "rencontrez un bug !",
+    "avez une suggestion d’idée !",
+    "une fonctionnalité vous fait vibrer !",
+  ];
+
+  const targetText = exprimationOptions[valueExprimation];
+  const [displayedText, setDisplayedText] = useState(targetText);
+  const [phase, setPhase] = useState<"idle" | "deleting" | "typing">("idle");
+  const typingSpeed = 35;
+  const deletingSpeed = 22;
+  const pauseBeforeTyping = 120;
+  const firstRender = useRef(true);
+
+  useEffect(() => {
+    setValueExprimation(exprimationIndexByOption[selected]);
+  }, [selected]);
+
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+    setPhase("deleting"); // déclenche l'effacement avant de retaper
+  }, [targetText]);
+
+  useEffect(() => {
+    if (phase === "idle") return;
+
+    let timeout: ReturnType<typeof setTimeout> | undefined;
+
+    if (phase === "deleting") {
+      if (displayedText.length === 0) {
+        timeout = setTimeout(() => setPhase("typing"), pauseBeforeTyping);
+      } else {
+        timeout = setTimeout(() => {
+          setDisplayedText((prev) => prev.slice(0, -1));
+        }, deletingSpeed);
+      }
+    }
+
+    if (phase === "typing") {
+      if (displayedText === targetText) {
+        setPhase("idle");
+      } else {
+        timeout = setTimeout(() => {
+          setDisplayedText(targetText.slice(0, displayedText.length + 1));
+        }, typingSpeed);
+      }
+    }
+
+    return () => timeout && clearTimeout(timeout);
+  }, [
+    phase,
+    displayedText,
+    targetText,
+    deletingSpeed,
+    typingSpeed,
+    pauseBeforeTyping,
+  ]);
 
   // 🎨 Couleurs actives / inactives
   const ACTIVE = { color: "#ffffff", bg: "#4549EF" };
@@ -14,8 +90,11 @@ const ExtensionExampleText = () => {
   return (
     <div className="extension-example-text-container">
       <h2 className="extension-example-title">
-        Exprimez-vous au moment même où vous{" "}
-        <span className="text-highlight-usearly">rencontrez un bug !</span>
+        Exprimez-vous au moment même où {valueExprimation != 2 && "vous"}{" "}
+        <span className="text-highlight-usearly typewriter">
+          {/* <span className="text-highlight-usearly typewriter" aria-live="polite"> */}
+          <span className="typewriter__text">{displayedText}</span>
+        </span>
       </h2>
       <p className="extension-example-description">
         Exprimez-vous en temps réel :{" "}
@@ -24,7 +103,10 @@ const ExtensionExampleText = () => {
           isActive={selected === "signalez"}
           color={selected === "signalez" ? ACTIVE.color : INACTIVE.color}
           backgroundColor={selected === "signalez" ? ACTIVE.bg : INACTIVE.bg}
-          onClick={() => setSelected("signalez")}
+          onClick={() => {
+            setValueExprimation(exprimationIndexByOption["signalez"]);
+            setSelected("signalez");
+          }}
         />{" "}
         un problème,{" "}
         <TextPill
@@ -32,20 +114,23 @@ const ExtensionExampleText = () => {
           isActive={selected === "félicitez"}
           color={selected === "félicitez" ? ACTIVE.color : INACTIVE.color}
           backgroundColor={selected === "félicitez" ? ACTIVE.bg : INACTIVE.bg}
-          onClick={() => setSelected("félicitez")}
+          onClick={() => {
+            setValueExprimation(exprimationIndexByOption["félicitez"]);
+            setSelected("félicitez");
+          }}
         />{" "}
-        pour une fonctionnalité qui vous plaît, ou{" "}
+        pour une fonctionnalité qui vous facilite la vie, ou{" "}
         <TextPill
           title="suggérez"
           isActive={selected === "suggérez"}
           color={selected === "suggérez" ? ACTIVE.color : INACTIVE.color}
           backgroundColor={selected === "suggérez" ? ACTIVE.bg : INACTIVE.bg}
-          onClick={() => setSelected("suggérez")}
+          onClick={() => {
+            setValueExprimation(exprimationIndexByOption["suggérez"]);
+            setSelected("suggérez");
+          }}
         />{" "}
-        une idée d'amélioration. En quelques clics, faites entendre votre voix
-        auprès des marques et rejoignez une communauté de milliers
-        d’utilisateurs, comme vous, qui souhaitent voir des évolutions concrètes
-        et impactantes.
+        une idée d'amélioration.
       </p>
     </div>
   );
