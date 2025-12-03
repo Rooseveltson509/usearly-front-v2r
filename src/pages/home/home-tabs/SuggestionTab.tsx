@@ -99,7 +99,9 @@ const SuggestionTab: React.FC<Props> = ({
       }`}
       style={selectedBrand ? suggestionBannerStyle : brandBannerStyle}
     >
-      <div className="feedback-list-wrapper">
+      <div
+        className={`feedback-list-wrapper ${selectedBrand ? "brand-selected" : ""}`}
+      >
         <HomeFiltersSuggestion
           filter={activeFilter}
           setFilter={setActiveFilter}
@@ -121,7 +123,9 @@ const SuggestionTab: React.FC<Props> = ({
             error={null}
           />
         ) : (
-          <div className="feedback-view-container">
+          <div
+            className={`feedback-view-container ${selectedBrand ? "brand-selected" : ""}`}
+          >
             {selectedBrand && (
               <div className="selected-brand-heading">
                 <div className="selected-brand-summary">

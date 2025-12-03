@@ -48,11 +48,15 @@ const TabLayout: React.FC<TabLayoutProps> = ({
       {/* -----------------------------
           Colonne centrale
       --------------------------------*/}
-      <div className="feedback-list-wrapper">
+      <div
+        className={`feedback-list-wrapper ${selectedBrand ? "brand-selected" : ""}`}
+      >
         {/* 🔥 Filtres TOUJOURS visibles (loading ou pas) */}
         {renderFilters()}
 
-        <div className="feedback-view-container">
+        <div
+          className={`feedback-view-container ${selectedBrand ? "brand-selected" : ""}`}
+        >
           {/* 🔥 Contenu (liste ou skeleton) */}
           {renderContent()}
         </div>

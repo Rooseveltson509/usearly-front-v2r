@@ -29,6 +29,16 @@
   min-height: 400px;
   margin-top: 25px;
   transition: opacity 0.2s ease;
+  &.brand-selected {
+    margin-top: 3px;
+    .selected-brand-heading {
+      .selected-brand-summary {
+        .selected-brand-summary__brand {
+          margin-left: 15px;
+        }
+      }
+    }
+  }
 }
 
 .scroll-loader-container {
