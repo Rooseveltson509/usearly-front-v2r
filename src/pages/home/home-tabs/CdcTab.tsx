@@ -132,7 +132,9 @@ const CdcTab: React.FC<Props> = ({
         style={brandBannerStyle}
       >
         {/* Colonne centre */}
-        <div className="feedback-list-wrapper">
+        <div
+          className={`feedback-list-wrapper ${selectedBrand ? "brand-selected" : ""}`}
+        >
           <HomeFiltersCdc
             filter={activeFilter}
             setFilter={setActiveFilter}
@@ -180,7 +182,9 @@ const CdcTab: React.FC<Props> = ({
       }`}
       style={brandBannerStyle}
     >
-      <div className="feedback-list-wrapper">
+      <div
+        className={`feedback-list-wrapper ${selectedBrand ? "brand-selected" : ""}`}
+      >
         <HomeFiltersCdc
           filter={activeFilter}
           setFilter={setActiveFilter}
@@ -193,7 +197,9 @@ const CdcTab: React.FC<Props> = ({
           setSelectedSiteUrl={setSelectedSiteUrl}
         />
 
-        <div className="feedback-view-container">
+        <div
+          className={`feedback-view-container ${selectedBrand ? "brand-selected" : ""}`}
+        >
           {selectedBrand && (
             <div className="selected-brand-heading">
               <div className="selected-brand-summary">
