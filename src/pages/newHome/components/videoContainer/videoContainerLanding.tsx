@@ -10,6 +10,8 @@ import VolumeIcon from "/assets/icons/volumeIcon.svg";
 const VIDEO_URL =
   "https://lbcefcnvssyhlpsr.public.blob.vercel-storage.com/Usearly-Video.mp4";
 
+/* const VIDEO_URL = "https://lbcefcnvssyhlpsr.public.blob.vercel-storage.com/video-karine.mp4"; */
+
 const VideoContainerLanding = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
 

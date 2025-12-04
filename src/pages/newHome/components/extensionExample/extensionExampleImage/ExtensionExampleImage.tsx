@@ -14,7 +14,7 @@ import ExtensionPopupLike from "/assets/images/Landing/extensionPopupLike.svg";
 import ExtensionPopupLikeThanks from "/assets/images/Landing/extensionPopupLikeThanks.png";
 import ExtensionPopupLikePublication from "/assets/images/Landing/extensionPopupLikePublication.png";
 import ImgLike from "/assets/images/Landing/likeBackgroundWebImg.svg";
-import ExtensionBarSuggest from "../../../../../../public/assets/images/Landing/extensionBarSuggest.svg";
+import ExtensionBarSuggest from "/assets/images/Landing/extensionBarSuggest.svg";
 import ExtensionPopupSuggest from "/assets/images/Landing/extensionPopupSuggest.png";
 import ExtensionPopupSuggestThanks from "/assets/images/Landing/extensionPopupSuggestThanks.png";
 import ExtensionPopupSuggestPublication from "/assets/images/Landing/extensionPopupSuggestPublication.svg";
