@@ -10,16 +10,18 @@ import ExtensionExample from "./components/extensionExample/ExtensionExample";
 import UsearlyDrawing from "@src/components/background/Usearly";
 import HeroSection from "./components/heroSection/HeroSection";
 import ScrollInlineImages from "./components/scroll-text/ScrollInlineImages";
+import FavoriteSection from "./components/slide-stack/FavoriteSection";
 
 const NewHome: React.FC = () => {
   return (
     <div className="new-home-page">
       <HeroSection />
+
+      {/* --- SECTION NORMALE --- */}
       <div className="new-home-main">
         <VideoContainerLanding />
         <ExtensionExample />
 
-        {/* WRAPPER ICI */}
         <div className="scroll-section">
           <ScrollInlineImages
             lines={[
@@ -29,7 +31,6 @@ const NewHome: React.FC = () => {
               "DES EXPÉRIENCES POSITIVES.",
             ]}
             images={[
-              /*               { line: 0, wordIndex: 1, src: "/assets/images/p7.jpg" }, */
               { line: 1, wordIndex: 1, src: "/assets/images/txt1.png" },
               { line: 2, wordIndex: 3, src: "/assets/images/txt2.png" },
               {
@@ -46,7 +47,13 @@ const NewHome: React.FC = () => {
           <SignalCard />
           <CdcCard />
         </div>
+      </div>
+      <div className="favorite-isolated">
+        <FavoriteSection />
+      </div>
 
+      {/* --- SUITE DU CONTENU (NON AFFECTÉ) --- */}
+      <div className="new-home-main">
         <SuggestCard />
         <BrandCard />
 

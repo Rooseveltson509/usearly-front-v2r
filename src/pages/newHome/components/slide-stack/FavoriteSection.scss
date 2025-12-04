@@ -1,0 +1,59 @@
+/* SECTION STICKY */
+.favorite-section {
+  background: transparent !important;
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* BLOC VIOLET */
+.favorite-content {
+  border-radius: 32px;
+  padding: 40px;
+  max-width: 1320px; /* léger élargissement Figma */
+  width: 100%;
+  min-height: 520px; /* plus haut visuellement */
+  display: flex;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+/* LEFT */
+.fav-left {
+  flex: 1;
+
+  h2 {
+    font-size: 52px; /* FIGMA */
+    line-height: 1.1;
+    font-weight: 800;
+    margin-bottom: 48px;
+  }
+
+  .fav-btn {
+    background: #000;
+    color: white;
+    padding: 18px 48px; /* bouton Figma Medium */
+    border-radius: 40px;
+    font-size: 20px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+}
+
+/* RIGHT — CONTAINER DES CARTES */
+.fav-right {
+  flex: 1;
+  position: relative;
+  width: 520px; /* FIGMA */
+  pointer-events: none;
+
+  .fav-card {
+    position: absolute;
+    height: auto; /* OK */
+    pointer-events: none; /* évite les glitchs */
+  }
+}
