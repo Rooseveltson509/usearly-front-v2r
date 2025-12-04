@@ -36,7 +36,7 @@
     .brand-slider {
       display: flex;
       animation: scrollInfinite 45s linear infinite;
-      width: calc(100px * 30 + 20px * 30); // 30 items * (100px + 20px padding)
+      width: calc(100px * 30 + 20px * 30);
       gap: 75px;
       .brand-item {
         min-width: 100px;
@@ -80,8 +80,6 @@
     transform: translateX(0);
   }
   100% {
-    transform: translateX(
-      calc(-100px * 10 - 20px * 10)
-    ); // Se déplace de la largeur de 10 items
+    transform: translateX(calc(-100px * 10 - 20px * 10));
   }
 }

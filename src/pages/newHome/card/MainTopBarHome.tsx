@@ -1,4 +1,4 @@
-import React from "react";
+/* import React from "react";
 import "./MainTopBarHome.scss";
 import {
   LogoBig,
@@ -11,10 +11,7 @@ import emojiIcon from "/assets/images/emoji-top-bar.png";
 const MainTopBarHome: React.FC = () => {
   return (
     <div className="main-top-bar-home">
-      {/* zone gauche – mascotte */}
       <img src={chatIcon} alt="chatIcon" className="chat" />
-
-      {/* message central */}
       <div className="text">
         <span>Likez, shakez, faites&nbsp;</span>
         <div className="text__decoration">
@@ -23,8 +20,6 @@ const MainTopBarHome: React.FC = () => {
         </div>
         <span>les marques !</span>
       </div>
-
-      {/* zone droite – pastilles statistiques */}
 
       <div className="right">
         <div className="decorative-logos">
@@ -38,3 +33,4 @@ const MainTopBarHome: React.FC = () => {
 };
 
 export default MainTopBarHome;
+ */

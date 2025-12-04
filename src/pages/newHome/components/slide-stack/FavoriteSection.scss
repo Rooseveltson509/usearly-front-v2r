@@ -3,40 +3,50 @@
   background: transparent !important;
   position: relative;
   width: 100%;
-  height: 100vh;
+  min-height: 100vh; // ← plus flexible que height:100vh
   overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
+
+  margin: 0; // ← retire tout espace autour
+  padding: 0; // ← garantit aucun ajout invisible
 }
 
-/* BLOC VIOLET */
+/* MAIN BLOCK */
 .favorite-content {
-  border-radius: 32px;
   padding: 40px;
-  max-width: 1320px; /* léger élargissement Figma */
+  max-width: 100%;
   width: 100%;
-  min-height: 520px; /* plus haut visuellement */
+  min-height: 600px;
   display: flex;
   justify-content: space-between;
   box-sizing: border-box;
 }
 
-/* LEFT */
+/* LEFT SIDE */
 .fav-left {
   flex: 1;
 
-  h2 {
-    font-size: 52px; /* FIGMA */
+  .fav-title {
+    font-size: 52px;
     line-height: 1.1;
     font-weight: 800;
     margin-bottom: 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    .title-line {
+      display: inline-block;
+      will-change: transform, opacity;
+    }
   }
 
   .fav-btn {
     background: #000;
     color: white;
-    padding: 18px 48px; /* bouton Figma Medium */
+    padding: 18px 48px;
     border-radius: 40px;
     font-size: 20px;
     font-weight: 600;
@@ -44,16 +54,17 @@
   }
 }
 
-/* RIGHT — CONTAINER DES CARTES */
+/* RIGHT SIDE (CARDS) */
 .fav-right {
   flex: 1;
   position: relative;
-  width: 520px; /* FIGMA */
+  width: 520px;
   pointer-events: none;
 
   .fav-card {
     position: absolute;
-    height: auto; /* OK */
-    pointer-events: none; /* évite les glitchs */
+    height: auto;
+    pointer-events: none;
+    will-change: transform;
   }
 }

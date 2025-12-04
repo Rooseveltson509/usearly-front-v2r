@@ -1,7 +1,5 @@
 import React from "react";
 import "./NewHome.scss";
-import SignalCard from "./card/SignalCard";
-import CdcCard from "./card/CdcCard";
 import SuggestCard from "./card/SuggestCard";
 import BrandCard from "./card/BrandCard";
 import Footer from "@src/components/layout/Footer";
@@ -42,11 +40,6 @@ const NewHome: React.FC = () => {
             ]}
           />
         </div>
-
-        <div className="new-home-main-top">
-          <SignalCard />
-          <CdcCard />
-        </div>
       </div>
       <div className="favorite-isolated">
         <FavoriteSection />
@@ -56,7 +49,6 @@ const NewHome: React.FC = () => {
       <div className="new-home-main">
         <SuggestCard />
         <BrandCard />
-
         <div className="usearly-drawing-container">
           <UsearlyDrawing animationDuration="25" />
         </div>

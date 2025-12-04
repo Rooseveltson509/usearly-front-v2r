@@ -22,8 +22,8 @@
 
 .mouse-reveal-img {
   position: absolute;
-  width: 160px;
-  height: 160px;
+  width: 360px;
+  height: 360px;
   object-fit: cover;
   border-radius: 24px;
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.25);
@@ -40,8 +40,8 @@
 
 .mouse-image {
   position: fixed;
-  width: 260px;
-  height: 260px;
+  width: 360px;
+  height: 360px;
   border-radius: 25px;
   object-fit: cover;
   pointer-events: none;
