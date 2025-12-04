@@ -226,7 +226,6 @@ img.inline-capture-img {
   font-size: 0.85rem;
   font-weight: 600;
   padding: 0.25rem 0;
-  margin-left: 4px;
   text-align: left;
 
   &:hover {
@@ -234,6 +233,14 @@ img.inline-capture-img {
   }
   &.not-expanded {
     margin-left: 0px;
+  }
+}
+
+.see-more-section {
+  &.expanded-section {
+    .see-more-button {
+      margin-left: 0px;
+    }
   }
 }
 

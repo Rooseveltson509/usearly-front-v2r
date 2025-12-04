@@ -1,10 +1,15 @@
+@use "@src/styles/base/variables" as *;
+
 .confirm-account-container {
-  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 591px;
   margin: 40px auto;
-  padding: 2rem;
+  padding: 2.5rem 3rem;
   background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  filter: drop-shadow(0 4px 0 rgba(0, 0, 0, 0.1));
   text-align: center;
 
   h2 {
@@ -12,19 +17,21 @@
     margin-bottom: 1.5rem;
     font-weight: 600;
     color: #333;
+    font-family: $font-family-2;
   }
 
   .code-inputs {
     display: flex;
     justify-content: center;
     gap: 10px;
+    margin: 0px 0px 27px 0px;
 
     input {
       width: 40px;
       height: 50px;
       text-align: center;
       font-size: 1.5rem;
-      border: 1px solid #ccc;
+      border: 1px solid #000000;
       border-radius: 8px;
       transition: border-color 0.3s ease;
 
@@ -37,43 +44,25 @@
 
     input:focus {
       outline: none;
-      border-color: #3b82f6; // bleu focus
+      border-color: #2d1e2c;
     }
   }
 
   .confirm-btn {
     margin-top: 12px;
-    width: 100%;
-    padding: 12px;
-    background-color: #00aaff;
-    color: white;
-    border: none;
-    border-radius: 8px;
+    margin-bottom: 12px;
+    background-color: #2d1e2c;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-
-    &:hover {
-      background-color: #008ecc;
-    }
-
-    &:disabled {
-      background-color: #b0dff3;
-      cursor: not-allowed;
-    }
   }
 
   .resend-link {
     display: inline-block;
     margin-top: 1rem;
-    color: #00aaff;
+    color: $dark;
     cursor: pointer;
     font-size: 0.95rem;
     text-decoration: underline;
     transition: color 0.3s ease;
-
-    &:hover {
-      color: #0077aa;
-    }
   }
 }

@@ -52,47 +52,6 @@
     display: flex;
     flex-direction: column;
 
-    .floating-group {
-      position: relative;
-
-      .password-input {
-        padding-right: 42px; // espace pour l’icône
-      }
-
-      input {
-        width: 100%;
-        max-width: 29.813rem;
-        padding: 1.25rem;
-        font-size: 0.875rem;
-        color: $dark;
-        border: 0.8px solid $dark;
-        border-radius: 4px;
-        background: white;
-        transition: border 0.3s;
-
-        &::placeholder {
-          color: $dark;
-        }
-      }
-    }
-    .eye-btn {
-      position: absolute;
-      right: 10px;
-      transform: translateY(-70%);
-      border: 0;
-      background: transparent;
-      padding: 0;
-      line-height: 0;
-      cursor: pointer;
-    }
-
-    .eye-icon {
-      width: 22px;
-      height: 22px;
-      display: block;
-      opacity: 0.75;
-    }
-
     .info-text {
       margin-top: 18px;
       font-size: 0.813rem;
@@ -145,7 +104,7 @@
       }
     }
 
-    button {
+    .btn-primary {
       margin-top: 34px;
     }
   }

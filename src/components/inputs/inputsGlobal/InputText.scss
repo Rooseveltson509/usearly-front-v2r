@@ -19,8 +19,8 @@
     }
 
     // 🟢 label flotte si focus ou si input a une valeur (.filled)
-    &:focus + label,
-    &.filled + label {
+    &:focus ~ label,
+    &.filled ~ label {
       top: -0.6rem;
       left: 0.6rem;
       font-size: 0.75rem;
@@ -44,7 +44,7 @@
   // 👁 bouton œil aligné dans l’input
   .eye-btn {
     position: absolute;
-    top: 4%; // ✅ bien centré verticalement
+    top: 50%;
     right: 0.6rem;
     transform: translateY(-50%);
     background: transparent;

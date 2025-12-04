@@ -168,8 +168,7 @@ const ChronoReportCard: React.FC<Props> = ({ item, isOpen, onToggle }) => {
               onClick={(e) => e.stopPropagation()} // ← MAJEUR
             >
               <p className="description-text">
-                {descriptionText}
-
+                {descriptionText}{" "}
                 {showFullText && item.capture && (
                   <div className="inline-capture">
                     <img

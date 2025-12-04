@@ -129,19 +129,29 @@
       align-items: center;
       gap: 0.4rem;
       padding: 0.4rem 0.8rem;
-      border: 1px solid #e5e5e5;
-      border-radius: 999px;
+      border: 1px solid #000;
+      outline: 0.5px solid transparent;
+      border-radius: 8px;
       cursor: pointer;
-      background: #fff;
+      background: transparent;
+      transition: background 0.3s ease;
 
       i {
         font-size: 0.6rem;
         color: #000;
+        &.fa-user {
+          font-size: 0.8rem;
+        }
       }
 
       .header-user {
         font-weight: 500;
         padding: 0 4px;
+      }
+
+      &:hover {
+        outline-color: #000;
+        background: rgba(255, 255, 255, 0.912);
       }
     }
 
@@ -358,6 +368,25 @@
 /* Style HERO pour la Home */
 .header.hero-mode {
   background: transparent;
+  padding-bottom: 4px;
+  .header-container {
+    .nav-links {
+      .link::after {
+        bottom: -14px;
+      }
+    }
+    .header-right {
+      .notif-button {
+        border-color: #000;
+        transition: background-color 0.3s ease;
+        outline: 0.5px solid transparent;
+        &:hover {
+          background-color: #ffffffe9;
+          outline-color: #000;
+        }
+      }
+    }
+  }
 }
 
 .header.hero-mode .header-right .login-button {

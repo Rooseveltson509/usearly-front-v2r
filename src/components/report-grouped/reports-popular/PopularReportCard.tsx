@@ -213,7 +213,7 @@ const PopularReportCard: React.FC<Props> = ({
         <div className="subcategory-content">
           <div className="main-description">
             <p className="description-text">
-              {descriptionText}
+              {descriptionText}{" "}
               {showFullText && captureUrl && (
                 <div className="inline-capture">
                   <img
@@ -230,10 +230,12 @@ const PopularReportCard: React.FC<Props> = ({
               {(firstDescription.description.length >
                 DESCRIPTION_PREVIEW_LENGTH ||
                 captureUrl) && (
-                <div className="see-more-section">
+                <div
+                  className={`see-more-section ${showFullText ? "expanded" : ""}`}
+                >
                   {showFullText && <br />}
                   <button
-                    className="see-more-button"
+                    className={`see-more-button ${showFullText ? "expanded" : ""}`}
                     style={showFullText ? { marginTop: "5px" } : {}}
                     onClick={(e) => {
                       e.stopPropagation();
