@@ -188,11 +188,10 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
                   }`
                 : `${initialDescription.description.slice(0, 100)}${
                     initialDescription.description.length > 100 ? "…" : ""
-                  }`}
-
+                  }`}{" "}
               {(initialDescription.description.length > 100 || captureUrl) && (
                 <span
-                  className="see-more-section"
+                  className={`see-more-section ${showFullText ? "expanded-section" : ""}`}
                   style={{ display: "inline" }}
                 >
                   {showFullText && <br />}
@@ -211,7 +210,6 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
                   </button>
                 </span>
               )}
-
               {showFullText && captureUrl && (
                 <div className="inline-capture">
                   <img

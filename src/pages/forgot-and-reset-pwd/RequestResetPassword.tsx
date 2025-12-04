@@ -2,6 +2,8 @@ import { requestResetPassword } from "@src/services/apiService";
 import { useState } from "react";
 import { showToast } from "@src/utils/toastUtils";
 import "./RequestResetPassword.scss";
+import InputText from "@src/components/inputs/inputsGlobal/InputText";
+import Buttons from "@src/components/buttons/Buttons";
 
 const RequestResetPassword = () => {
   const [email, setEmail] = useState("");
@@ -34,16 +36,27 @@ const RequestResetPassword = () => {
     <div className="reset-request">
       <h2>Réinitialiser mon mot de passe</h2>
       <form onSubmit={handleSubmit}>
-        <input
+        <InputText
+          type="email"
+          id="email"
+          label="Email"
+          placeholder=""
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        {/* <input
           type="email"
           placeholder="Votre email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
+        /> */}
+        <Buttons
+          onClick={handleSubmit}
+          title={loading ? "Envoi..." : "Envoyer"}
+          disabled={loading}
         />
-        <button type="submit" disabled={loading}>
-          {loading ? "Envoi..." : "Envoyer"}
-        </button>
       </form>
       {message && <p className="success">{message}</p>}
       {error && <p className="error">{error}</p>}

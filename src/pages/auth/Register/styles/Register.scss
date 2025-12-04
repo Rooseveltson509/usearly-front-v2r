@@ -128,19 +128,19 @@
         padding-right: 2.5rem;
       }
 
-      input + label {
-        position: absolute;
-        //top: -10px;
-        left: 1rem;
-        font-size: 0.8rem;
-        color: $gray-500;
-        pointer-events: none;
-        background: white;
-        padding: 0.2rem 0.4rem;
-        border-radius: 10px;
-        transition: 0.2s ease all;
-        z-index: 1;
-      }
+      // input + label {
+      //   position: absolute;
+      //   //top: -10px;
+      //   left: 1rem;
+      //   font-size: 0.8rem;
+      //   color: $gray-500;
+      //   pointer-events: none;
+      //   background: white;
+      //   padding: 0.2rem 0.4rem;
+      //   border-radius: 10px;
+      //   transition: 0.2s ease all;
+      //   z-index: 1;
+      // }
 
       select + label {
         position: absolute;
@@ -202,23 +202,23 @@
       }
     }
 
-    button {
+    .btn-primary {
       margin-top: 34px;
     }
 
-    input {
-      width: 100%;
-      padding: 1.25rem;
-      font-size: 0.875rem;
-      color: $dark;
-      border: 0.8px solid $dark;
-      border-radius: 4px;
-      background: white;
-      transition: border 0.3s;
+    // input {
+    //   width: 100%;
+    //   padding: 1.25rem;
+    //   font-size: 0.875rem;
+    //   color: $dark;
+    //   border: 0.8px solid $dark;
+    //   border-radius: 4px;
+    //   background: white;
+    //   transition: border 0.3s;
 
-      &::placeholder {
-        color: $dark;
-      }
-    }
+    //   &::placeholder {
+    //     color: $dark;
+    //   }
+    // }
   }
 }

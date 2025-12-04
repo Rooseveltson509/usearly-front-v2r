@@ -124,7 +124,7 @@
     .pg {
       position: relative;
       flex: 1;
-      height: 12px;
+      height: 8px;
       background: #e5e7eb;
       border-radius: 999px;
       overflow: hidden;
@@ -401,7 +401,7 @@
       .avatar-with-brand {
         position: relative;
         display: inline-block;
-        margin-top: -18px;
+        margin-top: -8px;
         margin-right: 8px;
 
         .user-avatar-wrapper {
@@ -497,7 +497,7 @@
       }
 
       .cdc-post-title {
-        width: 80%;
+        width: 100%;
         color: #000000;
         font-size: 18px;
         font-weight: 700;
@@ -512,7 +512,7 @@
       }
 
       .feedback-body-text {
-        width: 80%;
+        width: 100%;
         font-size: 15px;
         font-weight: 300;
         flex: 1 1 auto;
@@ -524,7 +524,7 @@
 
         &.is-expanded {
           overflow-y: auto;
-          width: 90%;
+          width: 100%;
           max-height: 250px;
         }
       }
@@ -534,7 +534,7 @@
 
 .feedback-right.is-expanded {
   transform: translateY(-1px);
-  height: 100%;
+  height: auto;
   padding-bottom: 16px;
   .feedback-content {
     .feedback-body {

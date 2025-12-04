@@ -4,7 +4,6 @@ import { loginUser, loginBrand } from "@src/services/apiService";
 import { showToast } from "@src/utils/toastUtils";
 import { useAuth } from "@src/services/AuthContext";
 import "./styles/Login.scss";
-import iconEye from "../../../assets/images/eye-password-logo.svg";
 import { useHandleAuthRedirect } from "@src/hooks/useHandleAuthRedirect";
 import InputText from "@src/components/inputs/inputsGlobal/InputText";
 import Buttons from "@src/components/buttons/Buttons";
@@ -20,7 +19,6 @@ const Login = () => {
   const [step, setStep] = useState(initialEmail ? 2 : 1);
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
   const isEmail = (value: string) => value.includes("@");
@@ -118,33 +116,14 @@ const Login = () => {
           </>
         ) : (
           <>
-            <div className="floating-group password-group">
-              <InputText
-                id="password"
-                label="Mot de passe*"
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className={password ? "filled" : ""}
-              />
-              <button
-                type="button"
-                className="eye-btn"
-                aria-label={
-                  showPassword
-                    ? "Masquer le mot de passe"
-                    : "Afficher le mot de passe"
-                }
-                onClick={() => setShowPassword((value) => !value)}
-              >
-                <img
-                  src={iconEye}
-                  alt="toggle visibility"
-                  className="eye-icon"
-                />
-              </button>
-            </div>
+            <InputText
+              id="password"
+              label="Mot de passe*"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
             {error && <p className="error-message">{error}</p>}
 
             <div className="login-options">

@@ -279,7 +279,7 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
                   <div className="subcategory-content">
                     <div className="main-description">
                       <p className="description-text">
-                        {initialDescription.description}
+                        {initialDescription.description}{" "}
                       </p>
                       {initialDescription.capture && (
                         <img

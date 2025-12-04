@@ -7,6 +7,7 @@ import {
 } from "../../services/apiService";
 import { showToast } from "@src/utils/toastUtils";
 import { useAuth } from "../../services/AuthContext";
+import Buttons from "../buttons/Buttons";
 
 const ConfirmAccount = () => {
   const location = useLocation();
@@ -94,9 +95,11 @@ const ConfirmAccount = () => {
         ))}
       </div>
 
-      <button className="confirm-btn" onClick={handleSubmit}>
-        Valider
-      </button>
+      <Buttons
+        addClassName="confirm-btn"
+        onClick={handleSubmit}
+        title="Valider"
+      />
 
       <div className="resend-link" onClick={handleResend}>
         Je n’ai pas reçu mon code

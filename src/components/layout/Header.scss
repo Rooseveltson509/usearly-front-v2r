@@ -133,7 +133,8 @@
       outline: 0.5px solid transparent;
       border-radius: 8px;
       cursor: pointer;
-      background: #fff;
+      background: transparent;
+      transition: background 0.3s ease;
 
       i {
         font-size: 0.6rem;
@@ -150,6 +151,7 @@
 
       &:hover {
         outline-color: #000;
+        background: rgba(255, 255, 255, 0.912);
       }
     }
 
@@ -371,6 +373,17 @@
     .nav-links {
       .link::after {
         bottom: -14px;
+      }
+    }
+    .header-right {
+      .notif-button {
+        border-color: #000;
+        transition: background-color 0.3s ease;
+        outline: 0.5px solid transparent;
+        &:hover {
+          background-color: #ffffffe9;
+          outline-color: #000;
+        }
       }
     }
   }

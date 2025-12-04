@@ -4,6 +4,8 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import "./ResetPassword.scss";
 import { useAuth } from "@src/services/AuthContext";
 import { showToast } from "@src/utils/toastUtils";
+import InputText from "@src/components/inputs/inputsGlobal/InputText";
+import Buttons from "@src/components/buttons/Buttons";
 
 const ResetPassword = () => {
   const [params] = useSearchParams();
@@ -49,23 +51,43 @@ const ResetPassword = () => {
     <div className="reset-password">
       <h2>Définir un nouveau mot de passe</h2>
       <form onSubmit={handleSubmit}>
-        <input
+        <InputText
+          type="password"
+          id="new-password"
+          label="Nouveau mot de passe"
+          placeholder=""
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        {/* <input
           type="password"
           placeholder="Nouveau mot de passe"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
+        /> */}
+        <InputText
+          type="password"
+          id="confirm-password"
+          label="Confirmer le mot de passe"
+          placeholder=""
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          required
         />
-        <input
+        {/* <input
           type="password"
           placeholder="Confirmer le mot de passe"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           required
+        /> */}
+        <Buttons
+          onClick={handleSubmit}
+          title={loading ? "Chargement..." : "Mettre à jour"}
+          disabled={loading}
         />
-        <button type="submit" disabled={loading}>
-          {loading ? "Chargement..." : "Mettre à jour"}
-        </button>
       </form>
       {error && <p className="error">{error}</p>}
     </div>

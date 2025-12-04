@@ -257,12 +257,11 @@ const UserBrandBlock: React.FC<Props> = ({
                               initialDescription.description.length > 100
                                 ? "…"
                                 : ""
-                            }`}
-
+                            }`}{" "}
                         {(initialDescription.description.length > 100 ||
                           initialDescription.capture) && (
                           <span
-                            className="see-more-section"
+                            className={`see-more-section ${showFullText ? "expanded" : ""}`}
                             style={{ display: "inline" }}
                           >
                             {showFullText && <br />}
@@ -286,7 +285,6 @@ const UserBrandBlock: React.FC<Props> = ({
                             </button>
                           </span>
                         )}
-
                         {showFullText[sub.subCategory] &&
                           initialDescription.capture && (
                             <div className="inline-capture">
