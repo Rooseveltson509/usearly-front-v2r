@@ -13,8 +13,9 @@ const TITLE_TEXT: Record<SlideType, string[]> = {
   suggestion: ["Les suggestions", "qui vous font", "rêver ✨"],
   report: [
     "Les signalements",
-    "qui ont le plus fait râler",
-    "cette semaine 😅",
+    "qui ont le plus",
+    "fait râler cette",
+    "semaine 😅",
   ],
 };
 

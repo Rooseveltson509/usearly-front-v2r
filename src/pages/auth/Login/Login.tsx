@@ -29,6 +29,7 @@ const Login = () => {
 
     try {
       let response;
+
       if (loginInput.includes("@brand.") || loginInput.includes("@marque.")) {
         response = await loginBrand({
           email: loginInput,
@@ -44,6 +45,16 @@ const Login = () => {
         });
       }
 
+      /* ===========================================================
+         1️⃣ Si le back dit "requiresConfirmation", on stocke l'email
+         =========================================================== */
+      if (response.requiresConfirmation && response.email) {
+        localStorage.setItem("pendingEmail", response.email);
+      }
+
+      /* ===========================================================
+         2️⃣ Laisse ensuite le hook gérer la redirection
+         =========================================================== */
       const ok = handleAuthRedirect(response, {
         onSuccess: async () => {
           if (response.accessToken && response.user) {
@@ -53,7 +64,9 @@ const Login = () => {
         },
       });
 
-      if (!ok) return;
+      if (!ok) {
+        return; // redirection déjà faite par le hook
+      }
     } catch (error: any) {
       setError(error.message || "Erreur de connexion");
     } finally {

@@ -1,6 +1,6 @@
 import React from "react";
 import "./NewHome.scss";
-import SuggestCard from "./card/SuggestCard";
+/* import SuggestCard from "./card/SuggestCard"; */
 import BrandCard from "./card/BrandCard";
 import Footer from "@src/components/layout/Footer";
 import VideoContainerLanding from "./components/videoContainer/videoContainerLanding";
@@ -47,7 +47,7 @@ const NewHome: React.FC = () => {
 
       {/* --- SUITE DU CONTENU (NON AFFECTÉ) --- */}
       <div className="new-home-main">
-        <SuggestCard />
+        {/* <SuggestCard /> */}
         <BrandCard />
         <div className="usearly-drawing-container">
           <UsearlyDrawing animationDuration="25" />

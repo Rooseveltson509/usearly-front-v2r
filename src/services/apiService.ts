@@ -196,10 +196,17 @@ apiService.interceptors.response.use(
   },
 );
 
-export const confirmEmailRequest = async (data: {
+/* export const confirmEmailRequest = async (data: {
   userId: string;
   token: string;
 }) => {
+  const response = await apiService.post("/user/confirm", data);
+  return response.data;
+}; */
+
+export const confirmEmailRequest = async (
+  data: { token: string } | { otp: string; email: string },
+) => {
   const response = await apiService.post("/user/confirm", data);
   return response.data;
 };

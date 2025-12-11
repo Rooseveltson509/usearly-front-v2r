@@ -1,144 +1,87 @@
 import { useForm } from "react-hook-form";
-import { useEffect, useState, useRef } from "react";
+import { useState } from "react";
 import { registerUser } from "@src/services/apiService";
 import type { RegisterData } from "@src/types/RegisterData";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./styles/Register.scss";
 import { showToast } from "@src/utils/toastUtils";
-import PasswordRules from "./Components/PasswordRules/PasswordRules";
 import InputText from "../../../components/inputs/inputsGlobal/InputText";
 import Buttons from "@src/components/buttons/Buttons";
 import { useHandleAuthRedirect } from "@src/hooks/useHandleAuthRedirect";
 import { errorMessages } from "@src/utils/errorMessages";
 import { toDMY } from "@src/utils/dateUtils";
-
-const passwordRules = {
-  length: (val: string) => val.length >= 8,
-  lowercase: (val: string) => /[a-z]/.test(val),
-  uppercase: (val: string) => /[A-Z]/.test(val),
-  number: (val: string) => /\d/.test(val),
-  special: (val: string) => /[^A-Za-z0-9]/.test(val),
-};
-
-const ZWS = "\u200B";
+import EditableEmail from "./EditableEmail";
+import PasswordSection from "./PasswordSection";
 
 const Register = () => {
   const {
     register,
     handleSubmit,
-    watch,
     getValues,
     formState: { errors },
+    watch,
   } = useForm<RegisterData>({ mode: "onChange" });
 
   const location = useLocation();
   const navigate = useNavigate();
   const { handleAuthRedirect } = useHandleAuthRedirect();
-  const password = watch("password", "");
+
   const initialEmail = (location.state as any)?.email ?? "";
+  const [email, setEmail] = useState(initialEmail);
 
-  const [mailUser, setMailUser] = useState(initialEmail);
-  const [mailContentEditable, setMailContentEditable] = useState(false);
-  const emailSpanRef = useRef<HTMLSpanElement | null>(null);
+  const password = watch("password", "");
 
-  const [, setValidations] = useState({
-    length: false,
-    lowercase: false,
-    uppercase: false,
-    number: false,
-    special: false,
-  });
-
-  // Password rules
-  useEffect(() => {
-    const invalidSpecialChar = /[^A-Za-z0-9@$!%*?&]/.test(password);
-    setValidations({
-      length: passwordRules.length(password),
-      lowercase: passwordRules.lowercase(password),
-      uppercase: passwordRules.uppercase(password),
-      number: passwordRules.number(password),
-      special: passwordRules.special(password) && !invalidSpecialChar,
-    });
-  }, [password]);
-
-  // Email editable
-  useEffect(() => {
-    if (!mailContentEditable) return;
-    const el = emailSpanRef.current;
-    if (!el) return;
-
-    if (!el.textContent) {
-      el.textContent = mailUser || ZWS;
-    }
-
-    el.focus();
-    const range = document.createRange();
-    range.selectNodeContents(el);
-    range.collapse(false);
-    const sel = window.getSelection();
-    sel?.removeAllRanges();
-    sel?.addRange(range);
-  }, [mailContentEditable, mailUser]);
-
-  const handleSpanInput = (e: React.FormEvent<HTMLSpanElement>) => {
-    const raw = e.currentTarget.textContent ?? "";
-    const clean = raw.replace(new RegExp(ZWS, "g"), "");
-    setMailUser(clean);
-  };
-
-  const handleSpanKeyDown = (e: React.KeyboardEvent<HTMLSpanElement>) => {
-    const text = (emailSpanRef.current?.textContent ?? "").replace(
-      new RegExp(ZWS, "g"),
-      "",
-    );
-    if ((e.key === "Backspace" || e.key === "Delete") && text.length === 0) {
-      e.preventDefault();
-    }
-  };
-
+  /* -------------------------------------------------------- */
+  /*  SUBMIT                                                 */
+  /* -------------------------------------------------------- */
   const onSubmit = async (data: RegisterData) => {
     const bornDate = new Date(data.born);
-    if (Number.isNaN(bornDate.getTime())) throw new Error("Date invalide");
+    if (isNaN(bornDate.getTime())) {
+      showToast("Date invalide", "error");
+      return;
+    }
 
-    const bornFr = toDMY(bornDate);
+    const payload = {
+      pseudo: data.pseudo,
+      email,
+      password: data.password,
+      password_confirm: data.password_confirm,
+      born: toDMY(bornDate),
+      gender: data.gender,
+    };
 
     try {
-      const payload = {
-        pseudo: data.pseudo,
-        email: mailUser,
-        password: data.password,
-        password_confirm: data.password_confirm,
-        born: bornFr,
-        gender: data.gender, // corrected enum values
-      };
-
       const response = await registerUser(payload);
 
-      // Cas utilisateur existant non confirmé
+      /* ----------------- Compte non confirmé ---------------- */
       if (response.code === "CONFIRMATION_REQUIRED") {
-        if (response.userId && response.email) {
-          const url = `/confirm?userId=${response.userId}&email=${encodeURIComponent(
-            response.email,
-          )}`;
-          showToast(
-            `📧 ${response.email} existe déjà. Confirme ton compte pour continuer.`,
-            "info",
-          );
-          navigate(url, { replace: true });
+        if (response.email) {
+          localStorage.setItem("pendingEmail", response.email);
         }
+
+        showToast(
+          `📧 ${response.email} existe déjà. Confirme ton compte.`,
+          "info",
+        );
+
+        navigate("/confirm", {
+          replace: true,
+          state: { email: response.email },
+        });
+
         return;
       }
 
-      // Cas normal → success
+      /* ----------------- Succès normal ---------------- */
       const ok = handleAuthRedirect(response, {
         onSuccess: () => {
-          showToast(`✅ ${response.email} inscrit avec succès !`, "success");
-          if (response.userId && response.email) {
-            navigate(
-              `/confirm?userId=${response.userId}&email=${encodeURIComponent(
-                response.email,
-              )}`,
-            );
+          showToast(`🎉 ${response.email} inscrit avec succès !`, "success");
+
+          if (response.email) {
+            localStorage.setItem("pendingEmail", response.email);
+            navigate("/confirm", {
+              state: { email: response.email },
+            });
           }
         },
       });
@@ -147,56 +90,30 @@ const Register = () => {
     } catch (error: any) {
       const code = error.response?.data?.code;
       const message =
-        errorMessages[code] ||
-        error.message ||
-        "❌ Erreur lors de l'inscription.";
+        errorMessages[code] || error.message || "Erreur inconnue.";
       showToast(message, "error");
     }
   };
 
-  const editableProps = mailContentEditable
-    ? ({ contentEditable: true, suppressContentEditableWarning: true } as const)
-    : {};
-
+  /* -------------------------------------------------------- */
+  /*  RENDER                                                 */
+  /* -------------------------------------------------------- */
   return (
     <div className="register-container">
       <h2 style={{ marginBottom: initialEmail ? 0 : "2.5rem" }}>
         Faisons de toi un Usear !
       </h2>
 
-      {initialEmail && (
-        <p className="register-subtitle">
-          Votre mail est bien{" "}
-          <span
-            ref={emailSpanRef}
-            {...editableProps}
-            role="textbox"
-            tabIndex={0}
-            className={mailContentEditable ? "editable" : ""}
-            onInput={handleSpanInput}
-            onKeyDown={handleSpanKeyDown}
-          >
-            {!mailContentEditable ? mailUser : null}
-          </span>{" "}
-          ?{" "}
-          <span
-            className="modifyLink"
-            onClick={() => setMailContentEditable(!mailContentEditable)}
-          >
-            Modifier
-          </span>
-        </p>
-      )}
+      {/* Email déjà fourni → email éditable */}
+      {initialEmail && <EditableEmail email={email} setEmail={setEmail} />}
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
-        {/* 🔥 PSEUDO VALIDATION */}
         <InputText
           registration={register("pseudo", {
             required: "Le pseudo est obligatoire",
             pattern: {
               value: /^[a-zA-Z0-9]{3,50}$/,
-              message:
-                "Pseudo invalide : lettres/chiffres, sans espace (3–50 caractères).",
+              message: "Pseudo invalide (3–50 caractères, lettres/chiffres).",
             },
           })}
           id="pseudo"
@@ -208,76 +125,39 @@ const Register = () => {
           <p className="error-message">{errors.pseudo.message}</p>
         )}
 
+        {/* Email classique si pas envoyé via CheckUser */}
         {!initialEmail && (
           <InputText
             registration={register("email", { required: true })}
             id="email"
             type="email"
             label="Email*"
-            defaultValue={mailUser}
+            defaultValue={email}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setMailUser(e.target.value)
+              setEmail(e.target.value)
             }
             required
           />
         )}
 
-        <div>
-          <InputText
-            registration={register("password", { required: true })}
-            id="password"
-            type="password"
-            label="Mot de passe*"
-            required
-          />
-          {password && (
-            <PasswordRules
-              value={password}
-              enabled={[
-                "length",
-                "lowercase",
-                "uppercase",
-                "number",
-                "special",
-              ]}
-              className="input-rules"
-            />
-          )}
-        </div>
-
-        <InputText
-          registration={register("password_confirm", {
-            validate: (val) =>
-              val === getValues("password") ||
-              "Les mots de passe ne correspondent pas",
-          })}
-          id="password_confirm"
-          type="password"
-          label="Confirmation Mot de passe*"
-          required
+        {/* Password + règles */}
+        <PasswordSection
+          register={register}
+          password={password}
+          errors={errors}
+          getValues={getValues}
         />
-        {errors.password_confirm && (
-          <p className="error-message">
-            {errors.password_confirm.message as string}
-          </p>
-        )}
 
+        {/* Date + Genre */}
         <div className="double-field">
-          {/* 🔥 DATE AVEC VALIDATION AGE >= 18 */}
           <InputText
             registration={register("born", { required: true })}
             id="born"
             type="date"
             label="Date de naissance*"
             required
-            defaultValue=""
           />
 
-          {/* {errors.born && (
-            <p className="error-message">{errors.born.message}</p>
-          )} */}
-
-          {/* 🔥 GENDER ENUM MYSQL */}
           <div className="select-wrap">
             <select
               id="gender"
@@ -296,15 +176,8 @@ const Register = () => {
           <label className="terms-checkbox">
             <input type="checkbox" required />
             <p>
-              J'accepte les{" "}
-              <a href="#" target="_blank" rel="noopener noreferrer">
-                conditions d'utilisation
-              </a>{" "}
-              et je confirme avoir lu la{" "}
-              <a href="#" target="_blank" rel="noopener noreferrer">
-                politique de confidentialité
-              </a>{" "}
-              de Usearly.
+              J'accepte les <a href="#">conditions d'utilisation</a> et j’ai lu
+              la <a href="#">politique de confidentialité</a>.
             </p>
           </label>
         </div>
