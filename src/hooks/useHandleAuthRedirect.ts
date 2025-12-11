@@ -18,11 +18,13 @@ export const useHandleAuthRedirect = () => {
         "⚠️ Ce compte existe déjà mais n'a pas été confirmé. Vérifie ton email.",
         "warning",
       );
-      if (response.userId && response.email) {
-        navigate(
-          `/confirm?userId=${response.userId}&email=${encodeURIComponent(response.email)}`,
-        );
+
+      if (response.email) {
+        navigate("/confirm", {
+          state: { email: response.email }, // ✔️ On passe l’email via state
+        });
       }
+
       return false;
     }
 

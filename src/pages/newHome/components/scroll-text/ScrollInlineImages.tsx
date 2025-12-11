@@ -1,6 +1,7 @@
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import "./ScrollInlineImages.scss";
+import { useStableInView } from "../hooks/useStableInView";
 
 interface RevealImage {
   line: number;
@@ -28,8 +29,8 @@ export default function ScrollInlineImages({ lines, images }: Props) {
 function InlineLine({ line, image }: { line: string; image?: RevealImage }) {
   const ref = useRef<HTMLDivElement | null>(null);
 
-  // Détection inView pour animation texte + glossy
-  const inView = useInView(ref, { margin: "-25% 0px -25% 0px" });
+  // Détection stabilisée ⛔ plus de vibration
+  const inView = useStableInView(ref);
 
   const words = line.split(" ");
   const before = image ? words.slice(0, image.wordIndex) : words;
