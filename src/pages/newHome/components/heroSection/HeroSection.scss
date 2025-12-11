@@ -72,3 +72,51 @@
     opacity: 0;
   }
 }
+
+/* ----------------------------- */
+/*   ANIMATION TITRES HERO       */
+/* ----------------------------- */
+
+.hero-title {
+  position: relative;
+
+  .title-top,
+  .title-bottom {
+    display: inline-block;
+    opacity: 0;
+  }
+
+  /* AMÉLIORER → arrive du haut */
+  .title-top {
+    transform: translateY(-50px);
+    animation: slideFromTop 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  /* L’EXPÉRIENCE → arrive du bas */
+  .title-bottom {
+    transform: translateY(50px);
+    animation: slideFromBottom 1s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards;
+  }
+}
+
+@keyframes slideFromTop {
+  0% {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideFromBottom {
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

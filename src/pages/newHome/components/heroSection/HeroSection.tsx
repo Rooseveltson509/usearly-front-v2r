@@ -7,8 +7,8 @@ const HeroSection = () => {
   return (
     <section className="hero-section">
       <h1 className="hero-title">
-        AMÉLIORER <br />
-        L’EXPÉRIENCE <br />
+        <span className="title-top">AMÉLIORER</span> <br />
+        <span className="title-bottom">L’EXPÉRIENCE</span> <br />
         <TypingFullWord
           words={[
             "ENSEMBLE",
