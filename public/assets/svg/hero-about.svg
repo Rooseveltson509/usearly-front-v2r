@@ -1,0 +1,20 @@
+<svg width="700" height="450" viewBox="0 0 700 450" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="30" y="80" width="640" height="300" rx="28" fill="#F7F5FF"/>
+  <rect x="80" y="130" width="540" height="60" rx="12" fill="#E6E1FF"/>
+  <rect x="80" y="210" width="420" height="20" rx="10" fill="#D2CBFF"/>
+  <rect x="80" y="250" width="360" height="20" rx="10" fill="#D2CBFF"/>
+  <rect x="80" y="290" width="480" height="20" rx="10" fill="#D2CBFF"/>
+
+  <circle cx="560" cy="110" r="30" fill="#989DFF"/>
+  <circle cx="600" cy="110" r="10" fill="#FFFFFF"/>
+  <circle cx="580" cy="110" r="6" fill="#FFFFFF"/>
+  
+  <rect x="0" y="360" width="700" height="90" fill="url(#grad)"/>
+  
+  <defs>
+    <linearGradient id="grad" x1="0" y1="360" x2="700" y2="450" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#989DFF"/>
+      <stop offset="1" stop-color="#FF99E5"/>
+    </linearGradient>
+  </defs>
+</svg>

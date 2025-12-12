@@ -2,7 +2,9 @@ import Header from "./Header";
 import { type ReactNode, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-// exported header height in pixels; will be calculated at runtime
+// 🟪 IMPORT GSAP FIX
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
 export let headerheight = 0;
 
 interface LayoutProps {
@@ -29,13 +31,21 @@ const Layout = ({ children }: LayoutProps) => {
 
       headerheight = newHeight;
       setHeaderHeight(newHeight);
+
+      /* 🔥 FIX DÉFINITIF POUR GSAP + ScrollTrigger */
+      ScrollTrigger.refresh();
     };
 
+    // première mesure
     compute();
+
+    // écoute resize
     window.addEventListener("resize", compute);
 
+    // écoute mutations du header
     const headerElement = getHeader();
     let mutationObserver: MutationObserver | null = null;
+
     if (headerElement && typeof MutationObserver !== "undefined") {
       mutationObserver = new MutationObserver(compute);
       mutationObserver.observe(headerElement, {

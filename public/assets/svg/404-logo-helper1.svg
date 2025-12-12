@@ -1,0 +1,23 @@
+<svg width="240" height="220" viewBox="0 0 240 220" xmlns="http://www.w3.org/2000/svg">
+
+  <!-- Ombre -->
+  <ellipse cx="120" cy="200" rx="60" ry="12" fill="rgba(0,0,0,0.08)" />
+
+  <!-- Bulle du logo -->
+  <g transform="translate(60,40)">
+    <rect x="0" y="0" width="120" height="120" rx="28" fill="#ffffff" stroke="#000" stroke-width="6"/>
+
+    <!-- Petit bec de bulle -->
+    <path d="M40 120 L60 140 L60 120" fill="#ffffff" stroke="#000" stroke-width="6"/>
+
+    <!-- Lettre U -->
+    <path d="M50 40 v30 a20 20 0 0 0 40 0 v-30" stroke="#000" stroke-width="12" stroke-linecap="round"/>
+  </g>
+
+  <!-- Loupe (assistant qui cherche la page) -->
+  <g transform="translate(150,120) scale(0.9)">
+    <circle cx="0" cy="0" r="22" stroke="#000" stroke-width="6" fill="none"/>
+    <line x1="16" y1="16" x2="36" y2="36" stroke="#000" stroke-width="6" stroke-linecap="round"/>
+  </g>
+
+</svg>

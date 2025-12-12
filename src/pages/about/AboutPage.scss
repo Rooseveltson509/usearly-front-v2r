@@ -1,0 +1,269 @@
+.about-page {
+  position: relative;
+  padding: 140px 80px;
+  max-width: 1200px;
+  margin: auto;
+  font-family: inherit;
+  position: relative;
+  z-index: 2;
+}
+
+/* ---------------- HERO ---------------- */
+
+.about-hero {
+  text-align: center;
+  margin-bottom: 120px;
+  animation: fadeUp 1s ease forwards;
+  opacity: 0;
+}
+
+.about-title {
+  font-size: 80px;
+  font-weight: 900;
+  line-height: 1.05;
+  margin-bottom: 24px;
+
+  .gradient-text {
+    background: linear-gradient(90deg, #989dff, #7e56ff, #ff88e8);
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+}
+
+.about-subtitle {
+  font-size: 22px;
+  opacity: 0.7;
+  max-width: 750px;
+  margin: auto;
+}
+
+.hero-illustration {
+  width: 600px;
+  margin: 40px auto 0;
+  display: block;
+  opacity: 0;
+  animation: fadeUp 1s ease forwards 0.4s;
+}
+
+@keyframes parallaxMove {
+  0% {
+    transform: translate(-30px, -20px);
+  }
+  100% {
+    transform: translate(40px, 40px);
+  }
+}
+
+/* ---------------- SECTION ---------------- */
+
+.about-section {
+  margin: 90px 0;
+  animation: fadeUp 1s ease forwards;
+  opacity: 0;
+}
+
+.section-title {
+  font-size: 42px;
+  font-weight: 800;
+  margin-bottom: 20px;
+}
+
+.section-text {
+  font-size: 20px;
+  line-height: 1.6;
+  opacity: 0.8;
+}
+
+/* ---------------- VALEURS ---------------- */
+
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 32px;
+  margin: 120px 0;
+}
+
+.value-card {
+  background: #fff;
+  padding: 28px;
+  border-radius: 18px;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.08);
+  transition: transform 0.35s ease;
+
+  h3 {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 10px;
+  }
+
+  p {
+    opacity: 0.7;
+    font-size: 18px;
+    line-height: 1.5;
+  }
+
+  &:hover {
+    transform: translateY(-6px);
+  }
+}
+
+/* ---------------- TIMELINE ---------------- */
+
+.timeline {
+  border-left: 3px solid #989dff;
+  padding-left: 40px;
+  margin: 40px 0;
+  position: relative;
+
+  .timeline-item {
+    margin-bottom: 50px;
+    position: relative;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards;
+
+    .dot {
+      position: absolute;
+      left: -48px;
+      top: 6px;
+      width: 18px;
+      height: 18px;
+      background: #989dff;
+      border-radius: 50%;
+      box-shadow: 0 0 0 4px rgba(152, 157, 255, 0.3);
+    }
+
+    h3 {
+      font-size: 26px;
+      margin-bottom: 8px;
+      font-weight: 800;
+    }
+
+    p {
+      opacity: 0.8;
+      line-height: 1.6;
+    }
+  }
+
+  .timeline-item:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+  .timeline-item:nth-child(2) {
+    animation-delay: 0.3s;
+  }
+  .timeline-item:nth-child(3) {
+    animation-delay: 0.5s;
+  }
+  .timeline-item:nth-child(4) {
+    animation-delay: 0.7s;
+  }
+}
+
+/* ---------------- TEAM ---------------- */
+
+.team-section {
+  margin-top: 120px;
+
+  .team-grid {
+    display: flex;
+    gap: 40px;
+    margin-top: 40px;
+  }
+
+  .team-card {
+    background: #fff;
+    padding: 28px;
+    border-radius: 18px;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    transition: transform 0.35s ease;
+
+    img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      margin-bottom: 20px;
+    }
+
+    &:hover {
+      transform: translateY(-6px);
+    }
+  }
+}
+
+/* ---------------- ANIMATION ---------------- */
+
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------------- RESPONSIVE ---------------- */
+
+@media (max-width: 900px) {
+  .about-title {
+    font-size: 60px;
+  }
+}
+
+@media (max-width: 600px) {
+  .about-title {
+    font-size: 42px;
+  }
+
+  .about-page {
+    padding: 80px 20px;
+  }
+
+  .team-grid {
+    flex-direction: column;
+  }
+
+  .hero-illustration {
+    width: 90%;
+  }
+}
+.cta-section {
+  text-align: center;
+  margin-top: 140px;
+  padding: 80px 40px;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.05);
+  animation: fadeUp 1s ease forwards;
+  opacity: 0;
+
+  h2 {
+    font-size: 42px;
+    font-weight: 900;
+    margin-bottom: 14px;
+  }
+
+  p {
+    font-size: 20px;
+    opacity: 0.7;
+    margin-bottom: 30px;
+  }
+
+  .cta-button {
+    display: inline-block;
+    padding: 16px 36px;
+    font-size: 20px;
+    border-radius: 50px;
+    background: linear-gradient(90deg, #7e56ff, #ff88e8);
+    color: white;
+    text-decoration: none;
+    font-weight: 700;
+    transition: transform 0.25s ease;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+}

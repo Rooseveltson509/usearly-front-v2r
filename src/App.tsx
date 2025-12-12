@@ -20,6 +20,8 @@ import CoupDeCoeurDetail from "./components/shared/share-modal/coupdecoeur-detai
 import ReportDetail from "./pages/home/report-detail/ReportDetail";
 import NotificationsPage from "./components/notification/NotificationsPage";
 import UsearlyDraw from "./components/background/Usearly";
+import AboutPage from "./pages/about/AboutPage";
+import NotFoundPage from "./pages/not-found/NotFoundPage";
 
 function App() {
   return (
@@ -74,6 +76,15 @@ function App() {
                     <Login />
                     <UsearlyDraw />
                   </>
+                </GuestRoute>
+              }
+            />
+            {/* about */}
+            <Route
+              path="/about"
+              element={
+                <GuestRoute>
+                  <AboutPage />
                 </GuestRoute>
               }
             />
@@ -162,7 +173,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route path="*" element={<div>404 - Page non trouvée</div>} />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Layout>
       </AuthProvider>

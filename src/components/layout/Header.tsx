@@ -92,7 +92,7 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
               Feedbacks
             </NavLink>
           )}
-          <NavLink to="/marque" className="link">
+          <NavLink to="/about" className="link">
             {isAuthenticated ? "Marques" : "A propos"}
           </NavLink>
           <NavLink to="/impact" className="link">
