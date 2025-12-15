@@ -22,6 +22,7 @@ import NotificationsPage from "./components/notification/NotificationsPage";
 import UsearlyDraw from "./components/background/Usearly";
 import AboutPage from "./pages/about/AboutPage";
 import NotFoundPage from "./pages/not-found/NotFoundPage";
+import AdminBrandsPage from "./pages/admin/brands/AdminBrandsPage";
 
 function App() {
   return (
@@ -56,6 +57,14 @@ function App() {
               element={
                 <ProtectedRoute allowedTypes={["user", "brand"]}>
                   <NavigateToHome />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/brands"
+              element={
+                <ProtectedRoute allowedTypes={["user"]}>
+                  <AdminBrandsPage />
                 </ProtectedRoute>
               }
             />

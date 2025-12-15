@@ -157,11 +157,17 @@ const VideoContainerLanding = () => {
    * ------------------------------------------------------ */
   useEffect(() => {
     const body = document.body;
+    const previousOverflow = body.style.overflow;
+
     if (cinema) {
       body.style.overflow = "hidden";
     } else {
-      body.style.overflow = "";
+      body.style.overflow = "auto";
     }
+
+    return () => {
+      body.style.overflow = previousOverflow || "auto";
+    };
   }, [cinema]);
 
   const hideControls = !isPaused && !isHovered && !isUsingVolume;

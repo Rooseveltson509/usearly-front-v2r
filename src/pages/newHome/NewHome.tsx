@@ -15,9 +15,13 @@ const NewHome: React.FC = () => {
     <div className="new-home-page">
       <HeroSection />
 
+      {/* 🔮 SECTION VIDÉO FULL WIDTH */}
+      <section className="new-home-video-section">
+        <VideoContainerLanding />
+      </section>
+
       {/* --- SECTION NORMALE --- */}
       <div className="new-home-main">
-        <VideoContainerLanding />
         <ExtensionExample />
 
         <div className="scroll-section">
@@ -30,10 +34,10 @@ const NewHome: React.FC = () => {
             ]}
             images={[
               { line: 1, wordIndex: 1, src: "/assets/images/txt1.png" },
-              { line: 2, wordIndex: 3, src: "/assets/images/txt2.png" },
+              { line: 3, wordIndex: 2, src: "/assets/images/txt2.png" },
               {
-                line: 3,
-                wordIndex: 1,
+                line: 2,
+                wordIndex: 2,
                 src: "/assets/images/txt3.png",
                 rotate: true,
               },

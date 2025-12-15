@@ -25,6 +25,27 @@
       }
     }
   }
+
+  .new-home-video-section {
+    position: relative;
+    width: 100%;
+    background: transparent;
+
+    // 🟣 fond violet qui descend derrière la vidéo
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 25%; // ajuste ici (20–35%)
+      background: #989dff;
+      z-index: 0;
+    }
+
+    // espace pour que la vidéo respire
+    padding: 80px 0 40px;
+  }
 }
 
 .scroll-section {

@@ -33,6 +33,9 @@ export default function FavoriteSection() {
   const [ready, setReady] = useState(false);
 
   const imageList = [
+    { src: "/assets/slides/cardSignal1.png", type: "report" as SlideType },
+    { src: "/assets/slides/cardSignal2.png", type: "report" as SlideType },
+
     { src: "/assets/slides/cardCDC1.png", type: "cdc" as SlideType },
     { src: "/assets/slides/cardCDC2.png", type: "cdc" as SlideType },
     {
@@ -43,8 +46,6 @@ export default function FavoriteSection() {
       src: "/assets/slides/cardSuggestion2.png",
       type: "suggestion" as SlideType,
     },
-    { src: "/assets/slides/cardSignal1.png", type: "report" as SlideType },
-    { src: "/assets/slides/cardSignal2.png", type: "report" as SlideType },
   ];
 
   const cardTypes = imageList.map((i) => i.type);
@@ -135,24 +136,26 @@ export default function FavoriteSection() {
   // TITLE ANIMATION
   // --------------------------------
   const animateTitleLines = () => {
-    if (!titleLinesRef.current.length) return;
+    const lines = titleLinesRef.current
+      .map((mask) => mask.querySelector(".title-line") as HTMLElement)
+      .filter(Boolean);
 
-    gsap.killTweensOf(titleLinesRef.current);
+    if (!lines.length) return;
 
-    // Reset initial state
-    titleLinesRef.current.forEach((line, index) => {
-      gsap.set(line, {
-        opacity: 0,
-        y: index % 2 === 0 ? -20 : 20, // ligne pairs → top, impaires → bottom
-      });
+    gsap.killTweensOf(lines);
+
+    // État initial : texte AU-DESSUS
+    gsap.set(lines, {
+      y: -36,
+      opacity: 0,
     });
 
-    // Animate in stagger
-    gsap.to(titleLinesRef.current, {
-      opacity: 1,
+    // Animation : texte DESCEND
+    gsap.to(lines, {
       y: 0,
-      duration: 0.7,
-      ease: "power2.out",
+      opacity: 1,
+      duration: 0.9,
+      ease: "cubic-bezier(0.22, 1, 0.36, 1)", // easing cinéma
       stagger: 0.12,
     });
   };
@@ -173,12 +176,12 @@ export default function FavoriteSection() {
             {TITLE_TEXT[activeType].map((line, index) => (
               <span
                 key={index}
-                className="title-line"
+                className="title-line-mask"
                 ref={(el) => {
                   if (el) titleLinesRef.current[index] = el;
                 }}
               >
-                {line}
+                <span className="title-line">{line}</span>
               </span>
             ))}
           </h2>

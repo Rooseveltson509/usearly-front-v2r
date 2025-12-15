@@ -12,15 +12,22 @@
     font-size: 54px;
 
     .typewriter {
-      display: inline;
       position: relative;
-      min-height: 1em;
+      display: inline-grid; // 👈 TRÈS IMPORTANT
+    }
 
-      .typewriter__text {
-        display: inline;
-      }
+    .typewriter__ghost {
+      visibility: hidden;
+      white-space: normal; // 👈 autorise le wrap
+    }
+
+    .typewriter__text {
+      position: absolute;
+      inset: 0;
+      white-space: normal; // 👈 autorise le wrap
     }
   }
+
   .extension-example-description {
     width: 90%;
     font-size: 24px;
