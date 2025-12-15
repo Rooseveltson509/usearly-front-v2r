@@ -92,10 +92,11 @@ const ExtensionExampleText = ({
       <h2 className="extension-example-title">
         Exprimez-vous au moment même où {valueExprimation != 2 && "vous"}{" "}
         <span className="text-highlight-usearly typewriter">
-          {/* <span className="text-highlight-usearly typewriter" aria-live="polite"> */}
+          <span className="typewriter__ghost">{targetText}</span>
           <span className="typewriter__text">{displayedText}</span>
         </span>
       </h2>
+
       <p className="extension-example-description">
         Exprimez-vous en temps réel :{" "}
         <TextPill

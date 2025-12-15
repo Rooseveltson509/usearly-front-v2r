@@ -78,45 +78,31 @@
 /* ----------------------------- */
 
 .hero-title {
-  position: relative;
+  line-height: 1.05;
 
   .title-top,
   .title-bottom {
     display: inline-block;
-    opacity: 0;
+    overflow: hidden; // 👈 masque visuel
   }
 
-  /* AMÉLIORER → arrive du haut */
   .title-top {
-    transform: translateY(-50px);
-    animation: slideFromTop 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation: titleReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
 
-  /* L’EXPÉRIENCE → arrive du bas */
   .title-bottom {
-    transform: translateY(50px);
-    animation: slideFromBottom 1s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards;
+    animation: titleReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: 0.15s; // 👈 léger stagger
   }
 }
 
-@keyframes slideFromTop {
-  0% {
+@keyframes titleReveal {
+  from {
+    transform: translateY(120%);
     opacity: 0;
-    transform: translateY(-50px);
   }
-  100% {
+  to {
+    transform: translateY(0%);
     opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideFromBottom {
-  0% {
-    opacity: 0;
-    transform: translateY(50px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
   }
 }

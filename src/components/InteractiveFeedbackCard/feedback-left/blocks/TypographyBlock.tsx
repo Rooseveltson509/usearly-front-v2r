@@ -1,3 +1,4 @@
+import { filterValidHighlights, normalizeWord } from "@src/utils/normalizeWord";
 import React from "react";
 
 interface Props {
@@ -7,33 +8,42 @@ interface Props {
   getTextColorForBackground: (hex: string) => string;
 }
 
-const TypographyBlock: React.FC<Props> = ({
+export default function TypographyBlock({
   punchline,
   highlightedWords = [],
   baseColor,
   getTextColorForBackground,
-}) => {
-  const html = (() => {
-    let text = punchline;
-    const highlightTextColor = getTextColorForBackground(baseColor);
+}: Props) {
+  const textColor = getTextColorForBackground(baseColor);
 
-    highlightedWords.forEach((word) => {
-      const regex = new RegExp(`(${word})`, "gi");
-      text = text.replace(
-        regex,
-        `<span class="highlight-bubble" style="background:${baseColor};color:${highlightTextColor};">${word}</span>`,
-      );
-    });
+  // 🔐 Sécurité front
+  const validHighlights = filterValidHighlights(punchline, highlightedWords);
 
-    return text;
-  })();
+  const words = punchline.split(/\s+/);
 
   return (
-    <div
-      className="punchline-typography"
-      dangerouslySetInnerHTML={{ __html: html }}
-    />
-  );
-};
+    <div className="punchline-typography">
+      {words.map((word, index) => {
+        const cleanWord = normalizeWord(word);
+        const isHighlighted = validHighlights.some(
+          (h) => normalizeWord(h) === cleanWord,
+        );
 
-export default TypographyBlock;
+        return isHighlighted ? (
+          <span
+            key={index}
+            className="highlight-bubble"
+            style={{
+              background: baseColor,
+              color: textColor,
+            }}
+          >
+            {word}{" "}
+          </span>
+        ) : (
+          <span key={index}>{word} </span>
+        );
+      })}
+    </div>
+  );
+}

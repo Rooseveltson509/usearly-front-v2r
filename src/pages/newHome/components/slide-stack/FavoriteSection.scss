@@ -16,10 +16,10 @@
 
 /* MAIN BLOCK */
 .favorite-content {
-  padding: 40px 60px; // ← plus proche de la maquette (moins d'espace latéral)
+  //padding: 40px 60px; // ← plus proche de la maquette (moins d'espace latéral)
   width: 92%;
   max-width: 1600px;
-  min-height: 600px;
+  min-height: 520px;
 
   border-radius: 20px;
   display: flex;
@@ -33,7 +33,7 @@
 
 /* LEFT SIDE */
 .fav-left {
-  flex: 0 0 35%; // ← largeur EXACTE de la colonne maquette
+  //flex: 0 0 35%; // ← largeur EXACTE de la colonne maquette
   display: flex;
   flex-direction: column;
 
@@ -81,6 +81,7 @@
   position: relative;
   height: 500px; // tu peux ajuster si besoin
   pointer-events: none;
+  padding-top: 54px;
 
   .fav-card {
     position: absolute;
@@ -88,5 +89,17 @@
     height: auto;
     will-change: transform;
     pointer-events: none;
+  }
+}
+
+.fav-title {
+  .title-line-mask {
+    display: block;
+    overflow: hidden; // cache le texte qui arrive
+  }
+
+  .title-line {
+    display: block;
+    will-change: transform, opacity;
   }
 }

@@ -12,6 +12,7 @@ interface UserProfile {
   id?: string;
   avatar: string;
   type: "user" | "brand";
+  role?: "user" | "admin";
   pseudo?: string;
   email?: string;
   born?: string;
@@ -57,7 +58,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     try {
       const res = await apiService.get("/user/me");
-      const fullProfile = { ...res.data, type: res.data.role || "user" };
+      const fullProfile: UserProfile = {
+        ...res.data,
+        type: "user", // 👈 un user reste un user
+        role: res.data.role, // 👈 admin ou user
+      };
+
       setUserProfile(fullProfile);
       setIsAuthenticated(true);
 
@@ -88,7 +94,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const res = await apiService.get("/user/me");
       setUserProfile({
         ...res.data,
-        type: res.data.role === "brand" ? "brand" : "user",
+        type: "user",
+        role: res.data.role,
       });
     } catch (err) {
       console.error("Erreur profil", err);
@@ -132,10 +139,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       // 👇 Ensuite : profil utilisateur
       try {
         const res = await apiService.get("/user/me");
-        const profile = {
+        const profile: UserProfile = {
           ...res.data,
-          type: res.data.role || "user",
+          type: "user",
+          role: res.data.role,
         };
+
         setUserProfile(profile);
         setIsAuthenticated(true);
       } catch (err) {

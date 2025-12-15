@@ -1,0 +1,168 @@
+.admin-brands-page {
+  padding: 40px;
+  background: #f6f7fb;
+  min-height: 100vh;
+}
+
+.admin-brands-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+}
+
+.brands-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th {
+    text-align: left;
+    font-size: 13px;
+    color: #888;
+    padding-bottom: 12px;
+  }
+
+  td {
+    padding: 14px 0;
+    border-top: 1px solid #eee;
+    font-size: 14px;
+  }
+
+  .brand-name {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+    }
+
+    .brand-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #989dff;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+  }
+
+  .status.active {
+    color: #2ecc71;
+    font-weight: 600;
+  }
+
+  .status.inactive {
+    color: #e74c3c;
+    font-weight: 600;
+  }
+
+  .actions {
+    cursor: pointer;
+    font-size: 20px;
+    text-align: right;
+  }
+}
+
+.actions {
+  position: relative;
+  text-align: right;
+
+  .menu-trigger {
+    cursor: pointer;
+    font-size: 20px;
+  }
+
+  .menu {
+    position: absolute;
+    right: 0;
+    top: 24px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    z-index: 10;
+
+    button {
+      display: block;
+      width: 100%;
+      padding: 10px 14px;
+      border: none;
+      background: none;
+      text-align: left;
+      cursor: pointer;
+
+      &:hover {
+        background: #f5f5f5;
+      }
+    }
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+
+  button {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+
+    &.loading {
+      opacity: 0.6;
+      cursor: wait;
+    }
+  }
+
+  .btn-status.danger {
+    background: #ffecec;
+    color: #d93025;
+  }
+
+  .btn-status.success {
+    background: #e6f4ea;
+    color: #1e8e3e;
+  }
+
+  .btn-reset {
+    background: #f1f3f4;
+  }
+}
+
+.btn-status {
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  border: none;
+  cursor: pointer;
+
+  &.success {
+    background: #eafaf1;
+    color: #2ecc71;
+  }
+
+  &.danger {
+    background: #fdecea;
+    color: #e74c3c;
+  }
+}
+
+.btn-reset {
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: #f5f6fa;
+  border: none;
+  font-size: 13px;
+  cursor: pointer;
+}
+.btn-status.danger {
+  background: rgba(231, 76, 60, 0.08);
+  color: #e74c3c;
+  border: 1px solid rgba(231, 76, 60, 0.25);
+}

@@ -1,0 +1,40 @@
+.admin-brands-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h1 {
+    margin: 0;
+    font-size: 22px;
+  }
+
+  p {
+    margin: 4px 0 0;
+    color: #777;
+    font-size: 14px;
+  }
+
+  .admin-brands-actions {
+    display: flex;
+    gap: 12px;
+
+    input {
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 14px;
+      min-width: 220px;
+    }
+
+    button {
+      padding: 10px 18px;
+      border-radius: 8px;
+      border: none;
+      background: #989dff;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+    }
+  }
+}

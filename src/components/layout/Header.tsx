@@ -87,17 +87,27 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
           <NavLink to="/home" className="link">
             Accueil
           </NavLink>
+
           {isAuthenticated && (
             <NavLink to="/feedback" className="link">
               Feedbacks
             </NavLink>
           )}
+
           <NavLink to="/about" className="link">
             {isAuthenticated ? "Marques" : "A propos"}
           </NavLink>
+
           <NavLink to="/impact" className="link">
             {isAuthenticated ? "Impact" : "Marques à l’écoute"}
           </NavLink>
+
+          {/* 🔐 LIENS ADMIN */}
+          {isAuthenticated && userProfile?.role === "admin" && (
+            <NavLink to="/admin" className="link admin-link">
+              Admin
+            </NavLink>
+          )}
         </nav>
 
         {/* Droite : notifications + profil */}
@@ -156,6 +166,32 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
 
           {userMenuOpen && (
             <div className="user-dropdown-menu">
+              {userProfile?.role === "admin" && (
+                <>
+                  <NavLink
+                    to="/admin/brands"
+                    className="menu-item"
+                    onClick={() => setUserMenuOpen(false)}
+                  >
+                    Administration
+                  </NavLink>
+                  <NavLink
+                    to="/admin"
+                    className="menu-item admin-item"
+                    onClick={() => setUserMenuOpen(false)}
+                  >
+                    Dashboard admin
+                  </NavLink>
+                  <NavLink
+                    to="/admin/brands"
+                    className="menu-item admin-item"
+                    onClick={() => setUserMenuOpen(false)}
+                  >
+                    Gérer les marques
+                  </NavLink>
+                </>
+              )}
+
               {isAuthenticated ? (
                 <>
                   <NavLink
