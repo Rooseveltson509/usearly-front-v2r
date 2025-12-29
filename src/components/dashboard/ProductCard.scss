@@ -1,0 +1,102 @@
+/* Carte (inchangé) */
+.product-card {
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+}
+
+.ticket-range-track {
+  position: relative;
+  width: 100%;
+  height: 8px;
+}
+
+.ticket-range-rail {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background-color: #e5e7eb;
+  overflow: hidden;
+}
+
+.ticket-range-fill {
+  height: 100%;
+  border-radius: inherit;
+  background-color: #22c55e;
+  transition: width 0.2s ease;
+}
+
+.ticket-range {
+  -webkit-appearance: none;
+  appearance: none;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 8px;
+  border-radius: 9999px;
+  outline: none;
+  background-color: transparent;
+}
+
+/* Track transparent pour laisser voir le background de l'input */
+.ticket-range::-webkit-slider-runnable-track {
+  height: 8px;
+  border-radius: 9999px;
+  background: transparent;
+}
+.ticket-range::-moz-range-track {
+  height: 8px;
+  border-radius: 9999px;
+  background: transparent;
+}
+
+/* ----- Thumb caché (ne touche pas au track !) ----- */
+.no-thumb::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+.no-thumb::-moz-range-thumb {
+  width: 0;
+  height: 0;
+  border: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Focus */
+.ticket-range:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.15);
+}
+
+/* Bulle */
+.bubble-label {
+  position: absolute;
+  top: -12px;
+  transform: translateX(-50%);
+  transition: left 0.2s ease;
+  pointer-events: none;
+}
+.bubble {
+  position: relative;
+  background: #0f1013;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.24);
+}
+.bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 10px;
+  height: 10px;
+  background: #0f1013;
+  border-radius: 2px;
+}
