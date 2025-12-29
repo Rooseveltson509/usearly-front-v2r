@@ -4,9 +4,13 @@ import "./MouseTrail.scss";
 
 interface MouseTrailProps {
   images: string[];
+  mode?: "sequential" | "random";
 }
 
-const MouseTrail: React.FC<MouseTrailProps> = ({ images }) => {
+const MouseTrail: React.FC<MouseTrailProps> = ({
+  images,
+  mode = "sequential",
+}) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   const last = useRef({ x: 0, y: 0 });
@@ -67,12 +71,19 @@ const MouseTrail: React.FC<MouseTrailProps> = ({ images }) => {
 
     const container = containerRef.current;
     if (!container) return;
+    if (!images.length) return;
 
     const img = document.createElement("img");
-    img.src = images[imageIndex.current];
+    const nextIndex =
+      mode === "random"
+        ? Math.floor(Math.random() * images.length)
+        : imageIndex.current;
+    img.src = images[nextIndex];
     img.className = "trail-img";
 
-    imageIndex.current = (imageIndex.current + 1) % images.length;
+    if (mode === "sequential") {
+      imageIndex.current = (imageIndex.current + 1) % images.length;
+    }
 
     // ⭐ Position brute (sans translate)
     img.style.left = `${x}px`;

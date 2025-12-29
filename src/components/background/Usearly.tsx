@@ -5,10 +5,14 @@ import "./UsearlyDraw.scss";
 type UsearlyDrawProps = {
   /** Durée de l'anim, accepte "40s", "1500ms" ou un nombre en secondes */
   animationDuration?: string | number;
+  strokeWidth?: number | string;
+  color?: string;
 };
 
 export default function UsearlyDraw({
   animationDuration = "45s",
+  strokeWidth, // optionnel
+  color,
 }: UsearlyDrawProps) {
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -23,10 +27,8 @@ export default function UsearlyDraw({
   useEffect(() => {
     const target = wrapRef.current;
     if (!target) return;
-
     const observer = new IntersectionObserver(
-      (entries) => {
-        const [entry] = entries;
+      ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
           observer.disconnect();
@@ -34,18 +36,26 @@ export default function UsearlyDraw({
       },
       { threshold: 0.2 },
     );
-
     observer.observe(target);
     return () => observer.disconnect();
   }, []);
+
+  const cssVars: CSSProperties & Record<string, string | number> = {
+    ["--usearly-duration"]: resolvedDuration,
+  };
+
+  // si strokeWidth est fourni, on l’injecte, sinon on laisse le défaut CSS
+  if (strokeWidth !== undefined) {
+    cssVars["--usearly-stroke"] =
+      typeof strokeWidth === "number" ? strokeWidth : strokeWidth;
+  }
+
+  if (color !== undefined) {
+    cssVars["--usearly-color"] = typeof color === "number" ? color : color;
+  }
+
   return (
-    <div
-      ref={wrapRef}
-      className="usearly-wrap"
-      style={
-        { ["--usearly-duration" as any]: resolvedDuration } as CSSProperties
-      }
-    >
+    <div ref={wrapRef} className="usearly-wrap" style={cssVars}>
       <svg
         className="usearly-svg"
         viewBox="0 0 1385 407"

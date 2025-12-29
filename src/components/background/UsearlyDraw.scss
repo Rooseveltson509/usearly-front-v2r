@@ -19,16 +19,16 @@
 }
 
 .usearly-path {
-  fill: transparent; /* contour uniquement */
+  fill: transparent;
   stroke: currentColor;
-  stroke-width: 1;
-  vector-effect: non-scaling-stroke; /* épaisseur stable au scaling */
+  stroke-width: var(--usearly-stroke, 1);
+  color: var(--usearly-color, $dark);
+  vector-effect: non-scaling-stroke;
   stroke-linecap: round;
   stroke-linejoin: round;
 
-  /* Animation “dessin” */
-  stroke-dasharray: 1; /* 100% de la longueur (grâce à pathLength="1") */
-  stroke-dashoffset: 1; /* caché au départ */
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
   will-change: stroke-dashoffset;
 }
 

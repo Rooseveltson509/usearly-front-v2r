@@ -1,0 +1,111 @@
+import { useEffect, useState } from "react";
+
+const HERO_VIDEO_SRC =
+  "https://lbcefcnvssyhlpsr.public.blob.vercel-storage.com/Usearly-Video.mp4";
+const SCROLL_HINT_TEXT = "Faites défiler pour découvrir la suite";
+
+const Hero = () => {
+  const [showScrollHint, setShowScrollHint] = useState(true);
+  const [typedText, setTypedText] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [allowTyping, setAllowTyping] = useState(true);
+
+  useEffect(() => {
+    const updateScrollHint = () => {
+      const shouldShow = window.scrollY <= 8;
+      setShowScrollHint((current) =>
+        current === shouldShow ? current : shouldShow,
+      );
+    };
+
+    updateScrollHint();
+    window.addEventListener("scroll", updateScrollHint, { passive: true });
+
+    return () => window.removeEventListener("scroll", updateScrollHint);
+  }, []);
+
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updatePreference = () => setAllowTyping(!media.matches);
+
+    updatePreference();
+
+    if (typeof media.addEventListener === "function") {
+      media.addEventListener("change", updatePreference);
+      return () => media.removeEventListener("change", updatePreference);
+    }
+
+    media.addListener(updatePreference);
+    return () => media.removeListener(updatePreference);
+  }, []);
+
+  useEffect(() => {
+    if (!allowTyping) {
+      setTypedText(SCROLL_HINT_TEXT);
+      setIsDeleting(false);
+      return;
+    }
+
+    const fullText = SCROLL_HINT_TEXT;
+    let timeoutId = 0;
+
+    if (!isDeleting) {
+      if (typedText.length < fullText.length) {
+        timeoutId = window.setTimeout(() => {
+          setTypedText(fullText.slice(0, typedText.length + 1));
+        }, 70);
+      } else {
+        timeoutId = window.setTimeout(() => setIsDeleting(true), 1200);
+      }
+    } else if (typedText.length > 0) {
+      timeoutId = window.setTimeout(() => {
+        setTypedText(fullText.slice(0, typedText.length - 1));
+      }, 45);
+    } else {
+      timeoutId = window.setTimeout(() => setIsDeleting(false), 550);
+    }
+
+    return () => window.clearTimeout(timeoutId);
+  }, [allowTyping, isDeleting, typedText]);
+
+  return (
+    <div className="about-classic__hero">
+      <video
+        className="about-classic__hero-video"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        aria-hidden="true"
+      >
+        <source src={HERO_VIDEO_SRC} type="video/mp4" />
+      </video>
+      <div className="about-classic__hero-content">
+        <h1 className="about-classic__hero-title Raleway reveal-wall">
+          Révolutionner
+          <br />
+          l'expérience client
+        </h1>
+        <p className="about-classic__hero-subtitle Raleway">
+          En donnant la voix aux utilisateurs
+        </p>
+      </div>
+      <div
+        className={`about-classic__scroll-indicator${
+          showScrollHint ? "" : " is-hidden"
+        }`}
+        aria-hidden={!showScrollHint}
+      >
+        <span className="about-classic__scroll-text Raleway">
+          <span className="about-classic__scroll-text-inner">{typedText}</span>
+        </span>
+        <span className="about-classic__scroll-icon" aria-hidden="true">
+          <span className="about-classic__scroll-wheel" />
+        </span>
+      </div>
+    </div>
+  );
+};
+
+export default Hero;

@@ -446,6 +446,8 @@ const FilterBar: React.FC<Props> = ({
             activeOnValue="hot"
             activeClassName="hot-active"
             align="left"
+            minWidthPart="2"
+            minWidth={275}
           />
         </div>
         <div className="secondary-filters-container">
