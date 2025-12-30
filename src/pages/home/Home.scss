@@ -120,6 +120,7 @@
     position: relative;
     z-index: 2;
     margin-top: -85px; // ✅ cartes par-dessus
+    min-width: 655px;
   }
 
   .right-panel {
@@ -224,6 +225,7 @@
     z-index: 2;
     margin-top: -90px;
     gap: 0px;
+    min-width: 655px;
 
     .selected-brand-heading {
       position: relative;
@@ -334,6 +336,7 @@
     z-index: 2;
     margin-top: -90px; // ✅ cartes par-dessus
     gap: 0px;
+    min-width: 655px;
 
     .selected-brand-heading {
       position: relative;

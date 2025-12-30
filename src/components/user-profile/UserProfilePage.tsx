@@ -25,6 +25,7 @@ const UserProfilePage: React.FC = () => {
         pastille={true}
         activeTab={activeTab}
         onTabChange={setActiveTab}
+        userProfile={true}
       />
 
       {/* Contenu principal */}

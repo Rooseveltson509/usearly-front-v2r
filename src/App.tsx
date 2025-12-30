@@ -21,6 +21,7 @@ import ReportDetail from "./pages/home/report-detail/ReportDetail";
 import NotificationsPage from "./components/notification/NotificationsPage";
 import UsearlyDraw from "./components/background/Usearly";
 import AboutPage from "./pages/about/AboutPage";
+import AboutClassicPage from "./pages/aboutClassic/AboutClassicPage";
 import NotFoundPage from "./pages/not-found/NotFoundPage";
 import AdminBrandsPage from "./pages/admin/brands/AdminBrandsPage";
 
@@ -89,14 +90,8 @@ function App() {
               }
             />
             {/* about */}
-            <Route
-              path="/about"
-              element={
-                <GuestRoute>
-                  <AboutPage />
-                </GuestRoute>
-              }
-            />
+            <Route path="/about" element={<AboutClassicPage />} />
+            <Route path="/about-legacy" element={<AboutPage />} />
             <Route
               path="/confirm"
               element={

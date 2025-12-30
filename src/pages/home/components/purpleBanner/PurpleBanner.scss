@@ -24,6 +24,9 @@
   }
 
   .text {
+    display: flex;
+    align-items: center;
+    gap: 16px;
     position: absolute;
     top: 40%;
     left: 50%;
@@ -37,6 +40,35 @@
     white-space: nowrap;
     @media screen and (max-width: 750px) {
       transform: translate(-85%, -50%);
+    }
+
+    .text-chat-icon {
+      position: relative;
+      .text-chat-icon-number {
+        position: absolute;
+        top: 0;
+        display: flex;
+        font-size: 46px;
+        font-weight: 600;
+        height: 90%;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    .text-information {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .text-information-time {
+      font-size: 13px;
+      line-height: normal;
+    }
+
+    .text-information-signalement {
+      font-size: 46px;
     }
   }
 
