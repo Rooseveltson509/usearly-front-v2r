@@ -15,7 +15,10 @@ const ExtensionExample = () => {
         selected={selectedScenario}
         setSelected={setSelectedScenario}
       />
-      <ExtensionExampleImage selected={selectedScenario} />
+      <ExtensionExampleImage
+        selected={selectedScenario}
+        onSelect={setSelectedScenario}
+      />
       <img className="img2" src={bigUofUsearly} alt="U of Usearly" />
     </div>
   );
