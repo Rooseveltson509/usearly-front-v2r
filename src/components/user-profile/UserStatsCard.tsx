@@ -7,7 +7,11 @@ import "./UserStatsCard.scss";
 import Avatar from "../shared/Avatar";
 import { useAuth } from "@src/services/AuthContext";
 
-const UserStatsCard = () => {
+type UserStatsCardProps = {
+  dashboard?: boolean;
+};
+
+const UserStatsCard = ({ dashboard = false }: UserStatsCardProps) => {
   const { userProfile } = useAuth();
   const { stats, loading } = useUserStatsSummary();
   const [showBadge, setShowBadge] = useState(false);
@@ -27,41 +31,47 @@ const UserStatsCard = () => {
       <h2 className="username">{userProfile.pseudo}</h2>
       <div className="user-level">Usear Niveau 1</div>
 
-      <div className="feedback-stats">
-        <div className="stat-item">
-          <span className="value">
-            {loading ? "..." : (stats?.totalReports ?? 0)}
-          </span>
-          <span className="label">
-            {(stats?.totalReports ?? 0) > 1 ? "Signalements" : "Signalement"}
-          </span>
+      {!dashboard && (
+        <div className="feedback-stats">
+          <div className="stat-item">
+            <span className="value">
+              {loading ? "..." : (stats?.totalReports ?? 0)}
+            </span>
+            <span className="label">
+              {(stats?.totalReports ?? 0) > 1 ? "Signalements" : "Signalement"}
+            </span>
+          </div>
+          <div className="stat-item large-item">
+            <span className="value">
+              {loading ? "..." : (stats?.totalCoupsDeCoeur ?? 0)}
+            </span>
+            <span className="label">
+              {(stats?.totalCoupsDeCoeur ?? 0) > 1
+                ? "Coups de cœur"
+                : "Coup de cœur"}
+            </span>
+          </div>
+          <div className="stat-item">
+            <span className="value">
+              {loading ? "..." : (stats?.totalSuggestions ?? 0)}
+            </span>
+            <span className="label">
+              {(stats?.totalSuggestions ?? 0) > 1
+                ? "Suggestions"
+                : "Suggestion"}
+            </span>
+          </div>
         </div>
-        <div className="stat-item large-item">
-          <span className="value">
-            {loading ? "..." : (stats?.totalCoupsDeCoeur ?? 0)}
-          </span>
-          <span className="label">
-            {(stats?.totalCoupsDeCoeur ?? 0) > 1
-              ? "Coups de cœur"
-              : "Coup de cœur"}
-          </span>
-        </div>
-        <div className="stat-item">
-          <span className="value">
-            {loading ? "..." : (stats?.totalSuggestions ?? 0)}
-          </span>
-          <span className="label">
-            {(stats?.totalSuggestions ?? 0) > 1 ? "Suggestions" : "Suggestion"}
-          </span>
-        </div>
-      </div>
+      )}
 
       <div className="power-section">
         <div>
           <span className="label">Usear Power</span>
-          <span className="value">
-            {loading ? "..." : stats?.usearPower}{" "}
-            <img className="score-icon" src={Uicon} alt="scoreIcon" />
+          <span className="value gap-4">
+            <div className="flex items-center gap-1">
+              {loading ? "..." : stats?.usearPower}{" "}
+              <img className="score-icon" src={Uicon} alt="scoreIcon" />
+            </div>
           </span>
         </div>
         <div className="badge">
