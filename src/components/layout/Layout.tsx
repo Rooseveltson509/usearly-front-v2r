@@ -66,7 +66,6 @@ const Layout = ({ children }: LayoutProps) => {
   }, []);
 
   useEffect(() => {
-    const headingSelector = "h1, h2, h3, h4, h5, h6";
     const wallSelector = ".reveal-wall";
     const observer = new IntersectionObserver(
       (entries) => {
@@ -95,26 +94,6 @@ const Layout = ({ children }: LayoutProps) => {
       );
     };
 
-    const markHeading = (element: HTMLElement) => {
-      if (element.dataset.titleReveal === "true") {
-        return;
-      }
-
-      if (element.classList.contains("reveal-wall")) {
-        return;
-      }
-
-      element.dataset.titleReveal = "true";
-      element.classList.add("title-slide-up");
-
-      if (isElementVisible(element)) {
-        markVisible(element);
-        return;
-      }
-
-      observer.observe(element);
-    };
-
     const markWall = (element: HTMLElement) => {
       if (element.dataset.revealWall === "true") {
         if (
@@ -136,14 +115,6 @@ const Layout = ({ children }: LayoutProps) => {
       observer.observe(element);
     };
 
-    const scanHeadings = (root: ParentNode) => {
-      root.querySelectorAll(headingSelector).forEach((node) => {
-        if (node instanceof HTMLElement) {
-          markHeading(node);
-        }
-      });
-    };
-
     const scanWalls = (root: ParentNode) => {
       root.querySelectorAll(wallSelector).forEach((node) => {
         if (node instanceof HTMLElement) {
@@ -152,7 +123,6 @@ const Layout = ({ children }: LayoutProps) => {
       });
     };
 
-    scanHeadings(document);
     scanWalls(document);
 
     let rafId = 0;
@@ -191,10 +161,6 @@ const Layout = ({ children }: LayoutProps) => {
             return;
           }
 
-          if (target.matches(headingSelector)) {
-            markHeading(target);
-          }
-
           if (target.matches(wallSelector)) {
             markWall(target);
           }
@@ -207,15 +173,10 @@ const Layout = ({ children }: LayoutProps) => {
             return;
           }
 
-          if (node.matches(headingSelector)) {
-            markHeading(node);
-          }
-
           if (node.matches(wallSelector)) {
             markWall(node);
           }
 
-          scanHeadings(node);
           scanWalls(node);
         });
       });

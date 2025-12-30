@@ -1,8 +1,10 @@
 import "./AboutPage.scss";
 import useRevealOnScroll from "./hooks/useRevealOnScroll";
+import useTitleRevealOnScroll from "./hooks/useTitleRevealOnScroll";
 
 const AboutPage = () => {
   useRevealOnScroll(".reveal");
+  useTitleRevealOnScroll(".about-page");
 
   return (
     <section className="about-page">
