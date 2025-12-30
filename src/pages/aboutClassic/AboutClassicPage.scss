@@ -60,11 +60,6 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-    circle at 70% 20%,
-    rgba(122, 92, 255, 0.35),
-    transparent 50%
-  );
   mix-blend-mode: screen;
   z-index: 2;
 }
