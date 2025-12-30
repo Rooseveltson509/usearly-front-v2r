@@ -1,3 +1,5 @@
+import emojiTransparentTeteCoeur from "/assets/icons/emojiTransparentTeteCoeur.svg";
+
 const MARQUEE_ITEMS = Array.from({ length: 4 });
 
 const MarqueeBanner = () => (
@@ -11,6 +13,7 @@ const MarqueeBanner = () => (
           {MARQUEE_ITEMS.map((_, index) => (
             <span className="about-classic__marquee-item Raleway" key={index}>
               Usearly porte-parole des utilisateurs
+              <img src={emojiTransparentTeteCoeur} alt="" />
             </span>
           ))}
         </div>

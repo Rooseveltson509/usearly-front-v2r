@@ -18,11 +18,14 @@ const CARDS: CardContent[] = [
     content: (
       <>
         <span className="about-classic__card-description">
-          Usearly est né d’une frustration largement partagée :{" "}
+          Usearly est né d’une frustration largement partagée{" "}
         </span>
-        signaler un problème ou un dysfonctionnement reste souvent un parcours
-        du combattant. Entre les formulaires interminables et l’incertitude
-        d’être entendu, l’utilisateur se retrouve seul, sans réel impact.
+        <span className="about-classic__card-description--highlight">
+          Signaler un problème ou un irritant reste souvent un parcours du
+          combattant. Entre les formulaires interminables et l’incertitude
+          d’être entendu, l’utilisateur se retrouve seul, sans comprendre ce qui
+          se passe et sans solution.
+        </span>
       </>
     ),
   },
@@ -32,14 +35,14 @@ const CARDS: CardContent[] = [
     content: (
       <>
         <span className="about-classic__card-description">
-          Avec Usearly, nous voulons renverser cette tendance. Notre mission est
-          simple :{" "}
+          Notre mission est simple : permettre à chaque utilisateur d’être
+          véritablement entendu{" "}
         </span>{" "}
-        permettre à chaque utilisateur d’être véritablement entendu. Nous avons
-        conçu Usearly pour que vous puissiez signaler un problème ou proposer un
-        idée en toute simplicité, et voir vos contributions influencer
-        directement l’évolution des produits et services que vous utilisez au
-        quotidien.
+        Avec Usearly, nous voulons renverser cette tendance pour que vous
+        puissiez signaler un problème ou proposer une idée en toute simplicité.
+        Grâce à la communauté vous obtenez des réponses et des solutions en
+        temps réel et influencez directement l’évolution des sites et
+        applications que vous utilisez au quotidien.
       </>
     ),
   },

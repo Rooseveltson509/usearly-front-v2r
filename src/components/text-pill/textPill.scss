@@ -11,16 +11,9 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  background-color: var(--pill-bg);
   color: var(--pill-fg);
-  background-image: radial-gradient(
-    circle,
-    var(--pill-fg) 100%,
-    var(--pill-fg) 100%
-  );
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 0% 0%;
+  border: 1px solid var(--pill-bg);
+  font-weight: 600;
   transition:
     color 0.3s ease,
     background-color 0.3s ease;
@@ -37,4 +30,8 @@
 .text-pill.is-active:focus-visible {
   color: var(--pill-fg);
   background-size: 0% 0%;
+}
+
+.text-pill.is-active {
+  background-color: var(--pill-bg);
 }

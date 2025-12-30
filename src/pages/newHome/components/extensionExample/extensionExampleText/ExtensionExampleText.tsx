@@ -25,7 +25,7 @@ const ExtensionExampleText = ({
   const exprimationOptions = [
     "rencontrez un bug !",
     "avez une suggestion d’idée !",
-    "une fonctionnalité vous fait vibrer !",
+    "vibrer pour une fonctionnalité !",
   ];
 
   const targetText = exprimationOptions[valueExprimation];
@@ -85,16 +85,13 @@ const ExtensionExampleText = ({
 
   // 🎨 Couleurs actives / inactives
   const ACTIVE = { color: "#ffffff", bg: "#4549EF" };
-  const INACTIVE = { color: "#4549EF", bg: "#4549EF29" }; // même teinte mais fond léger
+  const INACTIVE = { color: "#4549EF", bg: "#4549EF" }; // même teinte mais fond léger
 
   return (
     <div className="extension-example-text-container">
       <h2 className="extension-example-title">
-        Exprimez-vous au moment même où {valueExprimation != 2 && "vous"}{" "}
-        <span className="text-highlight-usearly typewriter">
-          <span className="typewriter__ghost">{targetText}</span>
-          <span className="typewriter__text">{displayedText}</span>
-        </span>
+        Exprimez-vous au <br /> moment même où <br />
+        vous <span className="text-highlight-usearly">{displayedText}</span>
       </h2>
 
       <p className="extension-example-description">
