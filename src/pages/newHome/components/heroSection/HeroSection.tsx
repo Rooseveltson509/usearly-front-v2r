@@ -7,17 +7,23 @@ const HeroSection = () => {
   return (
     <section className="hero-section">
       <h1 className="hero-title">
-        <span className="title-top">AMÉLIORER</span> <br />
-        <span className="title-bottom">L’EXPÉRIENCE</span> <br />
-        <TypingFullWord
-          words={[
-            "ENSEMBLE",
-            "DIGITALE",
-            "UTILISATEUR",
-            "CLIENT",
-            "ÉMOTIONNELLE",
-          ]}
-        />
+        <span className="title-line title-top reveal-wall">AMÉLIORER</span>{" "}
+        <br />
+        <span className="title-line title-bottom reveal-wall">
+          L’EXPÉRIENCE
+        </span>{" "}
+        <br />
+        <span className="title-line title-typing reveal-wall">
+          <TypingFullWord
+            words={[
+              "ENSEMBLE",
+              "DIGITALE",
+              "UTILISATEUR",
+              "CLIENT",
+              "ÉMOTIONNELLE",
+            ]}
+          />
+        </span>
       </h1>
 
       <MouseTrail

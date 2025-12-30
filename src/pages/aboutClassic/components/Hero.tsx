@@ -83,13 +83,13 @@ const Hero = () => {
       </video>
       <div className="about-classic__hero-content">
         <h1 className="about-classic__hero-title Raleway reveal-wall">
-          Révolutionner
+          Notre super-pouvoir :
           <br />
-          l'expérience client
+          les utilisateurs
         </h1>
-        <p className="about-classic__hero-subtitle Raleway">
+        {/* <p className="about-classic__hero-subtitle Raleway">
           En donnant la voix aux utilisateurs
-        </p>
+        </p> */}
       </div>
       <div
         className={`about-classic__scroll-indicator${

@@ -1,6 +1,9 @@
 .hero-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
-  padding: 160px 0 240px;
+  // padding: 160px 0 240px;
   background: #989dff;
   height: 100vh;
   overflow: hidden;
@@ -12,6 +15,24 @@
   font-weight: 900;
   line-height: 1.05;
   color: #000;
+}
+
+.hero-title .title-line {
+  display: inline-block;
+}
+
+.hero-title .title-top {
+  animation-delay: 0s;
+}
+
+.hero-title .title-bottom {
+  animation-delay: 0.12s;
+}
+
+.hero-title .title-typing {
+  animation-delay: 0.24s;
+  min-width: 1ch;
+  min-height: 1em;
 }
 
 .mouse-images-zone {
@@ -70,39 +91,5 @@
   }
   50% {
     opacity: 0;
-  }
-}
-
-/* ----------------------------- */
-/*   ANIMATION TITRES HERO       */
-/* ----------------------------- */
-
-.hero-title {
-  line-height: 1.05;
-
-  .title-top,
-  .title-bottom {
-    display: inline-block;
-    overflow: hidden; // 👈 masque visuel
-  }
-
-  .title-top {
-    animation: titleReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  }
-
-  .title-bottom {
-    animation: titleReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    animation-delay: 0.15s; // 👈 léger stagger
-  }
-}
-
-@keyframes titleReveal {
-  from {
-    transform: translateY(120%);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0%);
-    opacity: 1;
   }
 }
