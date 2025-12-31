@@ -107,7 +107,8 @@ const AdminBrandsPage = () => {
           <table className="brands-table">
             <thead>
               <tr>
-                <th>Marque</th>
+                <th>Nom Marque </th>
+                <th>Domaine</th>
                 <th>Email</th>
                 <th>Offre</th>
                 <th>Statut</th>
@@ -125,6 +126,7 @@ const AdminBrandsPage = () => {
                     )}
                     {brand.name}
                   </td>
+                  <td>{brand.domain}</td>
                   <td>{brand.email}</td>
                   <td>{brand.offres}</td>
                   <td>

@@ -7,6 +7,7 @@ import { apiService } from "./apiService";
 export interface CreateBrandPayload {
   name: string;
   email: string;
+  domain: string;
   offres?: "freemium" | "start" | "start pro" | "premium";
 }
 
@@ -28,6 +29,7 @@ export interface CreateBrandResponse {
 export interface AdminBrand {
   id: string;
   name: string;
+  domain: string;
   email: string;
   offres: "freemium" | "start" | "start pro" | "premium";
   logo?: string | null;

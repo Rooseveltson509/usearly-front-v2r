@@ -11,6 +11,7 @@ interface Props {
 const CreateBrandModal = ({ open, onClose, onSuccess }: Props) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [domain, setDomain] = useState("");
   const [offres, setOffres] = useState<
     "freemium" | "start" | "start pro" | "premium"
   >("freemium");
@@ -26,10 +27,11 @@ const CreateBrandModal = ({ open, onClose, onSuccess }: Props) => {
     setError(null);
 
     try {
-      await createBrand({ name, email, offres });
+      await createBrand({ name, email, domain, offres });
       onSuccess();
       onClose();
       setName("");
+      setDomain("");
       setEmail("");
       setOffres("freemium");
     } catch (err: any) {
@@ -60,6 +62,13 @@ const CreateBrandModal = ({ open, onClose, onSuccess }: Props) => {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+
+          <label>Domaine</label>
+          <input
+            value={domain}
+            onChange={(e) => setDomain(e.target.value)}
             required
           />
 
