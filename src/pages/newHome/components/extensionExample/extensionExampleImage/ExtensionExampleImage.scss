@@ -50,6 +50,84 @@
     max-width: 420px;
     z-index: 2;
 
+    .extension-icons {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      z-index: 3;
+      height: 236px;
+      height: max-content;
+      padding: 8px 1px;
+      background-color: white;
+      border-radius: 16px 16px 28px 28px;
+      transform: scale(1.4);
+      div {
+        width: 46px;
+        text-align: center;
+        &.extension-logo-icon {
+          justify-items: center;
+          img {
+            width: 42px;
+            height: 42px;
+          }
+        }
+        &.drag-area {
+          justify-items: center;
+          margin: 10px 0;
+        }
+        &.extension-report-icon {
+          justify-items: center;
+          margin: 4px 0 8px 0;
+          img {
+            width: 24px;
+            height: 24px;
+          }
+        }
+        &.extension-cdc-icon {
+          justify-items: center;
+          margin: 8px 0;
+          img {
+            width: 24px;
+            height: 24px;
+          }
+        }
+        &.extension-suggest-icon {
+          justify-items: center;
+          margin: 8px 0;
+          img {
+            width: 24px;
+            height: 24px;
+          }
+        }
+        &.extension-options-icon {
+          justify-items: center;
+          place-content: center;
+          align-self: center;
+          height: 32px;
+          width: 32px;
+          border-radius: 999px;
+          background-color: #f4f4f4;
+          img {
+            width: 18px;
+            height: 18px;
+          }
+        }
+      }
+    }
+
+    .suggestion-mode {
+      margin-left: -10%;
+    }
+
+    .report-mode {
+      margin-left: -3%;
+    }
+
+    .like-mode {
+      margin-left: -10%;
+    }
+
     .extension-image {
       display: block;
       width: 100%;
@@ -57,6 +135,7 @@
       --popup-scale: 1.25;
       --popup-anim-scale: 1.22;
       transform: scale(var(--popup-scale, 1.25));
+      pointer-events: none;
     }
 
     .step-animation {
@@ -230,3 +309,18 @@
 //   @media (prefers-reduced-motion: reduce) {
 //     .logo-big-landing-page { animation: none; }
 //   }
+
+.extension-icons .is-active img {
+  transform: scale(1.08);
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.25));
+}
+
+.extension-icons [role="button"] {
+  cursor: pointer;
+  outline: none;
+}
+.extension-icons [role="button"]:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.6);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
