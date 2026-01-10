@@ -127,6 +127,7 @@ type CursorTrailProps = {
   stepClass: string;
   stepDurationMs: number;
   imageRef: RefObject<HTMLImageElement | null>;
+  slowCursor?: boolean;
 };
 
 const CursorTrail = ({
