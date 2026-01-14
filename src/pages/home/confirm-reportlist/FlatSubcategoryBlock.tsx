@@ -283,47 +283,56 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
             <div className="other-descriptions">
               {descriptions
                 .slice(1, 1 + visibleDescriptionsCount)
-                .map((desc) => (
-                  <div key={desc.id} className="feedback-card">
-                    <div className="feedback-avatar">
-                      <div className="feedback-avatar-wrapper">
-                        <Avatar
-                          avatar={desc.user?.avatar || null}
-                          pseudo={desc.user?.pseudo || "?"}
-                          type="user"
-                          className="avatar"
-                          wrapperClassName="avatar-wrapper-override"
+                .map((desc) => {
+                  const safeAuthor = {
+                    id: desc.author?.id ?? null,
+                    pseudo: desc.author?.pseudo ?? "Utilisateur",
+                    avatar: desc.author?.avatar ?? null,
+                  };
+
+                  return (
+                    <div key={desc.id} className="feedback-card">
+                      <div className="feedback-avatar">
+                        <div className="feedback-avatar-wrapper">
+                          <Avatar
+                            avatar={safeAuthor.avatar}
+                            pseudo={safeAuthor.pseudo}
+                            type="user"
+                            className="avatar"
+                            wrapperClassName="avatar-wrapper-override"
+                          />
+
+                          {desc.emoji && (
+                            <div className="emoji-overlay">{desc.emoji}</div>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="feedback-content">
+                        <div className="feedback-meta">
+                          <span className="pseudo">{safeAuthor.pseudo}</span>
+                          <span className="time">
+                            ·{" "}
+                            {formatDistanceToNow(new Date(desc.createdAt), {
+                              locale: fr,
+                              addSuffix: true,
+                            })}
+                          </span>
+                        </div>
+
+                        <p className="feedback-text">{desc.description}</p>
+
+                        <DescriptionCommentSection
+                          userId={safeAuthor.id}
+                          descriptionId={desc.id}
+                          type="report"
+                          modeCompact
+                          triggerType="text"
                         />
-                        {desc.emoji && (
-                          <div className="emoji-overlay">{desc.emoji}</div>
-                        )}
                       </div>
                     </div>
-
-                    <div className="feedback-content">
-                      <div className="feedback-meta">
-                        <span className="pseudo">{desc.user.pseudo}</span>
-                        {/* <span className="brand"> · {brand}</span> */}
-                        <span className="time">
-                          ·{" "}
-                          {formatDistanceToNow(new Date(desc.createdAt), {
-                            locale: fr,
-                            addSuffix: true,
-                          })}
-                        </span>
-                      </div>
-                      <p className="feedback-text">{desc.description}</p>
-
-                      <DescriptionCommentSection
-                        userId={desc.user.id}
-                        descriptionId={desc.id}
-                        type="report"
-                        modeCompact
-                        triggerType="text"
-                      />
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
 
               {descriptions.length - 1 > 2 && (
                 <div className="see-more-toggle">

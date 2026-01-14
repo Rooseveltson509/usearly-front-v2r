@@ -48,7 +48,17 @@ const CommentSection: React.FC<Props> = ({
   const fetchComments = useCallback(async () => {
     try {
       const res = await apiService.get(buildCommentEndpoint());
-      setComments(res.data.comments || []);
+      const normalized = (res.data.comments || []).map((c: any) => ({
+        ...c,
+        user: c.user ??
+          c.author ?? {
+            id: c.userId,
+            pseudo: "Utilisateur",
+            avatar: null,
+          },
+      }));
+
+      setComments(normalized);
     } catch (err) {
       console.error("Erreur de chargement des commentaires :", err);
     }

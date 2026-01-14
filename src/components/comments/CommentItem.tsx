@@ -11,9 +11,11 @@ interface CommentItemProps {
     content: string;
     likesCount?: number;
     userHasLiked?: boolean;
-    user: {
-      pseudo: string;
-    };
+    author?: {
+      id?: string;
+      pseudo?: string;
+      avatar?: string;
+    } | null;
   };
   avatarUrl: string;
   dateLabel: string;
@@ -42,18 +44,22 @@ const CommentItem: React.FC<CommentItemProps> = ({
   const [liked, setLiked] = useState(comment.userHasLiked ?? false);
   const [isLoading, setIsLoading] = useState(false);
 
+  // ✅ AUTHOR SAFE (aligné avec l’API)
+  const safeUser = {
+    pseudo: comment.author?.pseudo ?? "Utilisateur",
+    avatar: comment.author?.avatar ?? avatarUrl ?? null,
+  };
+
   const handleToggleLike = async () => {
     if (isLoading) return;
     setIsLoading(true);
 
-    // 🟢 Optimistic UI
     setLiked((prev) => !prev);
     setLikesCount((prev) => prev + (liked ? -1 : 1));
 
     try {
       const res = await toggleCommentLike(comment.id);
       if (!res.data?.success) {
-        // rollback si échec
         setLiked((prev) => !prev);
         setLikesCount((prev) => prev + (liked ? 1 : -1));
       } else {
@@ -61,7 +67,6 @@ const CommentItem: React.FC<CommentItemProps> = ({
       }
     } catch (error) {
       console.error("Erreur lors du toggle like :", error);
-      // rollback si erreur
       setLiked((prev) => !prev);
       setLikesCount((prev) => prev + (liked ? 1 : -1));
     } finally {
@@ -72,20 +77,20 @@ const CommentItem: React.FC<CommentItemProps> = ({
   return (
     <li className="comment-item" data-comment-id={comment.id}>
       <Avatar
-        avatar={avatarUrl}
-        pseudo={comment.user.pseudo}
+        avatar={safeUser.avatar}
+        pseudo={safeUser.pseudo}
         type="user"
         className="comment-avatar"
         wrapperClassName="comment-avatar-wrapper"
       />
+
       <div className="comment-content">
         <div className="comment-header">
-          <span className="comment-author">{comment.user.pseudo}</span>
+          <span className="comment-author">{safeUser.pseudo}</span>
           <span className="comment-time">⸱ {dateLabel}</span>
           {isAuthor && <CommentActionsMenu onDelete={onDelete} />}
         </div>
 
-        {/* 🟦 Texte du commentaire */}
         <p
           className="comment-text"
           dangerouslySetInnerHTML={{
@@ -93,7 +98,6 @@ const CommentItem: React.FC<CommentItemProps> = ({
           }}
         />
 
-        {/* 🟢 Actions : like + répondre */}
         <div className="comment-actions">
           <button
             className={`like-button ${liked ? "active" : ""}`}
@@ -111,14 +115,3 @@ const CommentItem: React.FC<CommentItemProps> = ({
 };
 
 export default CommentItem;
-
-{
-  /* (optionnel) future zone pour like/répondre */
-}
-{
-  /* <div className="comment-actions">
-          <button type="button">J’aime</button>
-          <span> | </span>
-          <button type="button">Répondre</button>
-        </div> */
-}
