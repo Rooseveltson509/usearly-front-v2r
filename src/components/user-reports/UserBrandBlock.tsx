@@ -213,9 +213,9 @@ const UserBrandBlock: React.FC<Props> = ({
                       <div className="subcategory-user-brand-info">
                         <div className="avatars-row">
                           <Avatar
-                            avatar={initialDescription.user.avatar}
+                            avatar={initialDescription.author.avatar}
                             pseudo={
-                              initialDescription.user.pseudo || "Utilisateur"
+                              initialDescription.author.pseudo || "Utilisateur"
                             }
                             type="user"
                             wrapperClassName="avatar user-avatar"
@@ -229,9 +229,11 @@ const UserBrandBlock: React.FC<Props> = ({
                         </div>
                         <div className="user-brand-names">
                           <UserBrandLine
-                            userId={initialDescription.user?.id}
-                            email={initialDescription.user?.email ?? undefined}
-                            pseudo={initialDescription.user?.pseudo}
+                            userId={initialDescription.author?.id}
+                            email={
+                              initialDescription.author?.email ?? undefined
+                            }
+                            pseudo={initialDescription.author?.pseudo}
                             brand={brand}
                             type="report"
                           />
@@ -422,8 +424,8 @@ const UserBrandBlock: React.FC<Props> = ({
                               <div className="feedback-avatar">
                                 <div className="feedback-avatar-wrapper">
                                   <Avatar
-                                    avatar={desc.user?.avatar || null}
-                                    pseudo={desc.user?.pseudo || "?"}
+                                    avatar={desc.author?.avatar || null}
+                                    pseudo={desc.author?.pseudo || "?"}
                                     type="user"
                                     className="avatar"
                                     wrapperClassName="avatar-wrapper-override"
@@ -438,9 +440,9 @@ const UserBrandBlock: React.FC<Props> = ({
                               <div className="feedback-content">
                                 <div className="feedback-meta">
                                   <span className="pseudo">
-                                    {desc.user.pseudo}
+                                    {desc.author.pseudo}
                                   </span>
-                                  {userProfile?.id === desc.user.id && (
+                                  {userProfile?.id === desc.author.id && (
                                     <span className="badge-me">Moi</span>
                                   )}
                                   <span className="brand"> · {brand}</span>

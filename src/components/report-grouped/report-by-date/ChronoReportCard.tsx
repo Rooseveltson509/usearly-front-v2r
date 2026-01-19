@@ -108,8 +108,8 @@ const ChronoReportCard: React.FC<Props> = ({ item, isOpen, onToggle }) => {
             <div className="expanded-header">
               <div className="avatar-logo-group">
                 <Avatar
-                  avatar={firstDescription.user?.avatar ?? null}
-                  pseudo={firstDescription.user?.pseudo}
+                  avatar={firstDescription.author?.avatar ?? null}
+                  pseudo={firstDescription.author?.pseudo}
                   type="user"
                   className="user-avatar"
                 />
@@ -123,9 +123,9 @@ const ChronoReportCard: React.FC<Props> = ({ item, isOpen, onToggle }) => {
 
               <div className="text-meta">
                 <UserBrandLine
-                  userId={firstDescription.user?.id}
-                  email={firstDescription.user?.email}
-                  pseudo={firstDescription.user?.pseudo}
+                  userId={firstDescription.author?.id}
+                  email={firstDescription.author?.email}
+                  pseudo={firstDescription.author?.pseudo}
                   brand={item.marque}
                   type="report"
                 />

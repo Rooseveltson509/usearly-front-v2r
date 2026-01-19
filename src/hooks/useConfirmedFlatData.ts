@@ -19,21 +19,29 @@ export const useConfirmedFlatData = () => {
         const formatted: ExplodedGroupedReport[] = res.data.map(
           (item: ConfirmedSubcategoryReport) => {
             const descriptions: FeedbackDescription[] = item.descriptions.map(
-              (desc, i) => ({
-                id: String(desc.id),
-                reportingId: String(item.reportingId),
-                description: desc.description,
-                emoji: desc.emoji ?? "",
-                createdAt: desc.createdAt,
-                user: {
-                  id: String(desc.user.id),
-                  pseudo: desc.user.pseudo,
-                  avatar: desc.user.avatar ?? null,
-                },
-                capture: i === 0 ? item.capture : null,
-                marque: item.marque,
-                reactions: [],
-              }),
+              (desc: any, i) => {
+                const normalized: FeedbackDescription = {
+                  id: String(desc.id),
+                  reportingId: String(item.reportingId),
+                  description: desc.description,
+                  emoji: desc.emoji ?? "",
+                  createdAt: desc.createdAt,
+
+                  // ✅ NORMALISATION UNIQUE
+                  author: {
+                    id: String(desc.user.id),
+                    pseudo: desc.user.pseudo,
+                    avatar: desc.user.avatar ?? null,
+                    email: desc.user.email,
+                  },
+
+                  capture: i === 0 ? item.capture : null,
+                  marque: item.marque,
+                  reactions: [],
+                };
+
+                return normalized;
+              },
             );
 
             const explodedItem: ExplodedGroupedReport = {
