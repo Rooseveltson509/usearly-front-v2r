@@ -18,6 +18,7 @@ const ExtensionExample = () => {
       <ExtensionExampleImage
         selected={selectedScenario}
         onSelect={setSelectedScenario}
+        advanceMode="click"
       />
       <img className="img2" src={bigUofUsearly} alt="U of Usearly" />
     </div>

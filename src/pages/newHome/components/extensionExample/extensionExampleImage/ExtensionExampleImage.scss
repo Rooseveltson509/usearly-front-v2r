@@ -58,6 +58,7 @@
       z-index: 3;
       height: 236px;
       height: max-content;
+      flex: 0 0 auto;
       padding: 8px 1px;
       background-color: white;
       border-radius: 16px 16px 28px 28px;
@@ -116,30 +117,137 @@
       }
     }
 
-    .suggestion-mode {
+    .extension-popup-frame.suggestion-mode {
       margin-left: -10%;
     }
 
-    .report-mode {
+    .extension-popup-frame.report-mode {
       margin-left: -3%;
+      --popup-scale: 1;
+      --popup-anim-scale: 1;
     }
 
-    .like-mode {
+    .extension-popup-frame.like-mode {
       margin-left: -10%;
     }
 
-    .extension-image {
-      display: block;
-      width: 100%;
-      height: auto;
-      --popup-scale: 1.25;
-      --popup-anim-scale: 1.22;
-      transform: scale(var(--popup-scale, 1.25));
+    .extension-popup-frame {
+      position: relative;
+    }
+
+    .extension-click-targets {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
       pointer-events: none;
     }
 
-    .step-animation {
-      animation: popupFlow 2.2s ease-in-out;
+    .extension-click-target {
+      position: absolute;
+      border-radius: 10px;
+      background: rgba(69, 73, 239, 0.16);
+      border: 1px dashed rgba(69, 73, 239, 0.55);
+      box-shadow: 0 0 0 1px rgba(69, 73, 239, 0.12) inset;
+      opacity: 0;
+      transform: translateY(-6px) scale(0.95);
+      animation-fill-mode: forwards;
+    }
+
+    .extension-mouse {
+      position: absolute;
+      z-index: 4;
+      width: 20px;
+      height: 20px;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.25));
+      transition:
+        left 0.25s ease,
+        top 0.25s ease;
+    }
+
+    .extension-mouse .cursor-dot {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      border-radius: 999px;
+      background: rgb(69 73 239 / 30%);
+      border: 2px solid rgb(69 73 239);
+    }
+
+    /* Effet pulse radial */
+    .extension-mouse .cursor-pulse {
+      position: absolute;
+      inset: -10px;
+      z-index: 0;
+      border-radius: 999px;
+      border: 2px solid rgb(69 73 239);
+      opacity: 0;
+      animation: mouseClick 0.5s ease-out infinite;
+    }
+
+    @keyframes mouseClick {
+      0% {
+        opacity: 0.35;
+        transform: scale(0.6);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(1.2);
+      }
+    }
+
+    @keyframes extensionTargetSlideDown {
+      0% {
+        opacity: 0;
+        transform: translateY(-28px) scale(0.92);
+      }
+      60% {
+        opacity: 0.6;
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .extension-click-targets.report-mode.e4 .extension-click-target,
+    .extension-click-targets.report-mode.e6 .extension-click-target,
+    .extension-click-targets.report-mode.e8 .extension-click-target {
+      animation: extensionTargetSlideDown 0.54s cubic-bezier(0.3, 0, 0.2, 1)
+        forwards;
+    }
+    .extension-click-targets.report-mode.e4
+      .extension-click-target:nth-child(1),
+    .extension-click-targets.report-mode.e6
+      .extension-click-target:nth-child(1),
+    .extension-click-targets.report-mode.e8
+      .extension-click-target:nth-child(1) {
+      animation-delay: 0.05s;
+    }
+    .extension-click-targets.report-mode.e4
+      .extension-click-target:nth-child(2),
+    .extension-click-targets.report-mode.e6
+      .extension-click-target:nth-child(2),
+    .extension-click-targets.report-mode.e8
+      .extension-click-target:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    .extension-click-targets.report-mode.e4
+      .extension-click-target:nth-child(3),
+    .extension-click-targets.report-mode.e6
+      .extension-click-target:nth-child(3),
+    .extension-click-targets.report-mode.e8
+      .extension-click-target:nth-child(3) {
+      animation-delay: 0.35s;
+    }
+    .extension-click-targets.report-mode.e4
+      .extension-click-target:nth-child(4),
+    .extension-click-targets.report-mode.e6
+      .extension-click-target:nth-child(4),
+    .extension-click-targets.report-mode.e8
+      .extension-click-target:nth-child(4) {
+      animation-delay: 0.5s;
     }
 
     .extension-image-bar {
@@ -152,103 +260,169 @@
       transform: scale(0.4);
     }
 
-    // ajustement css pour chaque etape report
-    .extension-image.report-mode.e0 {
-      margin-top: -27%;
-      margin-left: -20%;
-      --popup-scale: 1.8;
-      --popup-anim-scale: 1.8;
+    .extension-image.report-mode.e0,
+    .extension-click-targets.report-mode.e0 {
+      transform: scale(2.1);
+      margin-left: -38%;
     }
-
-    .extension-image.report-mode.e1 {
-      margin-top: -30%;
-      margin-left: -20%;
-      --popup-scale: 1.7;
-      --popup-anim-scale: 1.7;
+    .extension-image.report-mode.e1,
+    .extension-click-targets.report-mode.e1 {
+      transform: scale(2.1);
+      margin-left: -38%;
     }
-
-    .extension-image.report-mode.e2 {
-      margin-top: -30%;
-      margin-left: -13%;
-      --popup-scale: 1.5;
-      --popup-anim-scale: 1.5;
+    .extension-image.report-mode.e2,
+    .extension-click-targets.report-mode.e2 {
+      transform: scale(2.1);
+      margin-left: -38%;
+      margin-top: -52px;
     }
-
-    .extension-image.report-mode.e3 {
-      margin-top: -43%;
-      margin-left: -7%;
-      --popup-scale: 1.3;
-      --popup-anim-scale: 1.3;
+    .extension-image.report-mode.e3,
+    .extension-click-targets.report-mode.e3 {
+      transform: scale(2.1);
+      margin-left: -33%;
     }
-
-    .extension-image.report-mode.e4 {
-      margin-top: -33%;
-      margin-left: -18%;
-      --popup-scale: 1.6;
-      --popup-anim-scale: 1.6;
-    }
-
-    .extension-image.report-mode.e5 {
-      margin-top: -33%;
-      margin-left: -18%;
-      --popup-scale: 1.6;
-      --popup-anim-scale: 1.6;
-    }
-
-    .extension-image.report-mode.e6 {
-      margin-top: -22%;
-      margin-left: -20%;
-      --popup-scale: 1.6;
-      --popup-anim-scale: 1.6;
-    }
-
-    // ajustement css pour chaque etape like
-    .extension-image.like-mode {
-      margin-left: -45px;
-    }
-
-    .extension-image.like-mode.e0 {
-      margin-top: -20%;
+    .extension-image.report-mode.e4,
+    .extension-click-targets.report-mode.e4 {
+      transform: scale(2.1);
       margin-left: -40%;
-      --popup-scale: 1.7;
-      --popup-anim-scale: 1.7;
     }
-
-    .extension-image.like-mode.e1 {
-      margin-top: -28%;
-      margin-left: -30%;
-      --popup-scale: 2.25;
-      --popup-anim-scale: 2.25;
-    }
-
-    .extension-image.like-mode.e2 {
-      margin-top: -10%;
-      margin-left: -60%;
-      --popup-scale: 2.1;
-      --popup-anim-scale: 2.1;
-    }
-
-    // ajustement css pour chaque etape suggest
-    .extension-image.suggestion-mode.e0 {
-      margin-top: -17%;
+    .extension-image.report-mode.e5,
+    .extension-click-targets.report-mode.e5 {
+      transform: scale(2.1);
       margin-left: -40%;
-      --popup-scale: 1.7;
-      --popup-anim-scale: 1.7;
+    }
+    .extension-image.report-mode.e6,
+    .extension-click-targets.report-mode.e6 {
+      transform: scale(2.1);
+      margin-left: -40%;
+    }
+    .extension-image.report-mode.e7,
+    .extension-click-targets.report-mode.e7 {
+      transform: scale(2.1);
+      margin-left: -40%;
+    }
+    .extension-image.report-mode.e8,
+    .extension-click-targets.report-mode.e8 {
+      transform: scale(2.1);
+      margin-left: -40%;
+    }
+    .extension-image.report-mode.e9,
+    .extension-click-targets.report-mode.e9 {
+      transform: scale(2.1);
+      margin-left: -40%;
+    }
+    .extension-image.report-mode.e10,
+    .extension-click-targets.report-mode.e10 {
+      transform: scale(2.1);
+      margin-left: -40%;
     }
 
-    .extension-image.suggestion-mode.e1 {
-      margin-top: -30%;
-      margin-left: -20%;
-      --popup-scale: 1.9;
-      --popup-anim-scale: 1.9;
+    .like-mode.extension-popup-frame.e0 {
+      .extension-image.like-mode.e0,
+      .extension-click-targets.like-mode.e0 {
+        transform: scale(1.8);
+        margin-left: -40%;
+      }
+      .extension-mouse.e0 {
+        margin-left: -8%;
+      }
+    }
+    .like-mode.extension-popup-frame.e1 {
+      .extension-image.like-mode.e1,
+      .extension-click-targets.like-mode.e1 {
+        transform: scale(2.7);
+        margin-left: -40%;
+      }
+      .extension-mouse.e1 {
+        margin-left: -10%;
+      }
     }
 
-    .extension-image.suggestion-mode.e2 {
-      margin-top: -5%;
-      margin-left: -70%;
-      --popup-scale: 2.2;
-      --popup-anim-scale: 2.2;
+    .like-mode.extension-popup-frame.e2 {
+      .extension-image.like-mode.e2,
+      .extension-click-targets.like-mode.e2 {
+        transform: scale(2.25) rotate(-10deg);
+        margin-left: -115%;
+        margin-top: 75%;
+      }
+      animation: extensionPopupArcEntry 3s cubic-bezier(0.22, 1, 0.36, 1) both;
+      will-change: margin-top, margin-left;
     }
+
+    .suggestion-mode.extension-popup-frame.e0 {
+      .extension-image.suggestion-mode.e0,
+      .extension-click-targets.suggestion-mode.e0 {
+        transform: scale(1.8);
+        margin-left: -40%;
+      }
+      .extension-mouse.e0 {
+        margin-left: -10%;
+      }
+    }
+    .suggestion-mode.extension-popup-frame.e1 {
+      .extension-image.suggestion-mode.e1,
+      .extension-click-targets.suggestion-mode.e1 {
+        transform: scale(2.7);
+        margin-left: -40%;
+      }
+      .extension-mouse.e1 {
+        margin-left: -8%;
+      }
+    }
+    .suggestion-mode.extension-popup-frame.e2 {
+      .extension-image.suggestion-mode.e2,
+      .extension-click-targets.suggestion-mode.e2 {
+        transform: scale(2.25);
+        margin-left: -115%;
+        margin-top: 75%;
+      }
+      animation: extensionPopupArcEntry 3s cubic-bezier(0.25, 0.8, 0.22, 1) both;
+      will-change: margin-top, margin-left;
+    }
+
+    // // ajustement css pour chaque etape like
+    // .extension-popup-frame.like-mode.e0 {
+    //   margin-top: -20%;
+    //   margin-left: -50%;
+    //   --popup-scale: 1;
+    //   --popup-anim-scale: 1;
+    // }
+
+    // .extension-popup-frame.like-mode.e1 {
+    //   margin-top: -28%;
+    //   margin-left: -40%;
+    //   --popup-scale: 1.5;
+    //   --popup-anim-scale: 1.5;
+    // }
+
+    // .extension-popup-frame.like-mode.e2 {
+    //   margin-top: -10%;
+    //   margin-left: -70%;
+    //   --popup-scale: 1;
+    //   --popup-anim-scale: 1;
+    // }
+
+    // // ajustement css pour chaque etape suggest
+    // .extension-popup-frame.suggestion-mode.e0 {
+    //   margin-top: -17%;
+    //   margin-left: -50%;
+    //   --popup-scale: 1;
+    //   --popup-anim-scale: 1;
+    // }
+
+    // .extension-popup-frame.suggestion-mode.e1 {
+    //   margin-top: -30%;
+    //   margin-left: -30%;
+    //   --popup-scale: 1.5;
+    //   --popup-anim-scale: 1.5;
+    // }
+
+    // .extension-popup-frame.suggestion-mode.e2 {
+    //   margin-top: -5%;
+    //   margin-left: -100%;
+    //   --popup-scale: 1;
+    //   --popup-anim-scale: 1;
+    // }
   }
 
   .logo-big-landing-page {
@@ -280,27 +454,44 @@
   }
 }
 
-@keyframes popupFlow {
+@keyframes mouseClick {
   0% {
     opacity: 0;
-    transform: translateY(100px) scale(0);
+    transform: scale(0.4);
   }
-  18% {
-    opacity: 1;
-    transform: translateY(-0px) scale(var(--popup-anim-scale, 1.22));
-  }
-  75% {
-    opacity: 1;
-    transform: translateY(0px) scale(var(--popup-anim-scale, 1.22));
+  35% {
+    opacity: 0.9;
+    transform: scale(1);
   }
   100% {
     opacity: 0;
-    transform: translateY(-100px) scale(var(--popup-anim-scale, 1.22));
+    transform: scale(1.6);
+  }
+}
+
+@keyframes extensionPopupArcEntry {
+  0% {
+    margin-top: -120%;
+    margin-left: 50%;
+  }
+  45% {
+    margin-top: -45px;
+    margin-left: -5%;
+  }
+  100% {
+    margin-top: -45px;
+    margin-left: -10%;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .extensionImg .step-animation {
+    animation: none;
+  }
+  .extensionImg .extension-mouse {
+    transition: none;
+  }
+  .extensionImg .extension-mouse .cursor-pulse {
     animation: none;
   }
 }
