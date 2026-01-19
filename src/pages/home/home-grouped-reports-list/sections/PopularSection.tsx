@@ -99,6 +99,7 @@ const PopularSection: React.FC<PopularSectionProps> = ({
     (popularEngagementData.data?.length ?? 0) > 0;
   const hasSearchResults =
     filteredPrimaryData.length > 0 || filteredEngagementData.length > 0;
+  console.log("POPULAR ITEM:", popularEngagementData?.data?.[0]);
 
   // 🕓 État chargement
   if (reportData.loading) {

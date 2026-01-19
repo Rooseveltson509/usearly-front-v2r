@@ -5,6 +5,7 @@ import SqueletonAnime from "@src/components/loader/SqueletonAnime";
 import FlatSubcategoryBlock from "../confirm-reportlist/FlatSubcategoryBlock";
 import "./ReportDetail.scss";
 import UsearlyDraw from "@src/components/background/Usearly";
+import type { ReportDetailDescription } from "@src/types/Reports";
 
 const ReportDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -12,7 +13,8 @@ const ReportDetail = () => {
   const queryParams = new URLSearchParams(location.search);
   const highlightedCommentId = queryParams.get("commentId");
 
-  const [report, setReport] = useState<any | null>(null);
+  //const [report, setReport] = useState<any | null>(null);
+  const [report, setReport] = useState<ReportDetailDescription | null>(null);
   const [loading, setLoading] = useState(true);
   const loaderRef = useRef<HTMLDivElement | null>(null);
 
@@ -98,16 +100,17 @@ const ReportDetail = () => {
   // ✅ 6. Affichage principal
   return (
     <div className="report-detail-page">
-      <h1>Signalement de {report.user.pseudo}</h1>
+      <h1>Signalement de {report.author.pseudo}</h1>
       <FlatSubcategoryBlock
-        brand={report.reporting?.marque}
-        siteUrl={report.reporting?.siteUrl}
+        brand={report.marque}
+        siteUrl={report.siteUrl ?? undefined}
         subcategory={report.subCategory}
         descriptions={[report]}
-        capture={report.reporting?.capture}
+        capture={report.capture}
         hideFooter={true}
-        forceOpenComments={!!highlightedCommentId} // 🟢 ouvre auto si mention
+        forceOpenComments={!!highlightedCommentId}
       />
+
       <UsearlyDraw />
     </div>
   );

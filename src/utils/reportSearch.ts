@@ -82,8 +82,8 @@ export const getPopularReportSearchValues = (item: PopularReport): string[] => {
     values.push(item.description);
   }
 
-  if (typeof item.user?.pseudo === "string") {
-    values.push(item.user.pseudo);
+  if (typeof item.author?.pseudo === "string") {
+    values.push(item.author.pseudo);
   }
 
   return values;

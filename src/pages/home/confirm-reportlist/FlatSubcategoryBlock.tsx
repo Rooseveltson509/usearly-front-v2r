@@ -52,7 +52,13 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
     "report",
     refreshKey,
   );
-
+  // ✅ AUTHOR SAFE (aligné API)
+  const safeAuthor = {
+    id: initialDescription.author?.id ?? null,
+    pseudo: initialDescription.author?.pseudo ?? "Utilisateur",
+    email: initialDescription.author?.email ?? null,
+    avatar: initialDescription.author?.avatar ?? null,
+  };
   const captureUrl = capture || initialDescription?.capture || null;
 
   useEffect(() => {
@@ -123,12 +129,8 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
             <div className="expanded-header">
               <div className="avatar-logo-group">
                 <Avatar
-                  avatar={
-                    initialDescription.user?.avatar || "/default-avatar.png"
-                  }
-                  pseudo={
-                    initialDescription.user?.pseudo || "Utilisateur inconnu"
-                  }
+                  avatar={safeAuthor.avatar}
+                  pseudo={safeAuthor.pseudo}
                   type="user"
                   className="user-avatar"
                   wrapperClassName="user-avatar-wrapper"
@@ -145,9 +147,9 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
               </div>
               <div className="text-meta">
                 <UserBrandLine
-                  userId={initialDescription.user?.id}
-                  email={initialDescription.user?.email}
-                  pseudo={initialDescription.user?.pseudo}
+                  userId={safeAuthor.id}
+                  email={safeAuthor.email}
+                  pseudo={safeAuthor.pseudo}
                   brand={brand}
                   type="report"
                 />

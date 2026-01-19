@@ -22,10 +22,11 @@ export interface ProfileChronoReport {
     emoji?: string | null;
     createdAt: string;
     reactions: { emoji: string; userId: string }[];
-    user: {
+    author: {
       id: string;
       pseudo: string;
       avatar: string | null;
+      email?: string;
     } | null;
   }[];
 }
@@ -62,11 +63,12 @@ export interface ConfirmedSubcategoryReport {
     description: string;
     emoji?: string;
     createdAt: string;
-    user: {
-      id: string; // 👈 UUID
+    author: {
+      id: string;
       pseudo: string;
-      avatar: string;
-    };
+      avatar: string | null;
+      email?: string;
+    } | null;
   }[];
 }
 
@@ -133,10 +135,11 @@ export interface ApiDescription {
   description: string;
   emoji: string;
   createdAt: string;
-  user: {
+  author: {
     id: string;
     pseudo: string;
     avatar: string | null;
+    email?: string;
   };
   capture: string | null;
 }
@@ -168,11 +171,11 @@ export interface FeedbackDescription {
   description: string;
   emoji: string;
   createdAt: string;
-  user: {
+  author: {
     id: string;
     pseudo: string;
-    email?: string | null;
     avatar: string | null;
+    email?: string;
   };
   capture: string | null;
   marque: string;
@@ -185,10 +188,11 @@ export interface SimplifiedFeedbackDescription {
   description: string;
   emoji: string;
   createdAt: string;
-  user?: {
+  author: {
     id: string;
     pseudo: string;
     avatar: string | null;
+    email?: string;
   };
   capture: string | null;
   reactions: {
@@ -256,8 +260,8 @@ export interface PopularGroupedReport {
   descriptions: FeedbackDescription[];
 }
 
-export interface PopularReport {
-  id: string; // id de la description
+/* interface PopularReport {
+  id: string;
   reportingId: string;
   subCategory: string;
   description: string;
@@ -270,6 +274,31 @@ export interface PopularReport {
     id: string;
     pseudo: string;
     avatar: string | null;
+  } | null;
+  reactions: any[];
+  comments: any[];
+  stats: {
+    totalReactions: number;
+    totalComments: number;
+    totalInteractions: number;
+  };
+} */
+
+export interface PopularReport {
+  id: string; // id de la description
+  reportingId: string;
+  subCategory: string;
+  description: string;
+  siteUrl: string | null;
+  marque: string;
+  category: string;
+  capture: string | null;
+  createdAt: string;
+  author: {
+    id: string;
+    pseudo: string;
+    avatar: string | null;
+    email?: string;
   } | null;
   reactions: {
     emoji: string;
@@ -313,11 +342,11 @@ export interface UserGroupedReportDescription {
   emoji: string | null;
   createdAt: string;
   commentsCount?: number;
-  user: {
+  author: {
     id: string;
     pseudo: string;
-    email: string | null;
     avatar: string | null;
+    email?: string;
   };
   capture: string | null;
   reactions: {
@@ -342,10 +371,11 @@ export interface PublicGroupedReport {
       description: string;
       emoji: string;
       createdAt: string;
-      user?: {
+      author?: {
         id: string;
         pseudo: string;
         avatar: string | null;
+        email?: string;
       };
       capture: string | null;
       reactions: {
@@ -376,3 +406,8 @@ export interface PublicGroupedReportFromAPI {
   descriptions: FeedbackDescription[];
   date: string;
 }
+
+export type ReportDetailDescription = FeedbackDescription & {
+  subCategory: string;
+  siteUrl?: string | null;
+};

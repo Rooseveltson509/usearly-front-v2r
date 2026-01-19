@@ -21,14 +21,30 @@ const UserBrandLine: React.FC<UserBrandLineProps> = ({
 }) => {
   const { userProfile } = useAuth();
 
-  // ✅ Détermine si c’est l’utilisateur connecté
+  // ✅ USER SAFE
+  const safeUser = {
+    id: userId ?? null,
+    pseudo: pseudo ?? "Utilisateur",
+    email: email ?? null,
+  };
+
+  // ✅ CURRENT USER SAFE
+  const safeCurrentUser = {
+    id: userProfile?.id ?? null,
+    pseudo: userProfile?.pseudo?.toLowerCase() ?? null,
+    email: userProfile?.email?.toLowerCase() ?? null,
+  };
+
+  // ✅ isCurrentUser
   const isCurrentUser =
-    (userId && userProfile?.id === userId) ||
-    (pseudo && userProfile?.pseudo?.toLowerCase() === pseudo.toLowerCase()) ||
-    (email && userProfile?.email?.toLowerCase() === email.toLowerCase());
+    (safeUser.id && safeCurrentUser.id === safeUser.id) ||
+    (safeUser.pseudo &&
+      safeCurrentUser.pseudo === safeUser.pseudo.toLowerCase()) ||
+    (safeUser.email && safeCurrentUser.email === safeUser.email.toLowerCase());
 
-  const displayName = isCurrentUser ? "Moi" : pseudo || "Utilisateur";
+  const displayName = isCurrentUser ? "Moi" : safeUser.pseudo;
 
+  // ✅ RESTAURÉ
   const typeClass =
     type === "suggestion"
       ? "me-badge-suggestion"
@@ -36,6 +52,7 @@ const UserBrandLine: React.FC<UserBrandLineProps> = ({
         ? "me-badge-coupdecoeur"
         : "me-badge-report";
 
+  // ⬇️ JSX inchangé
   return (
     <span className="user-brand-line">
       <span

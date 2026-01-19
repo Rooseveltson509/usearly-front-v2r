@@ -248,7 +248,7 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
                         <div className="avatars-row">
                           <img
                             src={getFullAvatarUrl(
-                              initialDescription.user?.avatar || null,
+                              initialDescription.author?.avatar || null,
                             )}
                             alt="avatar"
                             className="avatar user-avatar"
@@ -260,7 +260,7 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
                           />
                         </div>
                         <div className="user-brand-names">
-                          {initialDescription.user?.pseudo}{" "}
+                          {initialDescription.author?.pseudo}{" "}
                           <span className="x">×</span> {""}
                           <strong>{capitalizeFirstLetter(brand)}</strong>
                         </div>
@@ -399,8 +399,8 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
                               <div className="feedback-avatar">
                                 <div className="feedback-avatar-wrapper">
                                   <Avatar
-                                    avatar={desc.user?.avatar || null}
-                                    pseudo={desc.user?.pseudo || "?"}
+                                    avatar={desc.author?.avatar || null}
+                                    pseudo={desc.author?.pseudo || "?"}
                                     type="user"
                                     className="avatar"
                                     wrapperClassName="avatar-wrapper-override"
@@ -416,7 +416,7 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
                               <div className="feedback-content">
                                 <div className="feedback-meta">
                                   <span className="pseudo">
-                                    {desc.user?.pseudo}
+                                    {desc.author?.pseudo}
                                   </span>
                                   <span className="brand"> · {brand}</span>
                                   <span className="time">

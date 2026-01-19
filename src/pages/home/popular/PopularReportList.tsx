@@ -40,7 +40,11 @@ const PopularReportList = ({
               description: item.description,
               emoji: item.reactions?.[0]?.emoji ?? "",
               createdAt: item.createdAt,
-              user: item.user || { id: "0", pseudo: "Anonyme", avatar: null },
+              author: item.author ?? {
+                id: "0",
+                pseudo: "Anonyme",
+                avatar: null,
+              },
               reportingId: item.reportingId,
               capture: item.capture,
               marque: item.marque,

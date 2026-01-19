@@ -93,7 +93,7 @@ const PopularReportCard: React.FC<Props> = ({
     pseudo: string;
     avatar: string | null;
     email?: string | null; // ✅ ajouté
-  } = firstDescription.user ?? {
+  } = firstDescription.author ?? {
     id: "",
     pseudo: "Utilisateur",
     avatar: null,
@@ -281,7 +281,7 @@ const PopularReportCard: React.FC<Props> = ({
               {additionalDescriptions
                 .slice(0, visibleDescriptionsCount)
                 .map((desc) => {
-                  const secondaryAuthor = desc.user ?? {
+                  const secondaryAuthor = desc.author ?? {
                     id: "",
                     pseudo: "Utilisateur",
                     avatar: null,

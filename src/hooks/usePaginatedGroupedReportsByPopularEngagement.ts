@@ -1,29 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { getGroupedReportsByPopularEngagement } from "@src/services/feedbackService";
-
-interface PopularReport {
-  id: string;
-  reportingId: string;
-  subCategory: string;
-  description: string;
-  siteUrl: string | null;
-  marque: string;
-  category: string;
-  capture: string | null;
-  createdAt: string;
-  user: {
-    id: string;
-    pseudo: string;
-    avatar: string | null;
-  } | null;
-  reactions: any[];
-  comments: any[];
-  stats: {
-    totalReactions: number;
-    totalComments: number;
-    totalInteractions: number;
-  };
-}
+import type { PopularReport } from "@src/types/Reports";
 
 export const usePaginatedGroupedReportsByPopularEngagement = (
   enabled: boolean,
