@@ -1,0 +1,171 @@
+@use "@src/styles/base/variables" as variables;
+
+:root {
+  --height-input: 40px;
+}
+
+.dashboard-filter-container {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column-reverse;
+  align-items: flex-end;
+  padding: 0 10%;
+  margin: 36px 0;
+  font-family: variables.$font-family;
+  .dashboard-filter-container-right {
+    display: flex;
+    gap: 10px;
+    position: relative;
+    z-index: 1;
+    select {
+      cursor: pointer;
+    }
+    .dashboard-filter-dropdown {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    .dashboard-filter-dropdown-panel {
+      position: absolute;
+      top: calc(var(--height-input) + 8px);
+      left: 0;
+      width: max-content;
+      min-width: 100%;
+      background-color: #fff;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+      padding: 6px 3px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      max-height: 260px;
+      overflow-y: auto;
+      z-index: 10;
+    }
+    .dashboard-filter-dropdown-option {
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      width: 100%;
+      padding: 8px 16px;
+      text-align: left;
+      font-family: variables.$font-family;
+      font-size: 14px;
+      font-weight: 500;
+      color: #222;
+      cursor: pointer;
+      &:hover {
+        background-color: var(--contributor-hover, #f0f0f0);
+      }
+    }
+    .dashboard-filter-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 8px;
+      display: inline-flex;
+      align-self: center;
+    }
+    .dashboard-filter-dropdown-option.is-selected {
+      /* Keep the selected contributor background matching the hover tone */
+      background-color: var(--contributor-hover, #f0f0f0);
+    }
+    .dashboard-filter-select {
+      align-items: center;
+      height: var(--height-input);
+      border-radius: 999px;
+      padding: 4px 40px 5px 15px;
+      border: 1px solid #ddd;
+      background-color: #fff;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .select--icon {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+
+      /* fichier servi tel quel depuis /public */
+      background-image: url("/assets/svg/filter-svgrepo-com.svg");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      background-size: 1.2rem;
+    }
+
+    .select-up-icon {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+
+      /* fichier servi tel quel depuis /public */
+      // background-image: url("/assets/dashboardUser/up-trend-round-svgrepo-com.svg");
+      background-image: url("/assets/dashboardUser/chevron-down-svgrepo-com.svg");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      background-size: 1.2rem;
+    }
+
+    .select-contributor-icon {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+
+      /* fichier servi tel quel depuis /public */
+      background-image: url("/assets/dashboardUser/chevron-down-svgrepo-com.svg");
+      // background-image: url("/assets/dashboardUser/badge-check-svgrepo-com.svg");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      background-size: 1.2rem;
+    }
+
+    .select-statut-icon {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+
+      /* fichier servi tel quel depuis /public */
+      // background-image: url("/assets/dashboardUser/person-svgrepo-com.svg");
+      background-image: url("/assets/dashboardUser/chevron-down-svgrepo-com.svg");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      background-size: 1.2rem;
+    }
+
+    .dashboard-filter-search {
+      width: 215px;
+      height: var(--height-input);
+      padding: 7.5px 15px;
+      border: 1px solid #e6e6e6;
+      border-radius: 999px;
+      background-color: #e6e6e6 !important;
+
+      &:focus {
+        outline: none;
+        border-color: #e6e6e6;
+        background-color: #fff !important;
+      }
+    }
+
+    .search-input-icon {
+      background: url("/assets/svg/search-svgrepo-com.svg") no-repeat right
+        0.75rem center;
+      background-size: 1rem;
+    }
+  }
+  .dashboard-filter-values {
+    display: flex;
+    margin-top: 10px;
+    gap: 5px;
+    .dashboard-filter-values-selected {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 15px;
+      padding: 5px 7.55px 5px 15px;
+      background-color: #fff;
+      border: 1px solid rgba(128, 128, 128, 0.2);
+      border-radius: 999px;
+    }
+  }
+}

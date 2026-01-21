@@ -24,6 +24,7 @@ import AboutPage from "./pages/about/AboutPage";
 import AboutClassicPage from "./pages/aboutClassic/AboutClassicPage";
 import NotFoundPage from "./pages/not-found/NotFoundPage";
 import AdminBrandsPage from "./pages/admin/brands/AdminBrandsPage";
+import DashboardUser from "./pages/dashboardUser/DashboardUser";
 
 function App() {
   return (
@@ -174,6 +175,14 @@ function App() {
               element={
                 <ProtectedRoute allowedTypes={["user"]}>
                   <Home />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard-user"
+              element={
+                <ProtectedRoute allowedTypes={["user"]}>
+                  <DashboardUser />
                 </ProtectedRoute>
               }
             />
