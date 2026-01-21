@@ -1,0 +1,61 @@
+@use "@src/styles/base/variables" as variables;
+
+.dashboard-user-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #0e0431;
+  background-image: url("/assets/icons/bigUofUsearlyWithBorder.svg");
+  background-repeat: no-repeat;
+  background-position: 90% -30px;
+  color: white;
+  height: 128px;
+  padding: 0 10%;
+  .dashboard-user-header-global-stats {
+    display: flex;
+    gap: 100px;
+    .dashboard-user-header-global-stats-title {
+      font-family: variables.$font-family-3;
+      font-size: 36px;
+      font-weight: 800;
+    }
+    .dashboard-user-header-global-stats-score-container {
+      display: flex;
+      flex-wrap: nowrap;
+      .dashboard-user-header-score {
+        display: flex;
+        align-items: center;
+        font-family: variables.$font-family;
+        font-size: 40px;
+        font-weight: 700;
+        gap: 10px;
+        span {
+          font-size: 16px;
+          padding: 0px 10px;
+          background-color: #9f60ff;
+          border-radius: 999px;
+        }
+      }
+    }
+  }
+  .dashboard-user-header-stats-container {
+    display: flex;
+    gap: 50px;
+    margin-right: 7%;
+    .dashboard-user-header-stats {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      .dashboard-user-header-stats-icon {
+        img {
+          width: 50px;
+          height: 50px;
+        }
+      }
+      .dashboard-user-header-stats-count {
+        font-size: 36px;
+        font-family: variables.$font-family;
+      }
+    }
+  }
+}
