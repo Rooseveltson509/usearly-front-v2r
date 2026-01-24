@@ -54,14 +54,18 @@ export const usePaginatedGroupedReportsByDate = (
             siteUrl: report.siteUrl,
             capture: report.capture || null,
             totalCount: report.count,
+            status: report.status,
+            hasBrandResponse: report.hasBrandResponse,
             subCategory: {
               subCategory: report.subCategory,
+              status: report.status,
               count: report.count,
               descriptions: report.descriptions || [], // ✅ ici !
             },
             subCategories: [
               {
                 subCategory: report.subCategory,
+                status: report.status,
                 count: report.count,
                 descriptions: report.descriptions || [], // ✅ ici aussi !
               },

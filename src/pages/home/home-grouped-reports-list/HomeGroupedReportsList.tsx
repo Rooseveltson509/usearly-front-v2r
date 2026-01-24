@@ -344,7 +344,6 @@ const HomeGroupedReportsList: React.FC<Props> = ({
       ) : filter === "chrono" ? (
         <ChronoSection
           chronoData={chronoData}
-          reportData={reportData}
           loaderRef={loaderRef}
           searchTerm={searchTermValue}
           onClearSearchTerm={() => handleSearchTermChange("")}

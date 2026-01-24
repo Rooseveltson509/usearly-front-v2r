@@ -14,6 +14,7 @@ interface Props {
   onOpenSimilarReports?: () => void;
   forceClose?: boolean;
   onOpen?: () => void;
+  reportIds?: string[];
   autoOpenIfComments?: boolean;
   hideFooter?: boolean;
   refreshKey?: number;
@@ -32,6 +33,7 @@ const DescriptionCommentSection: React.FC<Props> = ({
   onOpenSimilarReports,
   forceClose = false,
   onOpen,
+  reportIds,
   /* autoOpenIfComments = false, */
   hideFooter = false,
   refreshKey,
@@ -159,6 +161,7 @@ const DescriptionCommentSection: React.FC<Props> = ({
         <CommentSection
           descriptionId={descriptionId}
           type={type}
+          reportIds={reportIds}
           onCommentAdded={() => setLocalRefreshKey((k) => k + 1)}
           onCommentDeleted={() => setLocalRefreshKey((k) => k + 1)}
         />

@@ -12,7 +12,6 @@ import "./ChronoSection.scss";
 
 interface ChronoSectionProps {
   chronoData: { data?: any[]; loading: boolean };
-  reportData: { loading: boolean };
   loaderRef: React.RefObject<HTMLDivElement | null>;
   searchTerm: string;
   onClearSearchTerm?: () => void;
@@ -27,7 +26,6 @@ interface ChronoSectionProps {
  */
 const ChronoSection: React.FC<ChronoSectionProps> = ({
   chronoData,
-  reportData,
   loaderRef,
   searchTerm,
   onClearSearchTerm,
@@ -66,7 +64,7 @@ const ChronoSection: React.FC<ChronoSectionProps> = ({
   }, [filteredReports]);
 
   // 🕓 Chargement
-  if (reportData.loading || chronoData.loading) {
+  if (chronoData.loading) {
     return (
       <SqueletonAnime
         loaderRef={loaderRef}
@@ -132,11 +130,13 @@ const ChronoSection: React.FC<ChronoSectionProps> = ({
                 <FlatSubcategoryBlock
                   key={`${report.reportingId}-${index}`}
                   brand={report.marque}
+                  reportId={report.reportingId}
                   siteUrl={report.siteUrl || undefined}
+                  hasBrandResponse={report.hasBrandResponse}
                   subcategory={report.subCategory.subCategory}
+                  status={report.status}
                   descriptions={report.subCategory.descriptions || []}
                   capture={report.capture || null}
-                  //brandLogoUrl={getBrandLogo(report.marque, report.siteUrl)}
                   hideFooter={true}
                 />
               ))}

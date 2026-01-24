@@ -36,10 +36,44 @@ export const useInfiniteGroupedReports = (limit = 10, resetKey = "") => {
         const combined = [...prev, ...data.results];
 
         const uniqueMap = new Map();
-        for (const item of combined) {
+        /*       for (const item of combined) {
           const key = `${item.marque}_${item.subCategory}`;
           if (!uniqueMap.has(key)) {
             uniqueMap.set(key, item);
+          }
+        } */
+        for (const item of combined) {
+          const key = `${item.marque}_${item.subCategory}`;
+
+          if (!uniqueMap.has(key)) {
+            uniqueMap.set(key, {
+              ...item,
+              reportIds: [...(item.reportIds ?? [])],
+            });
+          } else {
+            const existing = uniqueMap.get(key);
+
+            uniqueMap.set(key, {
+              ...existing,
+
+              // ✅ fusion des reportIds SANS doublons
+              reportIds: Array.from(
+                new Set([
+                  ...(existing.reportIds ?? []),
+                  ...(item.reportIds ?? []),
+                ]),
+              ),
+
+              // (optionnel mais propre)
+              descriptions: Array.from(
+                new Map(
+                  [...existing.descriptions, ...item.descriptions].map((d) => [
+                    d.id,
+                    d,
+                  ]),
+                ).values(),
+              ),
+            });
           }
         }
 

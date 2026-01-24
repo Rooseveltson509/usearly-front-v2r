@@ -5,6 +5,8 @@ import CommentForm from "./CommentForm";
 import CommentList from "./CommentList";
 import Swal from "sweetalert2";
 import { getFullAvatarUrl } from "@src/utils/avatarUtils";
+import { useBrandResponse } from "@src/hooks/useBrandResponse";
+import BrandResponseBanner from "../brand-response-banner/BrandResponseBanner";
 
 interface Comment {
   id: string;
@@ -21,22 +23,37 @@ interface Comment {
 
 interface Props {
   descriptionId: string;
+  reportIds?: string[];
   type: "report" | "suggestion" | "coupdecoeur";
+  brand?: string;
   onCommentAdded?: () => void;
   onCommentDeleted?: () => void;
+  readOnly?: boolean;
 }
 
 const CommentSection: React.FC<Props> = ({
   descriptionId,
+  reportIds,
   type,
+  brand,
   onCommentAdded,
   onCommentDeleted,
+  readOnly,
 }) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [filter, setFilter] = useState<"pertinent" | "recents" | "anciens">(
     "pertinent",
   );
   const { userProfile } = useAuth();
+  const effectiveReportIds =
+    type === "report" && reportIds?.length ? reportIds : [];
+
+  /*   const { brandMessage } =
+    type === "report" && reportIds?.length
+      ? useBrandResponse(reportIds)
+      : { brandMessage: null }; */
+
+  const { brandMessage } = useBrandResponse(effectiveReportIds);
 
   const buildCommentEndpoint = () => {
     if (type === "report") return `/descriptions/${descriptionId}/comments`;
@@ -113,13 +130,22 @@ const CommentSection: React.FC<Props> = ({
 
   return (
     <div className="comment-input-section">
-      {userProfile && (
+      {brandMessage && (
+        <BrandResponseBanner
+          message={brandMessage.message}
+          createdAt={brandMessage.createdAt}
+          brand={brand ?? ""}
+        />
+      )}
+
+      {!readOnly && userProfile && (
         <CommentForm
           avatarUrl={getFullAvatarUrl(userProfile.avatar)}
           value=""
           onSubmit={handleAdd}
         />
       )}
+
       <CommentList
         comments={comments}
         userId={userProfile?.id}
@@ -127,7 +153,6 @@ const CommentSection: React.FC<Props> = ({
         setFilter={setFilter}
         onDelete={handleDelete}
         getFullAvatarUrl={getFullAvatarUrl}
-        // 🔁 on rafraîchira depuis ici plus tard si besoin (like, etc.)
       />
     </div>
   );

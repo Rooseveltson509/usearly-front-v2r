@@ -96,6 +96,7 @@ const ReportDetail = () => {
       </div>
     );
   }
+  console.log("🧪 report detail =", report);
 
   // ✅ 6. Affichage principal
   return (
@@ -104,7 +105,9 @@ const ReportDetail = () => {
       <FlatSubcategoryBlock
         brand={report.marque}
         siteUrl={report.siteUrl ?? undefined}
+        reportId={report.reportId}
         subcategory={report.subCategory}
+        status={report.status ?? "open"}
         descriptions={[report]}
         capture={report.capture}
         hideFooter={true}

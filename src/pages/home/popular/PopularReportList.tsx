@@ -31,6 +31,7 @@ const PopularReportList = ({
           reportingId: item.reportingId,
           marque: item.marque,
           siteUrl: item.siteUrl ?? undefined,
+          status: item.status,
           category: item.category,
           subCategory: item.subCategory,
           count: 1,

@@ -54,10 +54,11 @@ const ReportListView: React.FC<Props> = ({
   onClearSearchTerm,
 }) => {
   const isPopularFilter = ["hot", "popular", "urgent"].includes(filter);
+
   const isChronoFilter = filter === "chrono";
 
   if (isPopularFilter) {
-    const { groupedByDay, isLoading } =
+    /* const { groupedByDay, isLoading } =
       filter === "popular"
         ? {
             groupedByDay: popularEngagementData,
@@ -65,7 +66,21 @@ const ReportListView: React.FC<Props> = ({
           }
         : filter === "rage"
           ? { groupedByDay: rageData, isLoading: loadingRage }
-          : { groupedByDay: popularData, isLoading: loadingPopular };
+          : { groupedByDay: popularData, isLoading: loadingPopular }; */
+    const { groupedByDay, isLoading } =
+      filter === "hot"
+        ? { groupedByDay: popularData, isLoading: loadingPopular }
+        : filter === "popular"
+          ? {
+              groupedByDay: popularEngagementData,
+              isLoading: loadingPopularEngagement,
+            }
+          : filter === "rage"
+            ? { groupedByDay: rageData, isLoading: loadingRage }
+            : { groupedByDay: popularData, isLoading: loadingPopular };
+
+    console.log("FILTER", filter);
+    console.log("groupedByDay", groupedByDay);
 
     if (!isLoading && Object.keys(groupedByDay || {}).length === 0) {
       return (
@@ -79,6 +94,7 @@ const ReportListView: React.FC<Props> = ({
       <ChronologicalReportList
         groupedByDay={groupedByDay}
         renderCard={(item) => {
+          // ✅ item: PopularGroupedReport
           const key = `${item.reportingId}-${item.subCategory}`;
           return (
             <PopularReportCard
@@ -176,9 +192,12 @@ const ReportListView: React.FC<Props> = ({
           <FlatSubcategoryBlock
             key={`${item.reportingId}-${item.subCategory.subCategory}`}
             brand={item.marque}
+            reportId={item.reportingId}
             subcategory={item.subCategory.subCategory}
+            status={item.subCategory.status}
             descriptions={item.subCategory.descriptions}
             siteUrl={item.siteUrl || undefined}
+            hasBrandResponse={item.hasBrandResponse}
             /* capture={item.capture || null} */
             hideFooter={true}
           />
@@ -187,14 +206,18 @@ const ReportListView: React.FC<Props> = ({
     );
   }
 
-  const grouped = flatData.reduce<Record<string, typeof flatData>>(
-    (acc, report) => {
-      if (!acc[report.marque]) acc[report.marque] = [];
-      acc[report.marque].push(report);
-      return acc;
-    },
-    {},
+  const publicReportsOnly = flatData.filter(
+    (report): report is PublicGroupedReport =>
+      "subCategories" in report && Array.isArray(report.subCategories),
   );
+
+  const grouped = publicReportsOnly.reduce<
+    Record<string, PublicGroupedReport[]>
+  >((acc, report) => {
+    if (!acc[report.marque]) acc[report.marque] = [];
+    acc[report.marque].push(report);
+    return acc;
+  }, {});
 
   return (
     <>

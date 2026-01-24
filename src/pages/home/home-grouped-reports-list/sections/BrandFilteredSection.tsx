@@ -3,6 +3,9 @@ import SqueletonAnime from "@src/components/loader/SqueletonAnime";
 import Avatar from "@src/components/shared/Avatar";
 import { capitalizeFirstLetter } from "@src/utils/stringUtils";
 import FlatSubcategoryBlock from "../../confirm-reportlist/FlatSubcategoryBlock";
+import { getMostAdvancedStatus } from "@src/utils/ticketStatus";
+import type { TicketStatusKey } from "@src/types/ticketStatus";
+import { useBrandResponsesMap } from "@src/hooks/useBrandResponsesMap";
 
 interface BrandFilteredSectionProps {
   selectedBrand?: string;
@@ -12,28 +15,85 @@ interface BrandFilteredSectionProps {
   filteredByCategory: any[];
   loadingFiltered: boolean;
   reportsToDisplay: any[];
+
+  // ⚠️ conservée volontairement (utilisée ailleurs / contrat parent)
   getBrandLogo: (brand: string, siteUrl?: string) => string;
+
   loaderRef: React.RefObject<HTMLDivElement | null>;
 }
 
 /**
+ * 🔑 Regroupement FRONT — Option A
+ * 1 ticket logique par subCategory (aligné front marque)
+ */
+function groupReportsAsTickets(reports: any[]) {
+  const map: Record<string, any> = {};
+
+  for (const r of reports) {
+    const sub = r.subCategory || "Autre";
+
+    if (!map[sub]) {
+      map[sub] = {
+        subCategory: sub,
+        brand: r.marque,
+        siteUrl: r.siteUrl,
+        capture: r.capture ?? null,
+
+        // 🔑 pivot = MIN(reportingId) (aligné front marque)
+        pivotReportId: r.reportingId,
+        reportIds: [r.reportingId],
+
+        descriptions: Array.isArray(r.descriptions)
+          ? [...r.descriptions]
+          : r.description
+            ? [r.description]
+            : [],
+
+        status: r.status as TicketStatusKey,
+        count: 1,
+      };
+    } else {
+      // 🔑 pivot stable
+      if (r.reportingId < map[sub].pivotReportId) {
+        map[sub].pivotReportId = r.reportingId;
+      }
+
+      map[sub].reportIds.push(r.reportingId);
+      map[sub].count += 1;
+
+      if (Array.isArray(r.descriptions)) {
+        map[sub].descriptions.push(...r.descriptions);
+      } else if (r.description) {
+        map[sub].descriptions.push(r.description);
+      }
+
+      // 🔥 statut global
+      map[sub].status = getMostAdvancedStatus(
+        map[sub].status,
+        r.status as TicketStatusKey,
+      );
+    }
+  }
+
+  return Object.values(map);
+}
+
+/**
  * 🏷️ Section BrandFiltered
- * Affiche les signalements d’une marque ou catégorie spécifique.
- * - Gère le chargement
- * - Gère les cas vides
- * - Affiche les signalements via FlatSubcategoryBlock
+ * Vue TICKET (alignée avec le front marque)
  */
 const BrandFilteredSection: React.FC<BrandFilteredSectionProps> = ({
   selectedBrand,
   selectedCategory,
   selectedSiteUrl,
-  totalCount,
   filteredByCategory,
   loadingFiltered,
   reportsToDisplay,
-  /* getBrandLogo, */
   loaderRef,
 }) => {
+  const allReportIds = reportsToDisplay.map((r) => r.reportingId);
+  const { brandResponsesMap } = useBrandResponsesMap(allReportIds);
+
   // 🕓 Chargement
   if (loadingFiltered) {
     return (
@@ -55,34 +115,9 @@ const BrandFilteredSection: React.FC<BrandFilteredSectionProps> = ({
     );
   }
 
-  function groupReportsBySubCategory(reports: any[]) {
-    const map: Record<string, any> = {};
+  // ✅ REGROUPEMENT OPTION A
+  const ticketGroups = groupReportsAsTickets(reportsToDisplay);
 
-    for (const r of reports) {
-      const sub = r.subCategory || "Autre";
-
-      if (!map[sub]) {
-        map[sub] = {
-          brand: r.marque,
-          siteUrl: r.siteUrl,
-          subCategory: sub,
-          capture: r.capture,
-          descriptions: [],
-        };
-      }
-
-      // ajoute toutes les descriptions (si déjà explodé)
-      if (Array.isArray(r.descriptions)) {
-        map[sub].descriptions.push(...r.descriptions);
-      }
-    }
-
-    return Object.values(map);
-  }
-
-  const groupedReports = groupReportsBySubCategory(reportsToDisplay);
-
-  // ✅ Contenu principal
   return (
     <div className="grouped-by-category">
       {selectedBrand && (
@@ -93,10 +128,11 @@ const BrandFilteredSection: React.FC<BrandFilteredSectionProps> = ({
                 avatar={null}
                 pseudo={selectedBrand}
                 type="brand"
-                siteUrl={selectedSiteUrl} // ✅ domaine propre
+                siteUrl={selectedSiteUrl}
                 preferBrandLogo={true}
               />
             </div>
+
             <div className="selected-brand-summary__info-container">
               {selectedCategory ? (
                 <>
@@ -106,15 +142,15 @@ const BrandFilteredSection: React.FC<BrandFilteredSectionProps> = ({
                     {filteredByCategory.length > 1 ? "s" : ""} lié
                     {filteredByCategory.length > 1 ? "s" : ""} à «{" "}
                     <b>{selectedCategory}</b> » sur{" "}
-                    {` ${capitalizeFirstLetter(selectedBrand)}`}
+                    {capitalizeFirstLetter(selectedBrand)}
                   </span>
                 </>
               ) : (
                 <>
-                  <span className="count">{totalCount}</span>
+                  <span className="count">{ticketGroups.length}</span>
                   <span className="text">
-                    Signalement{totalCount > 1 ? "s" : ""} sur{" "}
-                    {` ${capitalizeFirstLetter(selectedBrand)}`}
+                    Signalement{ticketGroups.length > 1 ? "s" : ""} sur{" "}
+                    {capitalizeFirstLetter(selectedBrand)}
                   </span>
                 </>
               )}
@@ -123,18 +159,27 @@ const BrandFilteredSection: React.FC<BrandFilteredSectionProps> = ({
         </div>
       )}
 
-      {/* ✅ Boucle principale avec fallback siteUrl */}
-      {groupedReports.map((group, i) => (
-        <FlatSubcategoryBlock
-          key={`${group.subCategory}-${i}`}
-          brand={group.brand}
-          siteUrl={group.siteUrl}
-          subcategory={group.subCategory}
-          descriptions={group.descriptions}
-          capture={group.capture}
-          hideFooter={true}
-        />
-      ))}
+      {/* ✅ 1 CARTE = 1 TICKET LOGIQUE */}
+      {ticketGroups.map((ticket) => {
+        const hasBrandResponse = ticket.reportIds.some(
+          (id: string) => brandResponsesMap[id],
+        );
+
+        return (
+          <FlatSubcategoryBlock
+            key={ticket.pivotReportId}
+            reportIds={ticket.reportIds}
+            brand={ticket.brand}
+            siteUrl={ticket.siteUrl}
+            subcategory={ticket.subCategory}
+            descriptions={ticket.descriptions}
+            capture={ticket.capture}
+            status={ticket.status}
+            hideFooter={true}
+            hasBrandResponse={hasBrandResponse} // ✅ ICI
+          />
+        );
+      })}
     </div>
   );
 };

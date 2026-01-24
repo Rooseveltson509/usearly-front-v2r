@@ -1,53 +1,78 @@
-import React from "react";
-import type { ExplodedGroupedReport } from "@src/types/Reports";
-import { usePaginatedGroupedReportsByHot } from "../hooks/usePaginatedGroupedReportsByHot";
+import { useMemo } from "react";
 import ReportListView from "../../ReportListView";
+import type { PopularGroupedReport } from "@src/types/Reports";
 
 const HotReportsList = ({
+  data,
+  loading,
   expandedItems,
   handleToggle,
   searchTerm,
   onClearSearchTerm,
 }: {
+  data: Record<string, PopularGroupedReport[]>;
+  loading: boolean;
   expandedItems: Record<string, boolean>;
   handleToggle: (key: string) => void;
   searchTerm?: string;
   onClearSearchTerm?: () => void;
 }) => {
-  const { data, loading } = usePaginatedGroupedReportsByHot(true);
+  const formattedHotData = useMemo(() => {
+    const result: Record<string, PopularGroupedReport[]> = {};
 
-  // On transforme les résultats du backend en ExplodedGroupedReport
-  const explodedData: ExplodedGroupedReport[] = data.map((r) => ({
-    id: String(r.reportingId),
-    reportingId: String(r.reportingId),
-    category: r.category,
-    marque: r.marque,
-    siteUrl: r.siteUrl ?? undefined,
-    totalCount: r.count,
-    reactions: [], // pas encore exploité pour "hot"
-    subCategory: {
-      subCategory: r.subCategory,
-      count: r.count,
-      descriptions: r.descriptions as any, // déjà uniques côté backend
-    },
-    subCategories: [], // vide → évite doublons
-  }));
+    // 🔥 CAS 1 : déjà groupé par date
+    if (data && typeof data === "object" && !Array.isArray(data)) {
+      Object.entries(data).forEach(([date, items]) => {
+        if (!Array.isArray(items)) return;
+
+        result[date] = items.map((item) => ({
+          ...item,
+          createdAt: item.descriptions?.[0]?.createdAt,
+          description: item.descriptions?.[0]?.description,
+          descriptions: item.descriptions ?? [],
+          reactions: item.descriptions?.[0]?.reactions ?? [],
+        }));
+      });
+
+      return result;
+    }
+
+    // 🔥 CAS 2 : array flat → on regroupe
+    if (Array.isArray(data)) {
+      data.forEach((item) => {
+        const date =
+          item.descriptions?.[0]?.createdAt?.slice(0, 10) ?? "unknown";
+
+        if (!result[date]) result[date] = [];
+
+        result[date].push({
+          ...item,
+          createdAt: item.descriptions?.[0]?.createdAt,
+          description: item.descriptions?.[0]?.description,
+          descriptions: item.descriptions ?? [],
+          reactions: item.descriptions?.[0]?.reactions ?? [],
+        });
+      });
+    }
+
+    return result;
+  }, [data]);
 
   return (
     <ReportListView
       filter="hot"
-      viewMode="confirmed" // plat comme "rage"
-      flatData={explodedData}
+      viewMode="confirmed"
+      flatData={[]}
       chronoData={{}}
-      popularData={{}}
+      popularData={formattedHotData} // ✅ ICI
       popularEngagementData={{}}
       rageData={{}}
       expandedItems={expandedItems}
       handleToggle={handleToggle}
       loadingChrono={false}
-      loadingPopular={false}
+      loadingPopular={loading}
       loadingPopularEngagement={false}
-      loadingRage={loading}
+      loadingRage={false}
       searchTerm={searchTerm}
       onClearSearchTerm={onClearSearchTerm}
     />

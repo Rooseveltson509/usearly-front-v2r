@@ -50,14 +50,34 @@ const HotSection: React.FC<HotSectionProps> = ({
     );
   }
 
-  // ⚠️ Aucun signalement hot
+  if (reportData.loading) {
+    return (
+      <SqueletonAnime
+        loaderRef={loaderRef}
+        loading
+        hasMore={false}
+        error={null}
+      />
+    );
+  }
+
   if (!reportData.data || Object.keys(reportData.data).length === 0) {
+    return (
+      <div style={{ padding: 20, textAlign: "center", color: "#888" }}>
+        Aucun signalement chaud trouvé.
+      </div>
+    );
+  }
+
+  // ⚠️ Aucun signalement hot
+  /*   if (!reportData.data || Object.keys(reportData.data).length === 0) {
     return (
       <div style={{ padding: "20px", textAlign: "center", color: "#888" }}>
         Aucun signalement chaud trouvé.
       </div>
     );
-  }
+  } */
+  //console.log("🔥 HOT reportData", reportData.data);
 
   // ✅ Contenu principal
   return (
@@ -99,8 +119,10 @@ const HotSection: React.FC<HotSectionProps> = ({
       )}
 
       <HotReportsList
+        data={reportData.data}
+        loading={reportData.loading}
         expandedItems={expandedItems}
-        handleToggle={(key: string) =>
+        handleToggle={(key) =>
           setExpandedItems((prev) => ({ ...prev, [key]: !prev[key] }))
         }
         searchTerm={searchTerm}

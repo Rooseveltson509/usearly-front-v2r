@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getRageReports } from "@src/services/feedbackService";
 import type { ConfirmedSubcategoryReport } from "@src/types/Reports";
+import { apiService } from "@src/services/apiService";
 
 export const usePaginatedGroupedReportsByRage = (
   active: boolean,
@@ -26,6 +27,19 @@ export const usePaginatedGroupedReportsByRage = (
       try {
         const res = await getRageReports(page, pageSize);
         const newData: ConfirmedSubcategoryReport[] = res.data || [];
+        const reportIds = Array.from(
+          new Set(newData.map((d) => d.reportingId)),
+        );
+
+        const { data: map } = await apiService.post(
+          "/reports/brand-responses-map",
+          { reportIds },
+        );
+
+        const enriched = newData.map((item) => ({
+          ...item,
+          hasBrandResponse: Boolean(map[item.reportingId]),
+        }));
 
         setData((prev) => {
           const map = new Map<string, ConfirmedSubcategoryReport>();
@@ -37,7 +51,11 @@ export const usePaginatedGroupedReportsByRage = (
           });
 
           // Ajouter les nouveaux sans doublons
-          newData.forEach((item) => {
+          /*  newData.forEach((item) => {
+            const key = `${item.reportingId}-${item.subCategory}`;
+            map.set(key, item);
+          }); */
+          enriched.forEach((item) => {
             const key = `${item.reportingId}-${item.subCategory}`;
             map.set(key, item);
           });

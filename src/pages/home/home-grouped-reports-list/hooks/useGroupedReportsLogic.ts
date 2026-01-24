@@ -75,9 +75,10 @@ export function useGroupedReportsLogic(
   const [loadingFiltered, setLoadingFiltered] = useState(false);
   const [initializing, setInitializing] = useState(true);
   const [totalCount, setTotalCount] = useState(totalityCount);
-  /* const [currentSection, setCurrentSection] = useState<SectionKey>("loading"); */
 
-  // === Hooks de données ===
+  // ===============================
+  // HOOKS BRUTS
+  // ===============================
   const confirmedData = useConfirmedFlatData();
   const rageData = usePaginatedGroupedReportsByRage(filter === "rage", 10);
   const hotData = usePaginatedGroupedReportsByHot(filter === "hot", 10);
@@ -86,39 +87,46 @@ export function useGroupedReportsLogic(
     20,
   );
   const rawChronoData = usePaginatedGroupedReportsByDate(filter === "chrono");
-
-  // ✅ Normalisation locale des données chrono
-  const chronoData = useMemo(() => {
-    if (!rawChronoData?.data) return rawChronoData;
-    const normalized = rawChronoData.data.map((r: any) => ({
-      ...r,
-      siteUrl:
-        r.siteUrl ||
-        (r.domain
-          ? `https://${r.domain}`
-          : `https://${r.marque?.toLowerCase()}.com`),
-    }));
-    return { ...rawChronoData, data: normalized };
-  }, [rawChronoData]);
-
   const flatData = useFetchGroupedReports(activeTab);
 
-  // === Sélection du hook actif ===
+  // ===============================
+  // CHRONO (siteUrl + status)
+  // ===============================
+
+  const chronoData = useMemo(() => {
+    if (!rawChronoData?.data) return rawChronoData;
+
+    return {
+      ...rawChronoData,
+      data: rawChronoData.data.map((r: any) => ({
+        ...r,
+        siteUrl:
+          r.siteUrl ||
+          (r.domain
+            ? `https://${r.domain}`
+            : `https://${r.marque?.toLowerCase()}.com`),
+      })),
+    };
+  }, [rawChronoData]);
+
+  // ===============================
+  // SOURCE ACTIVE
+  // ===============================
   const reportData = useMemo(() => {
-    switch (filter) {
-      case "confirmed":
-        return confirmedData;
-      case "rage":
-        return rageData;
-      case "hot":
-        return hotData;
-      case "popular":
-        return popularEngagementData;
-      case "chrono":
-        return chronoData;
-      default:
-        return flatData;
-    }
+    const source =
+      filter === "confirmed"
+        ? confirmedData
+        : filter === "rage"
+          ? rageData
+          : filter === "hot"
+            ? hotData
+            : filter === "popular"
+              ? popularEngagementData
+              : filter === "chrono"
+                ? chronoData
+                : flatData;
+
+    return source;
   }, [
     filter,
     confirmedData,
@@ -129,23 +137,25 @@ export function useGroupedReportsLogic(
     flatData,
   ]);
 
-  // === Détermination de la section courante ===
+  // ===============================
+  // SECTION COURANTE
+  // ===============================
   const derivedSection = useMemo<SectionKey>(() => {
     if (initializing) return "loading";
-    const hasBrand = Boolean(selectedBrand?.trim());
-    const hasCategory = Boolean(selectedCategory?.trim());
-    if (hasBrand || hasCategory) return "brandFiltered";
+    if (selectedBrand || selectedCategory) return "brandFiltered";
+
     switch (filter) {
       case "confirmed":
-        return "confirmed";
       case "rage":
-        return "rage";
       case "popular":
-        return "popular";
       case "chrono":
-        return "chrono";
       case "urgent":
-        return "urgent";
+        return filter;
+
+      case "hot":
+      case "recent":
+        return "default";
+
       default:
         return "default";
     }
@@ -155,7 +165,6 @@ export function useGroupedReportsLogic(
     if (onSectionChange) onSectionChange(derivedSection);
   }, [derivedSection, onSectionChange]);
 
-  // === Initialisation ===
   useEffect(() => {
     if (initializing) {
       setFilter("chrono");
@@ -163,31 +172,45 @@ export function useGroupedReportsLogic(
     }
   }, [initializing]);
 
-  // === Fetch filtré par marque ===
+  // ===============================
+  // FETCH PAR MARQUE
+  // ===============================
   useEffect(() => {
-    const fetchFilteredReports = async () => {
-      if (!selectedBrand) {
-        setFilteredReports([]);
-        return;
-      }
+    if (!selectedBrand) {
+      setFilteredReports([]);
+      return;
+    }
+
+    (async () => {
       try {
         setLoadingFiltered(true);
         const { data } = await apiService.get("/reports", {
-          params: { brand: selectedBrand, page: 1, limit: 10 },
+          params: { brand: selectedBrand, page: 1, limit: 20 },
         });
         setFilteredReports(data.data);
         setTotalCount(data.data.length);
-      } catch (err) {
-        console.error("Erreur fetch reports filtrés:", err);
+      } catch {
         setFilteredReports([]);
       } finally {
         setLoadingFiltered(false);
       }
-    };
-    fetchFilteredReports();
+    })();
   }, [selectedBrand]);
-
   return {
+    filter,
+    setFilter,
+    reportData: {
+      ...reportData,
+    },
+    chronoData,
+    popularEngagementData,
+    filteredReports,
+    loadingFiltered,
+    totalCount,
+    initializing,
+  };
+
+  /*   return {
     filter,
     setFilter,
     reportData,
@@ -197,5 +220,5 @@ export function useGroupedReportsLogic(
     loadingFiltered,
     totalCount,
     initializing,
-  };
+  }; */
 }

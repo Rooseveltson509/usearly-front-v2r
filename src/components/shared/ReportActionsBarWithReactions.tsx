@@ -1,16 +1,21 @@
 import React, { useState } from "react";
-import { ThumbsUp, MessageCircle, Share2 } from "lucide-react";
+import { ThumbsUp, MessageCircle, Share2, CheckCircle2 } from "lucide-react";
 import { useReactionsForDescription } from "@src/hooks/useReactionsForDescription";
 import { getEmojisForType } from "@src/components/constants/emojiMapByType";
 import "./ReportActionsBar.scss";
 import EmojiUrlyReactionPicker from "@src/utils/EmojiUrlyReactionPicker";
 import statutIcon from "/assets/statut-icon.svg";
+import { TICKET_STATUSES, type TicketStatusKey } from "@src/types/ticketStatus";
 
 interface Props {
   userId: string;
   descriptionId: string;
   reportsCount: number;
+  reportId?: string;
+  hasBrandResponse?: boolean;
   commentsCount: number;
+  status: TicketStatusKey;
+  brandLogoUrl?: string;
   reactions?: any[];
   onReactClick: () => void;
   onCommentClick: () => void;
@@ -22,7 +27,8 @@ const ReportActionsBarWithReactions: React.FC<Props> = ({
   descriptionId,
   reportsCount,
   commentsCount,
-  /* reactions, */
+  hasBrandResponse,
+  status,
   onCommentClick,
   onToggleSimilarReports,
 }) => {
@@ -33,7 +39,12 @@ const ReportActionsBarWithReactions: React.FC<Props> = ({
   const emojis = getEmojisForType("report");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   let hoverTimeout: NodeJS.Timeout;
+  const statusConfig = TICKET_STATUSES.find((s) => s.key === status);
 
+  if (!statusConfig) {
+    console.warn("❌ Status inconnu reçu:", status);
+    return null; // ou un badge neutre "—"
+  }
   // ✅ Récupérer toutes les réactions avec leur count
   const allReactions = emojis
     .map((e) => ({ emoji: e.emoji, count: getCount(e.emoji) }))
@@ -68,6 +79,12 @@ const ReportActionsBarWithReactions: React.FC<Props> = ({
             </>
           )}
         </div>
+        {hasBrandResponse && (
+          <span className="brand-response-pill" onClick={onCommentClick}>
+            <CheckCircle2 size={14} />
+            Une Réponse de la marque
+          </span>
+        )}
 
         <div className="count-right">
           {commentsCount > 0 && (
@@ -136,10 +153,15 @@ const ReportActionsBarWithReactions: React.FC<Props> = ({
             <span className="partager-span-btn">Partager</span>
           </button>
         </div>
-        <div className="status-right">
-          <img src={statutIcon} className="icon-statut" />
-          {/* <CheckCircle size={16} color="#2563eb" /> */}
-          <span>En cours de correction</span>
+        <div
+          className={`status-badge status-${status}`}
+          style={{
+            color: statusConfig.color,
+            backgroundColor: statusConfig.bg,
+          }}
+        >
+          <img src={statutIcon} className="status-icon" />
+          <span>{statusConfig.label}</span>
         </div>
       </div>
     </div>
