@@ -34,6 +34,7 @@ const PopularReportList = ({
           status: item.status,
           category: item.category,
           subCategory: item.subCategory,
+          createdAt: item.createdAt,
           count: 1,
           descriptions: [
             {

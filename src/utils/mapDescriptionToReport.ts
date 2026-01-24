@@ -2,6 +2,7 @@ import type {
   ExplodedGroupedReport,
   FeedbackDescription,
 } from "@src/types/Reports";
+import type { TicketStatusKey } from "@src/types/ticketStatus";
 
 export const mapDescriptionToGroupedReport = (
   desc: FeedbackDescription,
@@ -12,6 +13,8 @@ export const mapDescriptionToGroupedReport = (
   const category = "Non catégorisé";
   const subCategory = "Autre";
 
+  const status: TicketStatusKey = "open"; // ✅ OBLIGATOIRE
+
   return {
     id: reportingId,
     reportingId,
@@ -21,6 +24,7 @@ export const mapDescriptionToGroupedReport = (
     reactions: [],
     subCategory: {
       subCategory,
+      status, // ✅ FIX
       count: 1,
       descriptions: [desc],
     },
@@ -28,6 +32,7 @@ export const mapDescriptionToGroupedReport = (
       ? [
           {
             subCategory,
+            status, // ✅ FIX
             count: 1,
             descriptions: [desc],
           },

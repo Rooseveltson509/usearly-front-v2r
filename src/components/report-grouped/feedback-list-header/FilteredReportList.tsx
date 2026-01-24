@@ -7,6 +7,7 @@ import type {
 import "./FilteredReportList.scss";
 import type { UserReaction } from "@src/types/reaction";
 import { apiService } from "@src/services/apiService";
+import type { TicketStatusKey } from "@src/types/ticketStatus";
 
 type FeedbackWithReport = FeedbackDescription & {
   reporting?: {
@@ -89,29 +90,34 @@ const FilteredReportList = ({ brand, category, renderCard }: Props) => {
 
   return (
     <div className="filtered-report-list" onScroll={handleScroll}>
-      {descriptions.map((desc) =>
-        renderCard({
+      {descriptions.map((desc) => {
+        const status: TicketStatusKey =
+          (desc.reporting as any)?.status ?? "open";
+
+        return renderCard({
           id: desc.id,
           reportingId: desc.reporting?.id || desc.id,
           marque: desc.reporting?.marque || "Autre",
           category: desc.reporting?.categories?.[0] || "Autre",
-          /* capture: desc.capture || desc.reporting?.capture || null, */
           totalCount: 1,
           reactions: desc.reporting?.reactions || [],
           subCategory: {
             subCategory: desc.reporting?.categories?.[0] || "Autre",
+            status, // ✅ OBLIGATOIRE
             count: 1,
             descriptions: [desc],
           },
           subCategories: [
             {
               subCategory: desc.reporting?.categories?.[0] || "Autre",
+              status, // ✅ OBLIGATOIRE
               count: 1,
               descriptions: [desc],
             },
           ],
-        }),
-      )}
+        });
+      })}
+
       {loading && <p className="loading">Chargement...</p>}
       {!hasMore && !loading && descriptions.length > 0 && (
         <p className="end-message">Fin des résultats</p>
