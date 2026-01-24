@@ -141,14 +141,14 @@ const PopularSection: React.FC<PopularSectionProps> = ({
   return (
     <>
       {/* 🔹 Liste principale des signalements */}
-      <PopularReportList
+      {/*      <PopularReportList
         data={filteredPrimaryData}
         expandedItems={expandedItems}
         handleToggle={(key: string) =>
           setExpandedItems((prev) => ({ ...prev, [key]: !prev[key] }))
         }
         loading={reportData.loading}
-      />
+      /> */}
 
       {/* 🔹 Résumé de la marque sélectionnée */}
       {selectedBrand && (

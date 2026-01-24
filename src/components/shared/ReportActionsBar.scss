@@ -145,7 +145,7 @@
       }
     }
 
-    .status-right {
+    /*     .status-right {
       font-family: "inter";
       display: flex;
       align-items: center;
@@ -154,6 +154,39 @@
       color: #000000;
       font-size: 0.8rem;
       font-weight: 400;
+    } */
+
+    .status-right {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+
+      padding: 5px 10px;
+
+      border-radius: 999px;
+
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1;
+
+      color: var(--status-color);
+
+      background: color-mix(in srgb, var(--status-color) 12%, white);
+
+      border: 1px solid color-mix(in srgb, var(--status-color) 28%, transparent);
+
+      white-space: nowrap;
+
+      .icon-statut {
+        width: 13px;
+        height: 13px;
+        flex-shrink: 0;
+        opacity: 0.85;
+      }
+
+      .status-label {
+        transform: translateY(0.5px); // alignement optique
+      }
     }
   }
 }
@@ -170,4 +203,59 @@
       transform: scale(1.2);
     }
   }
+}
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 4px 10px;
+  border-radius: 999px;
+
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+
+  white-space: nowrap;
+  user-select: none;
+  cursor: default;
+
+  .status-icon {
+    width: 14px;
+    height: 14px;
+    opacity: 0.9;
+  }
+}
+.status-badge {
+  background-color: transparent !important;
+  border: 1px solid currentColor;
+}
+
+.brand-response-indicator {
+  display: flex;
+  align-items: center;
+}
+
+.brand-response-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 4px 10px;
+  border-radius: 999px;
+
+  font-size: 12px;
+  font-weight: 500;
+
+  background: #eef2ff; // violet clair
+  color: #4f46e5;
+
+  line-height: 1;
+}
+
+.brand-response-pill .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4f46e5;
 }

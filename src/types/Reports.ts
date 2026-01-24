@@ -1,4 +1,5 @@
 import type { UserReaction } from "./reaction";
+import type { TicketStatusKey } from "./ticketStatus";
 
 export type FeedbackType = "report" | "coupdecoeur" | "suggestion";
 
@@ -53,9 +54,11 @@ export interface ConfirmedSubcategoryReport {
   reportingId: string; // 👈 au lieu de number
   subCategory: string;
   count: number;
+  status: TicketStatusKey;
   siteUrl: string | null;
   marque: string;
   category: string;
+  hasBrandResponse: boolean;
   capture: string | null;
   createdAt: string;
   descriptions: {
@@ -205,14 +208,15 @@ export interface SimplifiedFeedbackDescription {
 export interface GroupedReport {
   id: string;
   reportingId: string;
-  status?: string;
   category: string;
   marque: string;
+  hasBrandResponse?: boolean;
   siteUrl?: string | null;
   capture?: string | null;
   totalCount: number;
   subCategories: {
     subCategory: string;
+    status: TicketStatusKey;
     count: number;
     descriptions: FeedbackDescription[];
   }[];
@@ -245,6 +249,7 @@ export interface UserStatsSummary {
 export interface ExplodedGroupedReport extends GroupedReport {
   subCategory: {
     subCategory: string;
+    status: TicketStatusKey;
     count: number;
     descriptions: FeedbackDescription[];
   };
@@ -254,35 +259,13 @@ export interface PopularGroupedReport {
   reportingId: string;
   marque: string;
   siteUrl?: string | null;
+  status: TicketStatusKey;
   category: string;
   subCategory: string;
   count: number;
+  createdAt: string;
   descriptions: FeedbackDescription[];
 }
-
-/* interface PopularReport {
-  id: string;
-  reportingId: string;
-  subCategory: string;
-  description: string;
-  siteUrl: string | null;
-  marque: string;
-  category: string;
-  capture: string | null;
-  createdAt: string;
-  user: {
-    id: string;
-    pseudo: string;
-    avatar: string | null;
-  } | null;
-  reactions: any[];
-  comments: any[];
-  stats: {
-    totalReactions: number;
-    totalComments: number;
-    totalInteractions: number;
-  };
-} */
 
 export interface PopularReport {
   id: string; // id de la description
@@ -291,6 +274,7 @@ export interface PopularReport {
   description: string;
   siteUrl: string | null;
   marque: string;
+  status: TicketStatusKey;
   category: string;
   capture: string | null;
   createdAt: string;
@@ -328,8 +312,12 @@ export interface UserGroupedReportResponse {
 }
 
 export interface UserGroupedReport {
+  reportingId: string;
   siteUrl: string;
   marque: string;
+  hasBrandResponse: boolean;
+  reportIds: string[];
+  status: TicketStatusKey;
   category: string;
   subCategory: string;
   count: number;
@@ -366,6 +354,7 @@ export interface PublicGroupedReport {
   subCategories: {
     subCategory: string;
     count: number;
+    status: TicketStatusKey;
     descriptions: {
       id: string;
       description: string;
@@ -399,15 +388,32 @@ export interface PublicGroupedReportFromAPI {
   reportingId: string;
   marque: string;
   category: string;
+  status: TicketStatusKey;
+  hasBrandResponse?: boolean;
   subCategory: string;
   siteUrl?: string | null;
   capture: string | null;
   count: number;
+
   descriptions: FeedbackDescription[];
   date: string;
 }
 
 export type ReportDetailDescription = FeedbackDescription & {
   subCategory: string;
+  reportId: string;
   siteUrl?: string | null;
+  status: TicketStatusKey;
 };
+
+export interface UserReportGroupedByDate {
+  reportingId: string;
+  marque: string;
+  siteUrl?: string | null;
+  capture?: string | null;
+  category: string;
+  subCategory: string;
+  status: TicketStatusKey;
+  totalCount: number;
+  descriptions: FeedbackDescription[];
+}

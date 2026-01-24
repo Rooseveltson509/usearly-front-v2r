@@ -73,6 +73,10 @@ const ChronoReportCard: React.FC<Props> = ({ item, isOpen, onToggle }) => {
     }
   }, [comments.length, descriptionId, loading]);
   const currentCount = localCommentsCounts[descriptionId] ?? 0;
+  console.log("🧪 CHRONO CARD", {
+    id: item.reportingId,
+    hasBrandResponse: item.hasBrandResponse,
+  });
 
   return (
     <div
@@ -204,8 +208,10 @@ const ChronoReportCard: React.FC<Props> = ({ item, isOpen, onToggle }) => {
             <ReportActionsBarWithReactions
               userId={userProfile?.id || ""}
               descriptionId={descriptionId}
+              hasBrandResponse={item.hasBrandResponse}
               reportsCount={item.subCategory.count}
               commentsCount={currentCount}
+              status={item.subCategory.status}
               onReactClick={() => {}}
               onCommentClick={handleCommentClick}
               onToggleSimilarReports={() => {}}
@@ -213,13 +219,14 @@ const ChronoReportCard: React.FC<Props> = ({ item, isOpen, onToggle }) => {
           </div>
 
           {/* COMMENTS */}
-          {showComments && userProfile?.id && (
+          {isOpen && userProfile?.id && (
             <DescriptionCommentSection
               userId={userProfile.id}
               descriptionId={descriptionId}
               type="report"
-              hideFooter={true}
-              forceOpen={true}
+              hideFooter={true} // 👈 footer visible seulement si commentaires ouverts
+              forceOpen={showComments} // 👈 ouvre les comments si demandé
+              reportIds={item.hasBrandResponse ? [item.reportingId] : []}
               onCommentCountChange={(count) =>
                 setLocalCommentsCounts((prev) => ({
                   ...prev,

@@ -2,6 +2,7 @@ import React from "react";
 import { usePaginatedGroupedReportsByRage } from "@src/hooks/usePaginatedGroupedReportsByRage";
 import type { ExplodedGroupedReport } from "@src/types/Reports";
 import ReportListView from "../ReportListView";
+import { useBrandResponsesMap } from "@src/hooks/useBrandResponsesMap";
 
 const RageReportsList = ({
   expandedItems,
@@ -15,6 +16,12 @@ const RageReportsList = ({
   onClearSearchTerm?: () => void;
 }) => {
   const { data, loading } = usePaginatedGroupedReportsByRage(true);
+  const reportIds = React.useMemo(
+    () => data.map((r) => String(r.reportingId)),
+    [data],
+  );
+  const { brandResponsesMap /* loading: loadingBrandResponses */ } =
+    useBrandResponsesMap(reportIds);
 
   // On transforme les résultats du backend en ExplodedGroupedReport
   const explodedData: ExplodedGroupedReport[] = data.map((r) => ({
@@ -24,14 +31,33 @@ const RageReportsList = ({
     marque: r.marque,
     siteUrl: r.siteUrl ?? undefined,
     totalCount: r.count,
-    reactions: [], // pas encore dispo pour rage
+    reactions: [],
+    hasBrandResponse: Boolean(brandResponsesMap[String(r.reportingId)]),
     subCategory: {
       subCategory: r.subCategory,
+      status: r.status,
       count: r.count,
-      descriptions: r.descriptions as any, // déjà uniques côté backend
+      descriptions: r.descriptions as any,
     },
-    subCategories: [], // 👈 vide → évite les doublons
+    subCategories: [
+      {
+        subCategory: r.subCategory,
+        status: r.status,
+        count: r.count,
+        descriptions: r.descriptions as any,
+      },
+    ],
   }));
+
+  console.log("🔥 RAGE brandResponsesMap", brandResponsesMap);
+
+  console.log(
+    "🔥 RAGE explodedData",
+    explodedData.map((r) => ({
+      id: r.reportingId,
+      hasBrandResponse: r.hasBrandResponse,
+    })),
+  );
 
   return (
     <ReportListView

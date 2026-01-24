@@ -198,9 +198,7 @@ const UserGroupedReportsList: React.FC = () => {
         <ChronologicalReportList
           groupedByDay={enrichedChronoData}
           renderCard={(item) => {
-            const id =
-              item.subCategory.descriptions[0]?.id ||
-              `${item.marque}-${item.subCategory.subCategory}`;
+            const id = `${item.reportingId}-${item.subCategory.subCategory}`;
             return (
               <ChronoReportCard
                 key={id}

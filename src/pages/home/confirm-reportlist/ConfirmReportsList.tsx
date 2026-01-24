@@ -23,13 +23,13 @@ const ConfirmedReportsList = ({
       category: group.category,
       marque: group.marque,
       siteUrl: group.siteUrl,
+      hasBrandResponse: group.hasBrandResponse,
       totalCount: group.totalCount,
       reactions: group.reactions,
       subCategory, // 👈 nouvelle clé : l'unique sous-catégorie à afficher
       subCategories: [subCategory], // 👈 requis pour compatibilité avec GroupedReport
     })),
   );
-
   return (
     <ReportListView
       filter=""

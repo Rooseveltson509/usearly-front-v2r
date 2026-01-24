@@ -14,6 +14,7 @@ import { getBrandLogo } from "@src/utils/brandLogos";
 import Avatar from "@src/components/shared/Avatar";
 import UserBrandLine from "@src/components/shared/UserBrandLine";
 import CloseButton from "@src/components/buttons/CloseButtons";
+import { useBrandResponsesMap } from "@src/hooks/useBrandResponsesMap";
 
 interface Props {
   item: PopularGroupedReport;
@@ -86,7 +87,13 @@ const PopularReportCard: React.FC<Props> = ({
     return `${truncated}${suffix} ${firstDescription.emoji || ""}`.trim();
   }, [firstDescription?.description, firstDescription?.emoji, showFullText]);
 
+  const reportIds = item.reportingId ? [item.reportingId] : [];
+
+  const { brandResponsesMap } = useBrandResponsesMap(reportIds);
+
   if (!firstDescription) return null;
+
+  const hasBrandResponse = !!brandResponsesMap[item.reportingId];
 
   const author: {
     id: string;
@@ -212,21 +219,13 @@ const PopularReportCard: React.FC<Props> = ({
       {isOpen && (
         <div className="subcategory-content">
           <div className="main-description">
-            <p className="description-text">
-              {descriptionText}{" "}
+            <div className="description-text">
+              <span className="description-content">{descriptionText}</span>
+
               {showFullText && captureUrl && (
-                <div className="inline-capture">
-                  <img
-                    src={captureUrl}
-                    alt="Capture du signalement"
-                    className="inline-capture-img"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setShowCapturePreview(true);
-                    }}
-                  />
-                </div>
+                <div className="inline-capture">...</div>
               )}
+
               {(firstDescription.description.length >
                 DESCRIPTION_PREVIEW_LENGTH ||
                 captureUrl) && (
@@ -236,7 +235,6 @@ const PopularReportCard: React.FC<Props> = ({
                   {showFullText && <br />}
                   <button
                     className={`see-more-button ${showFullText ? "expanded" : ""}`}
-                    style={showFullText ? { marginTop: "5px" } : {}}
                     onClick={(e) => {
                       e.stopPropagation();
                       setShowFullText((prev) => !prev);
@@ -246,13 +244,15 @@ const PopularReportCard: React.FC<Props> = ({
                   </button>
                 </div>
               )}
-            </p>
+            </div>
           </div>
 
           <ReportActionsBarWithReactions
             userId={userProfile?.id || ""}
             descriptionId={descriptionId}
             reportsCount={item.count}
+            status={item.status}
+            hasBrandResponse={hasBrandResponse}
             commentsCount={currentCount}
             onReactClick={() => {}}
             onCommentClick={handleCommentClick}

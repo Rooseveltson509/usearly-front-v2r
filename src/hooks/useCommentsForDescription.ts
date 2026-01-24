@@ -5,10 +5,20 @@ export interface Comment {
   id: string;
   content: string;
   createdAt: string;
-  user: {
+
+  // ⬇️ EXISTANT (on ne touche pas)
+  user?: {
     id: string;
     pseudo: string;
     avatar: string | null;
+  };
+
+  // ⬇️ AJOUT MINIMAL (pour la réponse marque)
+  author?: {
+    id: string;
+    pseudo: string;
+    avatar?: string | null;
+    type?: "user" | "brand";
   };
 }
 

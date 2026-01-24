@@ -51,6 +51,7 @@ export const useConfirmedFlatData = () => {
               marque: item.marque,
               siteUrl: item.siteUrl ?? undefined,
               totalCount: item.count,
+              hasBrandResponse: item.hasBrandResponse,
               reactions: [],
 
               // ✅ pour compatibilité avec GroupedReport
@@ -58,6 +59,7 @@ export const useConfirmedFlatData = () => {
                 {
                   subCategory: item.subCategory,
                   count: item.count,
+                  status: item.status,
                   descriptions,
                 },
               ],
@@ -66,6 +68,7 @@ export const useConfirmedFlatData = () => {
               subCategory: {
                 subCategory: item.subCategory,
                 count: item.count,
+                status: item.status,
                 descriptions,
               },
             };

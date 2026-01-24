@@ -4,7 +4,6 @@ import type {
   CoupDeCoeur,
   GetConfirmedResponse,
   GroupedReport,
-  GroupedReportResponse,
   Suggestion,
   UserGroupedReportResponse,
   UserStatsSummary,
@@ -16,7 +15,7 @@ const getAuthToken = () =>
 /**
  * Signalements groupés de l'utilisateur
  */
-export const getGroupedReportsByUser = async (
+/* export const getGroupedReportsByUser = async (
   page = 1,
   limit = 10,
 ): Promise<GroupedReportResponse> => {
@@ -41,7 +40,7 @@ export const getGroupedReportsByUser = async (
       "Erreur lors du chargement des signalements groupés.";
     throw new Error(msg);
   }
-};
+}; */
 /**
  * Coups de cœur de l'utilisateur
  */
@@ -108,6 +107,7 @@ export const getUserProfileGroupedReports = async (
       },
     );
 
+    console.log("data from back view brand: ", data);
     return data;
   } catch (error: any) {
     const msg =

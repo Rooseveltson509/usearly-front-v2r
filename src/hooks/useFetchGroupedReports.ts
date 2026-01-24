@@ -10,6 +10,7 @@ import type {
   CoupDeCoeur,
   Suggestion,
 } from "@src/types/Reports";
+import type { TicketStatusKey } from "@src/types/ticketStatus";
 
 export const useFetchGroupedReports = (activeTab: FeedbackType) => {
   const [data, setData] = useState<PublicGroupedReport[]>([]);
@@ -45,6 +46,7 @@ export const useFetchGroupedReports = (activeTab: FeedbackType) => {
             {
               subCategory: "Autre",
               count: 1,
+              status: "open" as TicketStatusKey,
               descriptions: [
                 {
                   id: item.id,
@@ -52,7 +54,7 @@ export const useFetchGroupedReports = (activeTab: FeedbackType) => {
                   description: item.description,
                   emoji: item.emoji || "",
                   createdAt: item.createdAt,
-                  user: item.author
+                  author: item.author
                     ? {
                         id: "",
                         pseudo: item.author.pseudo,

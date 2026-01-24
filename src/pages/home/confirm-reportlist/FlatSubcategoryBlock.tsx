@@ -16,13 +16,18 @@ import {
 import { useBrandLogos } from "@src/hooks/useBrandLogos";
 import UserBrandLine from "@src/components/shared/UserBrandLine";
 import CloseButton from "@src/components/buttons/CloseButtons";
+import type { TicketStatusKey } from "@src/types/ticketStatus";
 
 interface Props {
   brand: string;
   siteUrl?: string;
   subcategory: string;
+  reportId?: string; // ✅ tous les écrans existants
+  reportIds?: string[]; // ✅ UNIQUEMENT BrandFilteredSection
+  status: TicketStatusKey;
   capture?: string | null;
   descriptions: any[];
+  hasBrandResponse?: boolean;
   hideFooter?: boolean;
   forceOpenComments?: boolean;
 }
@@ -31,7 +36,11 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
   brand,
   siteUrl,
   subcategory,
+  reportId,
+  reportIds,
   descriptions,
+  hasBrandResponse,
+  status,
   capture,
   forceOpenComments = false,
 }) => {
@@ -52,6 +61,15 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
     "report",
     refreshKey,
   );
+  const effectiveReportIds = reportIds ?? (reportId ? [reportId] : []);
+
+  /* const hasBrandResponse =
+  effectiveReportIds.some((id) =>
+    descriptions.some(
+      (d) => d.reportingId === id && d.author?.type === "brand"
+    )
+  ); */
+
   // ✅ AUTHOR SAFE (aligné API)
   const safeAuthor = {
     id: initialDescription.author?.id ?? null,
@@ -96,6 +114,8 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
   const resolvedLogo =
     possibleKeys.map((k) => brandLogos[k]).find(Boolean) ||
     FALLBACK_BRAND_PLACEHOLDER;
+
+  console.log("effectiveReportIds", effectiveReportIds);
 
   return (
     <div
@@ -251,6 +271,8 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
             descriptionId={initialDescription.id}
             reportsCount={descriptions.length}
             commentsCount={comments.length}
+            hasBrandResponse={hasBrandResponse}
+            status={status}
             onReactClick={() => {}}
             onCommentClick={() => {
               setShowComments((prev) => !prev);
@@ -264,19 +286,15 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
 
           {showComments && (
             <>
+              {/* ✍️ INPUT UNIQUE (écriture – ticket logique) */}
               <CommentSection
+                key="comment-input"
                 descriptionId={initialDescription.id}
                 type="report"
-                onCommentAdded={() => setRefreshKey((prev) => prev + 1)}
-                onCommentDeleted={() => setRefreshKey((prev) => prev + 1)}
-              />
-              <DescriptionCommentSection
-                userId={initialDescription.user?.id}
-                descriptionId={initialDescription.id}
-                type="report"
-                hideFooter={true}
-                refreshKey={refreshKey}
-                forceOpen={forceOpenComments}
+                brand={brand}
+                reportIds={effectiveReportIds}
+                onCommentAdded={() => setRefreshKey((p) => p + 1)}
+                onCommentDeleted={() => setRefreshKey((p) => p + 1)}
               />
             </>
           )}

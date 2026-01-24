@@ -21,7 +21,6 @@ interface Props {
   brand: string;
   siteUrl: string;
   reports: UserGroupedReport[];
-  //userProfile: { id?: string } | null;
   isOpen: boolean;
   onToggle: () => void;
 }
@@ -29,7 +28,6 @@ interface Props {
 const UserBrandBlock: React.FC<Props> = ({
   brand,
   reports,
-  //userProfile,
   isOpen,
   onToggle,
   siteUrl,
@@ -142,6 +140,13 @@ const UserBrandBlock: React.FC<Props> = ({
         >
           {reports.map((sub) => {
             const initialDescription = sub.descriptions[0];
+            const safeAuthor = {
+              id: initialDescription.author?.id ?? null,
+              pseudo: initialDescription.author?.pseudo ?? "Utilisateur",
+              avatar: initialDescription.author?.avatar ?? null,
+              email: initialDescription.author?.email ?? undefined,
+            };
+
             const currentCount =
               localCommentsCounts[initialDescription.id] ?? 0;
 
@@ -213,10 +218,8 @@ const UserBrandBlock: React.FC<Props> = ({
                       <div className="subcategory-user-brand-info">
                         <div className="avatars-row">
                           <Avatar
-                            avatar={initialDescription.author.avatar}
-                            pseudo={
-                              initialDescription.author.pseudo || "Utilisateur"
-                            }
+                            avatar={safeAuthor.avatar}
+                            pseudo={safeAuthor.pseudo || "Utilisateur"}
                             type="user"
                             wrapperClassName="avatar user-avatar"
                           />
@@ -229,11 +232,9 @@ const UserBrandBlock: React.FC<Props> = ({
                         </div>
                         <div className="user-brand-names">
                           <UserBrandLine
-                            userId={initialDescription.author?.id}
-                            email={
-                              initialDescription.author?.email ?? undefined
-                            }
-                            pseudo={initialDescription.author?.pseudo}
+                            userId={safeAuthor.id}
+                            email={safeAuthor.email}
+                            pseudo={safeAuthor.pseudo}
                             brand={brand}
                             type="report"
                           />
@@ -307,7 +308,9 @@ const UserBrandBlock: React.FC<Props> = ({
                     <ReportActionsBarWithReactions
                       userId={userProfile?.id || ""}
                       descriptionId={initialDescription.id}
+                      status={sub.status}
                       reportsCount={sub.count}
+                      hasBrandResponse={sub.hasBrandResponse}
                       commentsCount={currentCount}
                       onReactClick={() =>
                         setShowReactions((prev) => ({
@@ -336,6 +339,7 @@ const UserBrandBlock: React.FC<Props> = ({
                         <CommentSection
                           descriptionId={initialDescription.id}
                           type="report"
+                          reportIds={[sub.reportingId]}
                           onCommentAdded={() => {
                             setLocalCommentsCounts((prev) => ({
                               ...prev,
@@ -369,6 +373,9 @@ const UserBrandBlock: React.FC<Props> = ({
                           descriptionId={initialDescription.id}
                           type="report"
                           hideFooter={true}
+                          reportIds={
+                            sub.hasBrandResponse ? [sub.reportingId] : []
+                          }
                           refreshKey={
                             refreshCommentsKeys[initialDescription.id] ?? 0
                           }
@@ -382,6 +389,9 @@ const UserBrandBlock: React.FC<Props> = ({
                         descriptionId={initialDescription.id}
                         type="report"
                         modeCompact
+                        reportIds={
+                          sub.hasBrandResponse ? [sub.reportingId] : []
+                        }
                       />
                     )}
 
@@ -440,11 +450,15 @@ const UserBrandBlock: React.FC<Props> = ({
                               <div className="feedback-content">
                                 <div className="feedback-meta">
                                   <span className="pseudo">
-                                    {desc.author.pseudo}
+                                    {desc.author?.pseudo || "Utilisateur"}
                                   </span>
-                                  {userProfile?.id === desc.author.id && (
-                                    <span className="badge-me">Moi</span>
-                                  )}
+
+                                  {userProfile?.id &&
+                                    desc.author?.id &&
+                                    userProfile.id === desc.author.id && (
+                                      <span className="badge-me">Moi</span>
+                                    )}
+
                                   <span className="brand"> · {brand}</span>
                                   <span className="time">
                                     {" "}
@@ -465,6 +479,11 @@ const UserBrandBlock: React.FC<Props> = ({
                                     type="report"
                                     modeCompact
                                     triggerType="text"
+                                    reportIds={
+                                      sub.hasBrandResponse
+                                        ? [sub.reportingId]
+                                        : []
+                                    }
                                   />
                                 )}
                               </div>

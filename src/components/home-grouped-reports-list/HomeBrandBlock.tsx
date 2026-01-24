@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import type { PublicGroupedReport } from "@src/types/Reports";
 import { getBrandLogo } from "@src/utils/brandLogos";
@@ -20,12 +20,22 @@ import { getFullAvatarUrl } from "@src/utils/avatarUtils";
 import Avatar from "../shared/Avatar";
 import { capitalizeFirstLetter } from "@src/utils/stringUtils";
 import Champs, { type SelectFilterOption } from "@src/components/champs/Champs";
+import type { TicketStatusKey } from "@src/types/ticketStatus";
+import { useBrandResponsesMap } from "@src/hooks/useBrandResponsesMap";
 
 interface Props {
   brand: string;
   siteUrl: string;
   reports: PublicGroupedReport[];
 }
+type NormalizedSubCategory = {
+  subCategory: string;
+  status: TicketStatusKey;
+  reportIds: string[];
+  reportId: string; // ✅ NOUVEAU
+  count: number;
+  descriptions: any[];
+};
 
 type SignalementFilterValue = "pertinent" | "recents" | "anciens";
 
@@ -99,17 +109,25 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
   }, [reports]);
 
   const uniqueSubCategoriesMap = reports
-    .flatMap((report) => report.subCategories)
+    .flatMap((report) =>
+      report.subCategories.map((sub) => ({
+        ...sub,
+        __status: sub.status,
+        __reportId: report.reportingId,
+      })),
+    )
     .reduce(
       (acc, sub) => {
         if (!acc[sub.subCategory]) {
           acc[sub.subCategory] = {
-            ...sub,
+            subCategory: sub.subCategory,
+            status: sub.__status,
+            reportIds: [sub.__reportId],
+            reportId: sub.__reportId, // ✅ MAINTENANT ACCEPTÉ
             descriptions: [...sub.descriptions],
-            count: sub.descriptions.length, // on force le vrai count
+            count: sub.descriptions.length,
           };
         } else {
-          // Ajout des nouvelles descriptions SANS doublons
           const existingDescriptions = acc[sub.subCategory].descriptions;
           const newDescriptions = sub.descriptions.filter(
             (desc) => !existingDescriptions.some((d) => d.id === desc.id),
@@ -119,15 +137,21 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
             ...existingDescriptions,
             ...newDescriptions,
           ];
-          acc[sub.subCategory].count = acc[sub.subCategory].descriptions.length; // recalcul réel
+          acc[sub.subCategory].count = acc[sub.subCategory].descriptions.length;
         }
 
         return acc;
       },
-      {} as Record<string, PublicGroupedReport["subCategories"][number]>,
+      {} as Record<string, NormalizedSubCategory>,
     );
 
   const uniqueSubCategories = Object.values(uniqueSubCategoriesMap);
+  const allReportIds = useMemo(
+    () =>
+      Array.from(new Set(uniqueSubCategories.flatMap((sub) => sub.reportIds))),
+    [uniqueSubCategories],
+  );
+  const { brandResponsesMap } = useBrandResponsesMap(allReportIds);
 
   const getMostRecentDate = () => {
     let latest: Date | null = null;
@@ -146,6 +170,7 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
 
   const mostRecentDate = getMostRecentDate();
 
+  console.log("🔎 test de vérif", reports);
   return (
     <div className={`brand-block ${openBrands[brand] ? "open" : "close"}`}>
       <div className="brand-header" onClick={() => toggleBrand(brand)}>
@@ -174,6 +199,9 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
       {openBrands[brand] && (
         <div className="subcategories-list">
           {uniqueSubCategories.map((sub, j) => {
+            const hasBrandResponse = sub.reportIds.some(
+              (id) => brandResponsesMap[id],
+            );
             const initialDescription = sub.descriptions[0];
             const additionalDescriptions = sub.descriptions.slice(1);
             const hasMoreThanTwo = additionalDescriptions.length > 2;
@@ -297,9 +325,12 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
                       userId={""}
                       descriptionId={initialDescription.id}
                       reportsCount={sub.count}
+                      hasBrandResponse={hasBrandResponse}
+                      brandLogoUrl={getBrandLogo(brand, siteUrl)}
                       commentsCount={
                         localCommentsCounts[initialDescription.id] ?? 0
                       }
+                      status={sub.status}
                       onReactClick={() =>
                         setShowReactions((prev) => ({
                           ...prev,
@@ -327,6 +358,7 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
                         <CommentSection
                           descriptionId={initialDescription.id}
                           type="report"
+                          reportIds={sub.reportIds}
                           onCommentAdded={() => {
                             setLocalCommentsCounts((prev) => ({
                               ...prev,

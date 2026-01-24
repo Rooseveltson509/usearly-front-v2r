@@ -66,7 +66,8 @@ const NotificationCardRenderer: React.FC<Props> = ({ notif, isOpen }) => {
           siteUrl={siteUrl}
           subcategory={report.subCategory}
           descriptions={normalizedDescriptions}
-          //brandLogoUrl={brandLogoUrl}
+          status={report.subCategory.status}
+          hasBrandResponse={report.hasBrandResponse}
           capture={reporting?.capture}
           hideFooter
           forceOpenComments={false}

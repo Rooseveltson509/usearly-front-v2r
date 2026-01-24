@@ -3,11 +3,14 @@ import { getUserReportsGroupedByDate } from "@src/services/feedbackService";
 import type {
   ExplodedGroupedReport,
   GetGroupedReportsByDateResponse,
-  PublicGroupedReportFromAPI,
 } from "@src/types/Reports";
 
 export const usePaginatedUserReportsGroupedByDate = (enabled: boolean) => {
   const [data, setData] = useState<Record<string, ExplodedGroupedReport[]>>({});
+  /* const [data, setData] = useState<Record<string, UserReportGroupedByDate[]>>(
+    {}
+  ); */
+
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -45,30 +48,38 @@ export const usePaginatedUserReportsGroupedByDate = (enabled: boolean) => {
 
         if (response.success) {
           const transformedData: Record<string, ExplodedGroupedReport[]> = {};
-
           Object.entries(response.data).forEach(([date, reports]) => {
             transformedData[date] = reports.map(
-              (report: PublicGroupedReportFromAPI) => ({
+              (report): ExplodedGroupedReport => ({
                 id: report.reportingId,
                 reportingId: report.reportingId,
-                category: report.category,
                 marque: report.marque,
-                siteUrl: report.siteUrl || null, // ✅ conserve siteUrl
-                capture: report.capture || null,
+                siteUrl: report.siteUrl ?? null,
+                capture: report.capture ?? null,
+                category: report.category,
                 totalCount: report.count,
+
+                // ✅ AJOUT IMPORTANT
+                hasBrandResponse: report.hasBrandResponse,
+
                 subCategory: {
                   subCategory: report.subCategory,
+                  status: report.status,
                   count: report.count,
                   descriptions: report.descriptions,
                 },
+
                 subCategories: [
                   {
                     subCategory: report.subCategory,
+                    status: report.status,
                     count: report.count,
                     descriptions: report.descriptions,
                   },
                 ],
+
                 reactions: [],
+                date,
               }),
             );
           });
