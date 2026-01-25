@@ -45,7 +45,7 @@
   color: #0f172a;
 }
 
-.badge {
+.badge-response {
   padding: 6px 14px;
   font-size: 11px;
   font-weight: 700;
@@ -115,10 +115,10 @@
   line-height: 1.75;
   letter-spacing: 0.01em;
 }
-.badge {
+.badge-response {
   font-weight: 800;
 }
-.badge {
+.badge-response {
   padding: 5px 12px;
   font-size: 10.5px;
   font-weight: 700;
@@ -128,7 +128,7 @@
   background: rgba(99, 102, 241, 0.12);
   box-shadow: none; // 👈 optionnel
 }
-.badge {
+.badge-response {
   display: inline-flex;
   align-items: center;
   gap: 6px;

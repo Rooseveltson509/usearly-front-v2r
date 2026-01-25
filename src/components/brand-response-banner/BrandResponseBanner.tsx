@@ -17,7 +17,7 @@ const BrandResponseBanner: React.FC<Props> = ({
     <div className="brand-response-banner">
       <div className="brand-response-header">
         <span className="brand-name">{brand}</span>
-        <span className="badge">
+        <span className="badge-response">
           <Check size={12} /> Réponse officielle
         </span>
 

@@ -144,7 +144,7 @@ const AdminBrandsPage = () => {
                   <td>{brand.offres}</td>
                   <td>
                     <span
-                      className={`status-badge ${
+                      className={`status-badge-dash ${
                         brand.isActive ? "active" : "inactive"
                       }`}
                     >
