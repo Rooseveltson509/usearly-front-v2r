@@ -73,10 +73,6 @@ const ChronoReportCard: React.FC<Props> = ({ item, isOpen, onToggle }) => {
     }
   }, [comments.length, descriptionId, loading]);
   const currentCount = localCommentsCounts[descriptionId] ?? 0;
-  console.log("🧪 CHRONO CARD", {
-    id: item.reportingId,
-    hasBrandResponse: item.hasBrandResponse,
-  });
 
   return (
     <div
@@ -224,6 +220,7 @@ const ChronoReportCard: React.FC<Props> = ({ item, isOpen, onToggle }) => {
               userId={userProfile.id}
               descriptionId={descriptionId}
               type="report"
+              brand={item.marque}
               hideFooter={true} // 👈 footer visible seulement si commentaires ouverts
               forceOpen={showComments} // 👈 ouvre les comments si demandé
               reportIds={item.hasBrandResponse ? [item.reportingId] : []}

@@ -12,6 +12,7 @@ import {
 import CreateBrandModal from "./CreateBrandModal";
 import { useToast } from "../hooks/useHooks";
 import Toast from "../toast/Toast";
+import EditBrandModal from "./EditBrandModal";
 
 const AdminBrandsPage = () => {
   const { userProfile, isLoading } = useAuth();
@@ -21,6 +22,8 @@ const AdminBrandsPage = () => {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [selectedBrand, setSelectedBrand] = useState<AdminBrand | null>(null);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   const { toast, showToast } = useToast();
 
@@ -127,37 +130,52 @@ const AdminBrandsPage = () => {
                     {brand.name}
                   </td>
                   <td>{brand.domain}</td>
-                  <td>{brand.email}</td>
+                  <td>
+                    <div className="email-cell">
+                      {brand.email}
+                      {brand.pendingEmail && (
+                        <span className="email-pending">
+                          En attente de confirmation
+                        </span>
+                      )}
+                    </div>
+                  </td>
+
                   <td>{brand.offres}</td>
                   <td>
                     <span
-                      className={`status ${
+                      className={`status-badge ${
                         brand.isActive ? "active" : "inactive"
                       }`}
                     >
                       {brand.isActive ? "Active" : "Désactivée"}
                     </span>
                   </td>
+
                   <td className="actions">
-                    {/* Toggle status */}
+                    <button
+                      className="btn-edit primary"
+                      onClick={() => {
+                        setSelectedBrand(brand);
+                        setShowEditModal(true);
+                      }}
+                    >
+                      Modifier
+                    </button>
+
                     <button
                       disabled={loadingActionId === brand.id}
-                      className={`btn-status ${brand.isActive ? "danger" : "success"} ${
-                        loadingActionId === brand.id ? "loading" : ""
+                      className={`btn-status subtle ${
+                        brand.isActive ? "danger" : "success"
                       }`}
                       onClick={() => confirmToggle(brand.id)}
                     >
-                      {loadingActionId === brand.id
-                        ? "…"
-                        : brand.isActive
-                          ? "Désactiver"
-                          : "Activer"}
+                      {brand.isActive ? "Désactiver" : "Activer"}
                     </button>
 
-                    {/* Reset password */}
                     <button
                       disabled={loadingActionId === brand.id}
-                      className="btn-reset"
+                      className="btn-reset subtle"
                       onClick={() => confirmReset(brand.id)}
                     >
                       Reset MDP
@@ -175,6 +193,13 @@ const AdminBrandsPage = () => {
         onSuccess={loadBrands}
       />
       {toast && <Toast message={toast.message} type={toast.type} />}
+
+      <EditBrandModal
+        open={showEditModal}
+        brand={selectedBrand}
+        onClose={() => setShowEditModal(false)}
+        onSuccess={loadBrands}
+      />
     </div>
   );
 };

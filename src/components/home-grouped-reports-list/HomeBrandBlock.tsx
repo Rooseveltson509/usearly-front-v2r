@@ -389,6 +389,7 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
 
                         <DescriptionCommentSection
                           userId=""
+                          brand={brand}
                           descriptionId={initialDescription.id}
                           type="report"
                           hideFooter
@@ -402,6 +403,7 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
                     {showReactions[sub.subCategory] && (
                       <DescriptionCommentSection
                         userId=""
+                        brand={brand}
                         descriptionId={initialDescription.id}
                         type="report"
                         modeCompact
@@ -467,6 +469,7 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
                                 </p>
                                 <DescriptionCommentSection
                                   userId=""
+                                  brand={brand}
                                   descriptionId={desc.id}
                                   type="report"
                                   modeCompact

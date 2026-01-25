@@ -339,6 +339,7 @@ const UserBrandBlock: React.FC<Props> = ({
                         <CommentSection
                           descriptionId={initialDescription.id}
                           type="report"
+                          brand={brand}
                           reportIds={[sub.reportingId]}
                           onCommentAdded={() => {
                             setLocalCommentsCounts((prev) => ({
