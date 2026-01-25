@@ -166,3 +166,80 @@
   color: #e74c3c;
   border: 1px solid rgba(231, 76, 60, 0.25);
 }
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-edit.primary {
+  background: #6366f1;
+  color: white;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 6px 12px;
+
+  &:hover {
+    background: #4f46e5;
+  }
+}
+
+button.subtle {
+  background: #f1f5f9;
+  color: #334155;
+
+  &:hover {
+    background: #e2e8f0;
+  }
+}
+
+button.danger {
+  color: #b91c1c;
+}
+
+button.success {
+  color: #047857;
+}
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+
+  &.active {
+    background: #ecfdf5;
+    color: #047857;
+  }
+
+  &.inactive {
+    background: #fef2f2;
+    color: #b91c1c;
+  }
+}
+.email-cell {
+  display: flex;
+  flex-direction: column;
+}
+
+.email-pending {
+  margin-top: 4px;
+  font-size: 11px;
+  background: #fffbeb;
+  color: #92400e;
+  padding: 2px 8px;
+  border-radius: 999px;
+  width: fit-content;
+}
+.brands-table tr {
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: #f8fafc;
+  }
+}
+.brand-avatar {
+  background: #f1f5f9;
+  color: #334155;
+  font-weight: 600;
+}

@@ -1,0 +1,50 @@
+.modal-card {
+  padding: 24px;
+  border-radius: 12px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+input,
+select {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  font-size: 14px;
+
+  &:focus {
+    border-color: #6366f1;
+    outline: none;
+  }
+}
+
+.hint {
+  margin-top: 6px;
+  font-size: 12px;
+  background: #fffbeb;
+  color: #92400e;
+  padding: 6px 8px;
+  border-radius: 8px;
+}
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.actions button:last-child {
+  background: #6366f1;
+  color: white;
+  font-weight: 600;
+}

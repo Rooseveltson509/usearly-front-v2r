@@ -195,21 +195,3 @@ function App() {
 }
 
 export default App;
-
-/* import { BrowserRouter as Router } from "react-router-dom";
-import { AuthProvider } from "@src/services/AuthContext";
-import Layout from "@src/components/layout/Layout";
-import AppRoutes from "@src/routes/AppRoutes";
-
-function App() {
-  return (
-    <Router>
-      <AuthProvider>
-        <Layout>
-          <AppRoutes />
-        </Layout>
-      </AuthProvider>
-    </Router>
-  );
-}
-export default App; */

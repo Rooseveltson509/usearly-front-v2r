@@ -17,6 +17,7 @@ interface Props {
   reportIds?: string[];
   autoOpenIfComments?: boolean;
   hideFooter?: boolean;
+  brand?: string;
   refreshKey?: number;
   forceOpen?: boolean;
   onCommentCountChange?: (count: number) => void;
@@ -29,6 +30,7 @@ const DescriptionCommentSection: React.FC<Props> = ({
   userId,
   type,
   modeCompact = false,
+  brand,
   triggerType = "default",
   onOpenSimilarReports,
   forceClose = false,
@@ -161,6 +163,7 @@ const DescriptionCommentSection: React.FC<Props> = ({
         <CommentSection
           descriptionId={descriptionId}
           type={type}
+          brand={brand}
           reportIds={reportIds}
           onCommentAdded={() => setLocalRefreshKey((k) => k + 1)}
           onCommentDeleted={() => setLocalRefreshKey((k) => k + 1)}

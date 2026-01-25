@@ -35,6 +35,7 @@ export interface AdminBrand {
   logo?: string | null;
   isActive: boolean;
   createdAt: string;
+  pendingEmail?: string | null;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -74,3 +75,15 @@ export async function resetBrandPassword(brandId: string) {
   );
   return data;
 }
+
+export const updateBrand = async (
+  brandId: string,
+  payload: {
+    domain?: string;
+    offres?: string;
+    email?: string;
+  },
+) => {
+  const res = await apiService.patch(`/admin/brands/${brandId}`, payload);
+  return res.data;
+};
