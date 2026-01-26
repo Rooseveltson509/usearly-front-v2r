@@ -87,3 +87,44 @@ export const updateBrand = async (
   const res = await apiService.patch(`/admin/brands/${brandId}`, payload);
   return res.data;
 };
+
+export const getAdminUsers = async (
+  page: number = 1,
+  limit: number = 10,
+  search?: string,
+  statuts?: string[],
+) => {
+  const params: any = { page, limit };
+
+  if (search && search.trim()) {
+    params.search = search.trim();
+  }
+
+  if (statuts && statuts.length > 0) {
+    params.statuts = statuts.join(",");
+  }
+
+  const { data } = await apiService.get("/admin/users", { params });
+  return data;
+};
+
+export const getAdminUserDetail = async (id: string) => {
+  const { data } = await apiService.get(`/admin/users/${id}`);
+  return data;
+};
+
+/* -------------------------------------------------------------------------- */
+/* Admin users actions */
+/* -------------------------------------------------------------------------- */
+
+// 🔒 Suspendre / réactiver un utilisateur
+export const toggleUserSuspension = async (userId: string) => {
+  const { data } = await apiService.patch(`/admin/users/${userId}/suspend`);
+  return data;
+};
+
+// 🗑️ Supprimer un utilisateur (soft delete)
+export const deleteUser = async (userId: string) => {
+  const { data } = await apiService.delete(`/admin/users/${userId}`);
+  return data;
+};

@@ -2,8 +2,9 @@ import Avatar from "@src/components/shared/Avatar";
 import goToUser from "/assets/dashboardUser/goToUser.svg";
 import { getContributorStyle } from "@src/services/contributorBadge";
 import { TooltipProvider } from "@src/components/ui/tooltip";
-import CellTooltip from "@src/pages/dashboardUser/components/ToolTip/CellTooltip";
+import CellTooltip from "@src/pages/admin/dashboardUser/components/ToolTip/CellTooltip";
 import "./feed.scss";
+import { useNavigate } from "react-router-dom";
 
 type UserRow = {
   id: string;
@@ -19,12 +20,13 @@ type UserRow = {
   up: number;
 };
 
-type StatutLabel = "actif" | "suspendu" | "supprimé";
+type StatutLabel = "actif" | "suspendu" | "supprimé" | "non_confirmé";
 
-const STATUS_EMOJI: Record<StatutLabel, "🟢" | "🟡" | "🔴"> = {
+const STATUS_EMOJI: Record<StatutLabel, "🟢" | "🟡" | "🔴" | "⚪"> = {
   actif: "🟢",
   suspendu: "🟡",
   supprimé: "🔴",
+  non_confirmé: "⚪",
 };
 
 function genderShort(gender: string): string {
@@ -53,6 +55,8 @@ const tooltipLabel = (label: string, value: string | number) =>
   `${label}: ${value}`;
 
 const Feed = ({ users }: { users: UserRow[] }) => {
+  const navigate = useNavigate();
+
   return (
     <TooltipProvider delayDuration={0}>
       <div className="feed-table-container">
@@ -86,7 +90,11 @@ const Feed = ({ users }: { users: UserRow[] }) => {
                   <td className="feed-table-body-line-data">
                     <CellTooltip tooltip={`Profil de ${user.pseudo}`}>
                       <div className="feed-table-body-line-data-avatar">
-                        <Avatar avatar={user.avatar || null} sizeHW={45} />
+                        <Avatar
+                          avatar={user.avatar || null}
+                          pseudo={user.pseudo}
+                          sizeHW={45}
+                        />
                       </div>
                     </CellTooltip>
                   </td>
@@ -192,7 +200,12 @@ const Feed = ({ users }: { users: UserRow[] }) => {
                     <CellTooltip tooltip={`Voir ${user.pseudo}`}>
                       <div className="feed-table-body-line-data">
                         <span className="feed-table-body-line-data-action">
-                          <img src={goToUser} alt="Voir l'utilisateur" />
+                          <img
+                            src={goToUser}
+                            alt="Voir l'utilisateur"
+                            onClick={() => navigate(`/admin/users/${user.id}`)}
+                            style={{ cursor: "pointer" }}
+                          />
                         </span>
                       </div>
                     </CellTooltip>

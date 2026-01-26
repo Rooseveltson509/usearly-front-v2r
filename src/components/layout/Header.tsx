@@ -169,18 +169,11 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
               {userProfile?.role === "admin" && (
                 <>
                   <NavLink
-                    to="/admin/brands"
-                    className="menu-item"
-                    onClick={() => setUserMenuOpen(false)}
-                  >
-                    Administration
-                  </NavLink>
-                  <NavLink
-                    to="/admin"
+                    to="/admin/users"
                     className="menu-item admin-item"
                     onClick={() => setUserMenuOpen(false)}
                   >
-                    Dashboard admin
+                    Gérer les Utilisateurs
                   </NavLink>
                   <NavLink
                     to="/admin/brands"

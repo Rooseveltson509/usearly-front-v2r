@@ -24,7 +24,8 @@ import AboutPage from "./pages/about/AboutPage";
 import AboutClassicPage from "./pages/aboutClassic/AboutClassicPage";
 import NotFoundPage from "./pages/not-found/NotFoundPage";
 import AdminBrandsPage from "./pages/admin/brands/AdminBrandsPage";
-import DashboardUser from "./pages/dashboardUser/DashboardUser";
+import DashboardUser from "./pages/admin/dashboardUser/users/DashboardUser";
+import AdminUserDetail from "./pages/admin/dashboardUser/users/AdminUserDetail";
 
 function App() {
   return (
@@ -67,6 +68,22 @@ function App() {
               element={
                 <ProtectedRoute allowedTypes={["user"]}>
                   <AdminBrandsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/users"
+              element={
+                <ProtectedRoute allowedTypes={["user"]}>
+                  <DashboardUser />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/users/:userId"
+              element={
+                <ProtectedRoute allowedTypes={["user"]}>
+                  <AdminUserDetail />
                 </ProtectedRoute>
               }
             />
@@ -175,14 +192,6 @@ function App() {
               element={
                 <ProtectedRoute allowedTypes={["user"]}>
                   <Home />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/dashboard-user"
-              element={
-                <ProtectedRoute allowedTypes={["user"]}>
-                  <DashboardUser />
                 </ProtectedRoute>
               }
             />

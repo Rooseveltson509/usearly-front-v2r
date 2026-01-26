@@ -4,7 +4,7 @@ import { type CSSProperties, useEffect, useRef, useState } from "react";
 
 import closeButton from "/assets/dashboardUser/closeButtonFilter.svg";
 
-type StatutLabel = "actif" | "suspendu" | "supprimé";
+type StatutLabel = "actif" | "suspendu" | "supprimé" | "non_confirmé";
 type ContributorLabel =
   | "Porteur d'idées"
   | "Explorateur de bugs"
@@ -25,7 +25,12 @@ type Props = {
   onUpRangeChange: (range: UpRange) => void;
 };
 
-const ALL_STATUSES: StatutLabel[] = ["actif", "suspendu", "supprimé"];
+const ALL_STATUSES: StatutLabel[] = [
+  "actif",
+  "suspendu",
+  "supprimé",
+  "non_confirmé",
+];
 const ALL_CONTRIBUTOR_TYPES: ContributorLabel[] = [
   "Porteur d'idées",
   "Explorateur de bugs",
@@ -48,6 +53,7 @@ const STATUS_COLORS: Record<StatutLabel, string> = {
   actif: "#22c55e",
   suspendu: "#facc15",
   supprimé: "#ef4444",
+  non_confirmé: "#ffffff",
 };
 
 const DashboardFilter = ({
