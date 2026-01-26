@@ -1,10 +1,15 @@
-import DashboardUserHeader from "@src/pages/dashboardUser/components/header/DashboardUserHeader.tsx";
-import DashboardFilter from "@src/pages/dashboardUser/components/filters/DashboardFilter.tsx";
-import Feed from "@src/pages/dashboardUser/components/feed/Feed.tsx";
-
-import "./DashboardUser.scss";
-
+import DashboardUserHeader from "@src/pages/admin/dashboardUser/components/header/DashboardUserHeader";
+import DashboardFilter from "@src/pages/admin/dashboardUser/components/filters/DashboardFilter";
+import Feed from "@src/pages/admin/dashboardUser/components/feed/Feed";
 import { useState, useMemo, useEffect } from "react";
+import { getAdminUsers } from "@src/services/adminService";
+import {
+  mapContributor,
+  mapStatut,
+  type ContributorLabel,
+  type StatutLabel,
+} from "../helpers/mapStats";
+import "./DashboardUser.scss";
 
 type UserRow = {
   id: string;
@@ -20,12 +25,6 @@ type UserRow = {
   contributeur: ContributorLabel;
 };
 
-type StatutLabel = "actif" | "suspendu" | "supprimé";
-type ContributorLabel =
-  | "Porteur d'idées"
-  | "Explorateur de bugs"
-  | "Ambassadeur"
-  | "Polycontributeur";
 type UpRange = "inf-10" | "10-30" | "30-50" | "sup-50" | "";
 
 const UP_RANGE_BOUNDARIES: Record<
@@ -55,48 +54,6 @@ const isInUpRange = (value: number, range: UpRange) => {
   return true;
 };
 
-const SAMPLE_USERS: UserRow[] = [
-  {
-    id: "u1",
-    avatar: null,
-    statut: "actif",
-    pseudo: "Utilisateur123",
-    gender: "Masculin",
-    birthdateISO: "2001-06-15",
-    email: "xizeucappoddau-3596@yopmail.fr",
-    feedbacks: 42,
-    marques: 7,
-    up: 15,
-    contributeur: "Porteur d'idées",
-  },
-  {
-    id: "u2",
-    avatar: null,
-    statut: "suspendu",
-    pseudo: "AnnaB",
-    gender: "Féminin",
-    birthdateISO: "1997-11-02",
-    email: "annaadibazidubaziudbziaubsdqjdbzaliudbsqdazvbidaiuzbdb@example.com",
-    feedbacks: 12,
-    marques: 3,
-    up: 4,
-    contributeur: "Explorateur de bugs",
-  },
-  {
-    id: "u3",
-    avatar: null,
-    statut: "supprimé",
-    pseudo: "Neo",
-    gender: "non Spécifié",
-    birthdateISO: "1990-01-20",
-    email: "neo@example.com",
-    feedbacks: 5,
-    marques: 1,
-    up: 0,
-    contributeur: "Ambassadeur",
-  },
-];
-
 const DashboardUser = () => {
   const [users, setUsers] = useState<UserRow[]>([]);
   const [query, setQuery] = useState("");
@@ -105,12 +62,38 @@ const DashboardUser = () => {
     ContributorLabel[]
   >([]);
   const [selectedUpRange, setSelectedUpRange] = useState<UpRange>("");
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
 
   useEffect(() => {
-    setPage(1);
-    setUsers(SAMPLE_USERS);
-  }, []);
+    const loadUsers = async () => {
+      const res = await getAdminUsers(
+        page,
+        PAGE_SIZE,
+        query,
+        selectedStatut, // 👈 ICI
+      );
+
+      const normalized: UserRow[] = res.users.map((u: any) => ({
+        id: u.id,
+        avatar: u.avatar,
+        statut: mapStatut(u),
+        pseudo: u.pseudo,
+        gender: u.gender,
+        birthdateISO: u.born,
+        email: u.email,
+        feedbacks: u.totalFeedbacks,
+        marques: u.brandsCount,
+        up: u.totalFeedbacks,
+        contributeur: mapContributor(u.totalFeedbacks),
+      }));
+
+      setUsers(normalized);
+      setTotalItems(res.pagination.totalItems);
+    };
+
+    loadUsers();
+  }, [page, query, selectedStatut]);
 
   const normalize = (string: string) =>
     string
@@ -140,7 +123,7 @@ const DashboardUser = () => {
 
   const PAGE_SIZE = 6;
 
-  const totalPages = Math.max(1, Math.ceil(users.length / PAGE_SIZE));
+  const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
 
   return (
     <div className="dashboard-user-page">
@@ -156,15 +139,23 @@ const DashboardUser = () => {
         onUpRangeChange={setSelectedUpRange}
       />
       <Feed users={filteredUsers} />
+
       <div className="feed-table-body-page">
-        <div className="feed-table-body-page-button">
+        <div
+          className="feed-table-body-page-button"
+          onClick={() => page > 1 && setPage((p) => p - 1)}
+        >
           <h3>Page précédente</h3>
         </div>
+
         <div className="feed-table-body-page-location">
-          <span className="feed-table-body-page-location-text">Page</span>{" "}
-          {page}/{totalPages}
+          Page {page}/{totalPages}
         </div>
-        <div className="feed-table-body-page-button">
+
+        <div
+          className="feed-table-body-page-button"
+          onClick={() => page < totalPages && setPage((p) => p + 1)}
+        >
           <h3>Page suivante</h3>
         </div>
       </div>

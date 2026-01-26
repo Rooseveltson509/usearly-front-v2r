@@ -29,10 +29,17 @@ const Avatar: React.FC<AvatarProps> = ({
 }) => {
   const [imgError, setImgError] = useState(false);
 
-  const baseInitial = useMemo(
-    () => (pseudo?.trim()?.charAt(0) || "?").toUpperCase(),
-    [pseudo],
-  );
+  const baseInitial = useMemo(() => {
+    if (!pseudo) return "?";
+
+    const parts = pseudo.trim().split(" ").filter(Boolean);
+
+    if (parts.length === 1) {
+      return parts[0].charAt(0).toUpperCase();
+    }
+
+    return (parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
+  }, [pseudo]);
 
   const displayInitial = useMemo(() => {
     const override = fallbackInitial?.trim()?.charAt(0);

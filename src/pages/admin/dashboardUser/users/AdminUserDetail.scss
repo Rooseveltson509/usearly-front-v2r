@@ -1,0 +1,137 @@
+.admin-user-detail {
+  padding: 32px 40px;
+  background: #fafafa;
+  min-height: 100vh;
+  font-family: Inter, system-ui, sans-serif;
+
+  .back-btn {
+    background: none;
+    border: none;
+    font-size: 14px;
+    color: #475569;
+    cursor: pointer;
+    margin-bottom: 24px;
+
+    &:hover {
+      color: #0f172a;
+    }
+  }
+
+  /* ===============================
+     HEADER USER
+  =============================== */
+  .user-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: #fff;
+    padding: 24px;
+    border-radius: 14px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+    margin-bottom: 24px;
+  }
+
+  .user-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    h2 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #0f172a;
+      margin: 0;
+    }
+
+    p {
+      font-size: 14px;
+      color: #64748b;
+      margin: 0;
+    }
+
+    .statut {
+      font-size: 13px;
+      font-weight: 500;
+      margin-top: 6px;
+      color: #16a34a;
+    }
+  }
+
+  /* ===============================
+     STATS
+  =============================== */
+  .user-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+  }
+
+  .stat-card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 14px;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+
+    strong {
+      display: block;
+      font-size: 28px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    span {
+      font-size: 13px;
+      color: #64748b;
+      margin-top: 4px;
+      display: block;
+    }
+  }
+}
+
+.admin-user-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.admin-btn {
+  padding: 10px 16px; // 👈 plus compact
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+/* 🟠 Suspendre */
+.admin-btn-warning {
+  background: #f59e0b;
+  color: white;
+
+  &:hover {
+    background: #d97706;
+  }
+}
+
+/* 🟢 Réactiver */
+.admin-btn-success {
+  background: #22c55e;
+  color: white;
+
+  &:hover {
+    background: #16a34a;
+  }
+}
+
+/* 🔴 Supprimer */
+.admin-btn-danger {
+  background: #ef4444;
+  color: white;
+
+  &:hover {
+    background: #dc2626;
+  }
+}
