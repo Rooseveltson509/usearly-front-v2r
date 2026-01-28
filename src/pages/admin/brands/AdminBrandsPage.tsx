@@ -1,35 +1,36 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@src/services/AuthContext";
 import { useNavigate } from "react-router-dom";
 import AdminBrandsHeader from "./AdminBrandsHeader";
 import "./AdminBrandsPage.scss";
-import {
-  getBrands,
-  resetBrandPassword,
-  toggleBrandStatus,
-  type AdminBrand,
-} from "@src/services/adminService";
+import { getBrands, type AdminBrand } from "@src/services/adminService";
 import CreateBrandModal from "./CreateBrandModal";
-import { useToast } from "../hooks/useHooks";
-import Toast from "../toast/Toast";
 import EditBrandModal from "./EditBrandModal";
+import DataTable from "@src/components/dashboard/components/DataTable";
+import DashboardPagination from "@src/components/dashboard/components/DashboardPagination";
+import useDashboardData from "@src/components/dashboard/hooks/useDashboardData";
+import useDashboardFilters from "@src/components/dashboard/hooks/useDashboardFilters";
+import usePagination from "@src/components/dashboard/hooks/usePagination";
+import {
+  ADMIN_BRANDS_FILTER_DEFAULTS,
+  type AdminBrandsFiltersState,
+} from "@src/types/Filters";
+import { createAdminBrandsColumns } from "@src/pages/admin/brands/config/table";
+import { filterBrands } from "@src/utils/brandFilters";
+
+const PAGE_SIZE = 6;
+const MAX_MEMBER = 10;
 
 const AdminBrandsPage = () => {
   const { userProfile, isLoading } = useAuth();
   const navigate = useNavigate();
-  const [loadingActionId, setLoadingActionId] = useState<string | null>(null);
-  const [brands, setBrands] = useState<AdminBrand[]>([]);
   const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [selectedBrand, setSelectedBrand] = useState<AdminBrand | null>(null);
+  const [selectedBrand] = useState<AdminBrand | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
-  const { toast, showToast } = useToast();
-  const ALLOWED_ROLES = ["admin", "super_admin"] as const;
-  type AllowedRole = (typeof ALLOWED_ROLES)[number];
-  const isAllowedRole = (role?: string): role is AllowedRole => {
-    return ALLOWED_ROLES.includes(role as AllowedRole);
-  };
+
+  const { filters, setFilter, resetFilters } =
+    useDashboardFilters<AdminBrandsFiltersState>(ADMIN_BRANDS_FILTER_DEFAULTS);
 
   // 🔐 Sécurité admin
   useEffect(() => {
@@ -38,66 +39,39 @@ const AdminBrandsPage = () => {
     }
   }, [isLoading, userProfile, navigate]);
 
-  // 📋 Load brands
-  const loadBrands = async () => {
-    setLoading(true);
-    try {
-      const data = await getBrands();
-      setBrands(data ?? []);
-    } catch (err) {
-      console.error("Erreur chargement marques", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    data: brands,
+    loading,
+    reload: loadBrands,
+  } = useDashboardData<AdminBrand[]>({
+    initialData: [],
+    fetcher: async () => ({ data: (await getBrands()) ?? [] }),
+    deps: [userProfile],
+    enabled: userProfile?.role === "admin",
+  });
 
-  useEffect(() => {
-    if (userProfile && isAllowedRole(userProfile.role)) {
-      loadBrands();
-    }
-  }, [userProfile]);
-
-  if (isLoading || !userProfile || !isAllowedRole(userProfile.role)) {
-    return null;
-  }
-
-  const filteredBrands = brands.filter(
-    (b) =>
-      b.name.toLowerCase().includes(search.toLowerCase()) ||
-      b.email.toLowerCase().includes(search.toLowerCase()),
+  const filteredBrands = useMemo(
+    () => filterBrands(brands, search, filters),
+    [brands, search, filters],
   );
 
-  const confirmToggle = async (brandId: string) => {
-    setLoadingActionId(brandId);
+  const { page, totalPages, pageItems, goPrev, goNext } = usePagination({
+    items: filteredBrands,
+    pageSize: PAGE_SIZE,
+    resetDeps: [search, filters.plans, filters.sectors, filters.lastAction],
+    overflowStrategy: "reset",
+  });
 
-    // optimistic UI
-    setBrands((prev) =>
-      prev.map((b) => (b.id === brandId ? { ...b, isActive: !b.isActive } : b)),
-    );
+  const columns = useMemo(
+    () =>
+      createAdminBrandsColumns(
+        (brandId) => navigate(`/admin/${brandId}`),
+        MAX_MEMBER,
+      ),
+    [navigate],
+  );
 
-    try {
-      await toggleBrandStatus(brandId);
-      showToast("Statut mis à jour");
-    } catch {
-      showToast("Erreur lors du changement de statut", "error");
-      loadBrands();
-    } finally {
-      setLoadingActionId(null);
-    }
-  };
-
-  const confirmReset = async (brandId: string) => {
-    setLoadingActionId(brandId);
-
-    try {
-      await resetBrandPassword(brandId);
-      showToast("Mot de passe réinitialisé");
-    } catch {
-      showToast("Erreur lors du reset", "error");
-    } finally {
-      setLoadingActionId(null);
-    }
-  };
+  if (isLoading || userProfile?.role !== "admin") return null;
 
   return (
     <div className="admin-brands-page">
@@ -105,92 +79,37 @@ const AdminBrandsPage = () => {
         search={search}
         onSearchChange={setSearch}
         onAddBrand={() => setShowModal(true)}
+        brandsLength={brands.length}
+        filters={filters}
+        onFilterChange={setFilter}
+        onClearFilters={resetFilters}
       />
 
-      <div className="admin-brands-card">
+      <div className="brand-feed-table-container">
         {loading ? (
           <p className="loading">Chargement des marques…</p>
         ) : filteredBrands.length === 0 ? (
           <p className="empty">Aucune marque trouvée</p>
         ) : (
-          <table className="brands-table">
-            <thead>
-              <tr>
-                <th>Nom Marque </th>
-                <th>Domaine</th>
-                <th>Email</th>
-                <th>Offre</th>
-                <th>Statut</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredBrands.map((brand) => (
-                <tr key={brand.id}>
-                  <td className="brand-name">
-                    {brand.logo ? (
-                      <img src={brand.logo} alt={brand.name} />
-                    ) : (
-                      <div className="brand-avatar">{brand.name[0]}</div>
-                    )}
-                    {brand.name}
-                  </td>
-                  <td>{brand.domain}</td>
-                  <td>
-                    <div className="email-cell">
-                      {brand.email}
-                      {brand.pendingEmail && (
-                        <span className="email-pending">
-                          En attente de confirmation
-                        </span>
-                      )}
-                    </div>
-                  </td>
-
-                  <td>{brand.offres}</td>
-                  <td>
-                    <span
-                      className={`status-badge-dash ${
-                        brand.isActive ? "active" : "inactive"
-                      }`}
-                    >
-                      {brand.isActive ? "Active" : "Désactivée"}
-                    </span>
-                  </td>
-
-                  <td className="actions">
-                    <button
-                      className="btn-edit primary"
-                      onClick={() => {
-                        setSelectedBrand(brand);
-                        setShowEditModal(true);
-                      }}
-                    >
-                      Modifier
-                    </button>
-
-                    <button
-                      disabled={loadingActionId === brand.id}
-                      className={`btn-status subtle ${
-                        brand.isActive ? "danger" : "success"
-                      }`}
-                      onClick={() => confirmToggle(brand.id)}
-                    >
-                      {brand.isActive ? "Désactiver" : "Activer"}
-                    </button>
-
-                    <button
-                      disabled={loadingActionId === brand.id}
-                      className="btn-reset subtle"
-                      onClick={() => confirmReset(brand.id)}
-                    >
-                      Reset MDP
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <DataTable
+            columns={columns}
+            rows={pageItems}
+            getRowKey={(brand) => brand.id}
+            tableClassName="brand-feed-table"
+            headClassName="brand-feed-table-head"
+            headRowClassName="brand-feed-table-head-title"
+            bodyClassName="brand-feed-table-body"
+            rowClassName="brand-feed-table-body-line"
+            emptyState={{
+              message: "Aucun utilisateur",
+              colSpan: 11,
+              rowClassName:
+                "brand-feed-table-body-line brand-feed-table-body-line--empty",
+              cellClassName: "brand-feed-table-body-line-data",
+              containerClassName: "brand-feed-table-body-line-data",
+              messageClassName: "brand-feed-table-body-line-data-empty",
+            }}
+          />
         )}
       </div>
       <CreateBrandModal
@@ -198,13 +117,18 @@ const AdminBrandsPage = () => {
         onClose={() => setShowModal(false)}
         onSuccess={loadBrands}
       />
-      {toast && <Toast message={toast.message} type={toast.type} />}
 
       <EditBrandModal
         open={showEditModal}
         brand={selectedBrand}
         onClose={() => setShowEditModal(false)}
         onSuccess={loadBrands}
+      />
+      <DashboardPagination
+        page={page}
+        totalPages={totalPages}
+        onPrev={goPrev}
+        onNext={goNext}
       />
     </div>
   );

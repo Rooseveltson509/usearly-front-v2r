@@ -1,51 +1,45 @@
 import DashboardUserHeader from "@src/pages/admin/dashboardUser/components/header/DashboardUserHeader";
 import DashboardFilter from "@src/pages/admin/dashboardUser/components/filters/DashboardFilter";
 import Feed from "@src/pages/admin/dashboardUser/components/feed/Feed";
-import { useState, useEffect } from "react";
+import { useMemo, useEffect, useState } from "react";
 import { getAdminUsers } from "@src/services/adminService";
-import {
-  mapContributor,
-  mapStatut,
-  type ContributorLabel,
-  type StatutLabel,
-} from "../helpers/mapStats";
+import { mapContributor, mapStatut } from "@src/utils/mapStats";
 import "./DashboardUser.scss";
+import {
+  DASHBOARD_USER_FILTER_DEFAULTS,
+  type DashboardUserFiltersState,
+  type UserRow,
+} from "@src/types/Filters";
+import { filterUsers } from "@src/pages/admin/dashboardUser/utils/userFilters";
+import useDashboardFilters from "@src/components/dashboard/hooks/useDashboardFilters";
+import usePagination from "@src/components/dashboard/hooks/usePagination";
+import DashboardPagination from "@src/components/dashboard/components/DashboardPagination";
+import useDashboardData from "@src/components/dashboard/hooks/useDashboardData";
 
-type UserRow = {
-  id: string;
-  avatar: string | null;
-  statut: StatutLabel;
-  pseudo: string;
-  gender: string;
-  birthdateISO: string; // "YYYY-MM-DD"
-  email: string;
-  feedbacks: number;
-  marques: number;
-  up: number;
-  contributeur: ContributorLabel;
-};
-
-type UpRange = "inf-10" | "10-30" | "30-50" | "sup-50" | "";
+const PAGE_SIZE = 6;
 
 const DashboardUser = () => {
-  const [users, setUsers] = useState<UserRow[]>([]);
   const [query, setQuery] = useState("");
-  const [selectedStatut, setSelectedStatut] = useState<StatutLabel[]>([]);
-  const [selectedContributorTypes, setSelectedContributorTypes] = useState<
-    ContributorLabel[]
-  >([]);
-  const [selectedUpRange, setSelectedUpRange] = useState<UpRange>("");
-  const [page, setPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
 
-  useEffect(() => {
-    const loadUsers = async () => {
-      const res = await getAdminUsers(
-        page,
-        PAGE_SIZE,
-        query,
-        selectedStatut, // 👈 ICI
-      );
+  const { filters, setFilter } = useDashboardFilters<DashboardUserFiltersState>(
+    DASHBOARD_USER_FILTER_DEFAULTS,
+  );
+
+  const { page, totalPages, goPrev, goNext } = usePagination({
+    totalItems,
+    pageSize: PAGE_SIZE,
+    resetDeps: [query],
+    overflowStrategy: "none",
+  });
+
+  const { data: users, meta } = useDashboardData<
+    UserRow[],
+    { totalItems: number }
+  >({
+    initialData: [],
+    fetcher: async () => {
+      const res = await getAdminUsers(page, PAGE_SIZE, query, filters.statut);
 
       const normalized: UserRow[] = res.users.map((u: any) => ({
         id: u.id,
@@ -61,55 +55,42 @@ const DashboardUser = () => {
         contributeur: mapContributor(u.totalFeedbacks),
       }));
 
-      setUsers(normalized);
-      setTotalItems(res.pagination.totalItems);
-    };
-
-    loadUsers();
-  }, [page, query, selectedStatut]);
+      return {
+        data: normalized,
+        meta: { totalItems: res.pagination.totalItems },
+      };
+    },
+    deps: [page, query, filters.statut],
+  });
 
   useEffect(() => {
-    setPage(1);
-  }, [selectedStatut, query]);
+    if (typeof meta?.totalItems === "number") {
+      setTotalItems(meta.totalItems);
+    }
+  }, [meta]);
 
-  const PAGE_SIZE = 6;
-
-  const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
+  const filteredUsers = useMemo(
+    () => filterUsers(users, query, filters),
+    [users, query, filters],
+  );
 
   return (
     <div className="dashboard-user-page">
       <DashboardUserHeader />
       <DashboardFilter
         value={query}
-        selectedStatuts={selectedStatut}
-        selectedContributors={selectedContributorTypes}
-        selectedUpRange={selectedUpRange}
-        onChange={setQuery}
-        onStatutChange={setSelectedStatut}
-        onContributorChange={setSelectedContributorTypes}
-        onUpRangeChange={setSelectedUpRange}
+        filters={filters}
+        onSearchChange={setQuery}
+        onFilterChange={setFilter}
       />
       <Feed users={users} />
 
-      <div className="feed-table-body-page">
-        <div
-          className="feed-table-body-page-button"
-          onClick={() => page > 1 && setPage((p) => p - 1)}
-        >
-          <h3>Page précédente</h3>
-        </div>
-
-        <div className="feed-table-body-page-location">
-          Page {page}/{totalPages}
-        </div>
-
-        <div
-          className="feed-table-body-page-button"
-          onClick={() => page < totalPages && setPage((p) => p + 1)}
-        >
-          <h3>Page suivante</h3>
-        </div>
-      </div>
+      <DashboardPagination
+        page={page}
+        totalPages={totalPages}
+        onPrev={goPrev}
+        onNext={goNext}
+      />
     </div>
   );
 };
