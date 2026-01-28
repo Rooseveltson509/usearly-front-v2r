@@ -5,14 +5,24 @@ import {
   deleteUser,
   getAdminUserDetail,
   toggleUserSuspension,
+  updateAdminRole,
 } from "@src/services/adminService";
 import "./AdminUserDetail.scss";
+import { useAuth } from "@src/services/AuthContext";
+import Toast from "@src/components/ommons/Toast";
 
 const AdminUserDetail = () => {
+  const { userProfile } = useAuth();
+  const isSuperAdmin = userProfile?.role === "super_admin";
   const { userId } = useParams();
   const navigate = useNavigate();
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [toast, setToast] = useState<{
+    message: string;
+    type: "success" | "error" | "info";
+  } | null>(null);
 
   const fetchUser = async () => {
     if (!userId) return;
@@ -33,18 +43,42 @@ const AdminUserDetail = () => {
   if (!user) return <p>Utilisateur introuvable</p>;
 
   const handleToggleSuspension = async () => {
-    await toggleUserSuspension(user.id);
-    await fetchUser(); // recharge les infos
+    try {
+      await toggleUserSuspension(user.id);
+      await fetchUser();
+
+      setToast({
+        message: user.expiredAt
+          ? "Utilisateur réactivé"
+          : "Utilisateur suspendu",
+        type: "info",
+      });
+    } catch {
+      setToast({
+        message: "Erreur lors de la modification du statut",
+        type: "error",
+      });
+    }
   };
 
   const handleDeleteUser = async () => {
-    const confirmed = window.confirm(
-      "Voulez-vous vraiment supprimer cet utilisateur ?",
-    );
-    if (!confirmed) return;
-
-    await deleteUser(user.id);
-    navigate("/admin/users");
+    try {
+      await deleteUser(user.id);
+      setToast({
+        message: "Utilisateur supprimé avec succès",
+        type: "success",
+      });
+      navigate("/admin/users");
+    } catch (err: any) {
+      setToast({
+        message:
+          err?.response?.data?.message ||
+          "Erreur lors de la suppression de l’utilisateur",
+        type: "error",
+      });
+    } finally {
+      setShowDeleteModal(false);
+    }
   };
 
   return (
@@ -64,6 +98,37 @@ const AdminUserDetail = () => {
             </span>
           </span>
         </div>
+
+        {isSuperAdmin && (
+          <div className="admin-role-section">
+            <label>Rôle</label>
+            <select
+              value={user.role}
+              onChange={async (e) => {
+                try {
+                  await updateAdminRole(
+                    user.id,
+                    e.target.value as "user" | "admin",
+                  );
+                  await fetchUser();
+
+                  setToast({
+                    message: "Rôle mis à jour avec succès",
+                    type: "success",
+                  });
+                } catch {
+                  setToast({
+                    message: "Erreur lors du changement de rôle",
+                    type: "error",
+                  });
+                }
+              }}
+            >
+              <option value="user">Utilisateur</option>
+              <option value="admin">Administrateur</option>
+            </select>
+          </div>
+        )}
       </div>
 
       <div className="user-stats">
@@ -76,28 +141,56 @@ const AdminUserDetail = () => {
           <span>Marques</span>
         </div>
       </div>
+      {isSuperAdmin && (
+        <div className="admin-user-actions">
+          <button
+            type="button"
+            className={`admin-btn ${
+              user.expiredAt ? "admin-btn-success" : "admin-btn-warning"
+            }`}
+            onClick={handleToggleSuspension}
+          >
+            {user.expiredAt
+              ? "Réactiver l’utilisateur"
+              : "Suspendre l’utilisateur"}
+          </button>
 
-      <div className="admin-user-actions">
-        <button
-          type="button"
-          className={`admin-btn ${
-            user.expiredAt ? "admin-btn-success" : "admin-btn-warning"
-          }`}
-          onClick={handleToggleSuspension}
-        >
-          {user.expiredAt
-            ? "Réactiver l’utilisateur"
-            : "Suspendre l’utilisateur"}
-        </button>
+          <button
+            type="button"
+            className="admin-btn admin-btn-danger"
+            onClick={() => setShowDeleteModal(true)}
+          >
+            Supprimer l’utilisateur
+          </button>
+        </div>
+      )}
 
-        <button
-          type="button"
-          className="admin-btn admin-btn-danger"
-          onClick={handleDeleteUser}
-        >
-          Supprimer l’utilisateur
-        </button>
-      </div>
+      {showDeleteModal && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h3>Supprimer l’utilisateur</h3>
+            <p>
+              Voulez-vous vraiment supprimer <strong>{user.pseudo}</strong> ?
+              <br />
+              Cette action est irréversible.
+            </p>
+
+            <div className="modal-actions">
+              <button onClick={() => setShowDeleteModal(false)}>Annuler</button>
+              <button className="danger" onClick={handleDeleteUser}>
+                Supprimer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
     </div>
   );
 };

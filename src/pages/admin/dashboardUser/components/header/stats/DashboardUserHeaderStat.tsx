@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-
 import reportIcon from "/assets/icons/reportYellowIcon.svg";
 import suggestIcon from "/assets/icons/suggest-icon.svg";
 import likeIcon from "/assets/icons/cdc-icon.svg";
@@ -9,37 +7,42 @@ type DashboardUserHeaderStatProps = {
   type: "report" | "like" | "suggest";
 };
 
+const iconMap = {
+  report: reportIcon,
+  like: likeIcon,
+  suggest: suggestIcon,
+} as const;
+
+const formatCount = (count: number | string) => {
+  const value = typeof count === "number" ? count : Number(count);
+  if (!Number.isFinite(value)) return String(count);
+
+  if (value < 1_000) {
+    return value.toString();
+  }
+
+  if (value < 1_000_000) {
+    return `${Math.floor((value / 1_000) * 10) / 10}K`;
+  }
+
+  if (value < 1_000_000_000) {
+    return `${Math.floor((value / 1_000_000) * 10) / 10}M`;
+  }
+
+  return `${Math.floor((value / 1_000_000_000) * 10) / 10}B`;
+};
+
 const DashboardUserHeaderStat = ({
   count,
   type,
 }: DashboardUserHeaderStatProps) => {
-  const [iconPath, setIconPath] = useState<string>("");
-
-  const cap8K = (count: number | string) => {
-    const valeur = typeof count === "number" ? count : Number(count);
-    if (!Number.isFinite(valeur)) return String(count);
-    return valeur >= 8000 ? "+8K" : valeur.toLocaleString("fr-FR");
-  };
-
-  useEffect(() => {
-    setIconPath(() => {
-      if (type === "report") {
-        return reportIcon;
-      } else if (type === "like") {
-        return likeIcon;
-      } else if (type === "suggest") {
-        return suggestIcon;
-      } else {
-        return "";
-      }
-    });
-  }, [type]);
-
   return (
     <div className="dashboard-user-header-stats">
-      <h3 className="dashboard-user-header-stats-count">{cap8K(count)}</h3>
+      <h3 className="dashboard-user-header-stats-count">
+        {formatCount(count)}
+      </h3>
       <span className="dashboard-user-header-stats-icon">
-        <img src={iconPath} alt="icone report" />
+        <img src={iconMap[type]} alt={type} />
       </span>
     </div>
   );

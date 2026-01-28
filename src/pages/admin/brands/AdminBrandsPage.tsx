@@ -24,12 +24,16 @@ const AdminBrandsPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedBrand, setSelectedBrand] = useState<AdminBrand | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
-
   const { toast, showToast } = useToast();
+  const ALLOWED_ROLES = ["admin", "super_admin"] as const;
+  type AllowedRole = (typeof ALLOWED_ROLES)[number];
+  const isAllowedRole = (role?: string): role is AllowedRole => {
+    return ALLOWED_ROLES.includes(role as AllowedRole);
+  };
 
   // 🔐 Sécurité admin
   useEffect(() => {
-    if (!isLoading && userProfile?.role !== "admin") {
+    if (!isLoading && userProfile && !isAllowedRole(userProfile.role)) {
       navigate("/home");
     }
   }, [isLoading, userProfile, navigate]);
@@ -48,12 +52,14 @@ const AdminBrandsPage = () => {
   };
 
   useEffect(() => {
-    if (userProfile?.role === "admin") {
+    if (userProfile && isAllowedRole(userProfile.role)) {
       loadBrands();
     }
   }, [userProfile]);
 
-  if (isLoading || userProfile?.role !== "admin") return null;
+  if (isLoading || !userProfile || !isAllowedRole(userProfile.role)) {
+    return null;
+  }
 
   const filteredBrands = brands.filter(
     (b) =>

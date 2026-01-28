@@ -7,7 +7,6 @@ import ConfirmAccount from "./components/confirm-account/ConfirmAccount";
 import GuestRoute from "./components/context/GuestRoute";
 import UserProfilePage from "./components/user-profile/UserProfilePage";
 import UserAccount from "./pages/UserAccount/UserAccount";
-import ProtectedRoute from "./components/context/ProtectedRoute";
 import { Home } from "./pages/home";
 import RequestResetPassword from "./pages/forgot-and-reset-pwd/RequestResetPassword";
 import ResetPassword from "./pages/forgot-and-reset-pwd/ResetPassword";
@@ -26,6 +25,8 @@ import NotFoundPage from "./pages/not-found/NotFoundPage";
 import AdminBrandsPage from "./pages/admin/brands/AdminBrandsPage";
 import DashboardUser from "./pages/admin/dashboardUser/users/DashboardUser";
 import AdminUserDetail from "./pages/admin/dashboardUser/users/AdminUserDetail";
+import AdminsPage from "./pages/admin/admins/AdminsPage";
+import ProtectedRoute from "./components/context/ProtectedRoute";
 
 function App() {
   return (
@@ -66,7 +67,10 @@ function App() {
             <Route
               path="/admin/brands"
               element={
-                <ProtectedRoute allowedTypes={["user"]}>
+                <ProtectedRoute
+                  allowedTypes={["user"]}
+                  allowedRoles={["super_admin"]}
+                >
                   <AdminBrandsPage />
                 </ProtectedRoute>
               }
@@ -76,6 +80,14 @@ function App() {
               element={
                 <ProtectedRoute allowedTypes={["user"]}>
                   <DashboardUser />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/admins"
+              element={
+                <ProtectedRoute allowedTypes={["user"]}>
+                  <AdminsPage />
                 </ProtectedRoute>
               }
             />

@@ -1,31 +1,46 @@
 .toast {
   position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 12px 20px;
+  bottom: 24px;
+  right: 24px;
+  min-width: 280px;
+  max-width: 360px;
+
+  padding: 14px 18px;
   border-radius: 8px;
+
+  font-size: 14px;
+  line-height: 1.4;
   color: #fff;
-  font-weight: 500;
-  z-index: 1000;
-  animation: fadeIn 0.3s ease;
+
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+
+  animation: toast-in 0.3s ease-out;
+
+  p {
+    margin: 0;
+  }
 
   &.success {
-    background-color: #28a745;
+    background: #16a34a; // vert pro
   }
 
   &.error {
-    background-color: #dc3545;
+    background: #dc2626; // rouge danger
+  }
+
+  &.info {
+    background: #03556c; // rouge danger
   }
 }
 
-@keyframes fadeIn {
+@keyframes toast-in {
   from {
     opacity: 0;
-    transform: translateX(-50%) translateY(10px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
-    transform: translateX(-50%) translateY(0);
+    transform: translateY(0);
   }
 }

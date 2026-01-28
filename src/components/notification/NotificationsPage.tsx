@@ -22,6 +22,8 @@ interface Notification {
   suggestionId?: string;
   coupDeCoeurId?: string;
   descriptionId?: string;
+  status?: string;
+  hasBrandResponse?: boolean;
   sender?: { pseudo: string; avatar: string };
   suggestion?: any;
   coupDeCoeur?: any;

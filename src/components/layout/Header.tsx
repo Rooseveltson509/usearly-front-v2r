@@ -94,20 +94,32 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
             </NavLink>
           )}
 
-          <NavLink to="/about" className="link">
-            {isAuthenticated ? "Marques" : "A propos"}
-          </NavLink>
-
           <NavLink to="/impact" className="link">
             {isAuthenticated ? "Impact" : "Marques à l’écoute"}
           </NavLink>
 
-          {/* 🔐 LIENS ADMIN */}
-          {isAuthenticated && userProfile?.role === "admin" && (
-            <NavLink to="/admin" className="link admin-link">
+          {/* 🔐 LIENS SUPER ADMIN */}
+          {isAuthenticated && userProfile?.role === "super_admin" && (
+            <NavLink to="/admin/admins" className="link admin-link">
               Admin
             </NavLink>
           )}
+          {/* 🔐 LIENS ADMIN ET SUPER ADMIN */}
+          {(userProfile?.role === "admin" ||
+            userProfile?.role === "super_admin") && (
+            <>
+              <NavLink to="/admin/users" className="link admin-link">
+                Gérer les Utilisateurs
+              </NavLink>
+
+              <NavLink to="/admin/brands" className="link admin-link">
+                Gérer les marques
+              </NavLink>
+            </>
+          )}
+          <NavLink to="/about" className="link">
+            A propos
+          </NavLink>
         </nav>
 
         {/* Droite : notifications + profil */}
@@ -166,25 +178,6 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
 
           {userMenuOpen && (
             <div className="user-dropdown-menu">
-              {userProfile?.role === "admin" && (
-                <>
-                  <NavLink
-                    to="/admin/users"
-                    className="menu-item admin-item"
-                    onClick={() => setUserMenuOpen(false)}
-                  >
-                    Gérer les Utilisateurs
-                  </NavLink>
-                  <NavLink
-                    to="/admin/brands"
-                    className="menu-item admin-item"
-                    onClick={() => setUserMenuOpen(false)}
-                  >
-                    Gérer les marques
-                  </NavLink>
-                </>
-              )}
-
               {isAuthenticated ? (
                 <>
                   <NavLink

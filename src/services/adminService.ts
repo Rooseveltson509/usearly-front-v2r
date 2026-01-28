@@ -3,6 +3,14 @@ import { apiService } from "./apiService";
 /* -------------------------------------------------------------------------- */
 /* Types */
 /* -------------------------------------------------------------------------- */
+export type EditableRole = "user" | "admin";
+
+export interface CreateAdminPayload {
+  pseudo: string;
+  born: string; // ISO ou yyyy-mm-dd
+  email: string;
+  password: string;
+}
 
 export interface CreateBrandPayload {
   name: string;
@@ -127,4 +135,29 @@ export const toggleUserSuspension = async (userId: string) => {
 export const deleteUser = async (userId: string) => {
   const { data } = await apiService.delete(`/admin/users/${userId}`);
   return data;
+};
+
+// 👮‍♂️ Liste admins
+export const getAdmins = async () => {
+  const { data } = await apiService.get("/admin/admins");
+  return data.admins;
+};
+
+// ➕ Créer admin (ROLE = admin forcé backend)
+export const createAdmin = async (payload: CreateAdminPayload) => {
+  const { data } = await apiService.post("/admin/admins", payload);
+  return data.admin;
+};
+
+// 🔄 Modifier rôle (user <-> admin)
+export const updateAdminRole = async (userId: string, role: EditableRole) => {
+  const { data } = await apiService.patch(`/admin/admins/${userId}/role`, {
+    role,
+  });
+  return data;
+};
+
+export const getAdminOverviewMetrics = async () => {
+  const { data } = await apiService.get("/admin/metrics/overview");
+  return data.metrics;
 };
