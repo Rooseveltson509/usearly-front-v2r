@@ -1,4 +1,3 @@
-import Avatar from "@src/components/shared/Avatar";
 import { truncate } from "@src/utils/stringUtils";
 import goToUser from "/assets/dashboardUser/goToUser.svg";
 import bigUofUsearly from "/assets/icons/bigUofUsearly.svg";
@@ -42,13 +41,24 @@ export const createAdminBrandsColumns = (
     tdClassName: CELL_CLASS,
     render: (brand) => (
       <div className="brand-feed-table-body-line-data-avatar">
-        <Avatar
+        {/* <Avatar
           avatar={brand.logo || null}
           pseudo={brand.name}
           siteUrl={brand.domain}
           sizeHW={50}
           type="brand"
-        />
+        /> */}
+        {brand.logo ? (
+          <img
+            className="brand-feed-table-body-line-data-avatar-avatar"
+            src={brand.logo}
+            alt={brand.name}
+          />
+        ) : (
+          <div className="brand-feed-table-body-line-data-avatar-avatar no-avatar">
+            {brand.name[0]}
+          </div>
+        )}
       </div>
     ),
   },

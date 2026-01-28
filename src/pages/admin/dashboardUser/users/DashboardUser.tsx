@@ -83,7 +83,7 @@ const DashboardUser = () => {
         onSearchChange={setQuery}
         onFilterChange={setFilter}
       />
-      <Feed users={users} />
+      <Feed users={filteredUsers} />
 
       <DashboardPagination
         page={page}

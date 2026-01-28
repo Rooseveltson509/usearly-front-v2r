@@ -21,6 +21,11 @@ import { filterBrands } from "@src/utils/brandFilters";
 const PAGE_SIZE = 6;
 const MAX_MEMBER = 10;
 
+function isAllowedRole(role: string | undefined) {
+  const ALLOWED_ROLES = ["admin"];
+  return typeof role === "string" && ALLOWED_ROLES.includes(role);
+}
+
 const AdminBrandsPage = () => {
   const { userProfile, isLoading } = useAuth();
   const navigate = useNavigate();
