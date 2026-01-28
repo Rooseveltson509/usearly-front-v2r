@@ -1,12 +1,39 @@
-.admin-brands-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
+@use "@src/styles/base/variables" as variables;
 
-  h1 {
+.admin-brands-header {
+  margin-bottom: 24px;
+  padding: 0 10%;
+
+  .admin-brands-header-stats-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 50px;
+    padding-right: 25%;
     margin: 0;
-    font-size: 22px;
+    margin-bottom: 50px;
+    color: #ffffff;
+    .admin-brands-header-title {
+      font-size: 36px;
+      font-family: variables.$font-family-3;
+      font-weight: 800;
+    }
+    .admin-brands-header-stats {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 40px;
+      font-family: variables.$font-family;
+      font-weight: 700;
+      span {
+        height: max-content;
+        padding: 1px 10px;
+        background-color: #9f60ff;
+        border-radius: 999px;
+        font-size: 16px;
+        font-weight: 600;
+      }
+    }
   }
 
   p {
@@ -19,22 +46,188 @@
     display: flex;
     gap: 12px;
 
-    input {
-      padding: 10px 14px;
-      border-radius: 8px;
-      border: 1px solid #ddd;
-      font-size: 14px;
-      min-width: 220px;
+    .admin-brands-action-filter {
+      position: relative;
+      .admin-brands-action-filter-button {
+        position: relative;
+        background-color: transparent;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding-right: 45px;
+        padding-left: 15px;
+        font-weight: 600;
+        height: 100%;
+        color: #ffffff;
+
+        cursor: pointer;
+      }
+      .admin-brands-action-filter-button:after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+
+        background-color: rgba(255, 255, 255, 0.5);
+        -webkit-mask: url("/assets/svg/filter-svgrepo-com.svg") no-repeat right
+          0.75rem center;
+        mask: url("/assets/svg/filter-svgrepo-com.svg") no-repeat right 0.75rem
+          center;
+        -webkit-mask-size: 1.2rem;
+        mask-size: 1.2rem;
+      }
+      .admin-brands-action-filter-button-dropdown {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        width: 280px;
+        background-color: #ffffff;
+        padding: 14px;
+        margin-top: 8px;
+        border-radius: 6px;
+        gap: 14px;
+        box-shadow: 0px 12px 40px rgba(0, 0, 0, 0.18);
+        z-index: 10;
+
+        .admin-brands-action-filter-section {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .admin-brands-action-filter-section-title {
+          font-size: 11px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.8px;
+          color: #6b7280;
+        }
+
+        .admin-brands-action-filter-options {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+        }
+
+        .admin-brands-action-filter-option {
+          border: 1px solid #e5e7eb;
+          background: #f8fafc;
+          border-radius: 999px;
+          padding: 6px 10px;
+          font-size: 12px;
+          font-weight: 600;
+          color: #111827;
+          cursor: pointer;
+          transition:
+            background-color 0.2s ease,
+            border-color 0.2s ease,
+            color 0.2s ease;
+        }
+
+        .admin-brands-action-filter-option.is-selected {
+          background: #111827;
+          border-color: #111827;
+          color: #ffffff;
+        }
+
+        .admin-brands-action-filter-footer {
+          display: flex;
+          justify-content: flex-end;
+        }
+
+        .admin-brands-action-filter-clear {
+          border: none;
+          background: transparent;
+          color: #6b7280;
+          font-size: 12px;
+          font-weight: 600;
+          cursor: pointer;
+        }
+
+        .admin-brands-action-filter-clear:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      }
     }
 
-    button {
-      padding: 10px 18px;
-      border-radius: 8px;
-      border: none;
-      background: #989dff;
-      color: #fff;
-      font-weight: 600;
-      cursor: pointer;
+    .admin-brands-actions-search-bar {
+      position: relative;
+
+      .admin-brands-actions-search-bar-input {
+        height: 100%;
+        border-radius: 32px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: #150836;
+        color: white;
+        font-weight: 600;
+        font-size: 16px;
+        padding-right: 2.5rem;
+        -webkit-appearance: none;
+
+        &::placeholder {
+          font-size: 14px;
+          color: rgba(255, 255, 255, 0.5);
+          font-weight: 500;
+        }
+      }
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: 0.75rem;
+        width: 1.25rem;
+        height: 1.25rem;
+        transform: translateY(-50%);
+        pointer-events: none;
+        z-index: 1;
+
+        background-color: rgba(255, 255, 255, 0.5);
+
+        -webkit-mask: url("/assets/svg/search-svgrepo-com.svg") no-repeat
+          center / contain;
+        mask: url("/assets/svg/search-svgrepo-com.svg") no-repeat center /
+          contain;
+      }
     }
+
+    .admin-brands-actions-add-brand {
+      .admin-brands-actions-add-brand-button {
+        padding: 10px 18px;
+        border-radius: 999px;
+        border: none;
+        background: #ffffff;
+        color: #000000;
+        font-weight: 600;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .admin-brands-filters-summary {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .admin-brands-filter-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 10px;
+    padding-right: 5px;
+    border-radius: 999px;
+    border: 1px solid #6b7280;
+    font-size: 12px;
+    font-weight: 600;
+    color: #ffffff;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .admin-brands-filter-chip-close {
+    font-weight: 700;
+    color: #6b7280;
   }
 }

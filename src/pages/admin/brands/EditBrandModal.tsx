@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { updateBrand } from "@src/services/adminService";
-import { useToast } from "../hooks/useHooks";
+import { useToast } from "../../../hooks/useHooks";
 import type { AdminBrand } from "@src/services/adminService";
 import "./EditBrandModal.scss";
 

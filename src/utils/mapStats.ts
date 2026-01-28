@@ -1,9 +1,4 @@
-export type StatutLabel = "actif" | "suspendu" | "supprimé" | "non_confirmé";
-export type ContributorLabel =
-  | "Porteur d'idées"
-  | "Explorateur de bugs"
-  | "Ambassadeur"
-  | "Polycontributeur";
+import { type ContributorLabel, type StatutLabel } from "@src/types/Filters";
 
 export const mapStatut = (user: {
   confirmedAt?: string | null;
