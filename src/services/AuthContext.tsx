@@ -12,7 +12,7 @@ interface UserProfile {
   id?: string;
   avatar: string;
   type: "user" | "brand";
-  role?: "user" | "admin";
+  role?: "user" | "admin" | "super_admin";
   pseudo?: string;
   email?: string;
   born?: string;

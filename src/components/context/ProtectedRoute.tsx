@@ -5,11 +5,13 @@ import { Navigate } from "react-router-dom";
 interface ProtectedRouteProps {
   children: React.ReactNode;
   allowedTypes?: ("user" | "brand")[];
+  allowedRoles?: ("user" | "admin" | "super_admin")[];
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
   allowedTypes,
+  allowedRoles,
 }) => {
   const { isAuthenticated, isLoading, userProfile } = useAuth();
 
@@ -17,11 +19,17 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     return <div>Chargement…</div>;
   }
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated || !userProfile) {
     return <Navigate to="/lookup" replace />;
   }
 
-  if (allowedTypes && userProfile && !allowedTypes.includes(userProfile.type)) {
+  // ✅ vérification du TYPE
+  if (allowedTypes && !allowedTypes.includes(userProfile.type)) {
+    return <Navigate to="/" replace />;
+  }
+
+  // ✅ vérification du ROLE
+  if (allowedRoles && !allowedRoles.includes(userProfile.role ?? "user")) {
     return <Navigate to="/" replace />;
   }
 

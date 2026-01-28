@@ -1,7 +1,7 @@
 import DashboardUserHeader from "@src/pages/admin/dashboardUser/components/header/DashboardUserHeader";
 import DashboardFilter from "@src/pages/admin/dashboardUser/components/filters/DashboardFilter";
 import Feed from "@src/pages/admin/dashboardUser/components/feed/Feed";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { getAdminUsers } from "@src/services/adminService";
 import {
   mapContributor,
@@ -26,33 +26,6 @@ type UserRow = {
 };
 
 type UpRange = "inf-10" | "10-30" | "30-50" | "sup-50" | "";
-
-const UP_RANGE_BOUNDARIES: Record<
-  Exclude<UpRange, "">,
-  { min?: number; max?: number }
-> = {
-  "inf-10": { max: 10 },
-  "10-30": { min: 10, max: 30 },
-  "30-50": { min: 30, max: 50 },
-  "sup-50": { min: 50 },
-};
-
-const isInUpRange = (value: number, range: UpRange) => {
-  if (!range) {
-    return true;
-  }
-  const bounds = UP_RANGE_BOUNDARIES[range];
-  if (!bounds) {
-    return true;
-  }
-  if (bounds.min !== undefined && value < bounds.min) {
-    return false;
-  }
-  if (bounds.max !== undefined && value > bounds.max) {
-    return false;
-  }
-  return true;
-};
 
 const DashboardUser = () => {
   const [users, setUsers] = useState<UserRow[]>([]);
@@ -95,31 +68,9 @@ const DashboardUser = () => {
     loadUsers();
   }, [page, query, selectedStatut]);
 
-  const normalize = (string: string) =>
-    string
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "");
-
-  const filteredUsers = useMemo(() => {
-    const querys = normalize(query.trim());
-    return users.filter((user) => {
-      const queryUser =
-        normalize(user.pseudo).includes(querys) ||
-        normalize(user.email).includes(querys);
-      const statutUser =
-        selectedStatut.length === 0 || selectedStatut.includes(user.statut);
-      const contributorUser =
-        selectedContributorTypes.length === 0 ||
-        selectedContributorTypes.includes(user.contributeur);
-      const upRangeUser = isInUpRange(user.up, selectedUpRange);
-      return queryUser && statutUser && contributorUser && upRangeUser;
-    });
-  }, [users, query, selectedStatut, selectedContributorTypes, selectedUpRange]);
-
   useEffect(() => {
     setPage(1);
-  }, [query]);
+  }, [selectedStatut, query]);
 
   const PAGE_SIZE = 6;
 
@@ -138,7 +89,7 @@ const DashboardUser = () => {
         onContributorChange={setSelectedContributorTypes}
         onUpRangeChange={setSelectedUpRange}
       />
-      <Feed users={filteredUsers} />
+      <Feed users={users} />
 
       <div className="feed-table-body-page">
         <div

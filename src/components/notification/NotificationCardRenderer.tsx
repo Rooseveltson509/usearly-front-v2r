@@ -15,7 +15,6 @@ const NotificationCardRenderer: React.FC<Props> = ({ notif, isOpen }) => {
   if (notif.suggestion) {
     return (
       <div className="notif-card-container">
-        {/*   {renderDeleteButton()} */}
         <InteractiveFeedbackCard
           item={{ ...notif.suggestion, type: "suggestion" }}
           {...openProps}
@@ -30,7 +29,6 @@ const NotificationCardRenderer: React.FC<Props> = ({ notif, isOpen }) => {
   if (notif.coupDeCoeur) {
     return (
       <div className="notif-card-container">
-        {/*  {renderDeleteButton()} */}
         <InteractiveFeedbackCard
           item={{ ...notif.coupDeCoeur, type: "coupdecoeur" }}
           {...openProps}
@@ -45,32 +43,36 @@ const NotificationCardRenderer: React.FC<Props> = ({ notif, isOpen }) => {
   if (notif.description && notif.description.reporting) {
     const report = notif.description;
     const reporting = report.reporting;
+
+    const reportId = reporting.id; // ✅ ICI LA VRAIE CLÉ
+
     const brand = reporting?.marque || "Marque inconnue";
     const siteUrl = reporting?.siteUrl || "";
-    /* const brandLogoUrl = getBrandLogo(brand, siteUrl); */
 
     const normalizedDescriptions = [
       {
         id: report.id,
         description: report.description,
-        user: report.user || { pseudo: "Utilisateur inconnu" },
         createdAt: report.createdAt,
+        author: report.author, // ✅ CLÉ IMPORTANTE
+        emoji: report.emoji,
+        reactions: report.reactions ?? [],
       },
     ];
 
     return (
       <div className="notif-card-container">
-        {/* {renderDeleteButton()} */}
         <FlatSubcategoryBlock
           brand={brand}
           siteUrl={siteUrl}
           subcategory={report.subCategory}
           descriptions={normalizedDescriptions}
-          status={report.subCategory.status}
-          hasBrandResponse={report.hasBrandResponse}
+          status={notif.status}
+          reportId={reportId} // ✅ MAINTENANT VALIDE
+          hasBrandResponse={notif.hasBrandResponse}
           capture={reporting?.capture}
-          hideFooter
-          forceOpenComments={false}
+          forceOpenComments={notif.hasBrandResponse}
+          hideFooter={true}
         />
       </div>
     );
