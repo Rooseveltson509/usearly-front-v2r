@@ -168,7 +168,6 @@ const BrandFilteredSection: React.FC<BrandFilteredSectionProps> = ({
         const hasBrandResponse = normalizeBrandResponse(rawBrandResponse, {
           brand: ticket.brand,
           siteUrl: ticket.siteUrl ?? null,
-          avatar: getBrandLogo(ticket.brand, ticket.siteUrl),
         });
 
         return (
