@@ -3,7 +3,13 @@ import { useAuth } from "@src/services/AuthContext";
 import { useNavigate } from "react-router-dom";
 import AdminBrandsHeader from "./AdminBrandsHeader";
 import "./AdminBrandsPage.scss";
-import { getBrands, type AdminBrand } from "@src/services/adminService";
+import {
+  deleteBrand,
+  getBrands,
+  resetBrandPassword,
+  toggleBrandStatus,
+  type AdminBrand,
+} from "@src/services/adminService";
 import CreateBrandModal from "./CreateBrandModal";
 import EditBrandModal from "./EditBrandModal";
 import DataTable from "@src/components/dashboard/components/DataTable";
@@ -17,22 +23,31 @@ import {
 } from "@src/types/Filters";
 import { createAdminBrandsColumns } from "@src/pages/admin/brands/config/table";
 import { filterBrands } from "@src/utils/brandFilters";
+import Toast from "@src/components/ommons/Toast";
 
 const PAGE_SIZE = 6;
 const MAX_MEMBER = 10;
 
-function isAllowedRole(role: string | undefined) {
-  const ALLOWED_ROLES = ["admin"];
-  return typeof role === "string" && ALLOWED_ROLES.includes(role);
-}
+const ALLOWED_ROLES = ["admin", "super_admin"] as const;
+type AllowedRole = (typeof ALLOWED_ROLES)[number];
+
+const isAllowedRole = (role?: string): role is AllowedRole => {
+  return ALLOWED_ROLES.includes(role as AllowedRole);
+};
 
 const AdminBrandsPage = () => {
   const { userProfile, isLoading } = useAuth();
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [selectedBrand] = useState<AdminBrand | null>(null);
+  const [selectedBrand, setSelectedBrand] = useState<AdminBrand | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [loadingActionId, setLoadingActionId] = useState<string | null>(null);
+  const [brandToDelete, setBrandToDelete] = useState<AdminBrand | null>(null);
+  const [toast, setToast] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
 
   const { filters, setFilter, resetFilters } =
     useDashboardFilters<AdminBrandsFiltersState>(ADMIN_BRANDS_FILTER_DEFAULTS);
@@ -52,7 +67,7 @@ const AdminBrandsPage = () => {
     initialData: [],
     fetcher: async () => ({ data: (await getBrands()) ?? [] }),
     deps: [userProfile],
-    enabled: userProfile?.role === "admin",
+    enabled: isAllowedRole(userProfile?.role),
   });
 
   const filteredBrands = useMemo(
@@ -66,17 +81,90 @@ const AdminBrandsPage = () => {
     resetDeps: [search, filters.plans, filters.sectors, filters.lastAction],
     overflowStrategy: "reset",
   });
+  const requestDeleteBrand = (brand: AdminBrand) => {
+    setBrandToDelete(brand);
+  };
 
+  const handleEditBrand = (brand: AdminBrand) => {
+    setSelectedBrand(brand);
+    setShowEditModal(true);
+  };
+
+  const handleDeleteBrand = async () => {
+    if (!brandToDelete) return;
+
+    setLoadingActionId(brandToDelete.id);
+
+    try {
+      await deleteBrand(brandToDelete.id);
+      setToast({ message: "Marque supprimée", type: "success" });
+      setBrandToDelete(null);
+      loadBrands();
+    } catch {
+      setToast({
+        message: "Erreur lors de la suppression",
+        type: "error",
+      });
+    } finally {
+      setLoadingActionId(null);
+    }
+  };
+
+  const handleBrandCreated = async () => {
+    resetFilters();
+    setSearch("");
+    await loadBrands();
+    setToast({ message: "Marque créée avec succès", type: "success" });
+  };
+
+  const handleToggleStatus = async (brand: AdminBrand) => {
+    setLoadingActionId(brand.id);
+
+    try {
+      await toggleBrandStatus(brand.id);
+      setToast({ message: "Statut mis à jour", type: "success" });
+      loadBrands();
+    } catch {
+      setToast({
+        message: "Erreur lors du changement de statut",
+        type: "error",
+      });
+    } finally {
+      setLoadingActionId(null);
+    }
+  };
+
+  const handleResetPassword = async (brand: AdminBrand) => {
+    setLoadingActionId(brand.id);
+
+    try {
+      await resetBrandPassword(brand.id);
+      setToast({ message: "Mot de passe réinitialisé", type: "success" });
+    } catch {
+      setToast({ message: "Erreur lors du reset", type: "error" });
+    } finally {
+      setLoadingActionId(null);
+    }
+  };
   const columns = useMemo(
     () =>
       createAdminBrandsColumns(
-        (brandId) => navigate(`/admin/${brandId}`),
+        {
+          onNavigate: (brandId) => navigate(`/admin/${brandId}`),
+          onEdit: handleEditBrand,
+          onToggleStatus: handleToggleStatus,
+          onResetPassword: handleResetPassword,
+          onDelete: requestDeleteBrand, // ✅ ICI
+          loadingActionId,
+        },
         MAX_MEMBER,
       ),
-    [navigate],
+    [navigate, loadingActionId],
   );
 
-  if (isLoading || userProfile?.role !== "admin") return null;
+  if (isLoading || !userProfile || !isAllowedRole(userProfile.role)) {
+    return null;
+  }
 
   return (
     <div className="admin-brands-page">
@@ -117,24 +205,72 @@ const AdminBrandsPage = () => {
           />
         )}
       </div>
+      {brandToDelete && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h3>Supprimer la marque</h3>
+            <p>
+              Voulez-vous vraiment supprimer{" "}
+              <strong>{brandToDelete.name}</strong> ?
+              <br />
+              Cette action est irréversible.
+            </p>
+
+            <div className="modal-actions">
+              <button onClick={() => setBrandToDelete(null)}>Annuler</button>
+              <button className="danger" onClick={handleDeleteBrand}>
+                Supprimer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <CreateBrandModal
+        open={showModal}
+        onClose={() => setShowModal(false)}
+        onSuccess={handleBrandCreated}
+      />
+
       <CreateBrandModal
         open={showModal}
         onClose={() => setShowModal(false)}
         onSuccess={loadBrands}
+        onCreated={() =>
+          setToast({ message: "Marque créée avec succès", type: "success" })
+        }
       />
 
-      <EditBrandModal
-        open={showEditModal}
-        brand={selectedBrand}
-        onClose={() => setShowEditModal(false)}
-        onSuccess={loadBrands}
-      />
+      {showEditModal && selectedBrand && (
+        <EditBrandModal
+          open={showEditModal}
+          brand={selectedBrand}
+          onClose={() => {
+            setShowEditModal(false);
+            setSelectedBrand(null);
+          }}
+          onSuccess={() => {
+            loadBrands();
+            setShowEditModal(false);
+            setSelectedBrand(null);
+            setToast({ message: "Marque mise à jour", type: "success" });
+          }}
+        />
+      )}
+
       <DashboardPagination
         page={page}
         totalPages={totalPages}
         onPrev={goPrev}
         onNext={goNext}
       />
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
     </div>
   );
 };

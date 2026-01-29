@@ -161,3 +161,6 @@ export const getAdminOverviewMetrics = async () => {
   const { data } = await apiService.get("/admin/metrics/overview");
   return data.metrics;
 };
+export const deleteBrand = async (brandId: string) => {
+  await apiService.delete(`/admin/brand/${brandId}`);
+};

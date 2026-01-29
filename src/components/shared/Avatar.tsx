@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import "./Avatar.scss";
 import { getFullAvatarUrl } from "@src/utils/avatarUtils";
 import { FALLBACK_BRAND_PLACEHOLDER } from "@src/utils/brandLogos";
@@ -28,10 +28,11 @@ const Avatar: React.FC<AvatarProps> = ({
   fallbackInitial,
 }) => {
   const [imgError, setImgError] = useState(false);
+  const [dbBrandLogo, setDbBrandLogo] = useState<string | null>(null);
+  const [, setLoadingDbLogo] = useState(false);
 
   const baseInitial = useMemo(() => {
     if (!pseudo) return "?";
-
     const parts = pseudo.trim().split(" ").filter(Boolean);
 
     if (parts.length === 1) {
@@ -40,6 +41,42 @@ const Avatar: React.FC<AvatarProps> = ({
 
     return (parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
   }, [pseudo]);
+
+  useEffect(() => {
+    if (
+      type !== "brand" ||
+      !preferBrandLogo ||
+      !siteUrl ||
+      dbBrandLogo !== null
+    ) {
+      return;
+    }
+
+    const domain = siteUrl
+      .replace(/^https?:\/\//, "")
+      .replace(/^www\./, "")
+      .split("/")[0]
+      .toLowerCase();
+
+    const baseUrl =
+      import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+
+    setLoadingDbLogo(true);
+
+    fetch(`${baseUrl}/api/brand/by-domain/${domain}`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.logo) {
+          setDbBrandLogo(data.logo);
+        }
+      })
+      .catch(() => {
+        // silence volontaire → fallback existant
+      })
+      .finally(() => {
+        setLoadingDbLogo(false);
+      });
+  }, [type, preferBrandLogo, siteUrl, dbBrandLogo]);
 
   const displayInitial = useMemo(() => {
     const override = fallbackInitial?.trim()?.charAt(0);
@@ -91,33 +128,47 @@ const Avatar: React.FC<AvatarProps> = ({
   );
   const fullUrl = useMemo(() => {
     if (type === "brand") {
-      if (preferBrandLogo) {
-        if (
-          resolvedBrandLogo &&
-          resolvedBrandLogo !== FALLBACK_BRAND_PLACEHOLDER
-        ) {
-          return resolvedBrandLogo;
-        }
+      // 🟢 1. Logo BDD
+      if (preferBrandLogo && dbBrandLogo) {
+        return dbBrandLogo;
+      }
 
-        if (siteUrl || pseudo) {
-          const domain =
-            siteUrl
-              ?.replace(/^https?:\/\//, "")
-              .replace(/^www\./, "")
-              .split("/")[0]
-              .toLowerCase() || `${pseudo?.toLowerCase().trim()}.com`;
+      // 🟡 2. Logos détectés existants
+      if (
+        preferBrandLogo &&
+        resolvedBrandLogo &&
+        resolvedBrandLogo !== FALLBACK_BRAND_PLACEHOLDER
+      ) {
+        return resolvedBrandLogo;
+      }
 
-          const baseUrl = import.meta.env.VITE_API_BASE_URL;
-          return `${baseUrl}/api/logo?domain=${domain}`;
-        }
+      // 🟠 3. Favicon / logo externe
+      if (preferBrandLogo && (siteUrl || pseudo)) {
+        const domain =
+          siteUrl
+            ?.replace(/^https?:\/\//, "")
+            .replace(/^www\./, "")
+            .split("/")[0]
+            .toLowerCase() || `${pseudo?.toLowerCase().trim()}.com`;
+
+        const baseUrl = import.meta.env.VITE_API_BASE_URL;
+        return `${baseUrl}/api/logo?domain=${domain}`;
       }
 
       return avatar ?? null;
     }
 
-    // 👤 Cas utilisateur normal
+    // 👤 User
     return getFullAvatarUrl(avatar);
-  }, [type, avatar, preferBrandLogo, resolvedBrandLogo, siteUrl, pseudo]);
+  }, [
+    type,
+    avatar,
+    preferBrandLogo,
+    dbBrandLogo,
+    resolvedBrandLogo,
+    siteUrl,
+    pseudo,
+  ]);
 
   const isInvalidPlaceholder =
     !fullUrl ||

@@ -1,5 +1,4 @@
 import { truncate } from "@src/utils/stringUtils";
-import goToUser from "/assets/dashboardUser/goToUser.svg";
 import bigUofUsearly from "/assets/icons/bigUofUsearly.svg";
 import { type AdminBrand } from "@src/services/adminService";
 import {
@@ -9,6 +8,7 @@ import {
   getOfferVariant,
 } from "../../../../utils/brandFilters";
 import { type DataTableColumn } from "@src/components/dashboard/components/DataTable";
+import BrandActionsMenu from "./BrandActionsMenu";
 
 type StatutLabel =
   | "true"
@@ -30,8 +30,17 @@ const STATUS_EMOJI: Record<StatutLabel, "🟢" | "🟡" | "🔴" | "⚪"> = {
 const HEADER_CLASS = "brand-feed-table-head-title-value";
 const CELL_CLASS = "brand-feed-table-body-line-data";
 
+type BrandActions = {
+  onNavigate: (brandId: string) => void;
+  onEdit: (brand: AdminBrand) => void;
+  onToggleStatus: (brand: AdminBrand) => void;
+  onResetPassword: (brand: AdminBrand) => void;
+  onDelete: (brand: AdminBrand) => void;
+  loadingActionId?: string | null;
+};
+
 export const createAdminBrandsColumns = (
-  onNavigate: (brandId: string) => void,
+  actions: BrandActions,
   maxMember: number,
 ): DataTableColumn<AdminBrand>[] => [
   {
@@ -41,13 +50,6 @@ export const createAdminBrandsColumns = (
     tdClassName: CELL_CLASS,
     render: (brand) => (
       <div className="brand-feed-table-body-line-data-avatar">
-        {/* <Avatar
-          avatar={brand.logo || null}
-          pseudo={brand.name}
-          siteUrl={brand.domain}
-          sizeHW={50}
-          type="brand"
-        /> */}
         {brand.logo ? (
           <img
             className="brand-feed-table-body-line-data-avatar-avatar"
@@ -74,6 +76,22 @@ export const createAdminBrandsColumns = (
     ),
   },
   {
+    key: "email",
+    header: "Email",
+    thClassName: HEADER_CLASS,
+    tdClassName: CELL_CLASS,
+    render: (brand) => (
+      <div className="email-cell">
+        <span>{brand.email}</span>
+
+        {brand.pendingEmail && (
+          <span className="email-pending">En attente de confirmation</span>
+        )}
+      </div>
+    ),
+  },
+
+  {
     key: "sector",
     header: "Secteur",
     thClassName: HEADER_CLASS,
@@ -87,19 +105,7 @@ export const createAdminBrandsColumns = (
       );
     },
   },
-  {
-    key: "domain",
-    header: "URL",
-    thClassName: HEADER_CLASS,
-    tdClassName: CELL_CLASS,
-    render: (brand) => (
-      <div className="brand-feed-table-body-line-data">
-        <span className="brand-feed-table-body-line-data-domain">
-          {brand.domain}
-        </span>
-      </div>
-    ),
-  },
+
   {
     key: "usearScore",
     header: "UsearScore",
@@ -204,22 +210,19 @@ export const createAdminBrandsColumns = (
       </div>
     ),
   },
+
   {
-    key: "action",
+    key: "actions",
     header: "",
-    thClassName: HEADER_CLASS,
-    tdClassName: CELL_CLASS,
+    tdClassName: "brand-actions-cell",
     render: (brand) => (
-      <div className="brand-feed-table-body-line-data">
-        <span className="brand-feed-table-body-line-data-action">
-          <img
-            src={goToUser}
-            alt="Voir l'utilisateur"
-            onClick={() => onNavigate(brand.id)}
-            style={{ cursor: "pointer" }}
-          />
-        </span>
-      </div>
+      <BrandActionsMenu
+        brand={brand}
+        onEdit={actions.onEdit}
+        onToggleStatus={actions.onToggleStatus}
+        onResetPassword={actions.onResetPassword}
+        onDelete={actions.onDelete}
+      />
     ),
   },
 ];

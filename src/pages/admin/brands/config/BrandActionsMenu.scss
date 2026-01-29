@@ -1,0 +1,44 @@
+.brand-actions-menu {
+  position: relative;
+}
+
+.kebab-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #cbd5f5;
+}
+
+.dropdown {
+  position: absolute;
+  right: 0;
+  top: 25px;
+  min-width: 220px;
+  background: #120a2d;
+  border-radius: 10px;
+  padding: 6px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  z-index: 10;
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 12px;
+    background: none;
+    border: none;
+    color: #e5e7eb;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 6px;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    &.danger {
+      color: #f87171;
+    }
+  }
+}

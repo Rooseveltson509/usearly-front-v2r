@@ -69,7 +69,7 @@ function App() {
               element={
                 <ProtectedRoute
                   allowedTypes={["user"]}
-                  allowedRoles={["super_admin", "admin"]}
+                  allowedRoles={["super_admin"]}
                 >
                   <AdminBrandsPage />
                 </ProtectedRoute>
