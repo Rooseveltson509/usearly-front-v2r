@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import DescriptionCommentSection from "../report-desc-comment/DescriptionCommentSection";
-import { getBrandLogo } from "@src/utils/brandLogos";
 import { getCategoryIconPathFromSubcategory } from "@src/utils/IconsUtils";
 import { formatDistance, formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -116,16 +115,11 @@ const UserBrandBlock: React.FC<Props> = ({
               }).replace("environ ", "")}`
             : "Date inconnue"}
         </p>
-
-        {/* <img
-          src={getBrandLogo(brand, siteUrl)}
-          alt={brand}
-          className="brand-logo"
-        /> */}
         <Avatar
-          avatar={getBrandLogo(brand, siteUrl)}
+          avatar={null}
           pseudo={brand}
           type="brand"
+          siteUrl={siteUrl}
           wrapperClassName="avatar brand-logo"
         />
         <ChevronDown size={18} className="chevron-icon" />
@@ -222,11 +216,12 @@ const UserBrandBlock: React.FC<Props> = ({
                             pseudo={safeAuthor.pseudo || "Utilisateur"}
                             type="user"
                             wrapperClassName="avatar user-avatar"
-                          />
+                          />{" "}
                           <Avatar
-                            avatar={getBrandLogo(brand, siteUrl)}
+                            avatar={null}
                             pseudo={brand}
                             type="brand"
+                            siteUrl={siteUrl}
                             wrapperClassName="avatar brand-logo"
                           />
                         </div>

@@ -6,9 +6,10 @@ interface Props {
   open: boolean;
   onClose: () => void;
   onSuccess: () => void;
+  onCreated?: () => void;
 }
 
-const CreateBrandModal = ({ open, onClose, onSuccess }: Props) => {
+const CreateBrandModal = ({ open, onClose, onSuccess, onCreated }: Props) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [domain, setDomain] = useState("");
@@ -29,6 +30,7 @@ const CreateBrandModal = ({ open, onClose, onSuccess }: Props) => {
     try {
       await createBrand({ name, email, domain, offres });
       onSuccess();
+      onCreated?.();
       onClose();
       setName("");
       setDomain("");

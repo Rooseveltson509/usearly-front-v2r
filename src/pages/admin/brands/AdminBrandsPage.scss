@@ -226,3 +226,55 @@
     }
   }
 }
+
+.brand-actions-menu {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-action {
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  background: rgba(255, 255, 255, 0.12);
+
+  &.primary {
+    background: #5b7cff;
+  }
+
+  &.danger {
+    background: #ff4d4f;
+  }
+
+  &.success {
+    background: #52c41a;
+  }
+
+  &.subtle {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+.email-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.email-pending {
+  font-size: 12px;
+  color: #f59e0b; // orange warning
+  font-style: italic;
+}
+.brand-actions-cell {
+  text-align: right;
+  width: 48px;
+}
