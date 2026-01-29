@@ -71,7 +71,7 @@ const NotificationCardRenderer: React.FC<Props> = ({ notif, isOpen }) => {
           reportId={reportId} // ✅ MAINTENANT VALIDE
           hasBrandResponse={notif.hasBrandResponse}
           capture={reporting?.capture}
-          forceOpenComments={notif.hasBrandResponse}
+          forceOpenComments={Boolean(notif.hasBrandResponse)}
           hideFooter={true}
         />
       </div>

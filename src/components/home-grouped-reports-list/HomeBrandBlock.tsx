@@ -22,6 +22,7 @@ import { capitalizeFirstLetter } from "@src/utils/stringUtils";
 import Champs, { type SelectFilterOption } from "@src/components/champs/Champs";
 import type { TicketStatusKey } from "@src/types/ticketStatus";
 import { useBrandResponsesMap } from "@src/hooks/useBrandResponsesMap";
+import { normalizeBrandResponse } from "@src/utils/brandResponse";
 
 interface Props {
   brand: string;
@@ -199,9 +200,14 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
       {openBrands[brand] && (
         <div className="subcategories-list">
           {uniqueSubCategories.map((sub, j) => {
-            const hasBrandResponse = sub.reportIds.some(
-              (id) => brandResponsesMap[id],
-            );
+            const rawBrandResponse = sub.reportIds
+              .map((id) => brandResponsesMap[id])
+              .find(Boolean);
+            const hasBrandResponse = normalizeBrandResponse(rawBrandResponse, {
+              brand,
+              siteUrl,
+              avatar: getBrandLogo(brand, siteUrl),
+            });
             const initialDescription = sub.descriptions[0];
             const additionalDescriptions = sub.descriptions.slice(1);
             const hasMoreThanTwo = additionalDescriptions.length > 2;
@@ -358,6 +364,9 @@ const HomeBrandBlock: React.FC<Props> = ({ brand, siteUrl, reports }) => {
                         <CommentSection
                           descriptionId={initialDescription.id}
                           type="report"
+                          brand={brand}
+                          brandSiteUrl={siteUrl}
+                          brandResponse={hasBrandResponse}
                           reportIds={sub.reportIds}
                           onCommentAdded={() => {
                             setLocalCommentsCounts((prev) => ({

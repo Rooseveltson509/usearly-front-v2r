@@ -5,6 +5,7 @@ import type {
   FeedbackDescription,
   ExplodedGroupedReport,
 } from "@src/types/Reports";
+import { normalizeBrandResponse } from "@src/utils/brandResponse";
 
 export const useConfirmedFlatData = () => {
   const [data, setData] = useState<ExplodedGroupedReport[]>([]);
@@ -51,7 +52,10 @@ export const useConfirmedFlatData = () => {
               marque: item.marque,
               siteUrl: item.siteUrl ?? undefined,
               totalCount: item.count,
-              hasBrandResponse: item.hasBrandResponse,
+              hasBrandResponse: normalizeBrandResponse(item.hasBrandResponse, {
+                brand: item.marque,
+                siteUrl: item.siteUrl ?? null,
+              }),
               reactions: [],
 
               // ✅ pour compatibilité avec GroupedReport

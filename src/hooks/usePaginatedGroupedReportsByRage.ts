@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getRageReports } from "@src/services/feedbackService";
 import type { ConfirmedSubcategoryReport } from "@src/types/Reports";
 import { apiService } from "@src/services/apiService";
+import { normalizeBrandResponse } from "@src/utils/brandResponse";
 
 export const usePaginatedGroupedReportsByRage = (
   active: boolean,
@@ -38,7 +39,10 @@ export const usePaginatedGroupedReportsByRage = (
 
         const enriched = newData.map((item) => ({
           ...item,
-          hasBrandResponse: Boolean(map[item.reportingId]),
+          hasBrandResponse: normalizeBrandResponse(map[item.reportingId], {
+            brand: item.marque,
+            siteUrl: item.siteUrl ?? null,
+          }),
         }));
 
         setData((prev) => {

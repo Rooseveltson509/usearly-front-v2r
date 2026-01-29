@@ -15,6 +15,7 @@ import Avatar from "@src/components/shared/Avatar";
 import UserBrandLine from "@src/components/shared/UserBrandLine";
 import CloseButton from "@src/components/buttons/CloseButtons";
 import { useBrandResponsesMap } from "@src/hooks/useBrandResponsesMap";
+import { normalizeBrandResponse } from "@src/utils/brandResponse";
 
 interface Props {
   item: PopularGroupedReport;
@@ -93,7 +94,14 @@ const PopularReportCard: React.FC<Props> = ({
 
   if (!firstDescription) return null;
 
-  const hasBrandResponse = !!brandResponsesMap[item.reportingId];
+  const hasBrandResponse = normalizeBrandResponse(
+    brandResponsesMap[item.reportingId],
+    {
+      brand: item.marque,
+      siteUrl: item.siteUrl ?? null,
+      avatar: getBrandLogo(item.marque, item.siteUrl ?? undefined),
+    },
+  );
 
   const author: {
     id: string;

@@ -4,6 +4,7 @@ import type { ExtensionScenario } from "../extensionExample.types";
 import { EXTENSION_SCENARIO_CONFIG } from "@src/config/extensionExample.config";
 import ExtensionExamplePopup, {
   type CursorPath,
+  type CursorStep,
   type PopupAdvanceMode,
   type PopupAnimationPreset,
   type PopupClickTarget,
@@ -24,7 +25,7 @@ import imageReport1 from "/assets/images/Landing/extensionpopupReport.svg";
 import imageReport2 from "/assets/images/Landing/extensionpopupReportSearch.svg";
 import imageReport3 from "/assets/images/Landing/extensionPopUpReportSearchValue.svg";
 import imageReport4 from "/assets/images/Landing/extensionsReportDescription.svg";
-import imageReport5 from "/assets/images/Landing/extensionPopupReportThanks.svg";
+import imageReport5 from "/assets/images/Landing/extensionPopupReportThanks2.svg";
 import imageReport6 from "/assets/images/Landing/extensionPopupReportSuivi.svg";
 import imageReport7 from "/assets/images/Landing/extensionPopupReportSolution.svg";
 import imageReport8 from "/assets/images/Landing/extensionPopupReportReponse.svg";
@@ -48,37 +49,37 @@ const REPORT_STEPS = [
   imageReport8,
 ];
 
-const REPORT_CURSOR_PATHS: CursorPath[][] = [
-  [[{ x: "50%", y: "45%" }]],
-  [[{ x: "50%", y: "77%" }]],
-  [[{ x: "40%", y: "46.5%" }]],
-  [
-    [
-      { x: "37%", y: "41%" },
-      { x: "50%", y: "78%" },
-    ],
-  ],
-  [
-    [{ x: "50%", y: "59%" }],
-    [{ x: "50%", y: "68%" }],
-    [{ x: "50%", y: "77.5%" }],
-    [{ x: "82.5%", y: "11%" }],
-  ],
-  [[{ x: "78%", y: "11.5%" }]],
-  [
-    [{ x: "50%", y: "59%" }],
-    [{ x: "50%", y: "68%" }],
-    [{ x: "50%", y: "77.5%" }],
-    [{ x: "82.5%", y: "11%" }],
-  ],
-  [[{ x: "78%", y: "17%" }]],
-  [
-    [{ x: "50%", y: "59%" }],
-    [{ x: "50%", y: "68%" }],
-    [{ x: "50%", y: "77.5%" }],
-    [{ x: "82.5%", y: "11%" }],
-  ],
-  [[{ x: "78%", y: "17%" }]],
+const makeCursorStep = (
+  startPath: CursorPath,
+  paths: CursorPath[] = [],
+): CursorStep => ({
+  startPath,
+  paths: [startPath, ...paths],
+});
+
+const REPORT_CURSOR_STEPS: CursorStep[] = [
+  makeCursorStep([{ x: "50%", y: "45%" }]),
+  makeCursorStep([{ x: "50%", y: "77%" }]),
+  makeCursorStep([{ x: "40%", y: "46.5%" }]),
+  makeCursorStep([
+    { x: "37%", y: "41%" },
+    { x: "50%", y: "78%" },
+  ]),
+  makeCursorStep(
+    [{ x: "80%", y: "11.25%" }],
+    [[{ x: "50%", y: "67.25%" }], [{ x: "50%", y: "77.25%" }]],
+  ),
+  makeCursorStep([{ x: "78%", y: "11.5%" }]),
+  makeCursorStep(
+    [{ x: "80%", y: "11.25%" }],
+    [[{ x: "50%", y: "67.25%" }], [{ x: "50%", y: "77.25%" }]],
+  ),
+  makeCursorStep([{ x: "78%", y: "17%" }]),
+  makeCursorStep(
+    [{ x: "80%", y: "11.25%" }],
+    [[{ x: "50%", y: "67.25%" }], [{ x: "50%", y: "77.25%" }]],
+  ),
+  makeCursorStep([{ x: "78%", y: "17%" }]),
 ];
 const REPORT_CURSOR_VISIBILITY = [
   true,
@@ -101,31 +102,27 @@ const REPORT_STEP_DURATIONS_MS = scaleDurations([
   2000, 4500, 4500, 8000, 4500, 4500, 4500, 4500,
 ]);
 const LIKE_STEPS = [imageLike1, imageLike2, imageLike3];
-const LIKE_CURSOR_PATHS: CursorPath[][] = [
-  [
-    [
-      { x: "40.5%", y: "37%" },
-      { x: "82%", y: "81%" },
-    ],
-  ],
-  [[{ x: "53%", y: "75%" }]],
-  [[{ x: "55%", y: "75%" }]],
+const LIKE_CURSOR_STEPS: CursorStep[] = [
+  makeCursorStep([
+    { x: "40.5%", y: "37%" },
+    { x: "82%", y: "81%" },
+  ]),
+  makeCursorStep([{ x: "53%", y: "75%" }]),
+  makeCursorStep([{ x: "55%", y: "75%" }]),
 ];
 const LIKE_CURSOR_VISIBILITY = [true, true, false];
-const LIKE_STEP_DURATIONS_MS = scaleDurations([5000, 4500, 4500]);
+const LIKE_STEP_DURATIONS_MS = scaleDurations([3000, 4500, 4500]);
 const SUGGEST_STEPS = [imageSuggest1, imageSuggest2, imageSuggest3];
-const SUGGEST_CURSOR_PATHS: CursorPath[][] = [
-  [
-    [
-      { x: "41.5%", y: "36%" },
-      { x: "83%", y: "78%" },
-    ],
-  ],
-  [[{ x: "53%", y: "77%" }]],
-  [[{ x: "55%", y: "75%" }]],
+const SUGGEST_CURSOR_STEPS: CursorStep[] = [
+  makeCursorStep([
+    { x: "41.5%", y: "36%" },
+    { x: "83%", y: "78%" },
+  ]),
+  makeCursorStep([{ x: "53%", y: "77%" }]),
+  makeCursorStep([{ x: "55%", y: "75%" }]),
 ];
 const SUGGEST_CURSOR_VISIBILITY = [true, true, false];
-const SUGGEST_STEP_DURATIONS_MS = scaleDurations([5000, 4500, 4500]);
+const SUGGEST_STEP_DURATIONS_MS = scaleDurations([3000, 4500, 4500]);
 
 const REPORT_STEP_ANIMATIONS: PopupAnimationPreset[] = [
   "fade",
@@ -177,8 +174,7 @@ const REPORT_RESTART_CLICK_TARGET: PopupClickTarget = {
 };
 
 const REPORT_THANKS_CLICK_TARGETS: PopupClickTarget[] = [
-  { x: 16.57, y: 54.59, width: 66.33, height: 8.62, targetIndex: 7 },
-  { x: 16.57, y: 64.06, width: 66.33, height: 8.62, targetIndex: 9 },
+  { x: 16.57, y: 64.06, width: 66.33, height: 8.62, targetIndex: 7 },
   { x: 16.57, y: 73.53, width: 66.33, height: 8.62, targetIndex: 5 },
 ];
 
@@ -213,10 +209,10 @@ const STEPS_BY_SCENARIO: Record<ExtensionScenario, string[]> = {
   suggérez: SUGGEST_STEPS,
 };
 
-const CURSOR_PATHS_BY_SCENARIO: Record<ExtensionScenario, CursorPath[][]> = {
-  signalez: REPORT_CURSOR_PATHS,
-  félicitez: LIKE_CURSOR_PATHS,
-  suggérez: SUGGEST_CURSOR_PATHS,
+const CURSOR_STEPS_BY_SCENARIO: Record<ExtensionScenario, CursorStep[]> = {
+  signalez: REPORT_CURSOR_STEPS,
+  félicitez: LIKE_CURSOR_STEPS,
+  suggérez: SUGGEST_CURSOR_STEPS,
 };
 
 const REPORT_STAY_ON_STEPS = [4, 6, 9];
@@ -347,7 +343,7 @@ const ExtensionExampleImage = ({
           modeClass={config.modeClass}
           stepsByScenario={STEPS_BY_SCENARIO}
           stepDurationsByScenario={STEP_DURATIONS_BY_SCENARIO}
-          cursorPathsByScenario={CURSOR_PATHS_BY_SCENARIO}
+          cursorStepsByScenario={CURSOR_STEPS_BY_SCENARIO}
           cursorVisibilityByScenario={CURSOR_VISIBILITY_BY_SCENARIO}
           popupAnimationPresetsByScenario={POPUP_STEP_ANIMATIONS_BY_SCENARIO}
           advanceModesByScenario={POPUP_STEP_ADVANCE_MODES_BY_SCENARIO}

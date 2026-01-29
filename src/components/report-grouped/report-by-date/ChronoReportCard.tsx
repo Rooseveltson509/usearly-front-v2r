@@ -221,6 +221,8 @@ const ChronoReportCard: React.FC<Props> = ({ item, isOpen, onToggle }) => {
               descriptionId={descriptionId}
               type="report"
               brand={item.marque}
+              brandSiteUrl={item.siteUrl ?? undefined}
+              brandResponse={item.hasBrandResponse}
               hideFooter={true} // 👈 footer visible seulement si commentaires ouverts
               forceOpen={showComments} // 👈 ouvre les comments si demandé
               reportIds={item.hasBrandResponse ? [item.reportingId] : []}

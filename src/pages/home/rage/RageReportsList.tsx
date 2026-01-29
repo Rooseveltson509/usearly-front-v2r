@@ -3,6 +3,7 @@ import { usePaginatedGroupedReportsByRage } from "@src/hooks/usePaginatedGrouped
 import type { ExplodedGroupedReport } from "@src/types/Reports";
 import ReportListView from "../ReportListView";
 import { useBrandResponsesMap } from "@src/hooks/useBrandResponsesMap";
+import { normalizeBrandResponse } from "@src/utils/brandResponse";
 
 const RageReportsList = ({
   expandedItems,
@@ -32,7 +33,13 @@ const RageReportsList = ({
     siteUrl: r.siteUrl ?? undefined,
     totalCount: r.count,
     reactions: [],
-    hasBrandResponse: Boolean(brandResponsesMap[String(r.reportingId)]),
+    hasBrandResponse: normalizeBrandResponse(
+      brandResponsesMap[String(r.reportingId)],
+      {
+        brand: r.marque,
+        siteUrl: r.siteUrl ?? null,
+      },
+    ),
     subCategory: {
       subCategory: r.subCategory,
       status: r.status,

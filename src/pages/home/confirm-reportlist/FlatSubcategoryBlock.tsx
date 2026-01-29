@@ -17,6 +17,7 @@ import { useBrandLogos } from "@src/hooks/useBrandLogos";
 import UserBrandLine from "@src/components/shared/UserBrandLine";
 import CloseButton from "@src/components/buttons/CloseButtons";
 import type { TicketStatusKey } from "@src/types/ticketStatus";
+import type { HasBrandResponse } from "@src/types/brandResponse";
 
 interface Props {
   brand: string;
@@ -27,7 +28,7 @@ interface Props {
   status: TicketStatusKey;
   capture?: string | null;
   descriptions: any[];
-  hasBrandResponse?: boolean;
+  hasBrandResponse?: HasBrandResponse;
   hideFooter?: boolean;
   forceOpenComments?: boolean;
 }
@@ -292,6 +293,8 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
                 descriptionId={initialDescription.id}
                 type="report"
                 brand={brand}
+                brandSiteUrl={siteUrl}
+                brandResponse={hasBrandResponse}
                 reportIds={effectiveReportIds}
                 onCommentAdded={() => setRefreshKey((p) => p + 1)}
                 onCommentDeleted={() => setRefreshKey((p) => p + 1)}

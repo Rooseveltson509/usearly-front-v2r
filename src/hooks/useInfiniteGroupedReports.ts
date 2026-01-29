@@ -1,5 +1,6 @@
 import { getUserProfileGroupedReports } from "@src/services/feedbackService";
 import type { UserGroupedReport } from "@src/types/Reports";
+import { normalizeBrandResponse } from "@src/utils/brandResponse";
 import { useState, useEffect, useCallback, useRef } from "react";
 
 /**
@@ -31,9 +32,18 @@ export const useInfiniteGroupedReports = (limit = 10, resetKey = "") => {
 
     try {
       const data = await getUserProfileGroupedReports(pageRef.current, limit);
+      const normalizedResults: UserGroupedReport[] = data.results.map(
+        (item: UserGroupedReport) => ({
+          ...item,
+          hasBrandResponse: normalizeBrandResponse(item.hasBrandResponse, {
+            brand: item.marque,
+            siteUrl: item.siteUrl ?? null,
+          }),
+        }),
+      );
 
       setReports((prev) => {
-        const combined = [...prev, ...data.results];
+        const combined = [...prev, ...normalizedResults];
 
         const uniqueMap = new Map();
         /*       for (const item of combined) {

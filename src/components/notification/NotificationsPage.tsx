@@ -12,6 +12,8 @@ import Avatar from "../shared/Avatar";
 import PurpleBanner from "../../pages/home/components/purpleBanner/PurpleBanner";
 import UserStatsCard from "../user-profile/UserStatsCard";
 import Champs, { type SelectFilterOption } from "@src/components/champs/Champs";
+import type { HasBrandResponse } from "@src/types/brandResponse";
+import { normalizeBrandResponse } from "@src/utils/brandResponse";
 
 interface Notification {
   id: string;
@@ -23,7 +25,7 @@ interface Notification {
   coupDeCoeurId?: string;
   descriptionId?: string;
   status?: string;
-  hasBrandResponse?: boolean;
+  hasBrandResponse?: HasBrandResponse;
   sender?: { pseudo: string; avatar: string };
   suggestion?: any;
   coupDeCoeur?: any;
@@ -105,7 +107,20 @@ const NotificationsPage: React.FC = () => {
         setLoading(true);
         const currentPage = opts?.reset || opts?.refresh ? 1 : page;
         const res = await getAllNotifications(currentPage, LIMIT, filter);
-        const newNotifs = res.notifications || [];
+        const newNotifs: Notification[] = (res.notifications || []).map(
+          (notif: Notification) => {
+            const reporting = notif.description?.reporting;
+            if (!reporting) return notif;
+
+            return {
+              ...notif,
+              hasBrandResponse: normalizeBrandResponse(notif.hasBrandResponse, {
+                brand: reporting.marque,
+                siteUrl: reporting.siteUrl ?? null,
+              }),
+            };
+          },
+        );
 
         setNotifications((prev) => {
           // ✅ Cas 1 : reset total (changement de filtre)

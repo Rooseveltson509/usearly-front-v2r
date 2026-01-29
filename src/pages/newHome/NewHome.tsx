@@ -9,6 +9,7 @@ import UsearlyDrawing from "@src/components/background/Usearly";
 import HeroSection from "./components/heroSection/HeroSection";
 import ScrollInlineImages from "./components/scroll-text/ScrollInlineImages";
 import FavoriteSection from "./components/slide-stack/FavoriteSection";
+import InfiniteCarouselBanner from "./components/infiniteCarouselBanner/InfiniteCarouselBanner";
 
 const NewHome: React.FC = () => {
   return (
@@ -23,6 +24,8 @@ const NewHome: React.FC = () => {
       {/* --- SECTION NORMALE --- */}
       <div className="new-home-main">
         <ExtensionExample />
+
+        <InfiniteCarouselBanner />
 
         <div className="scroll-section">
           <ScrollInlineImages

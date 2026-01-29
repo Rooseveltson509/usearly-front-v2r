@@ -32,6 +32,10 @@ export type PopupClickTarget = {
 export type CursorPosition = { x: string; y: string };
 export type CursorPath = CursorPosition[];
 export type CursorPathCollection = CursorPath[];
+export type CursorStep = {
+  startPath: CursorPath;
+  paths: CursorPathCollection;
+};
 
 const DEFAULT_POPUP_ANIMATION_PRESET: PopupAnimationPreset = "fade-up";
 const DEFAULT_POPUP_ANIMATION_DURATION_MS = 420;
@@ -466,7 +470,7 @@ type ExtensionExamplePopupProps = {
   modeClass: string;
   stepsByScenario: Record<ExtensionScenario, string[]>;
   stepDurationsByScenario: Record<ExtensionScenario, number[]>;
-  cursorPathsByScenario: Record<ExtensionScenario, CursorPath[][]>;
+  cursorStepsByScenario: Record<ExtensionScenario, CursorStep[]>;
   cursorVisibilityByScenario: Record<ExtensionScenario, boolean[]>;
   popupAnimationPresetsByScenario: Record<
     ExtensionScenario,
@@ -493,7 +497,7 @@ const ExtensionExamplePopup = ({
   modeClass,
   stepsByScenario,
   stepDurationsByScenario,
-  cursorPathsByScenario,
+  cursorStepsByScenario,
   cursorVisibilityByScenario,
   popupAnimationPresetsByScenario,
   defaultStepDurationMs,
@@ -536,9 +540,11 @@ const ExtensionExamplePopup = ({
         goToStep,
       }) => {
         const popupSrc = step ?? fallbackPopupSrc;
-        const cursorPaths = cursorPathsByScenario[activeKey]?.[stepIndex] ?? [
-          [{ x: "50%", y: "50%" }],
+        const cursorStep = cursorStepsByScenario[activeKey]?.[stepIndex];
+        const fallbackCursorPath = cursorStep?.startPath ?? [
+          { x: "50%", y: "50%" },
         ];
+        const cursorPaths = cursorStep?.paths ?? [fallbackCursorPath];
         const showCursor =
           cursorVisibilityByScenario[activeKey]?.[stepIndex] ?? true;
         const stepClass = `e${stepIndex}`;

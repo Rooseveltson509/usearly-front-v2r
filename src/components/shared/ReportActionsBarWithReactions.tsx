@@ -1,18 +1,21 @@
 import React, { useState } from "react";
-import { ThumbsUp, MessageCircle, Share2, CheckCircle2 } from "lucide-react";
+import { ThumbsUp, MessageCircle, Share2 } from "lucide-react";
 import { useReactionsForDescription } from "@src/hooks/useReactionsForDescription";
 import { getEmojisForType } from "@src/components/constants/emojiMapByType";
 import "./ReportActionsBar.scss";
 import EmojiUrlyReactionPicker from "@src/utils/EmojiUrlyReactionPicker";
-import statutIcon from "/assets/statut-icon.svg";
+import StatutIcon from "@src/assets/statut-icon.svg?react";
 import { TICKET_STATUSES, type TicketStatusKey } from "@src/types/ticketStatus";
+import Avatar from "@src/components/shared/Avatar";
+import type { HasBrandResponse } from "@src/types/brandResponse";
+import { getBrandAvatarFromResponse } from "@src/utils/brandResponse";
 
 interface Props {
   userId: string;
   descriptionId: string;
   reportsCount: number;
   reportId?: string;
-  hasBrandResponse?: boolean;
+  hasBrandResponse?: HasBrandResponse;
   commentsCount: number;
   status: TicketStatusKey;
   brandLogoUrl?: string;
@@ -53,6 +56,7 @@ const ReportActionsBarWithReactions: React.FC<Props> = ({
 
   const topThree = allReactions.slice(0, 3);
   const totalCount = allReactions.reduce((acc, r) => acc + r.count, 0);
+  const brandAvatar = getBrandAvatarFromResponse(hasBrandResponse);
 
   const handleAddReaction = async (emoji: string) => {
     await handleReact(emoji);
@@ -79,20 +83,35 @@ const ReportActionsBarWithReactions: React.FC<Props> = ({
             </>
           )}
         </div>
-        {hasBrandResponse && (
-          <span className="brand-response-pill" onClick={onCommentClick}>
-            <CheckCircle2 size={14} />
-            Une Réponse de la marque
-          </span>
-        )}
 
         <div className="count-right">
-          {commentsCount > 0 && (
+          {commentsCount > 0 ? (
             <>
+              {hasBrandResponse && brandAvatar && (
+                <Avatar
+                  avatar={brandAvatar.avatar}
+                  pseudo={brandAvatar.pseudo}
+                  type={brandAvatar.type}
+                  siteUrl={brandAvatar.siteUrl ?? undefined}
+                  sizeHW={20}
+                />
+              )}
               <span className="comments-link" onClick={onCommentClick}>
                 {commentsCount}{" "}
                 {commentsCount === 1 ? "commentaire" : "commentaires"}
               </span>
+            </>
+          ) : (
+            <>
+              {hasBrandResponse && brandAvatar && (
+                <Avatar
+                  avatar={brandAvatar.avatar}
+                  pseudo={brandAvatar.pseudo}
+                  type={brandAvatar.type}
+                  siteUrl={brandAvatar.siteUrl ?? undefined}
+                  sizeHW={20}
+                />
+              )}
             </>
           )}
 
@@ -160,7 +179,7 @@ const ReportActionsBarWithReactions: React.FC<Props> = ({
             backgroundColor: statusConfig.bg,
           }}
         >
-          <img src={statutIcon} className="status-icon" />
+          <StatutIcon className={`status-icon status-icon-${status}`} />
           <span>{statusConfig.label}</span>
         </div>
       </div>
