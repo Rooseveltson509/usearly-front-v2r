@@ -1,5 +1,6 @@
 import type { UserReaction } from "./reaction";
 import type { TicketStatusKey } from "./ticketStatus";
+import type { HasBrandResponse } from "./brandResponse";
 
 export type FeedbackType = "report" | "coupdecoeur" | "suggestion";
 
@@ -58,7 +59,7 @@ export interface ConfirmedSubcategoryReport {
   siteUrl: string | null;
   marque: string;
   category: string;
-  hasBrandResponse: boolean;
+  hasBrandResponse: HasBrandResponse;
   capture: string | null;
   createdAt: string;
   descriptions: {
@@ -210,7 +211,7 @@ export interface GroupedReport {
   reportingId: string;
   category: string;
   marque: string;
-  hasBrandResponse?: boolean;
+  hasBrandResponse?: HasBrandResponse;
   siteUrl?: string | null;
   capture?: string | null;
   totalCount: number;
@@ -315,7 +316,7 @@ export interface UserGroupedReport {
   reportingId: string;
   siteUrl: string;
   marque: string;
-  hasBrandResponse: boolean;
+  hasBrandResponse: HasBrandResponse;
   reportIds: string[];
   status: TicketStatusKey;
   category: string;
@@ -389,7 +390,7 @@ export interface PublicGroupedReportFromAPI {
   marque: string;
   category: string;
   status: TicketStatusKey;
-  hasBrandResponse?: boolean;
+  hasBrandResponse?: HasBrandResponse;
   subCategory: string;
   siteUrl?: string | null;
   capture: string | null;

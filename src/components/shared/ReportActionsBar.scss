@@ -1,3 +1,5 @@
+@use "@src/styles/base/variables" as variables;
+
 .point {
   font-size: 1rem;
   color: var(--color-text-low-emphasis);
@@ -58,7 +60,7 @@
     .count-right {
       display: flex;
       align-items: center;
-      gap: 0.25rem;
+      gap: 0.5rem;
       font-size: 13px;
       font-family: "Arial";
       color: #686c7d;
@@ -204,6 +206,7 @@
     }
   }
 }
+
 .status-badge {
   display: inline-flex;
   align-items: center;
@@ -213,7 +216,8 @@
   border-radius: 999px;
 
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
+  font-family: variables.$font-family;
   letter-spacing: 0.2px;
 
   white-space: nowrap;
@@ -221,14 +225,38 @@
   cursor: default;
 
   .status-icon {
+    opacity: 1;
     width: 14px;
     height: 14px;
-    opacity: 0.9;
+    flex-shrink: 0;
+    color: currentColor;
+  }
+
+  .status-icon-open {
+    color: transparent;
+    border-radius: 999px;
+    border: 1px solid #fff;
+    filter: invert(1);
+  }
+
+  .status-icon-in_progress {
+    color: #337aff;
+  }
+
+  .status-icon-waiting_user {
+    color: #7c3aed;
+  }
+
+  .status-icon-resolved {
+    color: #5cd55e;
+  }
+
+  .status-icon-closed {
+    color: #334155;
   }
 }
 .status-badge {
   background-color: transparent !important;
-  border: 1px solid currentColor;
 }
 
 .brand-response-indicator {
@@ -241,7 +269,6 @@
   align-items: center;
   gap: 6px;
 
-  padding: 4px 10px;
   border-radius: 999px;
 
   font-size: 12px;

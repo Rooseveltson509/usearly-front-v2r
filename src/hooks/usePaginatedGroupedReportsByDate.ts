@@ -5,6 +5,7 @@ import type {
   GetGroupedReportsByDateResponse,
   PublicGroupedReportFromAPI,
 } from "@src/types/Reports";
+import { normalizeBrandResponse } from "@src/utils/brandResponse";
 
 export const usePaginatedGroupedReportsByDate = (
   enabled: boolean,
@@ -55,7 +56,10 @@ export const usePaginatedGroupedReportsByDate = (
             capture: report.capture || null,
             totalCount: report.count,
             status: report.status,
-            hasBrandResponse: report.hasBrandResponse,
+            hasBrandResponse: normalizeBrandResponse(report.hasBrandResponse, {
+              brand: report.marque,
+              siteUrl: report.siteUrl ?? null,
+            }),
             subCategory: {
               subCategory: report.subCategory,
               status: report.status,

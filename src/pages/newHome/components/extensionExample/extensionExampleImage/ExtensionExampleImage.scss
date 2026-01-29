@@ -260,6 +260,10 @@
       transform: scale(0.4);
     }
 
+    .extension-image {
+      max-height: 425px;
+    }
+
     .extension-image.report-mode.e0,
     .extension-click-targets.report-mode.e0 {
       transform: scale(2.1);

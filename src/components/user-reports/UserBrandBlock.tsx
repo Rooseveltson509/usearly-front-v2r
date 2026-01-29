@@ -335,6 +335,8 @@ const UserBrandBlock: React.FC<Props> = ({
                           descriptionId={initialDescription.id}
                           type="report"
                           brand={brand}
+                          brandSiteUrl={siteUrl}
+                          brandResponse={sub.hasBrandResponse}
                           reportIds={[sub.reportingId]}
                           onCommentAdded={() => {
                             setLocalCommentsCounts((prev) => ({
@@ -369,6 +371,9 @@ const UserBrandBlock: React.FC<Props> = ({
                           descriptionId={initialDescription.id}
                           type="report"
                           hideFooter={true}
+                          brand={brand}
+                          brandSiteUrl={siteUrl}
+                          brandResponse={sub.hasBrandResponse}
                           reportIds={
                             sub.hasBrandResponse ? [sub.reportingId] : []
                           }
@@ -385,6 +390,9 @@ const UserBrandBlock: React.FC<Props> = ({
                         descriptionId={initialDescription.id}
                         type="report"
                         modeCompact
+                        brand={brand}
+                        brandSiteUrl={siteUrl}
+                        brandResponse={sub.hasBrandResponse}
                         reportIds={
                           sub.hasBrandResponse ? [sub.reportingId] : []
                         }
@@ -475,6 +483,9 @@ const UserBrandBlock: React.FC<Props> = ({
                                     type="report"
                                     modeCompact
                                     triggerType="text"
+                                    brand={brand}
+                                    brandSiteUrl={siteUrl}
+                                    brandResponse={sub.hasBrandResponse}
                                     reportIds={
                                       sub.hasBrandResponse
                                         ? [sub.reportingId]

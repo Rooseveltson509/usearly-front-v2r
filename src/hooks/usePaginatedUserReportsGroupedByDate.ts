@@ -4,6 +4,7 @@ import type {
   ExplodedGroupedReport,
   GetGroupedReportsByDateResponse,
 } from "@src/types/Reports";
+import { normalizeBrandResponse } from "@src/utils/brandResponse";
 
 export const usePaginatedUserReportsGroupedByDate = (enabled: boolean) => {
   const [data, setData] = useState<Record<string, ExplodedGroupedReport[]>>({});
@@ -60,7 +61,13 @@ export const usePaginatedUserReportsGroupedByDate = (enabled: boolean) => {
                 totalCount: report.count,
 
                 // ✅ AJOUT IMPORTANT
-                hasBrandResponse: report.hasBrandResponse,
+                hasBrandResponse: normalizeBrandResponse(
+                  report.hasBrandResponse,
+                  {
+                    brand: report.marque,
+                    siteUrl: report.siteUrl ?? null,
+                  },
+                ),
 
                 subCategory: {
                   subCategory: report.subCategory,

@@ -1,31 +1,46 @@
-.brand-response-banner {
-  position: relative;
-  margin: 20px 0;
-  padding: 18px 20px 20px 20px;
-  border-radius: 14px;
+.brand-response-banner-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 20px;
+  .brand-response-banner-content {
+    position: relative;
+    margin-right: 24px;
+    .icon-brand-answer {
+      position: absolute;
+      right: -12px;
+      top: 7.5px;
+      z-index: 1;
+      width: 35px;
+      height: 35px;
+    }
+    .brand-response-banner-footer {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+  .brand-response-banner {
+    position: relative;
+    margin: 20px 0;
+    margin-bottom: 0;
+    padding: 36px 30px 36px 30px;
+    border-radius: 14px;
+    --brand-accent: #6366f1;
 
-  background: linear-gradient(
-    180deg,
-    rgba(99, 102, 241, 0.06),
-    rgba(99, 102, 241, 0.02)
-  );
+    background: linear-gradient(
+      180deg,
+      rgba(99, 102, 241, 0.06),
+      rgba(99, 102, 241, 0.02)
+    );
 
-  border: 1px solid rgba(99, 102, 241, 0.15);
-  box-shadow:
-    0 6px 18px rgba(15, 23, 42, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    box-shadow:
+      0 6px 18px rgba(15, 23, 42, 0.04),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6);
 
-  font-family: Inter, system-ui, sans-serif;
-
-  &::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 14px;
-    bottom: 14px;
-    width: 3px;
-    border-radius: 3px;
-    background: linear-gradient(180deg, #6366f1, #818cf8);
+    font-family: Inter, system-ui, sans-serif;
+  }
+  .brand-response-avatar-wrapper {
+    margin-top: 25px;
   }
 }
 
@@ -67,11 +82,11 @@
 }
 .brand-response-header {
   padding-bottom: 10px;
-  border-bottom: 1px solid rgba(99, 102, 241, 0.12);
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--brand-accent) 18%, transparent);
 }
 
 .brand-response-message {
-  margin-top: 14px;
   max-width: 820px;
 
   p + p {
@@ -80,22 +95,25 @@
 }
 
 .date {
-  margin-left: auto;
+  margin: 5px 10px;
+  margin-right: 15px;
   font-size: 12px;
   color: #94a3b8;
   white-space: nowrap;
 }
 
+.maj-date {
+  margin-right: 15px;
+}
+
 /* ================= MESSAGE ================= */
 
 .brand-response-message {
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.7;
-  color: #1e293b;
+  color: #000;
 
   white-space: pre-line;
-
-  padding-left: 12px;
 
   strong {
     font-weight: 600;
@@ -112,7 +130,7 @@
     #f8fafc;
 }
 .brand-response-message {
-  line-height: 1.75;
+  line-height: 1.5;
   letter-spacing: 0.01em;
 }
 .badge-response {
@@ -124,12 +142,16 @@
   font-weight: 700;
   letter-spacing: 0.45px;
 
-  color: #4f46e5;
-  background: rgba(99, 102, 241, 0.12);
+  color: var(--brand-accent);
+  background: color-mix(in srgb, var(--brand-accent) 16%, white);
   box-shadow: none; // 👈 optionnel
 }
 .badge-response {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+}
+
+.brand-response-avatar-wrapper {
+  flex-shrink: 0;
 }

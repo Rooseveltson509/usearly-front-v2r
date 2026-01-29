@@ -6,6 +6,7 @@ import FlatSubcategoryBlock from "../../confirm-reportlist/FlatSubcategoryBlock"
 import { getMostAdvancedStatus } from "@src/utils/ticketStatus";
 import type { TicketStatusKey } from "@src/types/ticketStatus";
 import { useBrandResponsesMap } from "@src/hooks/useBrandResponsesMap";
+import { normalizeBrandResponse } from "@src/utils/brandResponse";
 
 interface BrandFilteredSectionProps {
   selectedBrand?: string;
@@ -161,9 +162,14 @@ const BrandFilteredSection: React.FC<BrandFilteredSectionProps> = ({
 
       {/* ✅ 1 CARTE = 1 TICKET LOGIQUE */}
       {ticketGroups.map((ticket) => {
-        const hasBrandResponse = ticket.reportIds.some(
-          (id: string) => brandResponsesMap[id],
-        );
+        const rawBrandResponse = ticket.reportIds
+          .map((id: string) => brandResponsesMap[id])
+          .find(Boolean);
+        const hasBrandResponse = normalizeBrandResponse(rawBrandResponse, {
+          brand: ticket.brand,
+          siteUrl: ticket.siteUrl ?? null,
+          avatar: getBrandLogo(ticket.brand, ticket.siteUrl),
+        });
 
         return (
           <FlatSubcategoryBlock

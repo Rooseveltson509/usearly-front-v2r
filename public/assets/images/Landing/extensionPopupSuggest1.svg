@@ -36,24 +36,16 @@
         to   { transform: scaleX(1); }
     }
 
-    #typing-clip-rect{
-        transform-box: fill-box;
-        transform-origin: left center;
-        /* steps(...) gives the “typewriter” effect */
-        animation: typingRect var(--dur, 2.6s) steps(var(--chars, 28)) var(--delay, 0.6s) forwards,
-                    caret .9s steps(1, end) infinite;
-    }
-
     .button-send{
         fill: gray;
-        animation: buttonAnimation 0.5s ease-in-out 2s forwards;
+        animation: buttonAnimation 0.5s ease-in-out 1.75s forwards;
     }
 
     #image2_1669_627{
         opacity: 0.4;
         width:75px;
         height:75px;
-        animation: selectEmojiAnimation 0.5s ease-in-out 2s forwards;
+        animation: selectEmojiAnimation 0.5s ease-in-out 1.75s forwards;
     }
 
     #image0_1669_627, #image1_1669_627{

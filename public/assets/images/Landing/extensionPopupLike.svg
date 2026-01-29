@@ -25,7 +25,7 @@
 
     .button-send{
         fill: gray;
-        animation: buttonAnimation 0.5s ease-in-out 3s forwards;
+        animation: buttonAnimation 0.5s ease-in-out 1.75s forwards;
     }
 
     .animation-coeur{
@@ -34,7 +34,7 @@
         x: 200px;
         y: 150px;
         opacity: 0.4;
-        animation: selectEmojiAnimation 0.5s ease-out 3s forwards;
+        animation: selectEmojiAnimation 0.5s ease-out 1.75s forwards;
     }
 </style>
 <g filter="url(#filter0_d_615_771)">

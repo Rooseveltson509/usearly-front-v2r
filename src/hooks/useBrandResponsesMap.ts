@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { apiService } from "@src/services/apiService";
+import type { HasBrandResponse } from "@src/types/brandResponse";
 
 export function useBrandResponsesMap(reportIds: string[]) {
-  const [map, setMap] = useState<Record<string, boolean>>({});
+  const [map, setMap] = useState<Record<string, HasBrandResponse>>({});
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {

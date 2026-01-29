@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 import { getFullAvatarUrl } from "@src/utils/avatarUtils";
 import { useBrandResponse } from "@src/hooks/useBrandResponse";
 import BrandResponseBanner from "../brand-response-banner/BrandResponseBanner";
+import type { HasBrandResponse } from "@src/types/brandResponse";
 
 interface Comment {
   id: string;
@@ -26,6 +27,8 @@ interface Props {
   reportIds?: string[];
   type: "report" | "suggestion" | "coupdecoeur";
   brand?: string;
+  brandSiteUrl?: string;
+  brandResponse?: HasBrandResponse;
   onCommentAdded?: () => void;
   onCommentDeleted?: () => void;
   readOnly?: boolean;
@@ -36,6 +39,8 @@ const CommentSection: React.FC<Props> = ({
   reportIds,
   type,
   brand,
+  brandSiteUrl,
+  brandResponse,
   onCommentAdded,
   onCommentDeleted,
   readOnly,
@@ -135,6 +140,8 @@ const CommentSection: React.FC<Props> = ({
           message={brandMessage.message}
           createdAt={brandMessage.createdAt}
           brand={brand ?? ""}
+          brandSiteUrl={brandSiteUrl}
+          brandResponse={brandResponse}
         />
       )}
 
