@@ -24,6 +24,7 @@ import {
 import { createAdminBrandsColumns } from "@src/pages/admin/brands/config/table";
 import { filterBrands } from "@src/utils/brandFilters";
 import Toast from "@src/components/ommons/Toast";
+import AdminAIFloatingAssistant from "../ai-brand-by-admin/AdminAIFloatingAssistant";
 
 const PAGE_SIZE = 6;
 const MAX_MEMBER = 10;
@@ -271,6 +272,7 @@ const AdminBrandsPage = () => {
           onClose={() => setToast(null)}
         />
       )}
+      <AdminAIFloatingAssistant />
     </div>
   );
 };

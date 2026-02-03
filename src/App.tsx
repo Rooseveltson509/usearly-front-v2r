@@ -27,6 +27,7 @@ import DashboardUser from "./pages/admin/dashboardUser/users/DashboardUser";
 import AdminUserDetail from "./pages/admin/dashboardUser/users/AdminUserDetail";
 import AdminsPage from "./pages/admin/admins/AdminsPage";
 import ProtectedRoute from "./components/context/ProtectedRoute";
+import AdminAIOverviewPage from "./pages/admin/admins/overview/AdminAIOverviewPage";
 
 function App() {
   return (
@@ -75,6 +76,18 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/admin/ai/overview"
+              element={
+                <ProtectedRoute
+                  allowedTypes={["user"]}
+                  allowedRoles={["super_admin"]}
+                >
+                  <AdminAIOverviewPage />
+                </ProtectedRoute>
+              }
+            />
+
             <Route
               path="/admin/users"
               element={

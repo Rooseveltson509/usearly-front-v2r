@@ -1,0 +1,49 @@
+.admin-ai-floating {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+
+  .ai-fab {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #7b61ff, #5a4bdb);
+    color: white;
+    font-size: 22px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  }
+
+  .ai-panel {
+    position: absolute;
+    bottom: 72px;
+    right: 0;
+    width: 320px;
+    background: rgba(30, 26, 58, 0.95);
+    backdrop-filter: blur(12px);
+    border-radius: 14px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+    overflow: hidden;
+  }
+
+  .ai-questions button {
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+    border-radius: 8px;
+    padding: 10px 12px;
+    text-align: left;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+  }
+  .ai-questions button:first-child {
+    background: rgba(255, 255, 255, 0.14);
+  }
+  .ai-questions button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+  }
+}
