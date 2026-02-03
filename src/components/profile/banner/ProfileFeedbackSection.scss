@@ -1,0 +1,44 @@
+.profile-feedback-section {
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -40px;
+    right: -40px;
+    height: 280px;
+    border-radius: 18px;
+    z-index: 0;
+  }
+
+  &--report::before {
+    background: #dbeafe;
+  }
+
+  &--coupDeCoeur::before {
+    background: #ede3ff;
+  }
+
+  &--suggestion::before {
+    background: #dcf7c8;
+  }
+}
+.profile-feedback-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.profile-feedback-main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.profile-feedback-side {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
