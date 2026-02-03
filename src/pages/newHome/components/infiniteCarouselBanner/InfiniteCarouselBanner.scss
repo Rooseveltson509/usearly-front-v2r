@@ -1,7 +1,7 @@
 .infinite-carousel-banner {
   --marquee-gap: clamp(32px, 7vw, 104px);
   --item-gap: clamp(12px, 2.4vw, 28px);
-  --stroke-color: rgba(140, 140, 140, 0.9);
+  --stroke-color: rgb(0, 0, 0);
   height: max-content;
   width: 100%;
   margin-top: 75px;
@@ -55,12 +55,12 @@
     system-ui,
     sans-serif;
   font-size: clamp(40px, 6.2vw, 110px);
-  font-weight: 700;
+  font-weight: 900;
   letter-spacing: -0.02em;
   line-height: 1;
   color: transparent;
-  -webkit-text-stroke: 2px var(--stroke-color);
-  text-stroke: 2px var(--stroke-color);
+  -webkit-text-stroke: 0.5px var(--stroke-color);
+  text-stroke: 0.5px var(--stroke-color);
 }
 
 .infinite-carousel-banner:hover .marquee__track {
@@ -83,8 +83,8 @@
 
   .marquee__label {
     font-size: clamp(30px, 9vw, 64px);
-    -webkit-text-stroke: 1.6px var(--stroke-color);
-    text-stroke: 1.6px var(--stroke-color);
+    -webkit-text-stroke: 0.5px var(--stroke-color);
+    text-stroke: 0.5px var(--stroke-color);
   }
 }
 

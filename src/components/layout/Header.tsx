@@ -194,6 +194,27 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
                   >
                     Mon compte
                   </NavLink>
+                  <details className="menu-item details-menu">
+                    <summary>admin</summary>
+                    <summary>
+                      <NavLink
+                        to="/admin/users"
+                        className="menu-item"
+                        onClick={() => setUserMenuOpen(false)}
+                      >
+                        Gérer les utilisateur
+                      </NavLink>
+                    </summary>
+                    <summary>
+                      <NavLink
+                        to="/admin/brands"
+                        className="menu-item"
+                        onClick={() => setUserMenuOpen(false)}
+                      >
+                        Gérer les marques
+                      </NavLink>
+                    </summary>
+                  </details>
                   <span className="menu-item" onClick={handleLogout}>
                     Se déconnecter
                   </span>
