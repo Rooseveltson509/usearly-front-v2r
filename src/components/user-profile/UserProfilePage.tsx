@@ -7,9 +7,16 @@ import UserFeedbackView from "../profile/UserFeedbackView";
 // import UserImpact from "./UserImpact";
 import UserVotesCard from "../profile/UserVotesCard";
 import PurpleBanner from "@src/pages/home/components/purpleBanner/PurpleBanner";
+import UserEmotionSummaryPanel from "../profile/banner/user-emotion/UserEmotionSummaryPanel";
+import { useUserEmotionSummary } from "../profile/hook/userEmotionService";
 
 const UserProfilePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<FeedbackType>("report");
+  const { data: emotionSummary, loading: loadingEmotionSummary } =
+    useUserEmotionSummary(
+      activeTab === "report" || activeTab === "coupdecoeur" ? activeTab : null,
+    );
+
   const mountCount = useRef(0);
 
   useEffect(() => {
@@ -43,6 +50,13 @@ const UserProfilePage: React.FC = () => {
 
         <aside className="right-panel">
           {activeTab === "suggestion" && <UserVotesCard />}
+          {/* {activeTab === "coupDeCoeur" && <UserImpact />} */}
+          {(activeTab === "report" || activeTab === "coupdecoeur") && (
+            <UserEmotionSummaryPanel
+              data={emotionSummary}
+              loading={loadingEmotionSummary}
+            />
+          )}
         </aside>
       </main>
     </div>
