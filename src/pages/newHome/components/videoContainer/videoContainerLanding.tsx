@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import "./videoContainerLanding.scss";
+//import "./videoContainerLanding.scss";
 import VideoTextContainer from "./videoTextContainer/videoTextContainer";
 import PlayerIcon from "/assets/icons/player-icon.svg";
 import EnterFullScreenIcon from "/assets/icons/enterFullScreenIcon.svg";
@@ -8,7 +8,7 @@ import MuteIcon from "/assets/icons/muteIcon.svg";
 import VolumeIcon from "/assets/icons/volumeIcon.svg";
 
 const VIDEO_URL =
-  "https://lbcefcnvssyhlpsr.public.blob.vercel-storage.com/Usearly-Video.mp4";
+  "https://lbcefcnvssyhlpsr.public.blob.vercel-storage.com/Apropos.mp4";
 
 /* const VIDEO_URL = "https://lbcefcnvssyhlpsr.public.blob.vercel-storage.com/video-karine.mp4"; */
 

@@ -235,12 +235,11 @@
 .user-main-content::before {
   content: "";
   position: absolute;
-
   top: 0;
   height: 280px;
 
   left: 260px; /* fin colonne gauche */
-  right: 150px; /* right-panel + gap */
+  right: 50px; /* right-panel + gap */
 
   background: #dcf7c8;
   border-radius: 18px;
