@@ -1,0 +1,123 @@
+.user-profile-banner {
+  background: #1a083a;
+  color: white;
+  width: 100%;
+  position: relative;
+  margin-bottom: 100px;
+}
+
+/* CONTAINER */
+.banner-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* TOP LINE */
+.banner-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* LEFT — AVATAR + TEXTE */
+.user-info {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translateY(80px);
+  overflow: visible;
+  z-index: 4;
+  //width: 80px;
+}
+
+/* AVATAR — LÉGÈREMENT POSÉ */
+.avatar-wrapper {
+  position: absolute;
+  top: -32px; // 👈 avatar “posé” sur le banner
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  width: 90px;
+  height: 90px;
+}
+/* TEXTE SOUS L’AVATAR */
+.identity {
+  margin-top: 60px; // espace pour l’avatar
+  text-align: center;
+
+  .name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #1a083a;
+  }
+
+  .level {
+    font-size: 0.75rem;
+    opacity: 0.7;
+    color: #1a083a;
+  }
+}
+
+/* CENTER — STATS */
+.stats-inline {
+  display: flex;
+  gap: 2.6rem;
+}
+
+.stat {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  text-align: center;
+  opacity: 0.55;
+
+  .stat-value {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 1.35rem;
+    font-weight: 700;
+  }
+
+  .label {
+    font-size: 0.7rem;
+    opacity: 0.8;
+    margin-top: 0.25rem;
+  }
+
+  &.active {
+    opacity: 1;
+  }
+}
+
+/* RIGHT — POWER */
+.right-badge {
+  position: relative;
+  top: 40px;
+}
+.power {
+  text-align: right;
+
+  .label {
+    font-size: 0.7rem;
+    opacity: 0.7;
+  }
+
+  .value {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+
+    img {
+      width: 64px;
+      height: 64px;
+    }
+  }
+}

@@ -1,14 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import UserStatsCard from "./UserStatsCard";
 import { type FeedbackType } from "./FeedbackTabs";
 import "./UserProfilePage.scss";
 import UserGroupedReportsList from "../profile/UserGroupedReportsList";
 import UserFeedbackView from "../profile/UserFeedbackView";
-// import UserImpact from "./UserImpact";
 import UserVotesCard from "../profile/UserVotesCard";
-import PurpleBanner from "@src/pages/home/components/purpleBanner/PurpleBanner";
 import UserEmotionSummaryPanel from "../profile/banner/user-emotion/UserEmotionSummaryPanel";
 import { useUserEmotionSummary } from "../profile/hook/userEmotionService";
+import UserProfileBanner from "./banner/UserProfileBanner";
 
 const UserProfilePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<FeedbackType>("report");
@@ -27,19 +25,10 @@ const UserProfilePage: React.FC = () => {
   return (
     <div className="user-profile-page">
       {/* Bandeau du haut */}
-      <PurpleBanner
-        navOn={true}
-        pastille={true}
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-        userProfile={true}
-      />
+      <UserProfileBanner activeTab={activeTab} onTabChange={setActiveTab} />
 
       {/* Contenu principal */}
       <main className="user-main-content">
-        <aside className="left-panel">
-          <UserStatsCard />
-        </aside>
         <div className="feedback-list-wrapper">
           {activeTab === "report" ? (
             <UserGroupedReportsList />
@@ -50,7 +39,6 @@ const UserProfilePage: React.FC = () => {
 
         <aside className="right-panel">
           {activeTab === "suggestion" && <UserVotesCard />}
-          {/* {activeTab === "coupDeCoeur" && <UserImpact />} */}
           {(activeTab === "report" || activeTab === "coupdecoeur") && (
             <UserEmotionSummaryPanel
               data={emotionSummary}

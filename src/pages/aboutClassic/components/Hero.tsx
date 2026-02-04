@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 const HERO_VIDEO_SRC =
-  "https://lbcefcnvssyhlpsr.public.blob.vercel-storage.com/Usearly-Video.mp4";
+  "https://lbcefcnvssyhlpsr.public.blob.vercel-storage.com/Apropos.mp4";
 const SCROLL_HINT_TEXT = "Faites défiler pour découvrir la suite";
 
 const Hero = () => {
@@ -81,16 +81,13 @@ const Hero = () => {
       >
         <source src={HERO_VIDEO_SRC} type="video/mp4" />
       </video>
-      <div className="about-classic__hero-content">
+      {/* <div className="about-classic__hero-content">
         <h1 className="about-classic__hero-title Raleway reveal-wall">
           Notre super-pouvoir :
           <br />
           les utilisateurs
         </h1>
-        {/* <p className="about-classic__hero-subtitle Raleway">
-          En donnant la voix aux utilisateurs
-        </p> */}
-      </div>
+      </div> */}
       <div
         className={`about-classic__scroll-indicator${
           showScrollHint ? "" : " is-hidden"
