@@ -24,29 +24,30 @@ const UserProfilePage: React.FC = () => {
 
   return (
     <div className="user-profile-page">
-      {/* Bandeau du haut */}
       <UserProfileBanner activeTab={activeTab} onTabChange={setActiveTab} />
 
-      {/* Contenu principal */}
-      <main className="user-main-content">
-        <div className="feedback-list-wrapper">
-          {activeTab === "report" ? (
-            <UserGroupedReportsList />
-          ) : (
-            <UserFeedbackView activeTab={activeTab} />
-          )}
-        </div>
+      {/* 👇 NOUVEAU WRAPPER */}
+      <div className={`profile-main-wrapper banner-${activeTab}`}>
+        <main className="user-main-content">
+          <div className="feedback-list-wrapper">
+            {activeTab === "report" ? (
+              <UserGroupedReportsList />
+            ) : (
+              <UserFeedbackView activeTab={activeTab} />
+            )}
+          </div>
 
-        <aside className="right-panel">
-          {activeTab === "suggestion" && <UserVotesCard />}
-          {(activeTab === "report" || activeTab === "coupdecoeur") && (
-            <UserEmotionSummaryPanel
-              data={emotionSummary}
-              loading={loadingEmotionSummary}
-            />
-          )}
-        </aside>
-      </main>
+          <aside className="right-panel">
+            {activeTab === "suggestion" && <UserVotesCard />}
+            {(activeTab === "report" || activeTab === "coupdecoeur") && (
+              <UserEmotionSummaryPanel
+                data={emotionSummary}
+                loading={loadingEmotionSummary}
+              />
+            )}
+          </aside>
+        </main>
+      </div>
     </div>
   );
 };

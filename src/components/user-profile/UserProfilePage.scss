@@ -1,11 +1,57 @@
 @use "@src/styles/base/variables" as *;
 
 .user-profile-page {
+  position: relative;
   display: flex;
   flex-direction: column;
   width: 100%;
   min-height: 100vh;
   background-color: #f8f8f8;
+}
+
+.profile-main-wrapper {
+  position: relative;
+  margin-top: 24px;
+  width: fit-content; // ⬅️ LA LIGNE MANQUANTE
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Le vrai banner */
+.profile-main-wrapper::before {
+  content: "";
+  position: absolute;
+
+  top: 0;
+  left: -32px;
+  right: -32px;
+
+  height: 280px;
+  border-radius: 18px;
+
+  z-index: 0;
+  pointer-events: none;
+  transition: background-color 0.3s ease;
+}
+
+@media (min-width: 1600px) {
+  .profile-main-wrapper::before {
+    left: -24px;
+    right: -24px;
+  }
+}
+
+/* Couleurs dynamiques */
+.profile-main-wrapper.banner-report::before {
+  background: #dcf7c8;
+}
+
+.profile-main-wrapper.banner-suggestion::before {
+  background: #cfe8ff;
+}
+
+.profile-main-wrapper.banner-coupdecoeur::before {
+  background: #ffe0e0;
 }
 
 // ===== Bandeau violet haut =====
@@ -141,11 +187,11 @@
 
 // ===== Contenu principal (3 colonnes) =====
 .user-main-content {
-  display: grid;
-  grid-template-columns: 260px 1fr 260px;
-  padding: 1rem 2rem;
-  margin: 0 auto;
-  gap: 40px !important;
+  position: relative;
+  margin-top: 24px;
+  width: max-content;
+  margin-left: auto;
+  margin-right: auto;
   .feedback-list-wrapper {
     width: 65%;
     max-width: 655px;
@@ -229,23 +275,6 @@
 
 .user-main-content {
   position: relative;
-}
-
-/* Banner purement visuel */
-.user-main-content::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  height: 280px;
-
-  left: 260px; /* fin colonne gauche */
-  right: 50px; /* right-panel + gap */
-
-  background: #dcf7c8;
-  border-radius: 18px;
-
-  z-index: 0;
-  pointer-events: none;
 }
 
 .user-main-content > * {
