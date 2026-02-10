@@ -388,6 +388,17 @@
       }
     }
   }
+  .user-dropdown-menu > .menu-item,
+  .user-dropdown-menu > a.menu-item {
+    color: #312e2e;
+    &:hover {
+      background: #f4f4f6;
+    }
+
+    &.danger {
+      color: #c0392b;
+    }
+  }
 }
 
 .header.hero-mode .header-right .login-button {

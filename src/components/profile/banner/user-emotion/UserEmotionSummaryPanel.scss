@@ -11,62 +11,6 @@
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.04); // très soft
 }
 
-/* LEFT */
-.emoji-area {
-  position: relative;
-  width: 70%;
-  min-height: 130px;
-  margin-top: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.emoji-main {
-  font-size: 4.5rem; // plus gros
-  z-index: 2;
-}
-
-.emoji-others {
-  position: absolute;
-  inset: 0;
-}
-
-.emoji-small {
-  position: absolute;
-  opacity: 1;
-
-  &:nth-child(1) {
-    top: -25%;
-    left: 8%;
-    font-size: 3.2rem;
-  }
-
-  &:nth-child(2) {
-    top: 0;
-    right: 5%;
-    font-size: 2.8rem;
-  }
-
-  &:nth-child(3) {
-    bottom: -10%;
-    left: 10%;
-    font-size: 2.5rem;
-  }
-
-  &:nth-child(4) {
-    bottom: -10%;
-    right: 12%;
-    font-size: 2rem;
-  }
-
-  &:nth-child(5) {
-    top: 45%;
-    left: 0;
-    font-size: 1.4rem;
-  }
-}
-
 /* RIGHT */
 .stats-area {
   display: flex;
@@ -95,4 +39,173 @@
 .stat-label {
   font-size: 0.9rem;
   color: #6b6b6b;
+}
+
+/* =========================
+   EMOJI ITEM (BASE)
+========================= */
+.emoji-item {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* =========================
+   EMOJI STATIC / GIF
+========================= */
+.emoji-static {
+  font-size: inherit;
+  line-height: 1;
+  transition: opacity 0.2s ease;
+}
+/* Emoji principal */
+.emoji-main {
+  font-size: 4.5rem; // 🏆 dominant
+}
+
+/* Emojis secondaires */
+.emoji-small {
+  font-size: 2.4rem; // base
+}
+
+.emoji-gif {
+  position: absolute;
+  width: 1em;
+  height: 1em;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+/* =========================
+   TOOLTIP
+========================= */
+/* =========================
+   EMOJI AREA
+========================= */
+.emoji-area {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =========================
+   EMOJI ITEM (BASE)
+========================= */
+.emoji-item {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* =========================
+   EMOJI CENTER (MAIN)
+========================= */
+.emoji-center {
+  font-size: 4.8rem;
+  z-index: 3;
+}
+
+/* =========================
+   ORBIT
+========================= */
+.emoji-orbit {
+  position: absolute;
+  inset: 0;
+}
+
+.emoji-orbit-item {
+  --radius: 78px;
+
+  top: 50%;
+  left: 50%;
+
+  transform: rotate(calc(360deg / var(--total) * var(--i)))
+    translateY(calc(-1 * var(--radius)))
+    rotate(calc(-360deg / var(--total) * var(--i)));
+
+  font-size: 2.4rem;
+}
+
+/* tailles progressives */
+.emoji-orbit-item:nth-child(1) {
+  font-size: 3rem;
+}
+.emoji-orbit-item:nth-child(2) {
+  font-size: 2.6rem;
+}
+.emoji-orbit-item:nth-child(3) {
+  font-size: 2.3rem;
+}
+
+/* =========================
+   STATIC / GIF SWITCH
+========================= */
+.emoji-static {
+  line-height: 1;
+  transition: opacity 0.15s ease;
+}
+
+.emoji-gif {
+  position: absolute;
+  width: 1em;
+  height: 1em;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+
+/* =========================
+   TOOLTIP
+========================= */
+.emoji-tooltip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10;
+
+  background: rgba(20, 20, 20, 0.95);
+  color: white;
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.emoji-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid rgba(20, 20, 20, 0.95);
+}
+
+/* =========================
+   HOVER
+========================= */
+.emoji-item:hover {
+  .emoji-static {
+    opacity: 0;
+  }
+  .emoji-gif {
+    opacity: 1;
+  }
+  .emoji-tooltip {
+    opacity: 1;
+  }
 }
