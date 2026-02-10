@@ -88,14 +88,27 @@ const ReportActionsBarWithReactions: React.FC<Props> = ({
           {commentsCount > 0 ? (
             <>
               {hasBrandResponse && brandAvatar && (
-                <Avatar
-                  avatar={brandAvatar.avatar}
-                  pseudo={brandAvatar.pseudo}
-                  type={brandAvatar.type}
-                  siteUrl={brandAvatar.siteUrl ?? undefined}
-                  sizeHW={20}
-                />
+                <span
+                  onClick={onCommentClick}
+                  role="button"
+                  tabIndex={0}
+                  className="brand-avatar-clickable"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      onCommentClick();
+                    }
+                  }}
+                >
+                  <Avatar
+                    avatar={brandAvatar.avatar}
+                    pseudo={brandAvatar.pseudo}
+                    type={brandAvatar.type}
+                    siteUrl={brandAvatar.siteUrl ?? undefined}
+                    sizeHW={20}
+                  />
+                </span>
               )}
+
               <span className="comments-link" onClick={onCommentClick}>
                 {commentsCount}{" "}
                 {commentsCount === 1 ? "commentaire" : "commentaires"}

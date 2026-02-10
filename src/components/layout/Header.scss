@@ -164,7 +164,7 @@
       }
     }
 
-    .user-dropdown-menu {
+    /*     .user-dropdown-menu {
       position: absolute;
       top: 110%;
       right: 0;
@@ -187,7 +187,7 @@
           background: #f5f5f5;
         }
       }
-    }
+    } */
   }
 
   .notif-button {
@@ -518,4 +518,146 @@
   100% {
     transform: scale(1);
   }
+}
+
+.user-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border-radius: 10px;
+  min-width: 220px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+  padding: 6px;
+  z-index: 1000;
+}
+
+.menu-item {
+  padding: 10px 12px;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &:hover {
+    background: #f4f4f6;
+  }
+
+  &.danger {
+    color: #c0392b;
+  }
+}
+
+/* ============================= */
+/* USER DROPDOWN – CLEAN VERSION */
+/* ============================= */
+
+.user-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+
+  background: #fff;
+  border-radius: 10px;
+  min-width: 220px;
+  padding: 6px;
+
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+  z-index: 1000;
+}
+
+/* ITEMS PRINCIPAUX */
+.user-dropdown-menu > .menu-item,
+.user-dropdown-menu > a.menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover {
+    background: #f4f4f6;
+  }
+
+  &.danger {
+    color: #c0392b;
+  }
+}
+
+/* SUBMENU WRAPPER */
+.user-dropdown-menu .submenu {
+  position: relative;
+}
+
+/* LABEL */
+.user-dropdown-menu .submenu-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  cursor: default;
+}
+
+/* SUBMENU PANEL (COLONNE, PAS FLEX) */
+.user-dropdown-menu .submenu-panel {
+  position: absolute;
+  top: 0;
+  right: calc(100% + 8px);
+  display: flex;
+  flex-direction: column; /* 🔥 LA CLÉ */
+  background: #fff;
+  border-radius: 10px;
+  min-width: 230px;
+  padding: 6px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: auto;
+  transition: opacity 0.15s ease;
+  z-index: 1001;
+}
+
+/* KEEP OPEN */
+.user-dropdown-menu .submenu:hover > .submenu-panel,
+.user-dropdown-menu .submenu-panel:hover {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* SUBMENU ITEMS (UNE LIGNE = UN ITEM) */
+.user-dropdown-menu .submenu-panel .submenu-item {
+  display: block; /* 🔥 UNE LIGNE PAR ITEM */
+  width: 100%;
+
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:hover {
+    background: #f4f4f6;
+  }
+}
+/* ZONE TAMPON ANTI-FERMETURE (CÔTÉ GAUCHE) */
+.user-dropdown-menu .submenu::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -12px; /* 🔥 vers le submenu */
+  width: 12px;
+  height: 100%;
+}
+/* KEEP SUBMENU OPEN */
+.user-dropdown-menu .submenu:hover > .submenu-panel,
+.user-dropdown-menu .submenu-panel:hover {
+  opacity: 1;
+  visibility: visible;
 }

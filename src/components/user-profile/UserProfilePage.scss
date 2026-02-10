@@ -287,3 +287,30 @@
     display: none;
   }
 }
+
+.profile-section-header {
+  margin-bottom: 16px;
+
+  h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin: 0;
+    color: #111;
+  }
+
+  span {
+    display: block;
+    margin-top: 4px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #6b7280; // gris doux comme la maquette
+  }
+}
+
+/* 🔽 section indépendante */
+.love-brands-section {
+  margin-top: 50px; // ou 24px selon ton rythme
+  gap: 30px;
+  display: flex;
+  justify-content: center;
+}

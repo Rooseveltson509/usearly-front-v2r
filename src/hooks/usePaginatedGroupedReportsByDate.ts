@@ -80,7 +80,13 @@ export const usePaginatedGroupedReportsByDate = (
         );
 
         // ✅ concaténation propre sans écraser les précédents
-        setData((prev) => [...prev, ...newData]);
+        //setData((prev) => [...prev, ...newData]);
+        setData((prev) => {
+          const merged = page === 1 ? newData : [...prev, ...newData];
+          const unique = new Map(merged.map((r) => [r.reportingId, r]));
+          return Array.from(unique.values());
+        });
+
         setHasMore(page < response.totalPages);
       } catch (error) {
         console.error("❌ Erreur chargement reports par date:", error);

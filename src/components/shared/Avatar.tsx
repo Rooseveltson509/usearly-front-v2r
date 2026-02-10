@@ -176,7 +176,9 @@ const Avatar: React.FC<AvatarProps> = ({
     fullUrl === FALLBACK_BRAND_PLACEHOLDER;
 
   const shouldShowImage =
-    !imgError && !isInvalidPlaceholder && (type !== "brand" || preferBrandLogo);
+    !imgError &&
+    !isInvalidPlaceholder &&
+    (type !== "brand" || preferBrandLogo || !!avatar);
 
   const colorIndex = displayInitial.charCodeAt(0) % 6;
   const colorClass =

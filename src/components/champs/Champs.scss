@@ -1,4 +1,4 @@
-@use "@src/styles/base/variables" as *;
+@use "..../../../../styles/base/variables" as *;
 
 .brand-badge {
   width: 28px;
@@ -292,10 +292,10 @@
   display: flex;
   flex-direction: column-reverse;
   align-items: stretch;
-  height: 54px;
+  height: $select-height;
   min-width: var(--min-w);
   cursor: pointer;
-
+  height: $select-height;
   &.is-loading {
     display: none !important;
   }
@@ -508,7 +508,7 @@
     width: 100%;
 
     .select-filter-display {
-      height: 54px;
+      height: $select-height;
       font-weight: 600;
     }
   }
@@ -526,7 +526,7 @@
   justify-content: center;
   flex-direction: column-reverse;
   align-items: stretch;
-  height: 54px;
+  height: $select-height;
   cursor: pointer;
 
   &.is-loading {
@@ -715,16 +715,6 @@
     }
   }
 
-  &.pill__select {
-    // min-width: 0;
-    width: 100%;
-
-    .select-filter-display {
-      height: 54px;
-      font-weight: 600;
-    }
-  }
-
   &:hover {
     .select-filter-display {
       border: 1px solid #e6e6e6;
@@ -801,4 +791,18 @@
   min-width: 0 !important;
   height: auto !important;
   position: relative;
+}
+
+/* Icônes image dans les select (catégories, etc.) */
+.select-filter-icon--image {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
 }

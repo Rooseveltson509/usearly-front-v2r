@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useFetchGroupedReports } from "@src/hooks/useFetchGroupedReports";
 import { usePaginatedGroupedReportsByDate } from "@src/hooks/usePaginatedGroupedReportsByDate";
 import { usePaginatedGroupedReportsByPopularEngagement } from "@src/hooks/usePaginatedGroupedReportsByPopularEngagement";
@@ -75,6 +75,7 @@ export function useGroupedReportsLogic(
   const [loadingFiltered, setLoadingFiltered] = useState(false);
   const [initializing, setInitializing] = useState(true);
   const [totalCount, setTotalCount] = useState(totalityCount);
+  const prevFilterRef = useRef<FilterType | null>(null);
 
   // ===============================
   // HOOKS BRUTS
@@ -86,8 +87,18 @@ export function useGroupedReportsLogic(
     filter === "popular",
     20,
   );
-  const rawChronoData = usePaginatedGroupedReportsByDate(filter === "chrono");
+  //const rawChronoData = usePaginatedGroupedReportsByDate(filter === "chrono");
+  const chronoDataHook = usePaginatedGroupedReportsByDate(filter === "chrono");
+  const rawChronoData = chronoDataHook;
+
   const flatData = useFetchGroupedReports(activeTab);
+
+  useEffect(() => {
+    if (filter === "chrono" && prevFilterRef.current !== "chrono") {
+      chronoDataHook.reset();
+    }
+    prevFilterRef.current = filter;
+  }, [filter]);
 
   // ===============================
   // CHRONO (siteUrl + status)
@@ -141,7 +152,6 @@ export function useGroupedReportsLogic(
   // SECTION COURANTE
   // ===============================
   const derivedSection = useMemo<SectionKey>(() => {
-    if (initializing) return "loading";
     if (selectedBrand || selectedCategory) return "brandFiltered";
 
     switch (filter) {
@@ -151,15 +161,10 @@ export function useGroupedReportsLogic(
       case "chrono":
       case "urgent":
         return filter;
-
-      case "hot":
-      case "recent":
-        return "default";
-
       default:
         return "default";
     }
-  }, [filter, initializing, selectedBrand, selectedCategory]);
+  }, [filter, selectedBrand, selectedCategory]);
 
   useEffect(() => {
     if (onSectionChange) onSectionChange(derivedSection);
@@ -209,16 +214,4 @@ export function useGroupedReportsLogic(
     totalCount,
     initializing,
   };
-
-  /*   return {
-    filter,
-    setFilter,
-    reportData,
-    chronoData,
-    popularEngagementData,
-    filteredReports,
-    loadingFiltered,
-    totalCount,
-    initializing,
-  }; */
 }
