@@ -94,8 +94,8 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
             </NavLink>
           )}
 
-          <NavLink to="/impact" className="link">
-            {isAuthenticated ? "Impact" : "Marques à l’écoute"}
+          <NavLink to="/profile" className="link">
+            {isAuthenticated && "Mon profil"}
           </NavLink>
 
           <NavLink to="/about" className="link">
@@ -159,14 +159,6 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
 
           {userMenuOpen && (
             <div className="user-dropdown-menu">
-              <NavLink
-                to="/profile"
-                className="menu-item"
-                onClick={() => setUserMenuOpen(false)}
-              >
-                Mon profil
-              </NavLink>
-
               <NavLink
                 to="/account"
                 className="menu-item"
