@@ -27,11 +27,11 @@ export default function UserProfileBanner({ activeTab, onTabChange }: Props) {
         <div className="banner-main">
           {/* LEFT — avatar + name */}
           <div className="user-info">
-            <div className="avatar-wrapper">
+            <div className="avatar-wrapper-profile">
               <Avatar
                 avatar={userProfile.avatar}
                 pseudo={getDisplayName(userProfile.pseudo, userProfile.email)}
-                sizeHW={90}
+                sizeHW={120}
                 className="user-avatar"
               />
             </div>

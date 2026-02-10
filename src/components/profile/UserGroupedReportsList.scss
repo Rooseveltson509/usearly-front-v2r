@@ -234,6 +234,8 @@
   &.close {
     background: #fff;
     transition: all 0.3s ease;
+    box-shadow: #0000002e 1px 1px 1px;
+    border: 1px solid #eeeeee;
     &:hover {
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);

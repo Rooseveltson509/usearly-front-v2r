@@ -3,7 +3,7 @@
 .user-stats-card {
   background-color: #fff;
   border-radius: 6px;
-  padding: 3.5rem 0px 2rem;
+  padding: 1.8rem 0px 2rem;
   text-align: center;
   position: relative;
   display: flex;
@@ -11,13 +11,14 @@
   gap: 1.5rem;
   font-family: inherit;
   inline-size: 300px;
-  border: 1px solid $border-color;
+  border: 1px solid #efefef;
+  box-shadow: #0000001a 0px 1px 0px;
 }
 
 // Avatar circulaire débordant
 .avatar-wrapper {
   position: absolute;
-  top: -50px;
+  top: -70px;
   left: 50%;
   transform: translateX(-50%);
 
@@ -26,7 +27,6 @@
     height: 100px;
     border-radius: 50%;
     border: 2px solid #fff;
-    box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
     object-fit: cover;
   }
 }
@@ -45,7 +45,7 @@
   font-size: 12px;
   font-weight: 400;
   color: #000;
-  margin-top: -16px;
+  margin-top: -26px;
 }
 
 // Section stats
