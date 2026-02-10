@@ -21,12 +21,10 @@
 .profile-main-wrapper::before {
   content: "";
   position: absolute;
-
+  height: 320px;
   top: 0;
   left: -32px;
   right: -32px;
-
-  height: 280px;
   border-radius: 18px;
 
   z-index: 0;
@@ -43,7 +41,7 @@
 
 /* Couleurs dynamiques */
 .profile-main-wrapper.banner-report::before {
-  background: #dcf7c8;
+  background: #d3e3ff;
 }
 
 .profile-main-wrapper.banner-suggestion::before {
@@ -189,7 +187,6 @@
 .user-main-content {
   position: relative;
   margin-top: 24px;
-  width: max-content;
   margin-left: auto;
   margin-right: auto;
   .feedback-list-wrapper {
@@ -211,7 +208,16 @@
     }
   }
 }
+.titre-bandeau {
+  font-family: "Onest";
+  font-size: 40px;
+  padding: 4px 0 24px 10px;
+  font-weight: 200;
 
+  strong {
+    font-weight: 700;
+  }
+}
 // Colonne gauche
 .left-panel {
   margin-top: -90px;
@@ -219,7 +225,7 @@
 
 // Colonne droite
 .right-panel {
-  width: 360px;
+  width: 400px;
   margin-top: 26px;
 
   .separator {
