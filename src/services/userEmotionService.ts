@@ -1,8 +1,16 @@
 import { apiService } from "./apiService";
 
 export type UserEmotionSummary = {
-  emotionsCount: number;
+  reportsCount: number;
+  reactionsCount: number;
   brandsCount: number;
+  brands: {
+    id: string;
+    name: string;
+    domain: string;
+    logo: string | null;
+    count: number;
+  }[];
   emotions: {
     emoji: string;
     count: number;

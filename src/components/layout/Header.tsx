@@ -98,25 +98,6 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
             {isAuthenticated ? "Impact" : "Marques à l’écoute"}
           </NavLink>
 
-          {/* 🔐 LIENS SUPER ADMIN */}
-          {isAuthenticated && userProfile?.role === "super_admin" && (
-            <NavLink to="/admin/admins" className="link admin-link">
-              Admin
-            </NavLink>
-          )}
-          {/* 🔐 LIENS ADMIN ET SUPER ADMIN */}
-          {(userProfile?.role === "admin" ||
-            userProfile?.role === "super_admin") && (
-            <>
-              <NavLink to="/admin/users" className="link admin-link">
-                Gérer les Utilisateurs
-              </NavLink>
-
-              <NavLink to="/admin/brands" className="link admin-link">
-                Gérer les marques
-              </NavLink>
-            </>
-          )}
           <NavLink to="/about" className="link">
             A propos
           </NavLink>
@@ -178,44 +159,75 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
 
           {userMenuOpen && (
             <div className="user-dropdown-menu">
-              {isAuthenticated ? (
-                <>
-                  <NavLink
-                    to="/profile"
-                    className="menu-item"
-                    onClick={() => setUserMenuOpen(false)}
-                  >
-                    Mon profil
-                  </NavLink>
-                  <NavLink
-                    to="/account"
-                    className="menu-item"
-                    onClick={() => setUserMenuOpen(false)}
-                  >
-                    Mon compte
-                  </NavLink>
-                  <span className="menu-item" onClick={handleLogout}>
-                    Se déconnecter
+              <NavLink
+                to="/profile"
+                className="menu-item"
+                onClick={() => setUserMenuOpen(false)}
+              >
+                Mon profil
+              </NavLink>
+
+              <NavLink
+                to="/account"
+                className="menu-item"
+                onClick={() => setUserMenuOpen(false)}
+              >
+                Mon compte
+              </NavLink>
+
+              {/* 🔐 ADMINISTRATION */}
+              {(userProfile?.role === "admin" ||
+                userProfile?.role === "super_admin") && (
+                <div className="menu-item submenu">
+                  <span className="submenu-label">
+                    Administration <i className="fa fa-chevron-right" />
                   </span>
-                </>
-              ) : (
-                <>
-                  <NavLink
-                    to="/signup"
-                    className="menu-item"
-                    onClick={() => setUserMenuOpen(false)}
-                  >
-                    S'inscrire
-                  </NavLink>
-                  <NavLink
-                    to="/lookup"
-                    className="menu-item"
-                    onClick={() => setUserMenuOpen(false)}
-                  >
-                    Se connecter
-                  </NavLink>
-                </>
+
+                  <div className="submenu-panel">
+                    <NavLink
+                      to="/admin/users"
+                      className="submenu-item"
+                      onClick={() => setUserMenuOpen(false)}
+                    >
+                      Gérer les utilisateurs
+                    </NavLink>
+
+                    {userProfile?.role === "super_admin" && (
+                      <NavLink
+                        to="/admin/admins"
+                        className="submenu-item"
+                        onClick={() => setUserMenuOpen(false)}
+                      >
+                        Gérer les admins
+                      </NavLink>
+                    )}
+                  </div>
+                </div>
               )}
+
+              {/* 🏷 MARQUES */}
+              {(userProfile?.role === "admin" ||
+                userProfile?.role === "super_admin") && (
+                <div className="menu-item submenu">
+                  <span className="submenu-label">
+                    Marques <i className="fa fa-chevron-right" />
+                  </span>
+
+                  <div className="submenu-panel">
+                    <NavLink
+                      to="/admin/brands"
+                      className="submenu-item"
+                      onClick={() => setUserMenuOpen(false)}
+                    >
+                      Gérer les marques
+                    </NavLink>
+                  </div>
+                </div>
+              )}
+
+              <span className="menu-item danger" onClick={handleLogout}>
+                Se déconnecter
+              </span>
             </div>
           )}
         </div>

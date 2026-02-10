@@ -47,6 +47,8 @@ type Props<V extends string = string> = {
 
 const normalize = (label?: string) => label?.toLowerCase().trim() ?? "";
 const PLACEHOLDER_LABEL = normalize("Choisir une marque");
+const BRAND_AVATAR_SIZE = 25;
+const BRAND_AVATAR_SIZE_OPTION = 35;
 
 export default function SelectFilter<V extends string = string>({
   options,
@@ -259,7 +261,7 @@ export default function SelectFilter<V extends string = string>({
     const isPlaceholder = !selected?.value;
     return renderBrandAvatar(
       selected,
-      32,
+      BRAND_AVATAR_SIZE,
       isPlaceholder ? "brand-logo--placeholder" : "",
       !isPlaceholder,
       isPlaceholder ? "?" : undefined,
@@ -473,7 +475,7 @@ export default function SelectFilter<V extends string = string>({
               if (brandSelect === true) {
                 optionVisual = renderBrandAvatar(
                   opt,
-                  35,
+                  BRAND_AVATAR_SIZE_OPTION,
                   !opt.value ? "brand-logo--placeholder" : "",
                   Boolean(opt.value),
                   !opt.value ? "?" : undefined,
@@ -486,7 +488,7 @@ export default function SelectFilter<V extends string = string>({
                     ? renderLeadingVisual(opt)
                     : renderBrandAvatar(
                         opt,
-                        35,
+                        BRAND_AVATAR_SIZE_OPTION,
                         !opt.value ? "brand-logo--placeholder" : "",
                         Boolean(opt.value),
                         !opt.value ? "?" : undefined,

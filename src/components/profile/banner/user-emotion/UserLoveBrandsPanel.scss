@@ -1,0 +1,117 @@
+.love-brands-card {
+  margin-top: 16px;
+
+  .love-brands-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #111;
+  }
+
+  .love-brands-list {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .love-brand-item {
+    display: flex;
+    align-items: center;
+  }
+}
+.love-brands-list {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Wrapper tooltip */
+.love-brand-tooltip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+
+  &:hover .love-brand-tooltip-content {
+    opacity: 1;
+    transform: translateY(-6px);
+    pointer-events: auto;
+  }
+}
+
+/* Tooltip box */
+.love-brand-tooltip-content {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translate(-50%, -2px);
+
+  background: #111;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 10px;
+
+  font-size: 12px;
+  line-height: 1.3;
+  white-space: nowrap;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.18s ease;
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+  z-index: 20;
+
+  strong {
+    display: block;
+    font-weight: 600;
+  }
+
+  span {
+    font-size: 11px;
+    opacity: 0.7;
+  }
+
+  /* petite flèche */
+  &::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: #111 transparent transparent transparent;
+  }
+}
+
+.love-brand-tooltip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+
+  &:hover .love-brand-tooltip-content {
+    opacity: 1;
+    transform: translate(-50%, -8px);
+    pointer-events: auto;
+  }
+}
+
+.love-brand-tooltip-content {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translate(-50%, -2px);
+
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.18s ease;
+
+  background: #111;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 10px;
+  white-space: nowrap;
+  z-index: 10;
+}

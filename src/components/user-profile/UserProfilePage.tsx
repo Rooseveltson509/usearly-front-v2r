@@ -7,9 +7,20 @@ import UserVotesCard from "../profile/UserVotesCard";
 import UserEmotionSummaryPanel from "../profile/banner/user-emotion/UserEmotionSummaryPanel";
 import { useUserEmotionSummary } from "../profile/hook/userEmotionService";
 import UserProfileBanner from "./banner/UserProfileBanner";
+import UserLoveBrandsPanel from "../profile/banner/user-emotion/UserLoveBrandsPanel";
+
+const PROFILE_TITLES: Record<
+  FeedbackType,
+  { title: string; subtitle?: string }
+> = {
+  report: { title: "Mes signalements", subtitle: "& émotions" },
+  coupdecoeur: { title: "Mes coups de cœur", subtitle: "& émotions" },
+  suggestion: { title: "Mes suggestions", subtitle: "& mes votes" },
+};
 
 const UserProfilePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<FeedbackType>("report");
+  const { title, subtitle } = PROFILE_TITLES[activeTab];
   const { data: emotionSummary, loading: loadingEmotionSummary } =
     useUserEmotionSummary(
       activeTab === "report" || activeTab === "coupdecoeur" ? activeTab : null,
@@ -30,6 +41,11 @@ const UserProfilePage: React.FC = () => {
       <div className={`profile-main-wrapper banner-${activeTab}`}>
         <main className="user-main-content">
           <div className="feedback-list-wrapper">
+            <div className="profile-section-header">
+              <h2>{title}</h2>
+              {subtitle && <span>{subtitle}</span>}
+            </div>
+
             {activeTab === "report" ? (
               <UserGroupedReportsList />
             ) : (
@@ -39,11 +55,20 @@ const UserProfilePage: React.FC = () => {
 
           <aside className="right-panel">
             {activeTab === "suggestion" && <UserVotesCard />}
+
             {(activeTab === "report" || activeTab === "coupdecoeur") && (
-              <UserEmotionSummaryPanel
-                data={emotionSummary}
-                loading={loadingEmotionSummary}
-              />
+              <>
+                {/* 🔵 Bloc émotions (inchangé) */}
+                <UserEmotionSummaryPanel
+                  data={emotionSummary}
+                  loading={loadingEmotionSummary}
+                />
+
+                {/* 🔽 SECTION SÉPARÉE */}
+                <div className="love-brands-section">
+                  <UserLoveBrandsPanel brands={emotionSummary?.brands ?? []} />
+                </div>
+              </>
             )}
           </aside>
         </main>

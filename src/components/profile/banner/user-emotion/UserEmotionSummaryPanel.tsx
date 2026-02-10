@@ -1,13 +1,5 @@
+import type { UserEmotionSummary } from "@src/services/userEmotionService";
 import "./UserEmotionSummaryPanel.scss";
-
-export type UserEmotionSummary = {
-  emotionsCount: number;
-  brandsCount: number;
-  emotions: {
-    emoji: string;
-    count: number;
-  }[];
-};
 
 interface Props {
   data: UserEmotionSummary | null;
@@ -17,7 +9,7 @@ interface Props {
 export default function UserEmotionSummaryPanel({ data, loading }: Props) {
   if (loading || !data || data.emotions.length === 0) return null;
 
-  const { emotionsCount, brandsCount, emotions } = data;
+  const { reactionsCount, brandsCount, emotions } = data;
   const [main, ...others] = emotions;
 
   return (
@@ -38,7 +30,7 @@ export default function UserEmotionSummaryPanel({ data, loading }: Props) {
       {/* RIGHT */}
       <div className="stats-area">
         <div className="stat-card">
-          <span className="stat-value">{emotionsCount}</span>
+          <span className="stat-value">{reactionsCount}</span>
           <span className="stat-label">Emotions</span>
         </div>
 
