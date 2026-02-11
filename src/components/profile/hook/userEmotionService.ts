@@ -3,14 +3,15 @@ import {
   type UserEmotionSummary,
 } from "@src/services/userEmotionService";
 import { useEffect, useState } from "react";
+import { useAuth } from "@src/services/AuthContext";
 
 export function useUserEmotionSummary(type: "report" | "coupdecoeur" | null) {
+  const { isAuthenticated } = useAuth();
   const [data, setData] = useState<UserEmotionSummary | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!type) {
-      setData(null);
+    if (!type || !isAuthenticated) {
       return;
     }
 
@@ -21,6 +22,9 @@ export function useUserEmotionSummary(type: "report" | "coupdecoeur" | null) {
       .then((res) => {
         if (mounted) setData(res);
       })
+      .catch(() => {
+        if (mounted) setData(null);
+      })
       .finally(() => {
         if (mounted) setLoading(false);
       });
@@ -28,7 +32,7 @@ export function useUserEmotionSummary(type: "report" | "coupdecoeur" | null) {
     return () => {
       mounted = false;
     };
-  }, [type]);
+  }, [type, isAuthenticated]);
 
   return { data, loading };
 }
