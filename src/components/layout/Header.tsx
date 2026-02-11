@@ -20,6 +20,7 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
   const navigate = useNavigate();
   const [shakeBell, setShakeBell] = useState(false);
   const prevUnreadCountRef = useRef(0);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // 🔹 Fermer le menu utilisateur quand on clique ailleurs
   useEffect(() => {
@@ -67,6 +68,17 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
     }
   }, [isAuthenticated]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 768) {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const handleLogout = () => {
     logout();
     setUserMenuOpen(false);
@@ -76,42 +88,191 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
   return (
     <header className={`header ${heroMode ? "hero-mode" : ""}`}>
       <div className="header-container">
-        {/* Logo */}
+        {/* ================= LOGO ================= */}
         <div className="logo" onClick={() => navigate("/home")}>
           <img src={Logo} alt="Usearly Logo" />
           <span className="logo-text">Usearly</span>
         </div>
 
-        {/* Navigation */}
-        <nav className="nav-links">
-          <NavLink to="/home" className="link">
+        {/* ================= BURGER (Mobile only via CSS) ================= */}
+        <div
+          className={`burger ${mobileMenuOpen ? "open" : ""}`}
+          onClick={() => setMobileMenuOpen((prev) => !prev)}
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        {/* ================= NAVIGATION / DRAWER ================= */}
+        <nav className={`nav-links ${mobileMenuOpen ? "mobile-open" : ""}`}>
+          {/* ======= NAV LINKS ======= */}
+          <NavLink
+            to="/home"
+            className="link"
+            onClick={() => setMobileMenuOpen(false)}
+          >
             Accueil
           </NavLink>
 
           {isAuthenticated && (
-            <NavLink to="/feedback" className="link">
+            <NavLink
+              to="/feedback"
+              className="link"
+              onClick={() => setMobileMenuOpen(false)}
+            >
               Feedbacks
             </NavLink>
           )}
 
-          <NavLink to="/profile" className="link">
-            {isAuthenticated && "Mon profil"}
-          </NavLink>
+          {isAuthenticated && (
+            <NavLink
+              to="/profile"
+              className="link"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Mon profil
+            </NavLink>
+          )}
 
-          <NavLink to="/about" className="link">
+          <NavLink
+            to="/about"
+            className="link"
+            onClick={() => setMobileMenuOpen(false)}
+          >
             A propos
           </NavLink>
+
+          {/* ================= MOBILE ACCOUNT SECTION ================= */}
+          <div className="mobile-divider" />
+
+          {isAuthenticated ? (
+            <>
+              {/* Notifications */}
+              <div
+                className="mobile-item"
+                onClick={() => {
+                  navigate("/notifications");
+                  setMobileMenuOpen(false);
+                }}
+              >
+                <i className="fa fa-bell" />
+                Notifications
+                {notifications.some((n) => !n.read) && (
+                  <span className="mobile-badge">
+                    {notifications.filter((n) => !n.read).length}
+                  </span>
+                )}
+              </div>
+
+              {/* Account */}
+              <div
+                className="mobile-item"
+                onClick={() => {
+                  navigate("/account");
+                  setMobileMenuOpen(false);
+                }}
+              >
+                <i className="far fa-user" />
+                Mon compte
+              </div>
+
+              {/* ADMIN */}
+              {(userProfile?.role === "admin" ||
+                userProfile?.role === "super_admin") && (
+                <div className="mobile-subsection">
+                  <span className="mobile-subtitle">Administration</span>
+
+                  <div
+                    className="mobile-item"
+                    onClick={() => {
+                      navigate("/admin/users");
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    Gérer les utilisateurs
+                  </div>
+
+                  {userProfile?.role === "super_admin" && (
+                    <div
+                      className="mobile-item"
+                      onClick={() => {
+                        navigate("/admin/admins");
+                        setMobileMenuOpen(false);
+                      }}
+                    >
+                      Gérer les admins
+                    </div>
+                  )}
+
+                  <div
+                    className="mobile-item"
+                    onClick={() => {
+                      navigate("/admin/brands");
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    Gérer les marques
+                  </div>
+                </div>
+              )}
+
+              {/* Logout */}
+              <div
+                className="mobile-item danger"
+                onClick={() => {
+                  handleLogout();
+                  setMobileMenuOpen(false);
+                }}
+              >
+                Se déconnecter
+              </div>
+            </>
+          ) : (
+            <>
+              <div
+                className="mobile-item"
+                onClick={() => {
+                  navigate("/lookup");
+                  setMobileMenuOpen(false);
+                }}
+              >
+                Connecter
+              </div>
+
+              <div
+                className="mobile-item"
+                onClick={() => {
+                  navigate("/lookup");
+                  setMobileMenuOpen(false);
+                }}
+              >
+                S'inscrire
+              </div>
+            </>
+          )}
+
+          {/* ================= LOGO BOTTOM ================= */}
+          <div
+            className="mobile-logo"
+            onClick={() => {
+              navigate("/home");
+              setMobileMenuOpen(false);
+            }}
+          >
+            <img src={Logo} alt="Usearly Logo" />
+            <span>Usearly</span>
+          </div>
         </nav>
 
-        {/* Droite : notifications + profil */}
+        {/* ================= DESKTOP RIGHT SIDE ================= */}
         <div className="header-right" ref={dropdownRef}>
-          {/* 🔔 Notifications */}
           {isAuthenticated && (
             <div
               className="notif-button"
               onClick={(e) => {
                 e.stopPropagation();
-                navigate("/notifications"); // 🔗 redirection directe
+                navigate("/notifications");
               }}
             >
               <i className={`fa fa-bell ${shakeBell ? "shake" : ""}`} />
@@ -123,7 +284,6 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
             </div>
           )}
 
-          {/* 👤 Menu utilisateur */}
           {isAuthenticated ? (
             <div
               className={`user-toggle ${userMenuOpen ? "open" : ""}`}
@@ -134,12 +294,12 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
             >
               <i className="far fa-user" />
               <span className="header-user">
-                {isAuthenticated
-                  ? `Bonjour ${userProfile?.pseudo || "Utilisateur"}`
-                  : "Mon compte"}
+                Bonjour {userProfile?.pseudo || "Utilisateur"}
               </span>
               <i
-                className={`fa fa-chevron-down ${userMenuOpen ? "rotated" : ""}`}
+                className={`fa fa-chevron-down ${
+                  userMenuOpen ? "rotated" : ""
+                }`}
               />
             </div>
           ) : (
@@ -167,14 +327,12 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
                 Mon compte
               </NavLink>
 
-              {/* 🔐 ADMINISTRATION */}
               {(userProfile?.role === "admin" ||
                 userProfile?.role === "super_admin") && (
                 <div className="menu-item submenu">
                   <span className="submenu-label">
                     Administration <i className="fa fa-chevron-right" />
                   </span>
-
                   <div className="submenu-panel">
                     <NavLink
                       to="/admin/users"
@@ -193,19 +351,7 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
                         Gérer les admins
                       </NavLink>
                     )}
-                  </div>
-                </div>
-              )}
 
-              {/* 🏷 MARQUES */}
-              {(userProfile?.role === "admin" ||
-                userProfile?.role === "super_admin") && (
-                <div className="menu-item submenu">
-                  <span className="submenu-label">
-                    Marques <i className="fa fa-chevron-right" />
-                  </span>
-
-                  <div className="submenu-panel">
                     <NavLink
                       to="/admin/brands"
                       className="submenu-item"
@@ -224,7 +370,14 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
           )}
         </div>
       </div>
-      {/* 🟦 Slot Hero uniquement en homepage */}
+
+      {mobileMenuOpen && (
+        <div
+          className="mobile-overlay"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
       {heroMode && <div className="header-hero-slot">{children}</div>}
     </header>
   );

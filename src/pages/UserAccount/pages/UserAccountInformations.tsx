@@ -1,5 +1,5 @@
 import "./UserAccountInformations.scss";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   updateUserProfile,
   updatePassword,
@@ -16,7 +16,6 @@ import PenModifyIcon from "@src/assets/images/pen-modify-circle.svg";
 import InputTextAccount from "@src/components/inputs/inputsGlobal/InputTextAccount";
 import SelectAccount from "@src/components/inputs/selectGlobal/SelectAccount";
 import Buttons from "@src/components/buttons/Buttons";
-//import { genderLabel } from "@src/components/InteractiveFeedbackCard/utils/genderLabel";
 
 /** Convertit une date string en valeur compatible <input type="date"> (YYYY-MM-DD). */
 function toInputDate(src: string | null | undefined): string {
@@ -45,6 +44,7 @@ function UserAccountInformations() {
   );
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [pseudo, setPseudo] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
   const [email, setEmail] = useState("");
   const [birthdate, setBirthdate] = useState(""); // valeur POUR l’input: YYYY-MM-DD
   const [gender, setGender] = useState("");
@@ -52,6 +52,8 @@ function UserAccountInformations() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState<string | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const pseudoRef = useRef<HTMLInputElement | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -64,6 +66,12 @@ function UserAccountInformations() {
       setAvatarPreview(getFullAvatarUrl(userProfile.avatar || null));
     }
   }, [userProfile, avatarFile]);
+
+  useEffect(() => {
+    if (isEditing && pseudoRef.current) {
+      pseudoRef.current.focus();
+    }
+  }, [isEditing]);
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -144,14 +152,12 @@ function UserAccountInformations() {
   };
 
   const handleDeleteAccount = async () => {
-    if (confirm("Êtes-vous sûr de vouloir supprimer votre compte ?")) {
-      try {
-        await deleteUserProfile();
-        logout();
-        window.location.href = "/login";
-      } catch (err: any) {
-        setMessage(err.message);
-      }
+    try {
+      await deleteUserProfile();
+      logout();
+      window.location.href = "/login";
+    } catch (err: any) {
+      setMessage(err.message);
     }
   };
 
@@ -165,99 +171,126 @@ function UserAccountInformations() {
       <div className="user-account">
         <h1>Mes informations</h1>
 
-        <div className="avatar-preview">
-          {avatarPreview?.startsWith("data:") ? (
-            <>
-              <h2>Photo actuelle</h2>
-              <div>
-                <img
-                  src={avatarPreview}
-                  alt="Preview"
-                  className="preview-img"
-                />
-                <img
-                  src={PenModifyIcon}
-                  alt="Modifier"
-                  onClick={avatarImgClick}
-                  className="modify-icon with-img"
-                />
-              </div>
-            </>
-          ) : (
-            <>
-              <h2>Photo actuelle</h2>
-              <div>
-                <Avatar
-                  avatar={avatarPreview}
-                  pseudo={pseudo || userProfile?.pseudo || "?"}
-                  className="large-avatar"
-                  sizeHW={120}
-                />
-                <img
-                  src={PenModifyIcon}
-                  alt="Modifier"
-                  onClick={avatarImgClick}
-                  className="modify-icon"
-                />
-              </div>
-            </>
-          )}
+        <div className="account-section avatar-section">
+          <div className="avatar-preview">
+            {avatarPreview?.startsWith("data:") ? (
+              <>
+                <h2>Photo actuelle</h2>
+                <div>
+                  <img
+                    src={avatarPreview}
+                    alt="Preview"
+                    className="preview-img"
+                  />
+                  <img
+                    src={PenModifyIcon}
+                    alt="Modifier"
+                    onClick={avatarImgClick}
+                    className="modify-icon with-img"
+                  />
+                </div>
+              </>
+            ) : (
+              <>
+                <h2>Photo actuelle</h2>
+                <div>
+                  <Avatar
+                    avatar={avatarPreview}
+                    pseudo={pseudo || userProfile?.pseudo || "?"}
+                    className="large-avatar"
+                    sizeHW={120}
+                  />
+                  <img
+                    src={PenModifyIcon}
+                    alt="Modifier"
+                    onClick={avatarImgClick}
+                    className="modify-icon"
+                  />
+                </div>
+              </>
+            )}
+          </div>
         </div>
-
         <input
           id="avatarImg"
           type="file"
           accept="image/*"
           onChange={handleAvatarChange}
         />
+        <div className="infos-section">
+          <div className="infos-header">
+            {!isEditing ? (
+              <button
+                type="button"
+                className="edit-profile-btn"
+                onClick={() => setIsEditing(true)}
+              >
+                Modifier
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="cancel-edit-btn"
+                onClick={() => {
+                  setIsEditing(false);
+                  fetchUserProfile();
+                }}
+              >
+                Annuler
+              </button>
+            )}
+          </div>
 
-        <div className="form-group">
-          <InputTextAccount
-            id="pseudo"
-            label="Pseudo"
-            type="text"
-            value={pseudo}
-            onChange={(e) => setPseudo(e.target.value)}
-          />
-        </div>
+          <div className="form-group">
+            <InputTextAccount
+              id="pseudo"
+              label="Pseudo"
+              type="text"
+              value={pseudo}
+              disabled={!isEditing}
+              onChange={(e) => setPseudo(e.target.value)}
+            />
+          </div>
 
-        <div className="form-group">
-          <InputTextAccount
-            id="email"
-            label="Email"
-            type="email"
-            value={email}
-            disabled={true}
-          />
-        </div>
+          <div className="form-group">
+            <InputTextAccount
+              id="email"
+              label="Email"
+              type="email"
+              value={email}
+              disabled={true}
+            />
+          </div>
 
-        <div className="form-group">
-          <InputTextAccount
-            id="birthdate"
-            label="Date de naissance"
-            type="date"
-            value={birthdate}
-            onChange={(e) => setBirthdate(e.target.value)}
-          />
-        </div>
+          <div className="form-group">
+            <InputTextAccount
+              id="birthdate"
+              label="Date de naissance"
+              type="date"
+              value={birthdate}
+              disabled={!isEditing}
+              onChange={(e) => setBirthdate(e.target.value)}
+            />
+          </div>
 
-        <div className="form-group">
-          <SelectAccount
-            id="gender"
-            title="Genre"
-            disabled={false}
-            value={gender} // 👈 valeur contrôlée
-            onChange={setGender} // 👈 met à jour ton state
-            options={[
-              { value: "monsieur", label: "Homme" },
-              { value: "madame", label: "Femme" },
-              { value: "N/A", label: "Non spécifié" },
-            ]}
-          />
-        </div>
+          <div className="form-group">
+            <SelectAccount
+              id="gender"
+              title="Genre"
+              disabled={!isEditing}
+              value={gender}
+              onChange={setGender}
+              options={[
+                { value: "monsieur", label: "Homme" },
+                { value: "madame", label: "Femme" },
+                { value: "N/A", label: "Non spécifié" },
+              ]}
+            />
+          </div>
 
-        <div className="form-group submit-group">
-          <Buttons title="Mettre à jour" onClick={handleProfileUpdate} />
+          <div className="form-group submit-group">
+            <Buttons title="Mettre à jour" onClick={handleProfileUpdate} />
+          </div>
         </div>
       </div>
 
@@ -299,9 +332,41 @@ function UserAccountInformations() {
         </div>
       </div>
 
-      <p className="delete-account" onClick={handleDeleteAccount}>
-        <u>Supprimer mon compte</u>
-      </p>
+      <button
+        type="button"
+        className="delete-account-btn"
+        onClick={() => setShowDeleteModal(true)}
+      >
+        Supprimer mon compte
+      </button>
+      {showDeleteModal && (
+        <div className="delete-modal-overlay">
+          <div className="delete-modal">
+            <h3>Supprimer votre compte ?</h3>
+            <p>
+              Cette action est définitive. Toutes vos données seront supprimées.
+            </p>
+
+            <div className="delete-modal-actions">
+              <button
+                type="button"
+                className="cancel-btn"
+                onClick={() => setShowDeleteModal(false)}
+              >
+                Annuler
+              </button>
+
+              <button
+                type="button"
+                className="confirm-delete-btn"
+                onClick={handleDeleteAccount}
+              >
+                Oui, supprimer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {message && <p className="feedback-message">{message}</p>}
     </div>
