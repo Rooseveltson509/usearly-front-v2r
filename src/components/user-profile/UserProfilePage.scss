@@ -1,5 +1,3 @@
-@use "@src/styles/base/variables" as *;
-
 .user-profile-page {
   position: relative;
   display: flex;
@@ -12,7 +10,9 @@
 .profile-main-wrapper {
   position: relative;
   margin-top: 24px;
-  width: fit-content; // ⬅️ LA LIGNE MANQUANTE
+  width: 100%;
+  max-width: 1200px;
+  //width: fit-content; // ⬅️ LA LIGNE MANQUANTE
   margin-left: auto;
   margin-right: auto;
 }
@@ -258,6 +258,9 @@
   margin: 0px 0;
 }
 
+.brand-block {
+  background: white;
+}
 .brand-block .subcategories-list .subcategory-block.open {
   box-shadow: none !important;
   border: 1px solid #f0f0f0 !important;

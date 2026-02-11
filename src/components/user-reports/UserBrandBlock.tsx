@@ -11,7 +11,6 @@ import { getCommentsCountForDescription } from "@src/services/commentService";
 import CommentSection from "../comments/CommentSection";
 import { parseISO, isAfter } from "date-fns";
 import Avatar from "../shared/Avatar";
-import { getBrandThemeColor } from "@src/utils/getBrandThemeColor";
 import { useAuth } from "@src/services/AuthContext";
 import UserBrandLine from "../shared/UserBrandLine";
 import CloseButton from "../buttons/CloseButtons";
@@ -94,14 +93,7 @@ const UserBrandBlock: React.FC<Props> = ({
   const mostRecentDate = getMostRecentDate();
 
   return (
-    <div
-      style={{
-        backgroundColor: isOpen
-          ? `color-mix(in srgb, ${getBrandThemeColor(brand).base} 10%, white)`
-          : "white",
-      }}
-      className={`brand-block ${isOpen ? "open" : "close"}`}
-    >
+    <div className={`brand-block ${isOpen ? "open" : "close"}`}>
       <div className="brand-header" onClick={onToggle}>
         <p className="brand-reports-count">
           <strong>{reports.length}</strong> signalement
@@ -126,12 +118,7 @@ const UserBrandBlock: React.FC<Props> = ({
       </div>
 
       {isOpen && (
-        <div
-          style={{
-            backgroundColor: `color-mix(in srgb, ${getBrandThemeColor(brand).base} 10%, white)`,
-          }}
-          className="subcategories-list"
-        >
+        <div className="subcategories-list">
           {reports.map((sub) => {
             const initialDescription = sub.descriptions[0];
             const safeAuthor = {

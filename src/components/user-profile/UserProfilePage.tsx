@@ -32,6 +32,8 @@ const UserProfilePage: React.FC = () => {
     mountCount.current += 1;
     console.log("UserProfilePage mounted:", mountCount.current);
   }, []);
+  console.log("emotionSummary:", emotionSummary);
+  console.log("loading:", loadingEmotionSummary);
 
   return (
     <div className="user-profile-page">
