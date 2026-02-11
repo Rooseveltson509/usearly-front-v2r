@@ -672,3 +672,354 @@
   opacity: 1;
   visibility: visible;
 }
+
+/* ===============================
+   RESPONSIVE MOBILE
+================================= */
+
+/* ======================================
+   RESPONSIVE CLEAN VERSION
+====================================== */
+
+/* Burger caché en desktop */
+.burger {
+  display: none;
+}
+/* =====================
+   MOBILE ONLY CONTENT
+===================== */
+
+.mobile-close,
+.mobile-divider,
+.mobile-item,
+.mobile-subsection,
+.mobile-subtitle,
+.mobile-logo {
+  display: none;
+}
+
+/* Visible uniquement en mobile */
+@media (max-width: 768px) {
+  .mobile-close,
+  .mobile-divider,
+  .mobile-item,
+  .mobile-subsection,
+  .mobile-subtitle,
+  .mobile-logo {
+    display: block;
+  }
+
+  .mobile-item {
+    display: flex;
+  }
+}
+
+/* ============================
+   RESPONSIVE SIMPLE & PROPRE
+============================ */
+
+/* Burger caché en desktop */
+.burger {
+  display: none;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  /* 🔥 Cacher nav desktop */
+  .nav-links {
+    display: none;
+  }
+
+  /* 🔥 Cacher header-right */
+  .header-right {
+    display: none !important;
+  }
+
+  /* Burger visible */
+  .burger {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    z-index: 1200;
+  }
+
+  .burger span {
+    width: 24px;
+    height: 2px;
+    background: #1b1740;
+  }
+
+  /* Drawer */
+  .nav-links.mobile-open {
+    display: flex;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 280px;
+    height: 100vh;
+    background: #fff;
+    flex-direction: column;
+    padding: 70px 24px 24px;
+    gap: 20px;
+    box-shadow: -6px 0 25px rgba(0, 0, 0, 0.08);
+    z-index: 1100;
+    overflow-y: auto;
+  }
+
+  /* Close */
+  .mobile-close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    font-size: 22px;
+    cursor: pointer;
+  }
+
+  /* Overlay */
+  .mobile-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 1000;
+  }
+
+  /* Logo bas */
+  .mobile-logo {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .mobile-logo img {
+    width: 26px;
+  }
+
+  .mobile-logo span {
+    font-weight: 600;
+    font-size: 15px;
+  }
+}
+
+/* ===============================
+   FIX RESPONSIVE MOBILE
+=============================== */
+
+@media (max-width: 768px) {
+  /* On override la version desktop */
+  .header .nav-links {
+    display: none !important;
+  }
+
+  .header .nav-links.mobile-open {
+    display: flex !important;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 280px;
+    height: 100vh;
+    background: #fff;
+    flex-direction: column;
+    padding: 70px 24px 24px;
+    gap: 20px;
+    box-shadow: -6px 0 25px rgba(0, 0, 0, 0.08);
+    z-index: 1100;
+    overflow-y: auto;
+  }
+
+  /* Cacher complètement le header-right */
+  .header .header-right {
+    display: none !important;
+  }
+
+  /* Burger visible */
+  .header .burger {
+    display: flex !important;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    z-index: 1200;
+  }
+
+  .header .burger span {
+    width: 24px;
+    height: 2px;
+    background: #1b1740;
+  }
+
+  /* Overlay */
+  .mobile-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 1000;
+  }
+
+  /* Logo bas */
+  .mobile-logo {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .mobile-logo img {
+    width: 26px;
+  }
+
+  .mobile-logo span {
+    font-weight: 600;
+    font-size: 15px;
+  }
+}
+
+/* =====================================
+   MOBILE DRAWER STYLE CLEAN
+===================================== */
+
+@media (max-width: 768px) {
+  /* Links propres */
+  .header .nav-links.mobile-open .link {
+    font-size: 17px;
+    font-weight: 500;
+    color: #222;
+    padding: 10px 0;
+  }
+
+  /* Supprimer l'underline animée en mobile */
+  .header .nav-links.mobile-open .link::after {
+    display: none;
+  }
+
+  /* Link actif propre */
+  .header .nav-links.mobile-open .link.active {
+    font-weight: 600;
+    color: #000;
+  }
+
+  /* Divider */
+  .mobile-divider {
+    height: 1px;
+    background: #eee;
+    margin: 12px 0;
+  }
+
+  /* Bloc account */
+  .mobile-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .mobile-item:hover {
+    opacity: 0.7;
+  }
+
+  .mobile-item i {
+    width: 18px;
+    text-align: center;
+    opacity: 0.7;
+  }
+
+  /* Section admin */
+  .mobile-subtitle {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 6px;
+    margin-top: 8px;
+  }
+
+  .mobile-subsection {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-left: 6px;
+  }
+
+  /* Logout */
+  .mobile-item.danger {
+    color: #c0392b;
+    margin-top: 8px;
+  }
+
+  /* Logo bas */
+  .mobile-logo {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .mobile-logo img {
+    width: 24px;
+  }
+
+  .mobile-logo span {
+    font-weight: 600;
+    font-size: 15px;
+  }
+}
+
+/* ===============================
+   BURGER ANIMATION
+=============================== */
+
+.burger {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .burger {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 28px;
+    height: 24px;
+    cursor: pointer;
+    z-index: 1200;
+  }
+
+  .burger span {
+    display: block;
+    height: 2px;
+    width: 100%;
+    background: #1b1740;
+    transition: all 0.35s ease;
+    transform-origin: center;
+  }
+
+  /* Animation quand open */
+
+  .burger.open span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  .burger.open span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .burger.open span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+}
+.burger {
+  z-index: 1300;
+}
+
+.mobile-overlay {
+  z-index: 1000;
+}

@@ -61,3 +61,16 @@
     }
   }
 }
+
+.input-text-account input:disabled {
+  background: transparent;
+  border: none;
+  color: #555;
+  cursor: default;
+}
+
+.input-text-account input:not(:disabled) {
+  border: 1px solid #d0d5dd;
+  background: #fff;
+  border-radius: 6px;
+}

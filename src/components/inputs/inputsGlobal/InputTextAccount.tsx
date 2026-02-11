@@ -1,7 +1,5 @@
 import { useState, useLayoutEffect, useRef } from "react";
-
 import "./InputTextAccount.scss";
-import PenModifyIcon from "@src/assets/images/pen-modify-circle.svg";
 
 type InputTextAccountProps = {
   id: string;
@@ -54,9 +52,6 @@ function InputTextAccount({
             width: type === "date" ? "100%" : width,
           }}
         />
-        {!disabled && (
-          <img src={PenModifyIcon} alt="Modifier" className="modify-icon" />
-        )}
       </div>
     </div>
   );

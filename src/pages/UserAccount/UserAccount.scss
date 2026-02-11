@@ -1,10 +1,31 @@
-@use "@src/styles/base/variables" as *;
-@use "@src/styles/utils/mixins" as *;
-
 .user-account-container {
   display: flex;
-  gap: 2.563rem;
-  background-color: #f7f7f7;
-  padding-top: 2.75rem;
-  justify-content: center;
+  align-items: flex-start;
+  gap: 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+.user-account-container > :first-child {
+  width: 260px;
+  flex-shrink: 0;
+}
+.user-account-container > :last-child {
+  flex: 1;
+  min-width: 0;
+}
+@media (max-width: 992px) {
+  .user-account-container {
+    flex-direction: column;
+    gap: 2rem;
+    padding: 1.5rem 1rem;
+  }
+
+  .user-account-container > :first-child {
+    width: 100%;
+  }
+
+  .user-account-container > :last-child {
+    width: 100%;
+  }
 }
