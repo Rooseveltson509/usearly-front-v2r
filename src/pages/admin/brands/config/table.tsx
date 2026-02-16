@@ -4,7 +4,6 @@ import { type AdminBrand } from "@src/services/adminService";
 import {
   formatLastAction,
   getBrandLastActionDays,
-  getBrandSector,
   getOfferVariant,
 } from "../../../../utils/brandFilters";
 import { type DataTableColumn } from "@src/components/dashboard/components/DataTable";
@@ -96,14 +95,13 @@ export const createAdminBrandsColumns = (
     header: "Secteur",
     thClassName: HEADER_CLASS,
     tdClassName: CELL_CLASS,
-    render: (brand) => {
-      const brandSector = getBrandSector(brand);
-      return (
-        <div className="brand-feed-table-body-line-data-secteur">
-          <span title={brand.name}>{brandSector}</span>
-        </div>
-      );
-    },
+    render: (brand) => (
+      <div className="brand-feed-table-body-line-data-secteur">
+        <span title={brand.sector ?? "Non défini"}>
+          {brand.sector?.trim() || "Non défini"}
+        </span>
+      </div>
+    ),
   },
 
   {

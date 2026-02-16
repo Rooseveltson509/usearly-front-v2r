@@ -1,3 +1,4 @@
+import type { Sector } from "@src/types/sectors";
 import { apiService } from "./apiService";
 
 /* -------------------------------------------------------------------------- */
@@ -17,6 +18,7 @@ export interface CreateBrandPayload {
   email: string;
   domain: string;
   offres?: "freemium" | "start" | "start pro" | "premium";
+  sector?: Sector;
 }
 
 export interface CreateBrandResponse {
@@ -26,6 +28,7 @@ export interface CreateBrandResponse {
     name: string;
     email: string;
     offres: string;
+    sector?: Sector;
   };
   tempPassword: string;
 }
@@ -43,6 +46,7 @@ export interface AdminBrand {
   logo?: string | null;
   isActive: boolean;
   createdAt: string;
+  sector?: string | null;
   pendingEmail?: string | null;
 }
 
@@ -58,6 +62,14 @@ export async function createBrand(
     payload,
   );
   return data;
+}
+
+/*-------------------------------------------------------------------------- */
+/* Sectors API */
+/* -------------------------------------------------------------------------- */
+export async function getSectors(): Promise<string[]> {
+  const { data } = await apiService.get("/admin/sectors");
+  return data.sectors;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -90,6 +102,7 @@ export const updateBrand = async (
     domain?: string;
     offres?: string;
     email?: string;
+    sector?: string;
   },
 ) => {
   const res = await apiService.patch(`/admin/brands/${brandId}`, payload);

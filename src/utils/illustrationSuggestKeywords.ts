@@ -33,11 +33,20 @@ export const illustrationSuggestKeywords: Record<string, string> = {
   produit: "ecommerce/mediumbag.svg",
   magasin: "ecommerce/mediumbag.svg",
   validation: "ecommerce/mediumbag.svg",
+  collection: "ecommerce/mediumbag.svg",
+  collections: "ecommerce/mediumbag.svg",
+  vetements: "ecommerce/mediumbag.svg",
+  vêtements: "ecommerce/mediumbag.svg",
 
   // 🍔 Food & Drink
-  //cafe
-  café: "food_drink/cafe.svg",
-  boisson: "food_drink/cafe.svg",
+  smoothie: "food_drink/coffee.svg",
+  smoothies: "food_drink/coffee.svg",
+  cocktail: "food_drink/coffee.svg",
+  cocktails: "food_drink/coffee.svg",
+  menu: "food_drink/livraisonmain.svg",
+  burger: "food_drink/livraisonmain.svg",
+  boissons: "food_drink/coffee.svg",
+
   //livraisonmain
   repas: "food_drink/livraisonmain.svg",
   livraison: "food_drink/livraisonmain.svg",

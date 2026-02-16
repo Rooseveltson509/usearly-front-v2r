@@ -27,6 +27,15 @@ export const illustrationKeywords: Record<string, string> = {
   lecture: "culture_musique/openbook.svg",
   casque: "culture_musique/casquemusique.svg",
 
+  vetement: "ecommerce/mediumbag.svg",
+  vêtements: "ecommerce/mediumbag.svg",
+  mode: "ecommerce/mediumbag.svg",
+  collection: "ecommerce/mediumbag.svg",
+  categorie: "ecommerce/caddie.svg",
+  femme: "ecommerce/mediumbag.svg",
+  enfant: "ecommerce/mediumbag.svg",
+  style: "ecommerce/largebag.svg",
+
   // 🍔 Food & Drink
   repas: "food_drink/burger.svg",
   restaurant: "food_drink/burger.svg",
@@ -84,5 +93,5 @@ export const illustrationKeywords: Record<string, string> = {
   bravo: "general/applaudissement.svg",
   rire: "general/emojiteterire.svg",
   message: "general/messagelike.svg",
-  default: "general/ordilike.svg",
+  default: "general/coeurdoigt.svg",
 };

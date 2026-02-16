@@ -36,13 +36,13 @@ export const PLAN_OPTIONS: FilterOption<OfferVariant>[] = [
   { label: "Premium", value: "premium" },
 ];
 
-export const SECTOR_OPTIONS: FilterOption<string>[] = [
+/* export const SECTOR_OPTIONS: FilterOption<string>[] = [
   "E-commerce",
   "SaaS",
   "Education",
   "Santé",
   "Finance",
-].map((value) => ({ label: value, value }));
+].map((value) => ({ label: value, value })); */
 
 export const LAST_ACTION_OPTIONS: FilterOption<LastActionRange>[] = [
   { label: "0-2j", value: "0-2j" },
@@ -70,7 +70,7 @@ export const ADMIN_BRANDS_FILTER_CONFIG: AdminBrandsFilterConfigItem[] = [
     key: "sectors",
     label: "Secteur",
     type: "multi",
-    options: SECTOR_OPTIONS,
+    options: [],
     defaultValue: ADMIN_BRANDS_FILTER_DEFAULTS.sectors,
     backendKey: "sector",
   },
