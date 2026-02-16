@@ -6,6 +6,7 @@ import "./AdminBrandsPage.scss";
 import {
   deleteBrand,
   getBrands,
+  getSectors,
   resetBrandPassword,
   toggleBrandStatus,
   type AdminBrand,
@@ -18,8 +19,10 @@ import useDashboardData from "@src/components/dashboard/hooks/useDashboardData";
 import useDashboardFilters from "@src/components/dashboard/hooks/useDashboardFilters";
 import usePagination from "@src/components/dashboard/hooks/usePagination";
 import {
+  ADMIN_BRANDS_FILTER_CONFIG,
   ADMIN_BRANDS_FILTER_DEFAULTS,
   type AdminBrandsFiltersState,
+  type FilterOption,
 } from "@src/types/Filters";
 import { createAdminBrandsColumns } from "@src/pages/admin/brands/config/table";
 import { filterBrands } from "@src/utils/brandFilters";
@@ -43,6 +46,7 @@ const AdminBrandsPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedBrand, setSelectedBrand] = useState<AdminBrand | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [sectorOptions, setSectorOptions] = useState<FilterOption[]>([]);
   const [loadingActionId, setLoadingActionId] = useState<string | null>(null);
   const [brandToDelete, setBrandToDelete] = useState<AdminBrand | null>(null);
   const [toast, setToast] = useState<{
@@ -52,6 +56,16 @@ const AdminBrandsPage = () => {
 
   const { filters, setFilter, resetFilters } =
     useDashboardFilters<AdminBrandsFiltersState>(ADMIN_BRANDS_FILTER_DEFAULTS);
+
+  const dynamicFilterConfig = useMemo(() => {
+    return ADMIN_BRANDS_FILTER_CONFIG.map((filter) =>
+      filter.key === "sectors" ? { ...filter, options: sectorOptions } : filter,
+    );
+  }, [sectorOptions]);
+
+  useEffect(() => {
+    console.log("Sectors from API:", sectorOptions);
+  }, [sectorOptions]);
 
   // 🔐 Sécurité admin
   useEffect(() => {
@@ -90,6 +104,24 @@ const AdminBrandsPage = () => {
     setSelectedBrand(brand);
     setShowEditModal(true);
   };
+
+  useEffect(() => {
+    const loadSectors = async () => {
+      try {
+        const sectors = await getSectors();
+        setSectorOptions(
+          sectors.map((s) => ({
+            label: s,
+            value: s,
+          })),
+        );
+      } catch {
+        setSectorOptions([]);
+      }
+    };
+
+    loadSectors();
+  }, []);
 
   const handleDeleteBrand = async () => {
     if (!brandToDelete) return;
@@ -177,6 +209,7 @@ const AdminBrandsPage = () => {
         filters={filters}
         onFilterChange={setFilter}
         onClearFilters={resetFilters}
+        filterConfig={dynamicFilterConfig}
       />
 
       <div className="brand-feed-table-container">

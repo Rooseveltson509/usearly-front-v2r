@@ -52,9 +52,16 @@ export const brandColors: Record<string, string[]> = {
   wish: ["#E60023", "#CC0020", "#FF3344"],
   shopify: ["#96BF48", "#A6D45E", "#85B93C"],
 
+  tripadvisor: ["#00AF87", "#008C6A", "#1E7A4C"],
+  airfrance: ["#0033A0", "#1E90FF", "#3366CC"],
+  sncf: ["#E60012", "#C70024", "#FF3344"],
+  ouibus: ["#DF2180", "#C2185B", "#F06292"],
+  boursobank: ["#003087", "#0050A0", "#3366CC"],
+
   // E-commerce & Retail
   amazon: ["#FF9900", "#FFB84D", "#E47911"],
   ebay: ["#E53238", "#0064D2", "#86B817"],
+  bershka: ["#121212", "#333333", "#524343"],
   zalando: ["#FF6900", "#FF8533", "#FF9C66"],
   zara: ["#000000", "#2B2B2B", "#555555"],
   nike: ["#111111", "#232323", "#444444"],
@@ -77,9 +84,10 @@ export const brandColors: Record<string, string[]> = {
   monoprix: ["#E60012", "#C70024", "#FF3344"],
   boulangeriepoilane: ["#000000", "#222222", "#555555"],
   laredoute: ["#E60012", "#C70024", "#FF3344"],
-  laboutiqueofficielle: ["#E74B58", "#D13F4A", "#FF6673"],
+  laboutiqueofficielle: ["#E74B58", "#ffffff", "#FF6673"],
   lego: ["#E3000B", "#FF3333", "#CC0000"],
   weareholy: ["#D473D4", "#BB60BB", "#E689E6"],
+  thetrainline: ["#01a88f", "#01a88f", "#055252"],
 
   // Tech
   apple: ["#000000", "#333333", "#555555"],

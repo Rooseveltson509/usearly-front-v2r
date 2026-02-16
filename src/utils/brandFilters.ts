@@ -3,7 +3,6 @@ import {
   type AdminBrandsFiltersState,
   type LastActionRange,
   type OfferVariant,
-  SECTOR_OPTIONS,
 } from "@src/types/Filters";
 
 export const getOfferVariant = (
@@ -32,9 +31,7 @@ const hashStringToNumber = (value: string) => {
 };
 
 export const getBrandSector = (brand: AdminBrand) => {
-  const seed = `${brand.domain ?? ""}-${brand.id}`;
-  const index = hashStringToNumber(seed) % SECTOR_OPTIONS.length;
-  return SECTOR_OPTIONS[index]?.value ?? SECTOR_OPTIONS[0]?.value ?? "";
+  return brand.sector?.trim() || "Non défini";
 };
 
 export const getBrandLastActionDays = (brand: AdminBrand) => {
@@ -72,7 +69,8 @@ export const filterBrands = (
     const matchesPlan =
       filters.plans.length === 0 || filters.plans.includes(offerVariant);
 
-    const brandSector = getBrandSector(brand);
+    const brandSector = (brand.sector ?? "").trim().toUpperCase();
+
     const matchesSector =
       filters.sectors.length === 0 || filters.sectors.includes(brandSector);
 

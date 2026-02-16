@@ -1,6 +1,7 @@
-import { useState } from "react";
-import { createBrand } from "@src/services/adminService";
+import { useEffect, useState } from "react";
+import { createBrand, getSectors } from "@src/services/adminService";
 import "./CreateBrandModal.scss";
+import type { Sector } from "@src/types/sectors";
 
 interface Props {
   open: boolean;
@@ -17,8 +18,18 @@ const CreateBrandModal = ({ open, onClose, onSuccess, onCreated }: Props) => {
     "freemium" | "start" | "start pro" | "premium"
   >("freemium");
 
+  const [sector, setSector] = useState<Sector | "">("");
+  const [sectors, setSectors] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (open) {
+      getSectors()
+        .then((data) => setSectors(data))
+        .catch(() => setSectors([]));
+    }
+  }, [open]);
 
   if (!open) return null;
 
@@ -28,14 +39,23 @@ const CreateBrandModal = ({ open, onClose, onSuccess, onCreated }: Props) => {
     setError(null);
 
     try {
-      await createBrand({ name, email, domain, offres });
+      await createBrand({
+        name,
+        email,
+        domain,
+        offres,
+        sector: sector || undefined,
+      });
+
       onSuccess();
       onCreated?.();
       onClose();
+
       setName("");
       setDomain("");
       setEmail("");
       setOffres("freemium");
+      setSector("");
     } catch (err: any) {
       setError(
         err?.response?.data?.message ||
@@ -83,6 +103,20 @@ const CreateBrandModal = ({ open, onClose, onSuccess, onCreated }: Props) => {
             <option value="start">Start</option>
             <option value="start pro">Start Pro</option>
             <option value="premium">Premium</option>
+          </select>
+
+          {/* Secteur dynamique */}
+          <label>Secteur</label>
+          <select
+            value={sector}
+            onChange={(e) => setSector(e.target.value as Sector)}
+          >
+            <option value="">-- Aucun secteur --</option>
+            {sectors.map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
           </select>
 
           {error && <p className="error">{error}</p>}

@@ -117,13 +117,15 @@ const ReportActionsBarWithReactions: React.FC<Props> = ({
           ) : (
             <>
               {hasBrandResponse && brandAvatar && (
-                <Avatar
-                  avatar={brandAvatar.avatar}
-                  pseudo={brandAvatar.pseudo}
-                  type={brandAvatar.type}
-                  siteUrl={brandAvatar.siteUrl ?? undefined}
-                  sizeHW={20}
-                />
+                <div onClick={onCommentClick}>
+                  <Avatar
+                    avatar={brandAvatar.avatar}
+                    pseudo={brandAvatar.pseudo}
+                    type={brandAvatar.type}
+                    siteUrl={brandAvatar.siteUrl ?? undefined}
+                    sizeHW={20}
+                  />
+                </div>
               )}
             </>
           )}

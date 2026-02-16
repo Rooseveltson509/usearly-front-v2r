@@ -3,7 +3,7 @@ import "./AdminBrandsHeader.scss";
 import closeButtonFilter from "/assets/dashboardUser/closeButtonFilter.svg";
 import useOutsideClick from "@src/hooks/useOutsideClick";
 import {
-  ADMIN_BRANDS_FILTER_CONFIG,
+  type AdminBrandsFilterConfigItem,
   type AdminBrandsFiltersState,
 } from "@src/types/Filters";
 
@@ -20,6 +20,7 @@ interface Props {
   filters: AdminBrandsFiltersState;
   onFilterChange: FilterChangeHandler;
   onClearFilters: () => void;
+  filterConfig: AdminBrandsFilterConfigItem[];
 }
 
 const toggleMultiValue = <T extends string>(current: T[], value: T) =>
@@ -35,6 +36,7 @@ const AdminBrandsHeader = ({
   filters,
   onFilterChange,
   onClearFilters,
+  filterConfig,
 }: Props) => {
   const [visibleFilter, setVisibleFilter] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -45,13 +47,11 @@ const AdminBrandsHeader = ({
     visibleFilter,
   );
 
-  const planConfig = ADMIN_BRANDS_FILTER_CONFIG.find(
-    (config) => config.key === "plans",
-  );
-  const sectorConfig = ADMIN_BRANDS_FILTER_CONFIG.find(
-    (config) => config.key === "sectors",
-  );
-  const lastActionConfig = ADMIN_BRANDS_FILTER_CONFIG.find(
+  const planConfig = filterConfig.find((config) => config.key === "plans");
+
+  const sectorConfig = filterConfig.find((config) => config.key === "sectors");
+
+  const lastActionConfig = filterConfig.find(
     (config) => config.key === "lastAction",
   );
 

@@ -59,12 +59,6 @@ const keywordMap: Record<string, string[]> = {
     "colis",
     "livraison",
   ],
-  /*   "wrong-description.png": [
-      "description", "mauvais", "erreur", "détail", "info", "incohérent", "différent", "mensonger"
-    ], */
-  /*   "payment-fail.png": [
-      "validation du paiement", "paiement", "carte", "refusé", "transaction", "code", "erreur bancaire"
-    ], */
   "payment-fail.png": [
     "paiement",
     "bancaire",
@@ -78,6 +72,9 @@ const keywordMap: Record<string, string[]> = {
     "problème de paiement",
     "informations bancaires",
     "problème avec la carte",
+    "prélèvement",
+    "prelevement",
+    "virement",
   ],
 
   "loading-page.png": [
@@ -161,14 +158,7 @@ const keywordMap: Record<string, string[]> = {
     "compliqué",
     "incompréhensible",
   ],
-  "size-product.png": [
-    "taille",
-    "dimension",
-    "format",
-    "grande",
-    "petite",
-    "panier",
-  ],
+  "size-product.png": ["taille", "dimension", "format", "grande", "petite"],
   "conflicting-information.png": [
     "incohérence",
     "contradiction",
@@ -185,6 +175,25 @@ const keywordMap: Record<string, string[]> = {
     "remboursement",
     "politique",
     "procédure",
+  ],
+  "double-charge.png": [
+    "double debit",
+    "double prelevement",
+    "double paiement",
+    "double facturation",
+    "facture en double",
+    "montant incorrect",
+    "montant errone",
+    "montant erroné",
+    "montant excessif",
+    "facturation excessive",
+    "surfacturation",
+    "trop facture",
+    "trop facturé",
+    "somme incorrecte",
+    "erreur de montant",
+    "prix incorrect",
+    "tarif incorrect",
   ],
   "stock.png": ["stock", "indisponible", "rupture", "épuisé"],
   "photo-error.png": [
@@ -213,78 +222,29 @@ export const getCategoryIconPathFromSubcategory = (
 
   const clean = normalize(subcategory);
 
-  // 1. Recherche dans keywordMap
+  let bestMatch: string = "other.png";
+  let bestScore = 0;
+
   for (const [icon, keywords] of Object.entries(keywordMap)) {
+    let score = 0;
+
     for (const keyword of keywords) {
-      if (new RegExp(`\\b${normalize(keyword)}\\b`, "i").test(clean)) {
-        return `/assets/categories-icons/${icon}`;
+      const normalizedKeyword = normalize(keyword);
+
+      if (clean.includes(normalizedKeyword)) {
+        score++;
       }
+    }
+
+    if (score > bestScore) {
+      bestScore = score;
+      bestMatch = icon;
     }
   }
 
-  // 2. Fallback basé sur similarité avec nom d’icône
-  const icons = [
-    "password",
-    "connect-bug",
-    "account",
-    "content-error",
-    "design",
-    "photo-error",
-    "delivery",
-    "delay",
-    "reply-error",
-    "wrong-address",
-    "payment-fail",
-    "expired",
-    "verification-code",
-    "size",
-    "payment",
-    "disconnect",
-    "order-tracking",
-    "support",
-    "reviews-fake",
-    "wrong-description",
-    "bug",
-    "error-message",
-    "basket",
-    "filter",
-    "coupon",
-    "scroll",
-    "resolution",
-    "restart",
-    "stock",
-    "support",
-    "double-charge",
-    "unresolved",
-    "sum-error",
-    "fraud",
-    "navigation",
-  ];
-
-  const match = icons.find((icon) => clean.includes(icon.replace(/-/g, "")));
-
-  if (match) {
-    return `/assets/categories-icons/${match}.png`;
+  if (bestScore > 0) {
+    return `/assets/categories-icons/${bestMatch}`;
   }
 
-  return "/assets/categories-icons/other.png"; // fallback final
+  return "/assets/categories-icons/other.png";
 };
-
-/* export const getCategoryIconPathFromSubcategory = (
-  subcategory: string | undefined
-): string => {
-  if (!subcategory) return "/assets/categories-icons/other.png";
-
-  const clean = normalize(subcategory);
-
-  for (const [icon, keywords] of Object.entries(keywordMap)) {
-    for (const keyword of keywords) {
-        console.log(`Matched subcategory "${subcategory}" with icon "${icon}"`);
-      if (clean.includes(normalize(keyword))) {
-        return `/assets/categories-icons/${icon}`;
-      }
-    }
-  }
-
-  return "/assets/categories-icons/other.png"; // fallback
-}; */

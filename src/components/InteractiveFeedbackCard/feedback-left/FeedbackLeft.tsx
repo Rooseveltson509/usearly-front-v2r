@@ -45,16 +45,15 @@ const FeedbackLeft: React.FC<Props> = ({ item, isExpanded = false }) => {
 
   const illustration = decideIllustration(
     item.title,
-    item.punchline,
+    item.description?.slice(0, 400),
     item.type,
   );
-
   const backgroundVariant =
-    item.meta?.axe === "emoji" ||
-    item.meta?.axe === "typography" ||
     item.meta?.axe === "illustration"
-      ? `color-mix(in srgb, ${adjustedBase} 10%, white)`
-      : adjustedBase;
+      ? adjustedBase
+      : item.meta?.axe === "emoji" || item.meta?.axe === "typography"
+        ? `color-mix(in srgb, ${adjustedBase} 10%, white)`
+        : adjustedBase;
 
   const textColor = getTextColorForBackground(adjustedBase);
   const highlightEmojiNeedsContrast = getBrightness(base) > 150;
@@ -151,8 +150,26 @@ const FeedbackLeft: React.FC<Props> = ({ item, isExpanded = false }) => {
               <div className="punchlines" ref={punchlinesRef}>
                 {lines.map((line, index) => {
                   const isPrimary = index === 0;
-                  const bubbleBg = isPrimary ? "#ffffff" : adjustedBase;
-                  const bubbleTextColor = isPrimary ? "#000000" : textColor;
+                  //const bubbleBg = isPrimary ? "#ffffff" : adjustedBase;
+                  const isIllustration = item.meta?.axe === "illustration";
+                  const brandIsLight = getBrightness(adjustedBase) > 235;
+
+                  let bubbleBg;
+                  let bubbleTextColor;
+
+                  if (isIllustration) {
+                    if (isPrimary) {
+                      bubbleBg = brandIsLight ? "#000000" : "#ffffff";
+                      bubbleTextColor = brandIsLight ? "#ffffff" : "#000000";
+                    } else {
+                      bubbleBg = brandIsLight ? "#ffffff" : "#000000";
+                      bubbleTextColor = brandIsLight ? "#000000" : "#ffffff";
+                    }
+                  } else {
+                    bubbleBg = isPrimary ? "#ffffff" : adjustedBase;
+                    bubbleTextColor = isPrimary ? "#000000" : textColor;
+                  }
+
                   const bubbleBorderWidth = isPrimary ? "2px" : "0px";
                   const bubbleBorderColor = isPrimary
                     ? "#000000"
@@ -214,14 +231,23 @@ const FeedbackLeft: React.FC<Props> = ({ item, isExpanded = false }) => {
                 <div
                   className="illu-wrapper"
                   style={{
-                    backgroundColor: `color-mix(in srgb, ${adjustedBase} 10%, white)`,
+                    backgroundColor:
+                      item.meta?.axe === "illustration"
+                        ? "transparent"
+                        : `color-mix(in srgb, ${adjustedBase} 10%, white)`,
                     color: "#000",
                   }}
                 >
-                  {item.type === "coupdecoeur" ? (
+                  <BrandSvg
+                    src={illustration}
+                    brandColor={svgColor}
+                    className="illu-image"
+                    alt="Illustration"
+                  />
+                  {/* {item.type === "coupdecoeur" ? (
                     <BrandSvg
                       src={illustration}
-                      brandColor={svgColor} // ⭐ Couleur différente automatiquement
+                      brandColor={svgColor}
                       className="illu-image"
                       alt="Illustration de la marque"
                     />
@@ -231,7 +257,7 @@ const FeedbackLeft: React.FC<Props> = ({ item, isExpanded = false }) => {
                       alt="illustration"
                       className="illu-image"
                     />
-                  )}
+                  )} */}
                 </div>
               )}
             </>
