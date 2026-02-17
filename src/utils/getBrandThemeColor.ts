@@ -1,11 +1,29 @@
-import { getRandomBrandColor } from "@src/utils/brandColors";
+import { brandColors } from "@src/utils/brandColors";
+
+export function getStableBrandColor(brandName: string): string {
+  const normalized = brandName.trim().toLowerCase();
+  const palette = brandColors[normalized] || brandColors.default;
+
+  if (!palette || palette.length === 0) return "#000000";
+
+  // 🔒 Hash déterministe basé sur le nom
+  let hash = 0;
+  for (let i = 0; i < normalized.length; i++) {
+    hash = normalized.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  const index = Math.abs(hash) % palette.length;
+
+  return palette[index];
+}
 
 /**
  * Retourne la couleur principale et une variante éclaircie pour chaque marque.
  * Gère aussi les cas extrêmes (fond noir/blanc) pour éviter les collisions visuelles.
  */
 export function getBrandThemeColor(brandName: string) {
-  const baseColor = getRandomBrandColor(brandName?.toLowerCase() || "default");
+  //const baseColor = getRandomBrandColor(brandName?.toLowerCase() || "default");
+  const baseColor = getStableBrandColor(brandName?.toLowerCase() || "default");
 
   const brightness = getBrightness(baseColor);
   const isDark = brightness < 128;

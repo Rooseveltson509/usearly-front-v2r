@@ -41,3 +41,23 @@ export function getBrightness(hex: string, bg: string = "#ffffff"): number {
 /** Texte noir ou blanc selon fond */
 export const getTextColorForBackground = (hex: string): string =>
   getBrightness(hex) > 150 ? "#000" : "#fff";
+
+export function mixHex(hex1: string, hex2: string, ratio: number) {
+  const parse = (h: string) => parseInt(h, 16);
+
+  const r1 = parse(hex1.slice(1, 3));
+  const g1 = parse(hex1.slice(3, 5));
+  const b1 = parse(hex1.slice(5, 7));
+
+  const r2 = parse(hex2.slice(1, 3));
+  const g2 = parse(hex2.slice(3, 5));
+  const b2 = parse(hex2.slice(5, 7));
+
+  const mix = (a: number, b: number) => Math.round(a + (b - a) * ratio);
+
+  const r = mix(r1, r2).toString(16).padStart(2, "0");
+  const g = mix(g1, g2).toString(16).padStart(2, "0");
+  const b = mix(b1, b2).toString(16).padStart(2, "0");
+
+  return `#${r}${g}${b}`;
+}

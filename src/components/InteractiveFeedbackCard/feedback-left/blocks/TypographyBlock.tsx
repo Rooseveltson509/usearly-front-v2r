@@ -1,5 +1,5 @@
 import { filterValidHighlights, normalizeWord } from "@src/utils/normalizeWord";
-import React from "react";
+import { getBrightness, mixHex } from "../../utils/colorUtils";
 
 interface Props {
   punchline: string;
@@ -12,13 +12,18 @@ export default function TypographyBlock({
   punchline,
   highlightedWords = [],
   baseColor,
-  getTextColorForBackground,
 }: Props) {
-  const textColor = getTextColorForBackground(baseColor);
+  const brightness = getBrightness(baseColor);
 
-  // 🔐 Sécurité front
+  // 🎨 Bulle adoucie (20–30%)
+  const softBrand =
+    brightness < 140
+      ? mixHex(baseColor, "#ffffff", 1) // éclaircissement plus fort pour les couleurs sombres
+      : mixHex(baseColor, "#000000", 0.25); // assombrissement léger pour les couleurs claires
+
+  const highlightTextColor = "#000";
+
   const validHighlights = filterValidHighlights(punchline, highlightedWords);
-
   const words = punchline.split(/\s+/);
 
   return (
@@ -34,8 +39,8 @@ export default function TypographyBlock({
             key={index}
             className="highlight-bubble"
             style={{
-              background: baseColor,
-              color: textColor,
+              background: softBrand,
+              color: highlightTextColor,
             }}
           >
             {word}{" "}
