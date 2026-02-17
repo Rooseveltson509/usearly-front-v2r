@@ -266,58 +266,58 @@
 
     .extension-image.report-mode.e0,
     .extension-click-targets.report-mode.e0 {
-      transform: scale(2.1);
-      margin-left: -38%;
+      transform: scale(1.6);
+      margin-left: -15%;
     }
     .extension-image.report-mode.e1,
     .extension-click-targets.report-mode.e1 {
-      transform: scale(2.1);
-      margin-left: -38%;
+      transform: scale(1.6);
+      margin-left: -15%;
     }
     .extension-image.report-mode.e2,
     .extension-click-targets.report-mode.e2 {
-      transform: scale(2.1);
-      margin-left: -38%;
+      transform: scale(1.5);
+      margin-left: -15%;
       margin-top: -52px;
     }
     .extension-image.report-mode.e3,
     .extension-click-targets.report-mode.e3 {
-      transform: scale(2.1);
-      margin-left: -33%;
+      transform: scale(1.7);
+      margin-left: -23%;
     }
     .extension-image.report-mode.e4,
     .extension-click-targets.report-mode.e4 {
-      transform: scale(2.1);
-      margin-left: -40%;
+      transform: scale(1.6);
+      margin-left: -20%;
     }
     .extension-image.report-mode.e5,
     .extension-click-targets.report-mode.e5 {
-      transform: scale(2.1);
+      transform: scale(1.6);
       margin-left: -40%;
     }
     .extension-image.report-mode.e6,
     .extension-click-targets.report-mode.e6 {
-      transform: scale(2.1);
+      transform: scale(1.6);
       margin-left: -40%;
     }
     .extension-image.report-mode.e7,
     .extension-click-targets.report-mode.e7 {
-      transform: scale(2.1);
+      transform: scale(1.6);
       margin-left: -40%;
     }
     .extension-image.report-mode.e8,
     .extension-click-targets.report-mode.e8 {
-      transform: scale(2.1);
-      margin-left: -40%;
+      transform: scale(1.6);
+      margin-left: -25%;
     }
     .extension-image.report-mode.e9,
     .extension-click-targets.report-mode.e9 {
-      transform: scale(2.1);
+      transform: scale(1.6);
       margin-left: -40%;
     }
     .extension-image.report-mode.e10,
     .extension-click-targets.report-mode.e10 {
-      transform: scale(2.1);
+      transform: scale(1.6);
       margin-left: -40%;
     }
 
@@ -334,8 +334,8 @@
     .like-mode.extension-popup-frame.e1 {
       .extension-image.like-mode.e1,
       .extension-click-targets.like-mode.e1 {
-        transform: scale(2.7);
-        margin-left: -40%;
+        transform: scale(2.2);
+        margin-left: -25%;
       }
       .extension-mouse.e1 {
         margin-left: -10%;
@@ -345,9 +345,9 @@
     .like-mode.extension-popup-frame.e2 {
       .extension-image.like-mode.e2,
       .extension-click-targets.like-mode.e2 {
-        transform: scale(2.25) rotate(-10deg);
-        margin-left: -115%;
-        margin-top: 75%;
+        transform: scale(1.9);
+        margin-left: -75%;
+        margin-top: 35%;
       }
       animation: extensionPopupArcEntry 3s cubic-bezier(0.22, 1, 0.36, 1) both;
       will-change: margin-top, margin-left;
@@ -366,8 +366,8 @@
     .suggestion-mode.extension-popup-frame.e1 {
       .extension-image.suggestion-mode.e1,
       .extension-click-targets.suggestion-mode.e1 {
-        transform: scale(2.7);
-        margin-left: -40%;
+        transform: scale(2.1);
+        margin-left: -20%;
       }
       .extension-mouse.e1 {
         margin-left: -8%;
@@ -376,9 +376,9 @@
     .suggestion-mode.extension-popup-frame.e2 {
       .extension-image.suggestion-mode.e2,
       .extension-click-targets.suggestion-mode.e2 {
-        transform: scale(2.25);
-        margin-left: -115%;
-        margin-top: 75%;
+        transform: scale(1.9);
+        margin-left: -75%;
+        margin-top: 35%;
       }
       animation: extensionPopupArcEntry 3s cubic-bezier(0.25, 0.8, 0.22, 1) both;
       will-change: margin-top, margin-left;

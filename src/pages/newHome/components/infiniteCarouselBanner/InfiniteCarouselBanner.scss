@@ -55,12 +55,12 @@
     system-ui,
     sans-serif;
   font-size: clamp(40px, 6.2vw, 110px);
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: -0.02em;
   line-height: 1;
   color: transparent;
-  -webkit-text-stroke: 2px var(--stroke-color);
-  text-stroke: 2px var(--stroke-color);
+  -webkit-text-stroke: 1px var(--stroke-color);
+  text-stroke: 1px var(--stroke-color);
 }
 
 .infinite-carousel-banner:hover .marquee__track {

@@ -23,6 +23,8 @@
         justify-content: center;
         background-color: white;
         padding: 10px 26px 10px 12px;
+        box-shadow: 0px 1px 2px #00000014;
+
         .feed-table-body-line-data {
           font-family: variables.$font-family;
           font-size: 14px;
@@ -115,13 +117,15 @@
     font-weight: 500;
     align-items: center;
     text-align: center;
+    font-size: 13px;
   }
   .feed-table-body-page-location {
     color: #181818;
     font-weight: 500;
+    font-size: 13px;
     .feed-table-body-page-location-text {
       font-family: variables.$font-family;
-      font-size: 15px;
+      font-size: 13px;
       color: rgb(103, 103, 103);
     }
   }
