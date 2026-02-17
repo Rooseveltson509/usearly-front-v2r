@@ -234,8 +234,8 @@
   &.close {
     background: #fff;
     transition: all 0.3s ease;
-    box-shadow: #0000002e 1px 1px 1px;
-    border: 1px solid #eeeeee;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.13);
+    border: 1px solid #0000000a;
     &:hover {
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -315,7 +315,8 @@
     flex-direction: column;
     gap: 0px;
     background: #fff;
-    padding-bottom: 4px;
+    padding-bottom: 20px;
+    padding-top: 10px;
 
     .subcategory-block:last-child {
       .subcategory-header {
@@ -327,7 +328,7 @@
       padding: 8px;
       margin: 4px 8px;
       overflow: hidden;
-      background-color: #ffffff;
+      background-color: #f7f7f7;
 
       .date-subcategory {
         color: grey;
@@ -348,9 +349,9 @@
       }
 
       &.open {
-        box-shadow: 0 3px 16px -3px rgba(0, 0, 0, 0.24);
-        background-color: rgb(255 255 255);
+        background-color: #ffffff;
         border: 1px solid #ffffff;
+        box-shadow: 0px 2px 2px #00000036;
 
         .subcategory-header {
           border: none;

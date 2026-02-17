@@ -3,7 +3,7 @@
   flex-direction: column;
   gap: 1.5rem;
   padding: 0;
-  margin-top: 30px;
+  margin-top: 0px;
 
   .date-group {
     display: flex;
@@ -23,13 +23,13 @@
         width: 18px;
         height: 18px;
         display: block;
-        color: #c4c6d3;
+        color: #d9d9d9;
       }
 
       .date-title {
         margin: 0;
         font-size: 13px;
-        color: #626469;
+        color: #424243;
         font-family: "Inter";
         font-weight: 400;
       }

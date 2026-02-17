@@ -11,7 +11,7 @@
   position: relative;
   margin-top: 24px;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1100px;
   //width: fit-content; // ⬅️ LA LIGNE MANQUANTE
   margin-left: auto;
   margin-right: auto;
@@ -21,7 +21,7 @@
 .profile-main-wrapper::before {
   content: "";
   position: absolute;
-  height: 320px;
+  height: 300px;
   top: 0;
   left: -32px;
   right: -32px;
@@ -226,7 +226,7 @@
 // Colonne droite
 .right-panel {
   width: 400px;
-  margin-top: 26px;
+  margin: 10px 0;
 
   .separator {
     height: 1px;
@@ -262,7 +262,6 @@
   background: white;
 }
 .brand-block .subcategories-list .subcategory-block.open {
-  box-shadow: none !important;
   border: 1px solid #f0f0f0 !important;
 }
 
@@ -298,21 +297,23 @@
 }
 
 .profile-section-header {
-  margin-bottom: 16px;
+  margin-bottom: 10px;
+  margin-left: 30px;
 
   h2 {
-    font-size: 1.6rem;
+    font-size: 40px;
     font-weight: 700;
     margin: 0;
     color: #111;
+    font-family: "onest";
+    line-height: 1;
   }
 
   span {
     display: block;
-    margin-top: 4px;
-    font-size: 1rem;
-    font-weight: 500;
-    color: #6b7280; // gris doux comme la maquette
+    font-size: 40px;
+    font-weight: 200;
+    color: #000000; // gris doux comme la maquette
   }
 }
 

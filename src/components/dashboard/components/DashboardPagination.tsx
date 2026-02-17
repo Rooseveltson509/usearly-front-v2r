@@ -13,7 +13,7 @@ const DashboardPagination = ({
 }: DashboardPaginationProps) => (
   <div className="feed-table-body-page">
     <div className="feed-table-body-page-button" onClick={onPrev}>
-      <h3>Page précédente</h3>
+      <p>Page précédente</p>
     </div>
 
     <div className="feed-table-body-page-location">
@@ -21,7 +21,7 @@ const DashboardPagination = ({
     </div>
 
     <div className="feed-table-body-page-button" onClick={onNext}>
-      <h3>Page suivante</h3>
+      <p>Page suivante</p>
     </div>
   </div>
 );
