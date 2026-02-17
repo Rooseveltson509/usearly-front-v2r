@@ -81,8 +81,8 @@ export const illustrationKeywords: Record<string, string> = {
   interface: "general/ordilike.svg",
   design: "general/ordilike.svg",
   animation: "general/ordilike.svg",
-  rapidité: "general/flèchecoeur.svg",
-  performance: "general/flèchecoeur.svg",
+  rapidité: "general/flechecoeur.svg",
+  performance: "general/flechecoeur.svg",
 
   durable: "general/coeurlike.svg",
 
