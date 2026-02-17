@@ -61,7 +61,7 @@ export const brandColors: Record<string, string[]> = {
   // E-commerce & Retail
   amazon: ["#FF9900", "#FFB84D", "#E47911"],
   ebay: ["#E53238", "#0064D2", "#86B817"],
-  bershka: ["#121212", "#333333", "#524343"],
+  bershka: ["#ffffff", "#2f3131", "#FFFFFF"],
   zalando: ["#FF6900", "#FF8533", "#FF9C66"],
   zara: ["#000000", "#2B2B2B", "#555555"],
   nike: ["#111111", "#232323", "#444444"],
@@ -85,7 +85,7 @@ export const brandColors: Record<string, string[]> = {
   boulangeriepoilane: ["#000000", "#222222", "#555555"],
   laredoute: ["#E60012", "#C70024", "#FF3344"],
   laboutiqueofficielle: ["#E74B58", "#ffffff", "#FF6673"],
-  lego: ["#E3000B", "#FF3333", "#CC0000"],
+  lego: ["#E3000B", "#FF3333", "#c8afaf"],
   weareholy: ["#D473D4", "#BB60BB", "#E689E6"],
   thetrainline: ["#01a88f", "#01a88f", "#055252"],
 

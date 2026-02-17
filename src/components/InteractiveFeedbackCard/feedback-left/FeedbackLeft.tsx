@@ -33,15 +33,35 @@ const FeedbackLeft: React.FC<Props> = ({ item, isExpanded = false }) => {
   const palette = getOfficialPalette(brandName);
 
   const brightness = getBrightness(base);
+  const isNearBlack = brightness < 25;
+  const isNearWhite = brightness > 240;
+  const isNeutralBrand = isNearBlack || isNearWhite;
+  // 🧠 Normalisation des couleurs extrêmes (noir / blanc)
+  let normalizedBase = base;
+
+  if (brightness < 25) {
+    // quasi noir
+    normalizedBase = "color-mix(in srgb, black 85%, white)"; // gris très foncé
+  } else if (brightness > 240) {
+    // quasi blanc
+    normalizedBase = "#E5E5E5"; // gris clair doux
+  }
+
   const isTooLight = brightness > 235;
-  const adjustedBase = base;
+  const adjustedBase = normalizedBase;
   const adjustedLight = light;
   const themeMode = isDark ? "dark" : "light";
 
   // 🎨 La bulle utilise déjà base
   const bubbleColor = adjustedBase;
   // 🎨 SVG = couleur différente + jamais noire + cohérente
-  const svgColor = pickSvgColor(palette, bubbleColor);
+  //const svgColor = pickSvgColor(palette, bubbleColor);
+  let svgColor = pickSvgColor(palette, bubbleColor);
+
+  if (isNeutralBrand) {
+    const accents = ["#E53935", "#1E88E5", "#8E24AA", "#FB8C00"];
+    svgColor = accents[brandName.length % accents.length];
+  }
 
   const illustration = decideIllustration(
     item.title,
