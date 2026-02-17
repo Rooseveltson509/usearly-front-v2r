@@ -62,11 +62,13 @@ export const illustrationKeywords: Record<string, string> = {
 
   // ✈️ Voyage & transport
   avion: "voyage_transport/avion.svg",
+  trajet: "voyage_transport/train.svg",
+  billet: "voyage_transport/avion.svg",
   vol: "voyage_transport/avion.svg",
-  trajet: "voyage_transport/chemin.svg",
   train: "voyage_transport/train.svg",
   valise: "voyage_transport/valise.svg",
   transport: "voyage_transport/valise.svg",
+  réservation: "voyage_transport/train.svg",
 
   // ⚽ Sport
   sport: "sport/maillot.svg",

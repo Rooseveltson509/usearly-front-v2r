@@ -54,13 +54,21 @@ const FeedbackLeft: React.FC<Props> = ({ item, isExpanded = false }) => {
 
   // 🎨 La bulle utilise déjà base
   const bubbleColor = adjustedBase;
-  // 🎨 SVG = couleur différente + jamais noire + cohérente
-  //const svgColor = pickSvgColor(palette, bubbleColor);
-  let svgColor = pickSvgColor(palette, bubbleColor);
+  let svgColor: string;
 
-  if (isNeutralBrand) {
-    const accents = ["#E53935", "#1E88E5", "#8E24AA", "#FB8C00"];
-    svgColor = accents[brandName.length % accents.length];
+  if (item.meta?.axe === "illustration") {
+    if (isNeutralBrand) {
+      const accents = ["#E53935", "#1E88E5", "#8E24AA", "#FB8C00"];
+      svgColor = accents[brandName.length % accents.length];
+    } else {
+      const brightness = getBrightness(adjustedBase);
+      svgColor =
+        brightness < 140
+          ? `color-mix(in srgb, ${adjustedBase} 30%, white)`
+          : `color-mix(in srgb, ${adjustedBase} 25%, black)`;
+    }
+  } else {
+    svgColor = pickSvgColor(palette, bubbleColor);
   }
 
   const illustration = decideIllustration(
@@ -68,10 +76,15 @@ const FeedbackLeft: React.FC<Props> = ({ item, isExpanded = false }) => {
     item.description?.slice(0, 400),
     item.type,
   );
+  const typographyIcon = decideIllustration(
+    item.title,
+    item.description?.slice(0, 400),
+    item.type,
+  );
   const backgroundVariant =
-    item.meta?.axe === "illustration"
+    item.meta?.axe === "illustration" || item.meta?.axe === "typography"
       ? adjustedBase
-      : item.meta?.axe === "emoji" || item.meta?.axe === "typography"
+      : item.meta?.axe === "emoji"
         ? `color-mix(in srgb, ${adjustedBase} 10%, white)`
         : adjustedBase;
 
@@ -136,9 +149,8 @@ const FeedbackLeft: React.FC<Props> = ({ item, isExpanded = false }) => {
           className="feedback-left"
           style={{
             backgroundColor: backgroundVariant,
-            color: textColor,
+            ["--feedback-text-color" as any]: textColor,
             ["--brand-color" as any]: adjustedBase,
-            ["--brand-color-light" as any]: adjustedLight,
           }}
           data-axe={item.meta?.axe || "typography"}
           data-theme={themeMode}
@@ -146,12 +158,25 @@ const FeedbackLeft: React.FC<Props> = ({ item, isExpanded = false }) => {
         >
           {/* === AXE TYPO === */}
           {item.meta?.axe === "typography" ? (
-            <TypographyBlock
-              punchline={item.punchline}
-              highlightedWords={item.meta?.highlightedWords}
-              baseColor={adjustedBase}
-              getTextColorForBackground={getTextColorForBackground}
-            />
+            <>
+              <TypographyBlock
+                punchline={item.punchline}
+                highlightedWords={item.meta?.highlightedWords}
+                baseColor={adjustedBase}
+                getTextColorForBackground={getTextColorForBackground}
+              />
+
+              {typographyIcon && (
+                <div className="typography-icon-wrapper">
+                  <BrandSvg
+                    src={typographyIcon}
+                    brandColor={`color-mix(in srgb, ${adjustedBase} 50%, white)`}
+                    className="typography-icon"
+                    alt="Decorative icon"
+                  />
+                </div>
+              )}
+            </>
           ) : item.meta?.axe === "emoji" ? (
             <EmojiBlock
               punchline={item.punchline}
