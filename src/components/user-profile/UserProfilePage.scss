@@ -11,7 +11,7 @@
   position: relative;
   margin-top: 24px;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1100px;
   //width: fit-content; // ⬅️ LA LIGNE MANQUANTE
   margin-left: auto;
   margin-right: auto;
@@ -21,7 +21,7 @@
 .profile-main-wrapper::before {
   content: "";
   position: absolute;
-  height: 320px;
+  height: 300px;
   top: 0;
   left: -32px;
   right: -32px;
@@ -262,7 +262,6 @@
   background: white;
 }
 .brand-block .subcategories-list .subcategory-block.open {
-  box-shadow: none !important;
   border: 1px solid #f0f0f0 !important;
 }
 
@@ -312,7 +311,6 @@
 
   span {
     display: block;
-    margin-top: 4px;
     font-size: 40px;
     font-weight: 200;
     color: #000000; // gris doux comme la maquette
