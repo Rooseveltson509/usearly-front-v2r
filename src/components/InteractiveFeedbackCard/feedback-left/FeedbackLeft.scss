@@ -1,8 +1,13 @@
 .feedback-left {
-  position: relative;
   padding: 2rem;
   border-radius: 12px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* centre verticalement */
+  align-items: center; /* centre horizontalement */
   text-align: center;
+  gap: 24px; /* espace stable texte/illu */
   font-family: "Raleway", sans-serif;
   transition: background-color 0.3s ease;
   color: var(--feedback-text-color);
@@ -69,5 +74,10 @@
       width: 100%;
       border-radius: 10px;
     }
+  }
+}
+.feedback-left[data-axe="typography"] {
+  .punchline-typography {
+    color: #000 !important;
   }
 }

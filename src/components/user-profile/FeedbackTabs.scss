@@ -25,9 +25,9 @@
     }
 
     &.active {
-      background-color: #0e0431;
+      background-color: #3e6efc;
       color: $white;
-      border: 2px solid #ffffff26;
+      border: 2px solidrgba(255, 255, 255, 0) 6;
       &:hover {
         border: 2px solid $white;
       }

@@ -1,3 +1,9 @@
+ul {
+  list-style: circle;
+  margin: 0;
+  padding: 0;
+}
+
 .legal-container {
   max-width: 900px;
   margin: 120px auto 80px auto;
@@ -23,6 +29,8 @@
 .legal-container h2 {
   font-size: 20px;
   margin-bottom: 12px;
+  font-family: "onest";
+  font-weight: 800;
 }
 
 .legal-container ul {

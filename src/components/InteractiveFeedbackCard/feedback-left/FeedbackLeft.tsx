@@ -82,11 +82,13 @@ const FeedbackLeft: React.FC<Props> = ({ item, isExpanded = false }) => {
     item.type,
   );
   const backgroundVariant =
-    item.meta?.axe === "illustration" || item.meta?.axe === "typography"
+    item.meta?.axe === "illustration"
       ? adjustedBase
-      : item.meta?.axe === "emoji"
-        ? `color-mix(in srgb, ${adjustedBase} 10%, white)`
-        : adjustedBase;
+      : item.meta?.axe === "typography"
+        ? `color-mix(in srgb, ${adjustedBase} 20%, white)`
+        : item.meta?.axe === "emoji"
+          ? `color-mix(in srgb, ${adjustedBase} 10%, white)`
+          : adjustedBase;
 
   const textColor = getTextColorForBackground(adjustedBase);
   const highlightEmojiNeedsContrast = getBrightness(base) > 150;
@@ -149,7 +151,8 @@ const FeedbackLeft: React.FC<Props> = ({ item, isExpanded = false }) => {
           className="feedback-left"
           style={{
             backgroundColor: backgroundVariant,
-            ["--feedback-text-color" as any]: textColor,
+            ["--feedback-text-color" as any]:
+              item.meta?.axe === "typography" ? "#000000" : textColor,
             ["--brand-color" as any]: adjustedBase,
           }}
           data-axe={item.meta?.axe || "typography"}
@@ -170,7 +173,7 @@ const FeedbackLeft: React.FC<Props> = ({ item, isExpanded = false }) => {
                 <div className="typography-icon-wrapper">
                   <BrandSvg
                     src={typographyIcon}
-                    brandColor={`color-mix(in srgb, ${adjustedBase} 50%, white)`}
+                    brandColor={`color-mix(in srgb, ${adjustedBase} 100%, white)`}
                     className="typography-icon"
                     alt="Decorative icon"
                   />
