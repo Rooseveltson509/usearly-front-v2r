@@ -1,7 +1,6 @@
 export const illustrationKeywords: Record<string, string> = {
   // 🏦 Banque
   banque: "bancaire/cartecredit.svg",
-  paiement: "bancaire/cartecredit.svg",
   carte: "bancaire/cartecredit.svg",
   crédit: "bancaire/cartecredit.svg",
   invest: "bancaire/invest.svg",
@@ -27,14 +26,23 @@ export const illustrationKeywords: Record<string, string> = {
   lecture: "culture_musique/openbook.svg",
   casque: "culture_musique/casquemusique.svg",
 
-  vetement: "ecommerce/mediumbag.svg",
+  // 🛒 E-commerce
+  paiement: "ecommerce/cartecredit.svg",
+  commande: "ecommerce/caddie.svg",
+  achat: "ecommerce/fillbag.svg",
+  panier: "ecommerce/caddie.svg",
+  produit: "ecommerce/mediumbag.svg",
+  magasin: "ecommerce/largebag.svg",
+  vêtement: "ecommerce/cintre.svg",
   vêtements: "ecommerce/mediumbag.svg",
-  mode: "ecommerce/mediumbag.svg",
-  collection: "ecommerce/mediumbag.svg",
+  mode: "ecommerce/cintre.svg",
+  collection: "ecommerce/caddie.svg",
   categorie: "ecommerce/caddie.svg",
-  femme: "ecommerce/mediumbag.svg",
-  enfant: "ecommerce/mediumbag.svg",
-  style: "ecommerce/largebag.svg",
+  femme: "ecommerce/fillbag.svg",
+  homme: "ecommerce/largebag.svg",
+  enfant: "ecommerce/fillbag.svg",
+  taille: "ecommerce/cintre.svg",
+  tailles: "ecommerce/cintre.svg",
 
   // 🍔 Food & Drink
   repas: "food_drink/burger.svg",
@@ -46,14 +54,6 @@ export const illustrationKeywords: Record<string, string> = {
   cocktail: "food_drink/cocktail.svg",
   glace: "food_drink/ice.svg",
 
-  // 🛒 E-commerce
-  commande: "ecommerce/caddie.svg",
-  achat: "ecommerce/fillbag.svg",
-  panier: "ecommerce/caddie.svg",
-  produit: "ecommerce/mediumbag.svg",
-  magasin: "ecommerce/largebag.svg",
-  validation: "ecommerce/fillbag.svg",
-
   // 🏨 Hôtellerie & immobilier
   hôtel: "hotelerie_immobilier/lit.svg",
   chambre: "hotelerie_immobilier/lit.svg",
@@ -62,13 +62,16 @@ export const illustrationKeywords: Record<string, string> = {
 
   // ✈️ Voyage & transport
   avion: "voyage_transport/avion.svg",
-  trajet: "voyage_transport/train.svg",
+  trajet: "voyage_transport/chemin.svg",
+  itinéraire: "voyage_transport/chemin.svg",
   billet: "voyage_transport/avion.svg",
   vol: "voyage_transport/avion.svg",
   train: "voyage_transport/train.svg",
   valise: "voyage_transport/valise.svg",
   transport: "voyage_transport/valise.svg",
-  réservation: "voyage_transport/train.svg",
+  réservation: "voyage_transport/valise.svg",
+  voyage: "voyage_transport/valise.svg",
+  logement: "voyage_transport/lit.svg",
 
   // ⚽ Sport
   sport: "sport/maillot.svg",

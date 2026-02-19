@@ -136,38 +136,10 @@ function App() {
                 </GuestRoute>
               }
             />
-            <Route
-              path="/privacy"
-              element={
-                <GuestRoute>
-                  <PrivacyPolicy />
-                </GuestRoute>
-              }
-            />
-            <Route
-              path="/support"
-              element={
-                <GuestRoute>
-                  <Support />
-                </GuestRoute>
-              }
-            />
-            <Route
-              path="/terms"
-              element={
-                <GuestRoute>
-                  <Terms />
-                </GuestRoute>
-              }
-            />
-            <Route
-              path="/contact"
-              element={
-                <GuestRoute>
-                  <Contact />
-                </GuestRoute>
-              }
-            />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/support" element={<Support />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/contact" element={<Contact />} />
             {/* about */}
             <Route path="/about" element={<AboutClassicPage />} />
             <Route path="/about-legacy" element={<AboutPage />} />

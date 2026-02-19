@@ -12,19 +12,42 @@ export default function PrivacyPolicy() {
         </p>
 
         <section>
-          <h2>1. Présentation</h2>
+          <h2>1. Notre principe</h2>
           <p>
-            Usearly est une extension navigateur permettant aux utilisateurs de
-            signaler des bugs, partager des retours et suggérer des
-            améliorations directement depuis les sites web qu’ils visitent.
+            Notre principe Usearly est conçu pour respecter votre vie privée.
+            Nous ne collectons aucune donnée permettant d’identifier directement
+            une personne, telle que : nom prénom adresse postale numéro de
+            téléphone données bancaires
           </p>
         </section>
 
         <section>
           <h2>2. Données collectées</h2>
-          <p>Usearly ne vend aucune donnée personnelle.</p>
+          <p>
+            Usearly ne vend aucune donnée personnelle.{" "}
+            <p>
+              Lors de l’inscription et de l’utilisation de la plateforme, seules
+              les informations suivantes sont demandées :
+              <ul>
+                <li>Un pseudonyme</li>
+                <li>L’âge</li>
+                <li>Le sexe</li>
+                <li>
+                  Les contributions publiées (signalements, suggestions, votes,
+                  commentaires)
+                </li>
+                <li>
+                  Aucune information civile ou administrative n’est requise.
+                  <br />
+                  <br />
+                </li>
+              </ul>
+            </p>
+          </p>
 
-          <p>L’extension peut collecter :</p>
+          <p>
+            <strong>L’extension peut collecter :</strong>
+          </p>
 
           <ul>
             <li>
@@ -67,12 +90,48 @@ export default function PrivacyPolicy() {
           <p>Les données collectées sont utilisées uniquement pour :</p>
 
           <ul>
-            <li>Améliorer les services</li>
+            <li>Afficher votre profil public sous pseudonyme</li>
+            <li>Permettre l’interaction avec les marques</li>
+            <li>Regrouper les signalements similaires</li>
+            <li>Produire des statistiques globales anonymisées</li>
+            <li>Améliorer les expériences proposées par les marques</li>
             <li>Fournir des solutions aux problèmes signalés</li>
-            <li>Optimiser l’expérience utilisateur</li>
+            <li>Optimiser les services</li>
+            Les analyses sont réalisées à partir de données agrégées.
           </ul>
         </section>
 
+        <section>
+          <h2>5. Aucune revente de données </h2>
+          <p>
+            Usearly ne vend, ne loue et ne cède aucune information à des tiers.
+            Les marques partenaires ont uniquement accès aux contributions liées
+            à leurs propres signalements, sous pseudonyme.
+          </p>
+        </section>
+        <section>
+          <h2>6. Données techniques</h2>
+          <p>
+            Afin d’assurer la sécurité et le bon fonctionnement de la
+            plateforme, Usearly traite des données techniques strictement
+            nécessaires, telles que :
+            <ul>
+              <li>l’adresse IP</li>
+              <li>les journaux de connexion</li>
+              <li>les informations liées au navigateur ou à l’appareil</li>
+              <li>Produire des statistiques globales anonymisées</li>
+              <strong>Ces données sont utilisées uniquement pour :</strong>
+              <li>
+                sécuriser le service prévenir les abus ou comportements
+                frauduleux
+              </li>
+              <li>assurer la stabilité technique</li>
+              Elles ne sont ni exploitées à des fins publicitaires, ni revendues
+              à des tiers. Elles sont conservées pour une durée limitée et
+              proportionnée aux exigences de sécurité.
+            </ul>
+          </p>
+        </section>
         <section>
           <h2>5. Sécurité</h2>
           <p>
