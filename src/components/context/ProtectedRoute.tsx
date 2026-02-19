@@ -20,7 +20,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   }
 
   if (!isAuthenticated || !userProfile) {
-    return <Navigate to="/lookup" replace />;
+    return <Navigate to="/home" replace />;
   }
 
   // ✅ vérification du TYPE

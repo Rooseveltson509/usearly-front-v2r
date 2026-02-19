@@ -4,19 +4,21 @@ import "./Footer.scss";
 
 const Footer: React.FC = () => (
   <footer>
-    <div style={{ marginBottom: "0.5rem" }}>
+    <div className="footer-container">
       <ul>
         <li>
-          <Link to="/cgu" style={{ textDecoration: "none" }}>
-            Conditions générales d'utilisation
-          </Link>
+          <Link to="/privacy">Privacy Policy</Link>
         </li>
         <li>
-          <Link to="/contact" style={{ textDecoration: "none" }}>
-            Nous contacter
-          </Link>
+          <Link to="/terms">Terms of Service</Link>
         </li>
-        <li>© Usearly 2024</li>
+        <li>
+          <Link to="/support">Support</Link>
+        </li>
+        <li>
+          <Link to="/contact">Contact</Link>
+        </li>
+        <li>© {new Date().getFullYear()} Usearly</li>
       </ul>
     </div>
   </footer>
