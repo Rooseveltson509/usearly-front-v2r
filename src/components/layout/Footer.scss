@@ -1,20 +1,24 @@
-@use "../../styles/base/variables" as *;
-
 footer {
-  margin-top: 3.313rem;
-  padding-top: 0px;
-  padding-bottom: 1rem;
-  padding-left: 2.938rem;
+  padding: 20px 0;
   text-align: center;
-  font-size: 0.75rem;
-  color: #ababab;
-  div {
-    margin-top: 0.5rem;
-    ul {
-      display: flex;
-      flex-direction: row;
-      list-style: none;
-      gap: 1.5rem;
+  background: #f8f8f8;
+  font-size: 14px;
+
+  ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  a {
+    text-decoration: none;
+    color: #333;
+
+    &:hover {
+      text-decoration: underline;
     }
   }
 }

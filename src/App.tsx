@@ -28,6 +28,10 @@ import AdminUserDetail from "./pages/admin/dashboardUser/users/AdminUserDetail";
 import AdminsPage from "./pages/admin/admins/AdminsPage";
 import ProtectedRoute from "./components/context/ProtectedRoute";
 import AdminAIOverviewPage from "./pages/admin/admins/overview/AdminAIOverviewPage";
+import PrivacyPolicy from "./pages/legal/PrivacyPolicy";
+import Terms from "./pages/legal/Terms";
+import Support from "./pages/legal/Support";
+import Contact from "./pages/legal/Contact";
 
 function App() {
   return (
@@ -129,6 +133,38 @@ function App() {
                     <Login />
                     <UsearlyDraw />
                   </>
+                </GuestRoute>
+              }
+            />
+            <Route
+              path="/privacy"
+              element={
+                <GuestRoute>
+                  <PrivacyPolicy />
+                </GuestRoute>
+              }
+            />
+            <Route
+              path="/support"
+              element={
+                <GuestRoute>
+                  <Support />
+                </GuestRoute>
+              }
+            />
+            <Route
+              path="/terms"
+              element={
+                <GuestRoute>
+                  <Terms />
+                </GuestRoute>
+              }
+            />
+            <Route
+              path="/contact"
+              element={
+                <GuestRoute>
+                  <Contact />
                 </GuestRoute>
               }
             />
