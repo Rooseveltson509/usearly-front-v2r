@@ -1,5 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Sora:wght@300;400;600;700;800&display=swap");
 
+.header {
+  background: rgb(255 255 255 / 50%);
+  backdrop-filter: blur(4px);
+}
+
 .about-classic {
   --about-ink: #131313;
   --about-muted: #4c4c4c;
@@ -16,6 +21,44 @@
   background-color: white;
   position: relative;
   padding-top: var(--header-height, 0px);
+  footer {
+    background-color: #0c0c0f;
+    font-size: 12px;
+    ul {
+      gap: 50px;
+      li {
+        color: #fff;
+        a {
+          color: #fff;
+        }
+      }
+    }
+  }
+  @media screen and (max-width: 580px) {
+    footer {
+      font-size: 10px;
+    }
+  }
+  @media screen and (max-width: 520px) {
+    footer {
+      ul {
+        gap: 25px;
+      }
+    }
+  }
+  @media screen and (max-width: 420px) {
+    footer {
+      ul {
+        gap: 0;
+        justify-content: space-between;
+      }
+    }
+  }
+  @media screen and (max-width: 333px) {
+    footer {
+      font-size: 9px;
+    }
+  }
 }
 
 .about-classic__hero {
