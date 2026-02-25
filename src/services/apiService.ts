@@ -168,7 +168,15 @@ apiService.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    const isAuthRoute =
+      originalRequest?.url?.includes("/user/login") ||
+      originalRequest?.url?.includes("/user/refresh-token");
+
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
+      !isAuthRoute
+    ) {
       originalRequest._retry = true;
       console.log("🔄 Token expiré, tentative de refresh...");
 
@@ -176,16 +184,15 @@ apiService.interceptors.response.use(
         const newAccessToken = await refreshToken();
 
         if (newAccessToken) {
-          // ✅ Mise à jour locale
           storeTokenInCurrentStorage(newAccessToken);
+
           apiService.defaults.headers.common["Authorization"] =
             `Bearer ${newAccessToken}`;
+
           originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
 
           console.log("✅ Token rafraîchi, requête rejouée.");
-          return apiService(originalRequest); // rejoue la requête
-        } else {
-          console.warn("🚫 Aucun nouveau token reçu. Déconnexion requise.");
+          return apiService(originalRequest);
         }
       } catch (err) {
         console.error("❌ Échec du refresh token :", err);
@@ -195,14 +202,6 @@ apiService.interceptors.response.use(
     return Promise.reject(error);
   },
 );
-
-/* export const confirmEmailRequest = async (data: {
-  userId: string;
-  token: string;
-}) => {
-  const response = await apiService.post("/user/confirm", data);
-  return response.data;
-}; */
 
 export const confirmEmailRequest = async (
   data: { token: string } | { otp: string; email: string },
