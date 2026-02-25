@@ -45,16 +45,16 @@ const Login = () => {
         });
       }
 
-      /* ===========================================================
-         1️⃣ Si le back dit "requiresConfirmation", on stocke l'email
-         =========================================================== */
+      // 🔥 Gestion erreur métier robuste
+      if (!response || response.success === false) {
+        setError(response?.message || "Identifiants invalides.");
+        return;
+      }
+
       if (response.requiresConfirmation && response.email) {
         localStorage.setItem("pendingEmail", response.email);
       }
 
-      /* ===========================================================
-         2️⃣ Laisse ensuite le hook gérer la redirection
-         =========================================================== */
       const ok = handleAuthRedirect(response, {
         onSuccess: async () => {
           if (response.accessToken && response.user) {
@@ -64,9 +64,7 @@ const Login = () => {
         },
       });
 
-      if (!ok) {
-        return; // redirection déjà faite par le hook
-      }
+      if (!ok) return;
     } catch (error: any) {
       setError(error.message || "Erreur de connexion");
     } finally {
