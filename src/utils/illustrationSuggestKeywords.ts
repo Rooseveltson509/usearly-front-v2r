@@ -36,7 +36,6 @@ export const illustrationSuggestKeywords: Record<string, string> = {
   vêtements: "ecommerce/mediumbag.svg",
 
   // 🍔 Food & Drink
-  repas: "food_drink/burger.svg",
   restaurant: "food_drink/burger.svg",
   cocktail: "food_drink/coffee.svg",
   cocktails: "food_drink/coffee.svg",
