@@ -2,11 +2,21 @@
   z-index: 2;
   position: relative;
   margin-top: -22.5px;
+  margin-inline: auto;
   width: 60%;
   display: flex;
   justify-content: center;
   transform: translate(0, 15%);
-  right: 20px;
+  right: 0;
+  @media screen and (max-width: 1193px) {
+    width: 75%;
+    margin-top: 15%;
+    right: 0;
+  }
+  @media screen and (max-width: 600px) {
+    width: 75%;
+    margin-top: 30%;
+  }
 
   .imgWebExample {
     position: relative;
@@ -14,13 +24,18 @@
     max-width: 940px;
     z-index: 1;
 
+    @media screen and (max-width: 600px) {
+      display: none;
+    }
     .web-image {
       position: absolute;
       display: block;
       width: 100%;
       height: auto;
       transform: scale(1.4);
-      right: -90px;
+      left: 0;
+      right: 0;
+      margin-inline: auto;
     }
   }
 
@@ -45,7 +60,9 @@
     display: flex;
     position: absolute;
     top: 12%;
-    right: -6%;
+    left: 50%;
+    right: 0;
+    margin-inline: auto;
     width: 44%;
     max-width: 420px;
     z-index: 2;
@@ -63,6 +80,11 @@
       background-color: white;
       border-radius: 16px 16px 28px 28px;
       transform: scale(1.4);
+      @media screen and (max-width: 600px) {
+        transform: scale(1);
+        top: -80px;
+        right: -65px;
+      }
       div {
         width: 46px;
         text-align: center;
@@ -268,52 +290,220 @@
     .extension-click-targets.report-mode.e0 {
       transform: scale(1.6);
       margin-left: -15%;
+      @media screen and (max-width: 780px) {
+        transform: scale(1.8);
+        margin-left: -25%;
+      }
+      @media screen and (max-width: 610px) {
+        transform: scale(2.4);
+        margin-left: -50%;
+      }
+      @media screen and (max-width: 600px) {
+        transform: scale(3.25);
+        margin-left: -25%;
+      }
+      @media screen and (max-width: 480px) {
+        transform: scale(5.5);
+        margin-top: 75%;
+        margin-left: -87.5%;
+      }
     }
     .extension-image.report-mode.e1,
     .extension-click-targets.report-mode.e1 {
       transform: scale(1.6);
       margin-left: -15%;
+      @media screen and (max-width: 780px) {
+        transform: scale(1.8);
+        margin-left: -25%;
+      }
+      @media screen and (max-width: 610px) {
+        transform: scale(2.4);
+        margin-left: -50%;
+      }
+      @media screen and (max-width: 600px) {
+        transform: scale(3.25);
+        margin-left: -25%;
+      }
+      @media screen and (max-width: 480px) {
+        transform: scale(5.5);
+        margin-top: 75%;
+        margin-left: -87.5%;
+      }
     }
     .extension-image.report-mode.e2,
     .extension-click-targets.report-mode.e2 {
       transform: scale(1.5);
       margin-left: -15%;
       margin-top: -52px;
+      @media screen and (max-width: 610px) {
+        transform: scale(2.2);
+        margin-top: -5px;
+        margin-left: -45%;
+      }
+      @media screen and (max-width: 600px) {
+        transform: scale(3.75);
+        margin-top: 70px;
+        margin-left: -50%;
+      }
+      @media screen and (max-width: 480px) {
+        transform: scale(5.25);
+        margin-top: 100%;
+        margin-left: -75%;
+      }
     }
     .extension-image.report-mode.e3,
     .extension-click-targets.report-mode.e3 {
       transform: scale(1.7);
       margin-left: -23%;
+      @media screen and (max-width: 780px) {
+        transform: scale(1.8);
+        margin-left: -25%;
+      }
+      @media screen and (max-width: 610px) {
+        transform: scale(2.6);
+        margin-left: -55%;
+      }
+      @media screen and (max-width: 600px) {
+        transform: scale(5);
+        margin-top: 70px;
+        margin-left: -80%;
+      }
+      @media screen and (max-width: 480px) {
+        transform: scale(6);
+        margin-top: 50%;
+        margin-left: -90%;
+      }
     }
     .extension-image.report-mode.e4,
     .extension-click-targets.report-mode.e4 {
       transform: scale(1.6);
       margin-left: -20%;
+      @media screen and (max-width: 780px) {
+        transform: scale(1.8);
+        margin-left: -27%;
+      }
+      @media screen and (max-width: 610px) {
+        transform: scale(2.6);
+        margin-top: 20px;
+        margin-left: -60%;
+      }
+      @media screen and (max-width: 600px) {
+        transform: scale(4);
+        margin-top: 70px;
+        margin-left: -65%;
+      }
+      @media screen and (max-width: 480px) {
+        transform: scale(5.5);
+        margin-top: 70%;
+        margin-left: -85%;
+      }
     }
     .extension-image.report-mode.e5,
     .extension-click-targets.report-mode.e5 {
       transform: scale(1.6);
       margin-left: -40%;
+      @media screen and (max-width: 780px) {
+        margin-left: -20%;
+      }
+      @media screen and (max-width: 610px) {
+        transform: scale(2.6);
+        margin-top: 20px;
+        margin-left: -60%;
+      }
+      @media screen and (max-width: 600px) {
+        transform: scale(4);
+        margin-top: 70px;
+        margin-left: -65%;
+      }
+      @media screen and (max-width: 480px) {
+        transform: scale(5.25);
+        margin-top: 90%;
+        margin-left: -85%;
+      }
     }
     .extension-image.report-mode.e6,
     .extension-click-targets.report-mode.e6 {
       transform: scale(1.6);
       margin-left: -40%;
+      @media screen and (max-width: 610px) {
+        transform: scale(2.6);
+        margin-top: 20px;
+        margin-left: -60%;
+      }
+      @media screen and (max-width: 600px) {
+        transform: scale(4);
+        margin-top: 70px;
+        margin-left: -65%;
+      }
+      @media screen and (max-width: 480px) {
+        transform: scale(5.5);
+        margin-top: 70%;
+        margin-left: -85%;
+      }
     }
     .extension-image.report-mode.e7,
     .extension-click-targets.report-mode.e7 {
       transform: scale(1.6);
       margin-left: -40%;
+      @media screen and (max-width: 780px) {
+        transform: scale(1.8);
+        margin-left: -27%;
+      }
+      @media screen and (max-width: 610px) {
+        transform: scale(2.6);
+        margin-top: 20px;
+        margin-left: -60%;
+      }
+      @media screen and (max-width: 600px) {
+        transform: scale(4.5);
+        margin-top: 70px;
+        margin-left: -75%;
+      }
+      @media screen and (max-width: 480px) {
+        transform: scale(5.5);
+        margin-top: 50%;
+        margin-left: -87.5%;
+      }
     }
     .extension-image.report-mode.e8,
     .extension-click-targets.report-mode.e8 {
       transform: scale(1.6);
       margin-left: -25%;
+      @media screen and (max-width: 610px) {
+        transform: scale(2.6);
+        margin-top: 20px;
+        margin-left: -60%;
+      }
+      @media screen and (max-width: 600px) {
+        transform: scale(4);
+        margin-top: 70px;
+        margin-left: -65%;
+      }
+      @media screen and (max-width: 480px) {
+        transform: scale(5.5);
+        margin-top: 70%;
+        margin-left: -85%;
+      }
     }
     .extension-image.report-mode.e9,
     .extension-click-targets.report-mode.e9 {
       transform: scale(1.6);
       margin-left: -40%;
+      @media screen and (max-width: 780px) {
+        transform: scale(3);
+        margin-top: 20%;
+        margin-left: -80%;
+      }
+      @media screen and (max-width: 600px) {
+        transform: scale(3.5);
+        margin-top: 30%;
+        margin-left: -100%;
+      }
+      @media screen and (max-width: 480px) {
+        transform: scale(4.5);
+        margin-top: 20%;
+        margin-left: -80%;
+      }
     }
     .extension-image.report-mode.e10,
     .extension-click-targets.report-mode.e10 {
@@ -326,6 +516,20 @@
       .extension-click-targets.like-mode.e0 {
         transform: scale(1.8);
         margin-left: -40%;
+        @media screen and (max-width: 610px) {
+          transform: scale(2.4);
+          margin-left: -67.5%;
+        }
+        @media screen and (max-width: 600px) {
+          transform: scale(3.5);
+          margin-top: 40px;
+          margin-left: -70%;
+        }
+        @media screen and (max-width: 480px) {
+          transform: scale(4.5);
+          margin-top: 10px;
+          margin-left: -80%;
+        }
       }
       .extension-mouse.e0 {
         margin-left: -8%;
@@ -336,6 +540,19 @@
       .extension-click-targets.like-mode.e1 {
         transform: scale(2.2);
         margin-left: -25%;
+        @media screen and (max-width: 610px) {
+          transform: scale(3.5);
+          margin-left: -65%;
+        }
+        @media screen and (max-width: 600px) {
+          transform: scale(5.25);
+          margin-top: 40px;
+          margin-left: -72.5%;
+        }
+        @media screen and (max-width: 480px) {
+          transform: scale(6);
+          margin-left: -65%;
+        }
       }
       .extension-mouse.e1 {
         margin-left: -10%;
@@ -348,6 +565,19 @@
         transform: scale(1.9);
         margin-left: -75%;
         margin-top: 35%;
+        @media screen and (max-width: 610px) {
+          transform: scale(3);
+          margin-left: -100%;
+        }
+        @media screen and (max-width: 600px) {
+          transform: scale(4);
+          margin-top: 40px;
+          margin-left: -100%;
+        }
+        @media screen and (max-width: 480px) {
+          transform: scale(4.75);
+          margin-left: -100%;
+        }
       }
       animation: extensionPopupArcEntry 3s cubic-bezier(0.22, 1, 0.36, 1) both;
       will-change: margin-top, margin-left;
@@ -358,6 +588,20 @@
       .extension-click-targets.suggestion-mode.e0 {
         transform: scale(1.8);
         margin-left: -40%;
+        @media screen and (max-width: 610px) {
+          transform: scale(2.4);
+          margin-left: -67.5%;
+        }
+        @media screen and (max-width: 600px) {
+          transform: scale(3.75);
+          margin-top: 40px;
+          margin-left: -77.5%;
+        }
+        @media screen and (max-width: 480px) {
+          transform: scale(4.5);
+          margin-top: 15px;
+          margin-left: -80%;
+        }
       }
       .extension-mouse.e0 {
         margin-left: -10%;
@@ -368,6 +612,19 @@
       .extension-click-targets.suggestion-mode.e1 {
         transform: scale(2.1);
         margin-left: -20%;
+        @media screen and (max-width: 610px) {
+          transform: scale(3.1);
+          margin-left: -55%;
+        }
+        @media screen and (max-width: 600px) {
+          transform: scale(5.3);
+          margin-top: 40px;
+          margin-left: -75%;
+        }
+        @media screen and (max-width: 480px) {
+          transform: scale(6);
+          margin-left: -65%;
+        }
       }
       .extension-mouse.e1 {
         margin-left: -8%;
@@ -379,6 +636,20 @@
         transform: scale(1.9);
         margin-left: -75%;
         margin-top: 35%;
+        @media screen and (max-width: 610px) {
+          transform: scale(2.7);
+          margin-left: -100%;
+        }
+        @media screen and (max-width: 600px) {
+          transform: scale(3.8);
+          margin-top: 40px;
+          margin-left: -105%;
+        }
+        @media screen and (max-width: 480px) {
+          transform: scale(4.5);
+          margin-top: 50px;
+          margin-left: -110%;
+        }
       }
       animation: extensionPopupArcEntry 3s cubic-bezier(0.25, 0.8, 0.22, 1) both;
       will-change: margin-top, margin-left;
@@ -518,4 +789,10 @@
   outline: 2px solid rgba(255, 255, 255, 0.6);
   outline-offset: 2px;
   border-radius: 8px;
+}
+
+@media screen and (max-width: 1193px) {
+  .extension-example-image {
+    transform: translate(0, 5%);
+  }
 }

@@ -7,14 +7,19 @@
   background: #989dff;
   height: 100vh;
   overflow: hidden;
+  @media screen and (max-width: 600px) {
+    height: 43vh;
+    padding-top: 10%;
+  }
 }
 
 .hero-title {
   text-align: center;
-  font-size: 150px;
+  font-size: clamp(2.4rem, 12vw, 150px);
   font-weight: 900;
   line-height: 1.05;
   color: #000;
+  padding-inline: 16px;
 }
 
 .hero-title .title-line {

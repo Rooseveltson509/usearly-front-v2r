@@ -4,21 +4,40 @@
   display: flex;
   margin: 24px 60px 0 60px;
   justify-content: center;
+  @media screen and (max-width: 600px) {
+    flex-direction: column;
+    margin: 24px 7% 0 7%;
+    margin-top: 0px;
+    gap: 24px;
+  }
   .new-home-video-text-download-icon-container {
     display: flex;
     gap: 16px;
+    @media screen and (max-width: 600px) {
+      justify-content: center;
+    }
     .new-home-video-text-download-icon {
       cursor: pointer;
       img {
         width: 140px;
+        min-width: 100px;
         height: 50px;
         object-fit: contain;
+        @media screen and (max-width: 600px) {
+          width: 110px;
+          min-width: 110px;
+          height: 40px;
+        }
       }
     }
   }
   .new-home-video-text-download-text {
     align-self: center;
     margin-left: 35px;
+    @media screen and (max-width: 600px) {
+      align-self: start;
+      margin-left: 0px;
+    }
     p {
       text-align: left;
       font-weight: 300;

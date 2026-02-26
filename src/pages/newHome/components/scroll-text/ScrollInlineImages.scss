@@ -4,7 +4,7 @@
 }
 
 .inline-line {
-  font-size: 80px;
+  font-size: clamp(32px, 8vw, 80px);
   font-weight: 900;
   text-align: center;
   line-height: 1.12;

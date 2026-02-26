@@ -1,5 +1,5 @@
 .brand-card {
-  width: 92%;
+  width: 100%;
   min-height: 400px;
   background: #fff;
   border-radius: 16px;
@@ -7,25 +7,31 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
-  padding: 50px 0;
+  padding: 50px 0 5% 0px;
   gap: 20px;
   border: 1px solid #ebebeb;
   .brand-title {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 0 50px;
+    padding: 0 7%;
     h2 {
       font-family: Onest;
       font-size: 30px;
       font-weight: 700;
       margin: 0;
+      @media screen and (max-width: 600px) {
+        font-size: 24px;
+      }
     }
 
     img {
       width: 70px;
       height: 70px;
       margin-top: -8px;
+      @media screen and (max-width: 485px) {
+        display: none;
+      }
     }
   }
 
@@ -38,6 +44,9 @@
       animation: scrollInfinite 45s linear infinite;
       width: calc(100px * 30 + 20px * 30);
       gap: 75px;
+      @media screen and (max-width: 600px) {
+        gap: 0px;
+      }
       .brand-item {
         min-width: 100px;
         display: flex;
@@ -51,6 +60,12 @@
           max-width: 100px;
           max-height: 100px;
           object-fit: contain;
+          @media screen and (max-width: 600px) {
+            min-width: 50px;
+            min-height: 50px;
+            max-width: 50px;
+            max-height: 50px;
+          }
         }
       }
     }
@@ -58,7 +73,7 @@
 
   .brand-footer {
     width: 100%;
-    padding: 0 50px;
+    padding: 0 7%;
 
     .brand-btn {
       width: auto;
@@ -66,7 +81,7 @@
       color: #fff;
       border: none;
       border-radius: 32px;
-      padding: 16px 20px;
+      padding: 12px 20px;
       cursor: pointer;
       font-family: Inter;
       font-weight: 600;
