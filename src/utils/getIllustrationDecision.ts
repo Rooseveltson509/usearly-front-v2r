@@ -14,7 +14,14 @@ export function decideIllustration(
 
   // 🔸 1. Si deux lignes → illustration automatique
   if (lineCount > 1) {
-    return getIllustrationFromText(safeTitle, safePunchline);
+    return type === "suggestion"
+      ? getIllustrationFromText(
+          safeTitle,
+          safePunchline,
+          illustrationSuggestKeywords,
+          "bobAssetsSuggest",
+        )
+      : getIllustrationFromText(safeTitle, safePunchline);
   }
 
   // 🔸 2. Si suggestion → plus de chance d'avoir une illustration
