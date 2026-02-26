@@ -828,27 +828,6 @@
     display: none !important;
   }
 }
-.typography-icon {
-  position: absolute;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 110px;
-  height: 110px;
-  padding: 0 0 10px 0;
-  pointer-events: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  svg,
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-}
-
 /* === 🎯 AXE TYPOGRAPHY — Version unifiée et contrastée === */
 .feedback-left[data-axe="typography"] {
   font-family: "Onest", sans-serif;
@@ -862,19 +841,48 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around; // 🔥 clé ici
-  padding-bottom: 40px;
+  justify-content: center;
+  gap: clamp(12px, 2.4vh, 12px);
+  padding: 24px 16px 20px;
   position: relative;
   overflow: hidden;
   min-height: 220px;
   //color: var(--brand-color);
 
   .punchline-typography {
+    margin: 0;
     font-size: clamp(26px, 1.7vw, 1.8rem);
     line-height: 1.4;
     font-weight: 100;
     word-wrap: break-word;
     color: var(--feedback-text-color);
+  }
+
+  .typography-icon-wrapper {
+    width: clamp(80px, 24cqw, 110px);
+    max-height: 135px;
+    aspect-ratio: 1 / 1;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .typography-icon {
+    width: 100%;
+    height: 100%;
+    padding: 0 0 10px 0;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg,
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
   }
 
   /* 💬 Bulles typographiques */

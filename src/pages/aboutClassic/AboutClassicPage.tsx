@@ -11,7 +11,6 @@ import Footer from "@src/components/layout/Footer";
 
 const PHRASES = ["des sondages", "des chatbots", "le silence"];
 const SCROLL_STEP = 0.17;
-const HEADER_SHOW_SCROLL_Y = 40;
 
 const AboutClassicPage = () => {
   const sectionRef = useRef<HTMLDivElement>(null!);
@@ -24,31 +23,6 @@ const AboutClassicPage = () => {
     return () => {
       main?.classList.remove("main--about-classic");
       document.body.classList.remove("page-about-classic");
-    };
-  }, []);
-
-  useEffect(() => {
-    const headerElement = document.querySelector<HTMLElement>("header.header");
-    if (!headerElement) {
-      return;
-    }
-
-    const updateHeaderVisibility = () => {
-      const currentScrollY = Math.max(window.scrollY, 0);
-      const isHidden = currentScrollY > HEADER_SHOW_SCROLL_Y;
-      headerElement.classList.toggle("is-hidden", isHidden);
-    };
-
-    window.addEventListener("scroll", updateHeaderVisibility, {
-      passive: true,
-    });
-    window.addEventListener("resize", updateHeaderVisibility);
-    updateHeaderVisibility();
-
-    return () => {
-      window.removeEventListener("scroll", updateHeaderVisibility);
-      window.removeEventListener("resize", updateHeaderVisibility);
-      headerElement?.classList.remove("is-hidden");
     };
   }, []);
 

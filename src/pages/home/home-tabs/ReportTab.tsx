@@ -76,6 +76,13 @@ const ReportTab: React.FC<Props> = ({
           searchTerm={searchTerm}
           onSearchTermChange={handleSearchTermChange}
         />
+
+        <div className="end-of-list">
+          <p className="end-text">Fin de la liste 🎉</p>
+          <p>
+            <u>Remonter la liste</u>
+          </p>
+        </div>
       </div>
       <aside className="right-panel">
         <SearchBar

@@ -2,29 +2,62 @@ import { Filter, MoreVertical, Search } from "lucide-react";
 import chatExclamation from "/assets/icons/dashboard/chatExclamation.svg";
 import "./PulseChart.scss";
 
-const pulseData = [
+type PulsePhase = "before" | "during" | "after";
+type PulsePoint = {
+  step: string;
+  score: number;
+  emoji: string;
+  phase: PulsePhase;
+};
+
+const pulseData: PulsePoint[] = [
   { step: "Recherche", score: 130, emoji: "😐", phase: "before" },
   { step: "Sélection", score: 10, emoji: "😊", phase: "before" },
   { step: "Identification", score: 90, emoji: "😣", phase: "before" },
   { step: "Processus d'achat", score: 112, emoji: "😡", phase: "during" },
-  { step: "Commande et livraison", score: 78, emoji: "😖", phase: "after" },
+  { step: "Commande et livraison", score: 78, emoji: "😖", phase: "during" },
   { step: "Retours et échanges", score: 90, emoji: "😡", phase: "after" },
   { step: "Support client", score: 187, emoji: "😡", phase: "after" },
 ];
 
-const phaseGroups = [
-  { label: "Avant achat", start: 0, end: 2 },
-  { label: "Pendant achat", start: 3, end: 4 },
-  { label: "Après achat", start: 5, end: 6 },
-];
+const phaseLabelByKey: Record<PulsePhase, string> = {
+  before: "Avant achat",
+  during: "Pendant achat",
+  after: "Après achat",
+};
 
 const PulseChart = () => {
   const maxScore = 200;
   const chartHeight = 240;
   const topPadding = 32;
   const bottomPadding = 76;
+  const warningThreshold = 120;
   const usableHeight = chartHeight - topPadding - bottomPadding;
   const columnWidth = 100 / pulseData.length;
+  const criticalStepIndex = pulseData.reduce(
+    (maxIndex, item, index) =>
+      item.score > pulseData[maxIndex].score ? index : maxIndex,
+    0,
+  );
+
+  const phaseGroups = pulseData.reduce<
+    { phase: PulsePhase; label: string; start: number; end: number }[]
+  >((groups, item, index) => {
+    const previousGroup = groups[groups.length - 1];
+
+    if (previousGroup && previousGroup.phase === item.phase) {
+      previousGroup.end = index;
+      return groups;
+    }
+
+    groups.push({
+      phase: item.phase,
+      label: phaseLabelByKey[item.phase],
+      start: index,
+      end: index,
+    });
+    return groups;
+  }, []);
 
   const mixColor = (
     from: [number, number, number],
@@ -56,7 +89,8 @@ const PulseChart = () => {
 
   const points = pulseData.map((item, index) => {
     const x = columnWidth * (index + 0.5);
-    const y = topPadding + (1 - item.score / maxScore) * usableHeight;
+    const clampedScore = Math.max(0, Math.min(maxScore, item.score));
+    const y = topPadding + (clampedScore / maxScore) * usableHeight;
     return { ...item, x, y };
   });
 
@@ -107,12 +141,13 @@ const PulseChart = () => {
                 key={item.step}
                 className={`pulse-step ${item.phase} ${
                   index === pulseData.length - 1 ? "last" : ""
-                } ${item.step === "Processus d'achat" ? "highlight" : ""}`}
+                } ${index === criticalStepIndex ? "highlight" : ""}`}
               >
                 {item.step}
-                {item.step === "Processus d'achat" && " 🔥"}
-                {item.step === "Retours et échanges" && " ⚠️"}
-                {item.step === "Support client" && " ⚠️"}
+                {index === criticalStepIndex && " 🔥"}
+                {index !== criticalStepIndex && item.score >= warningThreshold
+                  ? " ⚠️"
+                  : ""}
               </div>
             ))}
           </div>
@@ -124,7 +159,7 @@ const PulseChart = () => {
         <div className="pulse-graph" style={{ height: chartHeight + 70 }}>
           <div className="pulse-axis">
             <div className="axis-bar" />
-            <div className="axis-label">Expérience</div>
+            <div className="axis-label">Friction</div>
           </div>
 
           <div className="pulse-canvas" style={{ height: chartHeight }}>
@@ -205,9 +240,15 @@ const PulseChart = () => {
             {pulseData.map((item, index) => (
               <div
                 key={item.step}
-                className={`score-value ${index === 3 ? "strong" : ""}`}
+                className={`score-value ${
+                  index === criticalStepIndex ? "strong" : ""
+                }`}
               >
-                {index === 3 ? <strong>{item.score}</strong> : item.score}
+                {index === criticalStepIndex ? (
+                  <strong>{item.score}</strong>
+                ) : (
+                  item.score
+                )}
               </div>
             ))}
           </div>

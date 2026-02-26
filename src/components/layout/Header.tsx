@@ -1,11 +1,16 @@
 import { useState, useRef, useEffect } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./Header.scss";
 import Logo from "@src/assets/logo.svg";
 import { useAuth } from "@src/services/AuthContext";
 import { getNotifications } from "@src/services/notificationService";
 import Buttons from "@src/components/buttons/Buttons";
+
+const HEADER_HIDE_SCROLL_Y = 30;
+const HEADER_SHOW_TOP_SCROLL_Y = 2;
+const getGlobalScrollY = () =>
+  Math.max(window.scrollY, document.documentElement.scrollTop, 0);
 
 interface HeaderProps {
   heroMode?: boolean;
@@ -14,6 +19,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
   const { isAuthenticated, userProfile, logout } = useAuth();
+  const location = useLocation();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [notifications, setNotifications] = useState<any[]>([]);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -21,6 +27,11 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
   const [shakeBell, setShakeBell] = useState(false);
   const prevUnreadCountRef = useRef(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isHeaderHidden, setIsHeaderHidden] = useState(false);
+  const hasCrossedHideThresholdRef = useRef(false);
+  const hiddenRef = useRef(false);
+  const tickingRef = useRef(false);
+  const rafIdRef = useRef<number | null>(null);
 
   // 🔹 Fermer le menu utilisateur quand on clique ailleurs
   useEffect(() => {
@@ -79,6 +90,61 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  useEffect(() => {
+    const mainElement = document.querySelector("main");
+    const getScrollY = () =>
+      Math.max(getGlobalScrollY(), mainElement?.scrollTop ?? 0);
+
+    const updateHeaderVisibility = () => {
+      const currentScrollY = getScrollY();
+      const isAtTop = currentScrollY <= HEADER_SHOW_TOP_SCROLL_Y;
+
+      if (isAtTop) {
+        hasCrossedHideThresholdRef.current = false;
+      } else if (currentScrollY > HEADER_HIDE_SCROLL_Y) {
+        hasCrossedHideThresholdRef.current = true;
+      }
+
+      const nextHiddenState =
+        !mobileMenuOpen && hasCrossedHideThresholdRef.current;
+
+      if (nextHiddenState !== hiddenRef.current) {
+        hiddenRef.current = nextHiddenState;
+        setIsHeaderHidden(nextHiddenState);
+      }
+
+      tickingRef.current = false;
+      rafIdRef.current = null;
+    };
+
+    const onScroll = () => {
+      if (tickingRef.current) {
+        return;
+      }
+
+      tickingRef.current = true;
+      rafIdRef.current = window.requestAnimationFrame(updateHeaderVisibility);
+    };
+
+    hasCrossedHideThresholdRef.current = false;
+    hiddenRef.current = false;
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    mainElement?.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    onScroll();
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      mainElement?.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+
+      if (rafIdRef.current !== null) {
+        window.cancelAnimationFrame(rafIdRef.current);
+      }
+    };
+  }, [mobileMenuOpen, location.pathname]);
+
   const handleLogout = () => {
     logout();
     setUserMenuOpen(false);
@@ -86,7 +152,11 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
   };
 
   return (
-    <header className={`header ${heroMode ? "hero-mode" : ""}`}>
+    <header
+      className={`header component-header-container ${heroMode ? "hero-mode" : ""} ${
+        isHeaderHidden ? "is-hidden" : ""
+      }`}
+    >
       <div className="header-container">
         {/* ================= LOGO ================= */}
         <div className="logo" onClick={() => navigate("/home")}>

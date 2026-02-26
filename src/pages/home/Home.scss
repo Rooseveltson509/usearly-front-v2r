@@ -420,3 +420,15 @@
     max-width: none;
   }
 }
+
+.end-of-list {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  .end-text {
+    padding: 100px;
+    font-size: 16px;
+    color: #666;
+  }
+}

@@ -223,7 +223,12 @@ const CdcTabEnhanced: React.FC<Props> = ({
             )}
 
             {!hasMore && !isLoading && coupDeCoeursForDisplay.length > 0 && (
-              <p className="end-text">🎉 Fin de la liste</p>
+              <div className="end-of-list">
+                <p className="end-text">Fin de la liste 🎉</p>
+                <p>
+                  <u>Remonter la liste</u>
+                </p>
+              </div>
             )}
           </>
         )
