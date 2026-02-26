@@ -8,7 +8,7 @@ import {
   storeTokenInCurrentStorage,
 } from "@src/services/tokenStorage";
 
-interface UserProfile {
+export interface UserProfile {
   id?: string;
   avatar: string;
   type: "user" | "brand";

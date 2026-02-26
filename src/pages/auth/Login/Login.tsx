@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation, Link } from "react-router-dom";
-import { loginUser, loginBrand } from "@src/services/apiService";
+import { loginUser } from "@src/services/apiService";
 import { showToast } from "@src/utils/toastUtils";
 import { useAuth } from "@src/services/AuthContext";
 import "./styles/Login.scss";
@@ -28,45 +28,41 @@ const Login = () => {
     setLoading(true);
 
     try {
-      let response;
+      const response = await loginUser({
+        email: isEmail(loginInput) ? loginInput : undefined,
+        pseudo: !isEmail(loginInput) ? loginInput : undefined,
+        password,
+        rememberMe,
+      });
 
-      if (loginInput.includes("@brand.") || loginInput.includes("@marque.")) {
-        response = await loginBrand({
-          email: loginInput,
-          mdp: password,
-          rememberMe,
-        });
-      } else {
-        response = await loginUser({
-          email: isEmail(loginInput) ? loginInput : undefined,
-          pseudo: !isEmail(loginInput) ? loginInput : undefined,
-          password,
-          rememberMe,
-        });
+      // 🔥 Gestion erreur métier
+      if (!response || response.success === false) {
+        setError(response?.message || "Identifiants invalides.");
+        return;
       }
 
-      /* ===========================================================
-         1️⃣ Si le back dit "requiresConfirmation", on stocke l'email
-         =========================================================== */
-      if (response.requiresConfirmation && response.email) {
-        localStorage.setItem("pendingEmail", response.email);
+      if (response.requiresConfirmation && response.user?.email) {
+        localStorage.setItem("pendingEmail", response.user.email);
       }
 
-      /* ===========================================================
-         2️⃣ Laisse ensuite le hook gérer la redirection
-         =========================================================== */
       const ok = handleAuthRedirect(response, {
         onSuccess: async () => {
           if (response.accessToken && response.user) {
-            await login(response.accessToken, response.user, rememberMe);
+            await login(
+              response.accessToken,
+              {
+                avatar: response.user.avatar ?? "",
+                type: "user",
+              },
+              rememberMe,
+            );
+
             showToast("✅ Connexion réussie !");
           }
         },
       });
 
-      if (!ok) {
-        return; // redirection déjà faite par le hook
-      }
+      if (!ok) return;
     } catch (error: any) {
       setError(error.message || "Erreur de connexion");
     } finally {
