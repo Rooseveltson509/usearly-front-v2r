@@ -31,7 +31,6 @@ export const illustrationKeywords: Record<string, string> = {
   commande: "ecommerce/caddie.svg",
   achat: "ecommerce/fillbag.svg",
   panier: "ecommerce/caddie.svg",
-  produit: "ecommerce/mediumbag.svg",
   magasin: "ecommerce/largebag.svg",
   vêtement: "ecommerce/cintre.svg",
   vêtements: "ecommerce/mediumbag.svg",
