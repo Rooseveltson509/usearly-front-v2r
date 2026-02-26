@@ -41,7 +41,7 @@
 }
 
 .marquee__icon {
-  width: 90px;
+  width: clamp(40px, 7vw, 90px);
   height: auto;
   flex-shrink: 0;
 }
@@ -82,7 +82,7 @@
   }
 
   .marquee__label {
-    font-size: clamp(30px, 9vw, 64px);
+    font-size: 64px;
     -webkit-text-stroke: 1.6px var(--stroke-color);
     text-stroke: 1.6px var(--stroke-color);
   }

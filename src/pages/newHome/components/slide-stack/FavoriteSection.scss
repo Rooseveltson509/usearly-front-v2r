@@ -8,94 +8,204 @@
 
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
 
   margin: 0;
   padding: 0;
+  padding-top: 23% !important;
+  @media screen and (min-width: 900px) {
+    padding-top: 12% !important;
+  }
 }
 
 /* MAIN BLOCK */
 .favorite-content {
-  //padding: 40px 60px; // ← plus proche de la maquette (moins d'espace latéral)
+  padding: 50px 60px; // ← plus proche de la maquette (moins d'espace latéral)
   width: 92%;
   max-width: 1600px;
-  min-height: 520px;
+  min-height: 615px;
 
   border-radius: 20px;
   display: flex;
-
-  /* ⭐ LE POINT IMPORTANT : centrer verticalement le texte + bouton */
-  align-items: center;
-
-  justify-content: space-around;
-  box-sizing: border-box;
-}
-
-/* LEFT SIDE */
-.fav-left {
-  //flex: 0 0 35%; // ← largeur EXACTE de la colonne maquette
-  display: flex;
   flex-direction: column;
 
-  /* ⭐ Centre le bloc verticalement, sans coller le bouton en haut */
-  justify-content: center;
+  justify-content: space-between;
+  box-sizing: border-box;
 
-  .fav-title {
-    font-size: 52px;
-    line-height: 1.1;
-    font-weight: 800;
-
+  .fav-container {
     display: flex;
-    flex-direction: column;
-    gap: 8px;
-
-    margin-bottom: 32px; // ← réduis un peu : maquette plus compacte
-
-    .title-line {
-      display: inline-block;
-    }
-  }
-
-  .fav-btn {
-    background: #000;
-    color: white;
-    padding: 18px 48px;
-    border-radius: 40px;
-    font-size: 20px;
-    width: fit-content;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 80px;
-
-    /* ⭐ Optionnel : petit hover propre */
-    transition: transform 0.2s ease;
-    &:hover {
-      transform: translateY(-2px);
-    }
-  }
-}
-
-/* RIGHT SIDE (CARDS) */
-.fav-right {
-  flex: 0 0 50%; // ← largeur carte plus proche de la maquette
-  position: relative;
-  height: 500px; // tu peux ajuster si besoin
-  pointer-events: none;
-  padding-top: 54px;
-
-  .fav-card {
-    position: absolute;
+    justify-content: space-between;
+    align-items: center;
+    gap: clamp(35px, 4vw, 64px);
     width: 100%;
-    height: auto;
-    will-change: transform;
-    pointer-events: none;
+    min-height: 430px;
+
+    @media screen and (min-width: 900px) {
+      flex-direction: row;
+      align-items: center;
+    }
+
+    /* LEFT SIDE */
+    .fav-left {
+      flex: 1 1 auto;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+
+      /* ⭐ Centre le bloc verticalement, sans coller le bouton en haut */
+      justify-content: center;
+
+      .fav-title {
+        font-size: clamp(28px, 7.5vw, 52px);
+        line-height: 1.2;
+        font-weight: 800;
+
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+
+        margin-bottom: 32px; // ← réduis un peu : maquette plus compacte
+        padding-left: 10px;
+        @media screen and (max-width: 600px) {
+          margin-bottom: 0;
+        }
+        .title-line {
+          display: inline-block;
+        }
+
+        @media screen and (min-width: 900px) {
+          font-size: clamp(28px, 5vw, 52px);
+        }
+        @media screen and (max-width: 900px) {
+          flex-direction: row;
+          flex-wrap: wrap;
+        }
+
+        @media screen and (max-width: 600px) {
+          gap: 0px;
+        }
+      }
+    }
+
+    /* RIGHT SIDE (CARDS) */
+    .fav-right {
+      display: flex;
+      align-items: center;
+      flex: 1 1 520px;
+      width: 100%;
+      max-width: 620px;
+      position: relative;
+      pointer-events: none;
+      margin-left: auto;
+
+      .fav-card {
+        position: absolute;
+        width: 100%;
+        height: auto;
+        will-change: transform;
+        pointer-events: none;
+        transition:
+          box-shadow 0.25s ease,
+          filter 0.25s ease,
+          opacity 0.25s ease;
+      }
+
+      .fav-card.is-mobile-active {
+        pointer-events: auto;
+        cursor: pointer;
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+        filter: saturate(1.03);
+      }
+
+      .fav-card.is-mobile-selected {
+        box-shadow: 0 18px 38px rgba(0, 0, 0, 0.28);
+        filter: saturate(1.08);
+        z-index: 7 !important;
+      }
+
+      .fav-card--theme-report,
+      .fav-card--theme-cdc,
+      .fav-card--theme-suggestion {
+        border-radius: 10px;
+      }
+    }
+
+    @media screen and (max-width: 900px) {
+      flex-direction: column;
+      align-items: flex-start;
+
+      &.is-column {
+        flex-direction: column;
+        align-items: flex-start;
+
+        .fav-right {
+          flex: 0 0 auto;
+          width: min(100%, 620px);
+          max-width: 100%;
+          margin: 0 auto;
+        }
+      }
+
+      .fav-right {
+        pointer-events: auto;
+        overflow: visible;
+
+        .fav-card {
+          width: 100%;
+        }
+      }
+    }
+  }
+  .fav-btn-container {
+    .fav-btn {
+      background: #000;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 40px;
+      font-size: 14px;
+      width: fit-content;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 80px;
+
+      /* ⭐ Optionnel : petit hover propre */
+      transition: transform 0.2s ease;
+      &:hover {
+        transform: translateY(-2px);
+      }
+      @media screen and (max-width: 900px) {
+        margin-top: 10px;
+        margin-bottom: 5px;
+      }
+    }
+  }
+  @media screen and (max-width: 900px) {
+    padding: 5% 7%;
   }
 }
 
 .fav-title {
+  > * {
+    margin-left: 4px;
+    margin-right: 4px;
+  }
+
+  > :first-child {
+    margin-left: 0;
+  }
+
+  > :last-child {
+    margin-right: 0;
+  }
+
   .title-line-mask {
     display: block;
     overflow: hidden; // cache le texte qui arrive
+    @media screen and (max-width: 900px) {
+      width: fit-content;
+      text-wrap-mode: nowrap;
+      overflow: unset;
+    }
   }
 
   .title-line {

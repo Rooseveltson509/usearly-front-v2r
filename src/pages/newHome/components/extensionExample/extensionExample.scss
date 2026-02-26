@@ -7,6 +7,13 @@
   justify-content: space-between;
   background: #191637;
   overflow: hidden;
+  @media screen and (max-width: 1193px) {
+    flex-direction: column;
+    justify-content: flex-start;
+    min-height: 115vh;
+    padding: 10% 10% 5% 10%;
+    gap: 40px;
+  }
 }
 
 img.img2 {
@@ -19,4 +26,8 @@ img.img2 {
   object-fit: cover;
   object-position: center;
   pointer-events: none;
+  @media screen and (max-width: 900px) {
+    width: 100%;
+    margin-left: 0;
+  }
 }

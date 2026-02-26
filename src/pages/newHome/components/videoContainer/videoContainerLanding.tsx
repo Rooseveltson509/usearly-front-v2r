@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import "./videoContainerLanding.scss";
+import { useIsMobile } from "@src/hooks/use-mobile";
 import VideoTextContainer from "./videoTextContainer/videoTextContainer";
 import PlayerIcon from "/assets/icons/player-icon.svg";
 import EnterFullScreenIcon from "/assets/icons/enterFullScreenIcon.svg";
@@ -12,11 +13,49 @@ const VIDEO_URL =
 
 /* const VIDEO_URL = "https://lbcefcnvssyhlpsr.public.blob.vercel-storage.com/video-karine.mp4"; */
 
+type WebkitDocument = Document & {
+  webkitFullscreenElement?: Element | null;
+  webkitExitFullscreen?: () => Promise<void> | void;
+};
+
+type WebkitVideoElement = HTMLVideoElement & {
+  webkitEnterFullscreen?: () => void;
+  webkitExitFullscreen?: () => void;
+  webkitDisplayingFullscreen?: boolean;
+};
+
+type OrientationApi = {
+  lock?: (orientation: "landscape" | "portrait") => Promise<void>;
+  unlock?: () => void;
+};
+
+const lockLandscapeOrientation = async () => {
+  if (typeof window === "undefined") return;
+  const orientation = window.screen.orientation as OrientationApi | undefined;
+  try {
+    await orientation?.lock?.("landscape");
+  } catch {
+    // Some mobile browsers do not allow orientation lock.
+  }
+};
+
+const unlockScreenOrientation = () => {
+  if (typeof window === "undefined") return;
+  const orientation = window.screen.orientation as OrientationApi | undefined;
+  try {
+    orientation?.unlock?.();
+  } catch {
+    // No-op for unsupported browsers.
+  }
+};
+
 const VideoContainerLanding = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const isMobile = useIsMobile();
 
   const [isPaused, setIsPaused] = useState(true);
   const [cinema, setCinema] = useState(false);
+  const [isNativeFullscreen, setIsNativeFullscreen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isUsingVolume, setIsUsingVolume] = useState(false);
 
@@ -33,6 +72,7 @@ const VideoContainerLanding = () => {
 
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const controlTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isFullscreen = cinema || isNativeFullscreen;
 
   /* ------------------------------------------------------
    * Play / Pause
@@ -120,6 +160,75 @@ const VideoContainerLanding = () => {
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
   };
 
+  const enterNativeFullscreen = async () => {
+    const v = videoRef.current;
+    if (!v) return false;
+
+    try {
+      if (v.requestFullscreen) {
+        await v.requestFullscreen();
+        setIsNativeFullscreen(true);
+        await lockLandscapeOrientation();
+        return true;
+      }
+    } catch {
+      // Continue with webkit fallback.
+    }
+
+    const webkitVideo = v as WebkitVideoElement;
+    if (webkitVideo.webkitEnterFullscreen) {
+      webkitVideo.webkitEnterFullscreen();
+      setIsNativeFullscreen(true);
+      await lockLandscapeOrientation();
+      return true;
+    }
+
+    return false;
+  };
+
+  const exitNativeFullscreen = async () => {
+    const doc = document as WebkitDocument;
+    const webkitVideo = videoRef.current as WebkitVideoElement | null;
+
+    try {
+      if (document.fullscreenElement && document.exitFullscreen) {
+        await document.exitFullscreen();
+      } else if (doc.webkitFullscreenElement && doc.webkitExitFullscreen) {
+        await doc.webkitExitFullscreen();
+      } else if (
+        webkitVideo?.webkitDisplayingFullscreen &&
+        webkitVideo.webkitExitFullscreen
+      ) {
+        webkitVideo.webkitExitFullscreen();
+      }
+    } finally {
+      setIsNativeFullscreen(false);
+      unlockScreenOrientation();
+    }
+  };
+
+  const toggleFullscreen = async () => {
+    if (!isMobile) {
+      setCinema((v) => !v);
+      return;
+    }
+
+    if (isNativeFullscreen) {
+      await exitNativeFullscreen();
+      return;
+    }
+
+    if (cinema) {
+      setCinema(false);
+      return;
+    }
+
+    const enteredNativeFullscreen = await enterNativeFullscreen();
+    if (!enteredNativeFullscreen) {
+      setCinema(true);
+    }
+  };
+
   /* ------------------------------------------------------
    * Attach video events
    * ------------------------------------------------------ */
@@ -169,6 +278,65 @@ const VideoContainerLanding = () => {
       body.style.overflow = previousOverflow || "auto";
     };
   }, [cinema]);
+
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+
+    const doc = document as WebkitDocument;
+
+    const onFullscreenChange = () => {
+      const fullscreenActive = Boolean(
+        document.fullscreenElement || doc.webkitFullscreenElement,
+      );
+      setIsNativeFullscreen(fullscreenActive);
+
+      if (!fullscreenActive) {
+        unlockScreenOrientation();
+      }
+    };
+
+    const onWebkitBeginFullscreen = () => {
+      setIsNativeFullscreen(true);
+      void lockLandscapeOrientation();
+    };
+
+    const onWebkitEndFullscreen = () => {
+      setIsNativeFullscreen(false);
+      unlockScreenOrientation();
+    };
+
+    document.addEventListener("fullscreenchange", onFullscreenChange);
+    document.addEventListener(
+      "webkitfullscreenchange",
+      onFullscreenChange as EventListener,
+    );
+    v.addEventListener(
+      "webkitbeginfullscreen",
+      onWebkitBeginFullscreen as EventListener,
+    );
+    v.addEventListener(
+      "webkitendfullscreen",
+      onWebkitEndFullscreen as EventListener,
+    );
+
+    return () => {
+      document.removeEventListener("fullscreenchange", onFullscreenChange);
+      document.removeEventListener(
+        "webkitfullscreenchange",
+        onFullscreenChange as EventListener,
+      );
+      v.removeEventListener(
+        "webkitbeginfullscreen",
+        onWebkitBeginFullscreen as EventListener,
+      );
+      v.removeEventListener(
+        "webkitendfullscreen",
+        onWebkitEndFullscreen as EventListener,
+      );
+      unlockScreenOrientation();
+    };
+  }, []);
 
   const hideControls = !isPaused && !isHovered && !isUsingVolume;
 
@@ -230,7 +398,7 @@ const VideoContainerLanding = () => {
             onClick={togglePlay}
             onDoubleClick={(e) => {
               e.preventDefault();
-              setCinema((v) => !v);
+              void toggleFullscreen();
             }}
           />
         </div>
@@ -277,9 +445,15 @@ const VideoContainerLanding = () => {
             />
           </div>
 
-          <button className="cinema-btn" onClick={() => setCinema((v) => !v)}>
+          <button
+            type="button"
+            className="cinema-btn"
+            onClick={() => {
+              void toggleFullscreen();
+            }}
+          >
             <img
-              src={cinema ? ExitFullScreenIcon : EnterFullScreenIcon}
+              src={isFullscreen ? ExitFullScreenIcon : EnterFullScreenIcon}
               alt=""
             />
           </button>
