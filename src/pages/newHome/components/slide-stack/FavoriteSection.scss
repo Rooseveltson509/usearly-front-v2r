@@ -14,16 +14,17 @@
   padding: 0;
   padding-top: 23% !important;
   @media screen and (min-width: 900px) {
-    padding-top: 12% !important;
+    padding-top: 7% !important;
   }
 }
 
 /* MAIN BLOCK */
 .favorite-content {
+  position: relative;
   padding: 50px 60px; // ← plus proche de la maquette (moins d'espace latéral)
   width: 92%;
   max-width: 1600px;
-  min-height: 615px;
+  min-height: 580px;
 
   border-radius: 20px;
   display: flex;
@@ -36,13 +37,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: clamp(35px, 4vw, 64px);
     width: 100%;
-    min-height: 430px;
+    min-height: 395px;
 
     @media screen and (min-width: 900px) {
+      // gap: clamp(35px, 4vw, 64px);
       flex-direction: row;
       align-items: center;
+      flex: 1 1 auto;
     }
 
     /* LEFT SIDE */
@@ -53,11 +55,12 @@
       flex-direction: column;
 
       /* ⭐ Centre le bloc verticalement, sans coller le bouton en haut */
-      justify-content: center;
+      justify-content: flex-start;
+      padding-top: 10px;
 
       .fav-title {
-        font-size: clamp(28px, 7.5vw, 52px);
-        line-height: 1.2;
+        font-size: clamp(28px, 7.8vw, 82px);
+        line-height: 1.1;
         font-weight: 800;
 
         display: flex;
@@ -65,7 +68,6 @@
         gap: 7px;
 
         margin-bottom: 32px; // ← réduis un peu : maquette plus compacte
-        padding-left: 10px;
         @media screen and (max-width: 600px) {
           margin-bottom: 0;
         }
@@ -74,7 +76,7 @@
         }
 
         @media screen and (min-width: 900px) {
-          font-size: clamp(28px, 5vw, 52px);
+          font-size: clamp(28px, 5vw, 82px);
         }
         @media screen and (max-width: 900px) {
           flex-direction: row;
@@ -91,19 +93,34 @@
     .fav-right {
       display: flex;
       align-items: center;
-      flex: 1 1 520px;
+      flex: 1 1 100%;
       width: 100%;
-      max-width: 620px;
-      position: relative;
+      max-width: 705px;
+      position: absolute;
       pointer-events: none;
       margin-left: auto;
+      font-size: 36px;
+      right: 60px;
+      top: 17.5%;
 
+      @media screen and (max-width: 1730px) {
+        flex: 1 1 550px;
+      }
+
+      @media screen and (max-width: 1385px) {
+        flex: 1 1 520px;
+        gap: clamp(20px, 3vw, 40px);
+      }
+      @media screen and (max-width: 900px) {
+        align-items: center;
+      }
       .fav-card {
         position: absolute;
         width: 100%;
         height: auto;
         will-change: transform;
         pointer-events: none;
+        box-shadow: -1px -10px 36px rgb(0 0 0 / 4%);
         transition:
           box-shadow 0.25s ease,
           filter 0.25s ease,
@@ -126,7 +143,7 @@
       .fav-card--theme-report,
       .fav-card--theme-cdc,
       .fav-card--theme-suggestion {
-        border-radius: 10px;
+        border-radius: 25px;
       }
     }
 
@@ -160,9 +177,9 @@
     .fav-btn {
       background: #000;
       color: white;
-      padding: 12px 20px;
+      padding: 14px 24px;
       border-radius: 40px;
-      font-size: 14px;
+      font-size: 15px;
       width: fit-content;
       font-weight: 600;
       cursor: pointer;
@@ -173,6 +190,18 @@
       &:hover {
         transform: translateY(-2px);
       }
+      @media screen and (min-width: 900px) {
+        padding: 16px 28px;
+        font-size: 17px;
+      }
+      @media screen and (min-width: 1200px) {
+        padding: 18px 32px;
+        font-size: 19px;
+      }
+      @media screen and (min-width: 1600px) {
+        padding: 20px 36px;
+        font-size: 21px;
+      }
       @media screen and (max-width: 900px) {
         margin-top: 10px;
         margin-bottom: 5px;
@@ -180,7 +209,7 @@
     }
   }
   @media screen and (max-width: 900px) {
-    padding: 5% 7%;
+    padding: 5% 7% 6% 7%;
   }
 }
 
