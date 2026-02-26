@@ -1,5 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Sora:wght@300;400;600;700;800&display=swap");
 
+.header {
+  background: rgb(255 255 255 / 50%);
+  backdrop-filter: blur(4px);
+}
+
 .about-classic {
   --about-ink: #131313;
   --about-muted: #4c4c4c;
@@ -16,6 +21,44 @@
   background-color: white;
   position: relative;
   padding-top: var(--header-height, 0px);
+  footer {
+    background-color: #0c0c0f;
+    font-size: 12px;
+    ul {
+      gap: 50px;
+      li {
+        color: #fff;
+        a {
+          color: #fff;
+        }
+      }
+    }
+  }
+  @media screen and (max-width: 580px) {
+    footer {
+      font-size: 10px;
+    }
+  }
+  @media screen and (max-width: 520px) {
+    footer {
+      ul {
+        gap: 25px;
+      }
+    }
+  }
+  @media screen and (max-width: 420px) {
+    footer {
+      ul {
+        gap: 0;
+        justify-content: space-between;
+      }
+    }
+  }
+  @media screen and (max-width: 333px) {
+    footer {
+      font-size: 9px;
+    }
+  }
 }
 
 .about-classic__hero {
@@ -30,6 +73,9 @@
   color: #fff;
   background-color: #0c0c0f;
   overflow: hidden;
+  @media screen and (max-width: 900px) {
+    height: 300px;
+  }
 }
 
 .about-classic__hero-video {
@@ -186,6 +232,12 @@
     width: 70%;
     text-align: center;
   }
+  @media screen and (max-width: 650px) {
+    font-size: clamp(16px, 10vw, 68px);
+  }
+  @media screen and (max-width: 450px) {
+    margin-top: 5rem;
+  }
 }
 
 .about-classic__manifesto-nowrap {
@@ -209,6 +261,7 @@
   display: grid;
   gap: 28px;
   margin-left: 20px;
+  z-index: 2;
 }
 
 .about-classic__card {
@@ -227,6 +280,9 @@
     font-size: 16px;
     flex-direction: column;
     gap: 10px;
+  }
+  @media screen and (max-width: 900px) {
+    background-color: rgb(255 255 255 / 90%);
   }
 }
 
@@ -249,10 +305,16 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  align-self: center;
   margin-top: -5px;
   font-size: clamp(1.5rem, 3vw, 2.3rem);
   font-weight: 700;
   color: #0f0f0f;
+  @media screen and (max-width: 900px) {
+    position: absolute;
+    justify-self: center;
+    align-self: center;
+  }
 }
 
 .about-classic__canvas-wrap {
@@ -479,6 +541,13 @@
   -webkit-text-fill-color: white;
   -webkit-text-stroke-width: 1px;
   -webkit-text-stroke-color: black;
+  @media screen and (max-width: 900px) {
+    letter-spacing: 0.2em;
+    font-size: 100px;
+  }
+  @media screen and (max-width: 650px) {
+    font-size: 60px;
+  }
 }
 
 .about-classic__manifesto {
@@ -496,6 +565,13 @@
   margin: 0 auto;
   margin-bottom: 100px;
   font-weight: 300;
+  @media screen and (max-width: 600px) {
+    padding-left: 8vw;
+    padding-right: 8vw;
+  }
+  @media screen and (max-width: 500px) {
+    margin-bottom: 50px;
+  }
 }
 
 .about-classic__manifesto p {
@@ -543,7 +619,14 @@
     .usearly-svg {
       height: 100%;
       padding: 55px 0px;
+      @media screen and (max-width: 600px) {
+        padding: 0px 0px;
+      }
     }
+  }
+
+  @media screen and (max-width: 900px) {
+    min-height: 250px;
   }
 }
 
@@ -700,11 +783,6 @@
     grid-template-columns: 1fr;
   }
 
-  .about-classic__statement {
-    align-items: center;
-    text-align: center;
-  }
-
   .about-classic__marquee-item {
     letter-spacing: 0.2em;
   }
@@ -726,11 +804,6 @@
 
   .about-classic__outline-banner span {
     white-space: normal;
-  }
-
-  .about-classic__manifesto {
-    padding-left: 8vw;
-    padding-right: 8vw;
   }
 }
 
