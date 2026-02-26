@@ -2,16 +2,15 @@
 
 .feedback-tabs {
   display: flex;
-  gap: 1rem;
+  gap: 0.6rem;
   margin-top: 0rem;
   margin-bottom: 2.5rem;
   justify-content: center;
 
   .tab-btn {
-    padding: 0.6rem 1.2rem;
+    padding: 0.4rem 1.2rem;
     border-radius: 2rem;
     border: 2px solid transparent;
-    background-color: #f5f6fa1c;
     color: #ffffff73;
     font-size: 14px;
     /* font-weight: 600; */
@@ -25,9 +24,9 @@
     }
 
     &.active {
-      background-color: #3e6efc;
-      color: $white;
-      border: 2px solidrgba(255, 255, 255, 0) 6;
+      background-color: #0e0431;
+      color: #f5f6fa;
+      border: 2px solid #ffffffcc;
       &:hover {
         border: 2px solid $white;
       }

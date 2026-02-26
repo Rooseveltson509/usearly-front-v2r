@@ -25,10 +25,7 @@ export const illustrationSuggestKeywords: Record<string, string> = {
   chanson: "culture_musique/notemusique.svg",
 
   // 🛒 E-commerce
-  //caddie
-  commande: "ecommerce/caddie.svg",
   panier: "ecommerce/caddie.svg",
-  //mediumbag
   achat: "ecommerce/mediumbag.svg",
   produit: "ecommerce/mediumbag.svg",
   magasin: "ecommerce/mediumbag.svg",
@@ -39,12 +36,11 @@ export const illustrationSuggestKeywords: Record<string, string> = {
   vêtements: "ecommerce/mediumbag.svg",
 
   // 🍔 Food & Drink
-  smoothie: "food_drink/coffee.svg",
-  smoothies: "food_drink/coffee.svg",
+  restaurant: "food_drink/burger.svg",
   cocktail: "food_drink/coffee.svg",
   cocktails: "food_drink/coffee.svg",
   menu: "food_drink/livraisonmain.svg",
-  burger: "food_drink/livraisonmain.svg",
+  burger: "food_drink/burger.svg",
   boissons: "food_drink/coffee.svg",
 
   //livraisonmain
@@ -69,6 +65,7 @@ export const illustrationSuggestKeywords: Record<string, string> = {
   série: "tv_cinema/canape.svg",
   //clapcinema
   cinéma: "tv_cinema/clapcinema.svg",
+  séance: "tv_cinema/clapcinema.svg",
   film: "tv_cinema/clapcinema.svg",
   //popcorn
   popcorn: "tv_cinema/popcorn.svg",
@@ -93,15 +90,14 @@ export const illustrationSuggestKeywords: Record<string, string> = {
   valise: "voyage_transport/valise.svg",
 
   // ⚽ Sport
-  //basketball
-  basket: "sport/basketball.svg",
-  //cagefoot
+  sport: "sport/panierbasket.svg",
+  basket: "sport/chaussurecourse.svg",
+  sneaker: "sport/chaussurecourse.svg",
   foot: "sport/cagefoot.svg",
-  //chaussurecourse
-  sport: "sport/chaussurecourse.svg",
+  football: "sport/cagefoot.svg",
+  chaussure: "sport/chaussurecourse.svg",
   course: "sport/chaussurecourse.svg",
-  //panierbasket
   cible: "sport/panierbasket.svg",
-  //podium
+  basketball: "sport/basketball.svg",
   podium: "sport/podium.svg",
 };
