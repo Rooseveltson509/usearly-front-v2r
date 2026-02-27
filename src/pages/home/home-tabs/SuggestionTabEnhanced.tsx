@@ -195,6 +195,15 @@ const SuggestionTabEnhanced: React.FC<Props> = ({
               selectedSiteUrl={selectedSiteUrl}
               renderCard={() => <></>}
             />
+
+            {!isLoading && suggestionsForDisplay.length > 0 && (
+              <div className="end-of-list">
+                <p className="end-text">Fin de la liste 🎉</p>
+                <p>
+                  <u>Remonter la liste</u>
+                </p>
+              </div>
+            )}
           </>
         )
       }

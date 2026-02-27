@@ -15,9 +15,10 @@
     transform 0.32s ease,
     opacity 0.24s ease;
   will-change: transform, opacity;
+  transform: translateY(0);
 
   &.is-hidden {
-    transform: translateY(calc(-100% - 8px));
+    transform: translateY(-100%);
     opacity: 0;
     pointer-events: none;
   }
@@ -374,6 +375,17 @@
         text-decoration: underline;
       }
     }
+  }
+}
+
+.component-header-container.is-hidden {
+  transform: translateY(-100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header,
+  .component-header-container {
+    transition: none;
   }
 }
 
