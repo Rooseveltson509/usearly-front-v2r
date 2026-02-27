@@ -1,5 +1,10 @@
-export const genderShort = (gender: string): string =>
-  gender !== "non Spécifié" ? gender.slice(0, 1) : "NS";
+export const genderShort = (gender?: string | null): string => {
+  if (typeof gender !== "string" || gender.trim() === "") return "NS";
+
+  if (gender === "non Spécifié") return "NS";
+
+  return gender.trim().charAt(0).toUpperCase();
+};
 
 export const ageFromBirthdateISO = (iso: string): number => {
   const birth = new Date(iso);

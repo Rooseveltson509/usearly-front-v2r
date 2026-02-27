@@ -653,50 +653,6 @@
       animation: extensionPopupArcEntry 3s cubic-bezier(0.25, 0.8, 0.22, 1) both;
       will-change: margin-top, margin-left;
     }
-
-    // // ajustement css pour chaque etape like
-    // .extension-popup-frame.like-mode.e0 {
-    //   margin-top: -20%;
-    //   margin-left: -50%;
-    //   --popup-scale: 1;
-    //   --popup-anim-scale: 1;
-    // }
-
-    // .extension-popup-frame.like-mode.e1 {
-    //   margin-top: -28%;
-    //   margin-left: -40%;
-    //   --popup-scale: 1.5;
-    //   --popup-anim-scale: 1.5;
-    // }
-
-    // .extension-popup-frame.like-mode.e2 {
-    //   margin-top: -10%;
-    //   margin-left: -70%;
-    //   --popup-scale: 1;
-    //   --popup-anim-scale: 1;
-    // }
-
-    // // ajustement css pour chaque etape suggest
-    // .extension-popup-frame.suggestion-mode.e0 {
-    //   margin-top: -17%;
-    //   margin-left: -50%;
-    //   --popup-scale: 1;
-    //   --popup-anim-scale: 1;
-    // }
-
-    // .extension-popup-frame.suggestion-mode.e1 {
-    //   margin-top: -30%;
-    //   margin-left: -30%;
-    //   --popup-scale: 1.5;
-    //   --popup-anim-scale: 1.5;
-    // }
-
-    // .extension-popup-frame.suggestion-mode.e2 {
-    //   margin-top: -5%;
-    //   margin-left: -100%;
-    //   --popup-scale: 1;
-    //   --popup-anim-scale: 1;
-    // }
   }
 
   .logo-big-landing-page {
@@ -770,11 +726,6 @@
   }
 }
 
-/* Respecte la réduction des animations utilisateur */
-//   @media (prefers-reduced-motion: reduce) {
-//     .logo-big-landing-page { animation: none; }
-//   }
-
 .extension-icons .is-active img {
   transform: scale(1.08);
   filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.25));
@@ -793,5 +744,107 @@
 @media screen and (max-width: 1193px) {
   .extension-example-image {
     transform: translate(0, 5%);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .extension-example-image {
+    transform: none !important;
+    width: 100%;
+    margin-top: 40px;
+  }
+
+  .extensionImg {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    width: 100% !important;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+
+  .extension-image,
+  .extension-click-targets {
+    transform: none !important;
+    margin: 0 !important;
+    max-height: none !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .extensionImg {
+    position: relative !important;
+    display: flex;
+    flex-direction: row; // 👈 important
+    justify-content: center;
+    align-items: flex-start;
+    gap: 12px;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+  }
+
+  .extension-icons {
+    position: relative !important;
+    transform: none !important;
+    flex-direction: column !important; // 👈 on garde vertical
+    height: auto !important;
+  }
+
+  .extension-image,
+  .extension-click-targets {
+    transform: none !important;
+    margin: 0 !important;
+    max-height: none !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+}
+@media screen and (max-width: 600px) {
+  .extensionImg {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
+  }
+
+  .extension-icons {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    transform: scale(1) !important;
+  }
+}
+@media screen and (max-width: 600px) {
+  .extension-popup-frame {
+    display: flex;
+    justify-content: center;
+  }
+
+  .extension-image,
+  .extension-click-targets {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    transform: none !important;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .extension-example-image .extensionImg .extension-popup-frame.like-mode {
+    margin-left: 0 !important;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .extension-popup-frame {
+    margin-left: 0 !important;
+  }
+}
+@media screen and (max-width: 600px) {
+  .extension-icons > div {
+    display: flex;
+    justify-content: center;
   }
 }
