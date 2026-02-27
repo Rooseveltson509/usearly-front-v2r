@@ -20,10 +20,10 @@
     }
     .usearly-drawing-container {
       .usearly-wrap {
+        margin-top: 7rem !important;
         @media screen and (max-width: 600px) {
           margin-top: 5rem;
         }
-        margin-top: 5rem;
         .usearly-svg {
           max-width: 1200px;
         }
@@ -32,12 +32,10 @@
     footer {
       .footer-container {
         ul {
+          margin-top: 50px;
           font-size: 12px;
         }
       }
-    }
-    @media screen and (max-width: 600px) {
-      margin-top: -100px;
     }
   }
 

@@ -316,7 +316,9 @@ export default function FavoriteSection() {
         }}
       >
         <div
-          className={`fav-container${isColumnLayout ? " is-column" : ""}`}
+          className={`fav-container${isColumnLayout ? " is-column" : ""}${
+            isDualCardMobileLayout ? " is-two-cards-mobile" : ""
+          }`}
           ref={containerRef}
         >
           {/* LEFT */}
