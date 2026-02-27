@@ -20,9 +20,6 @@
     font-weight: 800;
     line-height: 1.2;
 
-    @media screen and (min-width: 1500px) {
-      font-size: clamp(28px, 5vw, 64px);
-    }
     @media screen and (max-width: 1193px) {
       br:first-child {
         display: none;

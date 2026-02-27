@@ -3,7 +3,7 @@
   background: transparent !important;
   position: relative;
   width: 100%;
-  min-height: 100vh;
+  min-height: 100svh;
   overflow: hidden;
 
   display: flex;
@@ -12,19 +12,22 @@
 
   margin: 0;
   padding: 0;
-  padding-top: 23% !important;
+  padding-top: clamp(24px, 6vw, 90px) !important;
+  padding-bottom: clamp(20px, 4vh, 56px);
   @media screen and (min-width: 900px) {
-    padding-top: 7% !important;
+    padding-top: clamp(24px, 4.5vh, 72px) !important;
+  }
+  @media screen and (max-width: 900px) {
+    padding-top: clamp(18px, 9vw, 52px) !important;
   }
 }
 
 /* MAIN BLOCK */
 .favorite-content {
   position: relative;
-  padding: 50px 60px; // ← plus proche de la maquette (moins d'espace latéral)
-  width: 92%;
-  max-width: 1600px;
-  min-height: 580px;
+  padding: clamp(28px, 3.5vw, 50px) clamp(20px, 4vw, 60px);
+  width: min(92%, 1600px);
+  min-height: min(670px, calc(100svh - clamp(72px, 13vh, 180px)));
 
   border-radius: 20px;
   display: flex;
@@ -38,13 +41,15 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    min-height: 395px;
+    min-height: clamp(300px, 52vh, 395px);
 
     @media screen and (min-width: 900px) {
       // gap: clamp(35px, 4vw, 64px);
       flex-direction: row;
       align-items: center;
       flex: 1 1 auto;
+      // Reserve the right side for the absolute card stack to prevent overlap.
+      padding-right: clamp(450px, 45vw, 765px);
     }
 
     /* LEFT SIDE */
@@ -59,7 +64,7 @@
       padding-top: 10px;
 
       .fav-title {
-        font-size: clamp(28px, 7.8vw, 82px);
+        font-size: clamp(36px, 4vw, 66px);
         line-height: 1.1;
         font-weight: 800;
 
@@ -71,20 +76,26 @@
         @media screen and (max-width: 600px) {
           margin-bottom: 0;
         }
-        .title-line {
-          display: inline-block;
+
+        @media screen and (min-width: 900px) and (max-width: 1385px) {
+          font-size: clamp(34px, 3.8vw, 52px);
+          line-height: 1.06;
         }
 
-        @media screen and (min-width: 900px) {
-          font-size: clamp(28px, 5vw, 82px);
-        }
         @media screen and (max-width: 900px) {
-          flex-direction: row;
-          flex-wrap: wrap;
+          font-size: clamp(34px, 9vw, 46px);
+          line-height: 1.08;
+          flex-direction: column;
+          gap: 4px;
         }
 
         @media screen and (max-width: 600px) {
-          gap: 0px;
+          font-size: clamp(30px, 10.5vw, 38px);
+          gap: 2px;
+        }
+
+        .title-line {
+          display: inline-block;
         }
       }
     }
@@ -95,13 +106,13 @@
       align-items: center;
       flex: 1 1 100%;
       width: 100%;
-      max-width: 705px;
+      max-width: clamp(500px, 42vw, 705px);
       position: absolute;
       pointer-events: none;
       margin-left: auto;
       font-size: 36px;
-      right: 60px;
-      top: 17.5%;
+      right: clamp(24px, 3.5vw, 60px);
+      top: clamp(48px, 17.5%, 120px);
 
       @media screen and (max-width: 1730px) {
         flex: 1 1 550px;
@@ -110,6 +121,7 @@
       @media screen and (max-width: 1385px) {
         flex: 1 1 520px;
         gap: clamp(20px, 3vw, 40px);
+        max-width: 450px;
       }
       @media screen and (max-width: 900px) {
         align-items: center;
@@ -150,6 +162,7 @@
     @media screen and (max-width: 900px) {
       flex-direction: column;
       align-items: flex-start;
+      gap: clamp(26px, 12vw, 70px);
 
       &.is-column {
         flex-direction: column;
@@ -160,12 +173,40 @@
           width: min(100%, 620px);
           max-width: 100%;
           margin: 0 auto;
+          position: relative;
+          top: auto;
+          right: auto;
+          left: auto;
+        }
+      }
+
+      &.is-two-cards-mobile {
+        .fav-right {
+          // The mobile stack animates cards at y +/- 50px, so we reserve
+          // enough top/bottom space to keep cards away from title and CTA.
+          --mobile-card-offset: 50px;
+          --mobile-card-safe-gap: clamp(18px, 4vw, 30px);
+          margin-top: clamp(8px, 2vw, 16px);
+          padding-top: calc(
+            var(--mobile-card-offset) + var(--mobile-card-safe-gap)
+          );
+          padding-bottom: calc(
+            var(--mobile-card-offset) + var(--mobile-card-safe-gap)
+          );
         }
       }
 
       .fav-right {
         pointer-events: auto;
         overflow: visible;
+        position: relative;
+        top: auto;
+        right: auto;
+        left: auto;
+        width: min(100%, 620px);
+        max-width: 100%;
+        margin: 0 auto;
+        align-self: center;
 
         .fav-card {
           width: 100%;
@@ -174,6 +215,9 @@
     }
   }
   .fav-btn-container {
+    position: relative;
+    z-index: 12;
+
     .fav-btn {
       background: #000;
       color: white;
@@ -183,7 +227,7 @@
       width: fit-content;
       font-weight: 600;
       cursor: pointer;
-      margin-top: 80px;
+      margin-top: 40px;
 
       /* ⭐ Optionnel : petit hover propre */
       transition: transform 0.2s ease;
@@ -203,13 +247,14 @@
         font-size: 21px;
       }
       @media screen and (max-width: 900px) {
-        margin-top: 10px;
+        margin-top: 30px;
         margin-bottom: 5px;
       }
     }
   }
   @media screen and (max-width: 900px) {
-    padding: 5% 7% 6% 7%;
+    padding: clamp(28px, 8vw, 44px) clamp(18px, 7vw, 34px)
+      clamp(26px, 8vw, 40px);
   }
 }
 
@@ -231,9 +276,8 @@
     display: block;
     overflow: hidden; // cache le texte qui arrive
     @media screen and (max-width: 900px) {
-      width: fit-content;
-      text-wrap-mode: nowrap;
-      overflow: unset;
+      width: 100%;
+      overflow: visible;
     }
   }
 
