@@ -3,6 +3,7 @@ import "./FavoriteSection.scss";
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import MobileCarousel from "./MobileCarousel";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -57,6 +58,16 @@ export default function FavoriteSection() {
   const [activeMobileGroup, setActiveMobileGroup] = useState(0);
   const [mobileSelectedCards, setMobileSelectedCards] = useState<number[]>([]);
   const isDualCardMobileLayout = isColumnLayout && isTwoCardsMobile;
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   const handleMobileCardClick = (cardIndex: number) => {
     if (!isDualCardMobileLayout) return;
@@ -140,6 +151,7 @@ export default function FavoriteSection() {
   useEffect(() => {
     if (!ready) return;
     if (!sectionRef.current) return;
+    if (isMobile) return;
 
     const contentEl = sectionRef.current.querySelector(
       ".favorite-content",
@@ -325,56 +337,63 @@ export default function FavoriteSection() {
           </div>
 
           {/* RIGHT */}
-          <div
-            className="fav-right"
-            ref={cardsContainerRef}
-            style={
-              maxCardAspect ? { aspectRatio: 1 / maxCardAspect } : undefined
-            }
-          >
-            {IMAGE_LIST.map((item, i) => {
-              const isActiveMobileCard =
-                isDualCardMobileLayout &&
-                Math.floor(i / CARDS_PER_GROUP) === activeMobileGroup;
-              const isMobileSelected = mobileSelectedCards.includes(i);
-              const cardZIndex = isMobileSelected
-                ? IMAGE_LIST.length * 2 + i + 1
-                : i + 1;
-              const cardIndexInTheme = (i % CARDS_PER_GROUP) + 1;
-              const themeClass = `fav-card--theme-${item.type}`;
-              const themeVariantClass = `fav-card--${item.type}-${cardIndexInTheme}`;
+          {isMobile ? (
+            <MobileCarousel
+              slides={IMAGE_LIST}
+              onSlideChange={(type) => setActiveType(type)}
+            />
+          ) : (
+            <div
+              className="fav-right"
+              ref={cardsContainerRef}
+              style={
+                maxCardAspect ? { aspectRatio: 1 / maxCardAspect } : undefined
+              }
+            >
+              {IMAGE_LIST.map((item, i) => {
+                const isActiveMobileCard =
+                  isDualCardMobileLayout &&
+                  Math.floor(i / CARDS_PER_GROUP) === activeMobileGroup;
+                const isMobileSelected = mobileSelectedCards.includes(i);
+                const cardZIndex = isMobileSelected
+                  ? IMAGE_LIST.length * 2 + i + 1
+                  : i + 1;
+                const cardIndexInTheme = (i % CARDS_PER_GROUP) + 1;
+                const themeClass = `fav-card--theme-${item.type}`;
+                const themeVariantClass = `fav-card--${item.type}-${cardIndexInTheme}`;
 
-              const cardClassName = [
-                "fav-card",
-                themeClass,
-                themeVariantClass,
-                isActiveMobileCard ? "is-mobile-active" : "",
-                isMobileSelected ? "is-mobile-selected" : "",
-              ]
-                .filter(Boolean)
-                .join(" ");
+                const cardClassName = [
+                  "fav-card",
+                  themeClass,
+                  themeVariantClass,
+                  isActiveMobileCard ? "is-mobile-active" : "",
+                  isMobileSelected ? "is-mobile-selected" : "",
+                ]
+                  .filter(Boolean)
+                  .join(" ");
 
-              return (
-                <img
-                  key={i}
-                  src={item.src}
-                  className={cardClassName}
-                  data-card-position={cardIndexInTheme}
-                  data-theme-type={item.type}
-                  loading="lazy"
-                  style={{ zIndex: cardZIndex }}
-                  onClick={
-                    isDualCardMobileLayout
-                      ? () => handleMobileCardClick(i)
-                      : undefined
-                  }
-                  ref={(el) => {
-                    if (el) cardsRef.current[i] = el;
-                  }}
-                />
-              );
-            })}
-          </div>
+                return (
+                  <img
+                    key={i}
+                    src={item.src}
+                    className={cardClassName}
+                    data-card-position={cardIndexInTheme}
+                    data-theme-type={item.type}
+                    loading="lazy"
+                    style={{ zIndex: cardZIndex }}
+                    onClick={
+                      isDualCardMobileLayout
+                        ? () => handleMobileCardClick(i)
+                        : undefined
+                    }
+                    ref={(el) => {
+                      if (el) cardsRef.current[i] = el;
+                    }}
+                  />
+                );
+              })}
+            </div>
+          )}
         </div>
         <div className="fav-btn-container">
           <button className="fav-btn">Découvrir</button>

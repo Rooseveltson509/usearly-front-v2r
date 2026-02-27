@@ -1,18 +1,25 @@
 .extension-example-container {
   position: relative;
   width: 100vw;
-  min-height: 101vh;
+  margin-left: calc(50% - 50vw);
+  min-height: 100vh;
   padding: 150px 162px 100px 100px;
   display: flex;
   justify-content: space-between;
   background: #191637;
   overflow: hidden;
+
   @media screen and (max-width: 1193px) {
     flex-direction: column;
     justify-content: flex-start;
-    min-height: 115vh;
-    padding: 10% 10% 5% 10%;
+    min-height: auto;
+    padding: 80px 40px;
     gap: 40px;
+  }
+
+  @media screen and (max-width: 768px) {
+    padding: 60px 20px;
+    gap: 30px;
   }
 }
 
@@ -26,8 +33,31 @@ img.img2 {
   object-fit: cover;
   object-position: center;
   pointer-events: none;
+  opacity: 0.12; // 👈 plus subtil
+
+  @media screen and (max-width: 900px) {
+    width: 120%;
+    margin-left: 0;
+    opacity: 0.06; // 👈 très discret
+  }
+
+  @media screen and (max-width: 600px) {
+    display: none; // 👈 clean mobile
+  }
+}
+
+/* img.img2 {
+  z-index: 1;
+  position: absolute;
+  inset: 0;
+  width: 90%;
+  height: 100%;
+  margin-left: 20%;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
   @media screen and (max-width: 900px) {
     width: 100%;
     margin-left: 0;
   }
-}
+} */

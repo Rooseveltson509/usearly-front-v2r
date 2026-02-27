@@ -431,25 +431,6 @@ const PopupFrame = ({
         className={`extension-image ${modeClass} ${stepClass}`}
         draggable={false}
       />
-      {/* {clickTargets?.length ? (
-        <div
-          className={`extension-click-targets ${modeClass} ${stepClass}`}
-          aria-hidden="true"
-        >
-          {clickTargets.map((target, index) => (
-            <span
-              key={`target-${stepClass}-${index}`}
-              className="extension-click-target"
-              style={{
-                left: `${target.x}%`,
-                top: `${target.y}%`,
-                width: `${target.width}%`,
-                height: `${target.height}%`,
-              }}
-            />
-          ))}
-        </div>
-      ) : null} */}
       {showCursor &&
         validCursorPaths.map((path, index) => (
           <CursorTrail
