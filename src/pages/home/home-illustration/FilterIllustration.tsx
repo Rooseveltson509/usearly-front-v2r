@@ -19,10 +19,10 @@ const cdcBrandSolo = "/assets/brandSolo/cdcBrandSolo.png";
 const suggestBrandSolo = "/assets/brandSolo/suggestBrandSolo.png";
 
 import { useEffect, useMemo } from "react";
-import { FALLBACK_BRAND_PLACEHOLDER } from "@src/utils/brandLogos";
 import { useBrandLogos } from "@src/hooks/useBrandLogos";
 import { getCategoryIconPathFromSubcategory } from "@src/utils/IconsBigUtils";
 import "./FilterIllustration.scss";
+import Avatar from "@src/components/shared/Avatar";
 
 const illustrationMap = {
   // === Signalements ===
@@ -183,21 +183,16 @@ const FilterIllustration = ({
       );
     }
 
-    // ✅ 1️⃣ Priorité au logo dynamique Clearbit/backend
-    const imgSrc =
-      (logoUrl && logoUrl !== FALLBACK_BRAND_PLACEHOLDER ? logoUrl : null) ||
-      brandSoloImg ||
-      illustrationMap[fallbackKey].img;
-
     return (
       <div className={containerClassName}>
         <div className="illustration-content">
-          <img
-            src={imgSrc}
-            alt={selectedBrand || "Illustration"}
-            className={`brand-hero__img ${
-              logoUrl ? "brand-logo" : "fallback-img"
-            }`}
+          <Avatar
+            key={`${selectedBrand}-${siteUrl ?? ""}`}
+            avatar={logoUrl}
+            pseudo={selectedBrand}
+            type="brand"
+            siteUrl={siteUrl}
+            preferBrandLogo
           />
         </div>
       </div>
