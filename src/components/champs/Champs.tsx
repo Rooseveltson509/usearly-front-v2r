@@ -78,7 +78,12 @@ export default function SelectFilter<V extends string = string>({
   const measurementRef = useRef<HTMLDivElement | null>(null);
 
   const selected = useMemo(
-    () => options.find((o) => o.value === value) ?? options[0],
+    () =>
+      options.find(
+        (o) =>
+          o.value?.toString().toLowerCase().trim() ===
+          value?.toString().toLowerCase().trim(),
+      ),
     [options, value],
   );
 
@@ -197,6 +202,7 @@ export default function SelectFilter<V extends string = string>({
       const pseudo = opt.label || `${opt.value ?? ""}` || "Marque";
       return (
         <Avatar
+          key={`${opt.value}-${opt.siteUrl}`}
           avatar={null}
           pseudo={pseudo}
           type="brand"
@@ -544,8 +550,10 @@ export default function SelectFilter<V extends string = string>({
         className={"select-filter"}
       />
       <Trigger
-        leading={selectedVisual}
-        label={getDisplayLabel(selected?.label)}
+        leading={selected ? selectedVisual : null}
+        label={
+          selected ? getDisplayLabel(selected.label) : "Choisir une marque"
+        }
       />
       {isBrandSelect && measurementCandidates.length > 0 && (
         <div
