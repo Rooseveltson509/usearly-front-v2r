@@ -18,6 +18,8 @@ import UserBrandLine from "@src/components/shared/UserBrandLine";
 import CloseButton from "@src/components/buttons/CloseButtons";
 import type { TicketStatusKey } from "@src/types/ticketStatus";
 import type { HasBrandResponse } from "@src/types/brandResponse";
+import { useIsMobile } from "@src/hooks/use-mobile";
+import FlatSubcategoryBlockMobile from "./FlatSubcategoryBlockMobile";
 
 interface Props {
   brand: string;
@@ -53,6 +55,7 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
   const [showFullText, setShowFullText] = useState(false);
   const initialDescription = descriptions?.[0];
   const [showCapturePreview, setShowCapturePreview] = useState(false);
+  const isMobile = useIsMobile();
 
   // ✅ Appelé avant tout return
   const brandLogos = useBrandLogos([{ brand, siteUrl }]);
@@ -73,10 +76,10 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
 
   // ✅ AUTHOR SAFE (aligné API)
   const safeAuthor = {
-    id: initialDescription.author?.id ?? null,
-    pseudo: initialDescription.author?.pseudo ?? "Utilisateur",
-    email: initialDescription.author?.email ?? null,
-    avatar: initialDescription.author?.avatar ?? null,
+    id: initialDescription?.author?.id ?? null,
+    pseudo: initialDescription?.author?.pseudo ?? "Utilisateur",
+    email: initialDescription?.author?.email ?? null,
+    avatar: initialDescription?.author?.avatar ?? null,
   };
   const captureUrl = capture || initialDescription?.capture || null;
 
@@ -95,6 +98,29 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
     setExpanded((prev) => !prev);
     setShowComments(false);
     setShowSimilarReports(false);
+  };
+  const handleToggleComments = () => {
+    setShowComments((prev) => !prev);
+    setShowSimilarReports(false);
+  };
+  const handleToggleSimilarReports = () => {
+    setShowSimilarReports((prev) => !prev);
+    setShowComments(false);
+  };
+  const handleToggleFullText = () => {
+    setShowFullText((prev) => !prev);
+  };
+  const handleOpenCapture = () => {
+    setShowCapturePreview(true);
+  };
+  const handleCloseCapture = () => {
+    setShowCapturePreview(false);
+  };
+  const handleShowMoreSimilar = () => {
+    setVisibleDescriptionsCount((prev) => prev + 2);
+  };
+  const handleShowLessSimilar = () => {
+    setVisibleDescriptionsCount(2);
   };
 
   // ✅ return après tous les hooks
@@ -116,7 +142,39 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
     possibleKeys.map((k) => brandLogos[k]).find(Boolean) ||
     FALLBACK_BRAND_PLACEHOLDER;
 
-  console.log("effectiveReportIds", effectiveReportIds);
+  if (isMobile) {
+    return (
+      <FlatSubcategoryBlockMobile
+        brand={brand}
+        siteUrl={siteUrl}
+        subcategory={subcategory}
+        status={status}
+        descriptions={descriptions}
+        hasBrandResponse={hasBrandResponse}
+        initialDescription={initialDescription}
+        safeAuthor={safeAuthor}
+        resolvedLogo={resolvedLogo}
+        captureUrl={captureUrl}
+        expanded={expanded}
+        showComments={showComments}
+        showSimilarReports={showSimilarReports}
+        showFullText={showFullText}
+        showCapturePreview={showCapturePreview}
+        visibleDescriptionsCount={visibleDescriptionsCount}
+        commentsCount={comments.length}
+        effectiveReportIds={effectiveReportIds}
+        onToggleExpanded={toggleExpanded}
+        onToggleComments={handleToggleComments}
+        onToggleSimilarReports={handleToggleSimilarReports}
+        onToggleFullText={handleToggleFullText}
+        onOpenCapture={handleOpenCapture}
+        onCloseCapture={handleCloseCapture}
+        onRefreshComments={() => setRefreshKey((p) => p + 1)}
+        onShowMoreSimilar={handleShowMoreSimilar}
+        onShowLessSimilar={handleShowLessSimilar}
+      />
+    );
+  }
 
   return (
     <div
@@ -226,7 +284,7 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
                     style={showFullText ? { marginTop: "5px" } : {}}
                     onClick={(e) => {
                       e.stopPropagation();
-                      setShowFullText((prev) => !prev);
+                      handleToggleFullText();
                     }}
                   >
                     {showFullText ? "Voir moins" : "Voir plus"}
@@ -241,15 +299,12 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
                     className="inline-capture-img"
                     onClick={(e) => {
                       e.stopPropagation();
-                      setShowCapturePreview(true);
+                      handleOpenCapture();
                     }}
                   />
 
                   {showCapturePreview && (
-                    <div
-                      className="lightbox"
-                      onClick={() => setShowCapturePreview(false)}
-                    >
+                    <div className="lightbox" onClick={handleCloseCapture}>
                       <div
                         className="lightbox-content"
                         onClick={(e) => e.stopPropagation()}
@@ -275,14 +330,8 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
             hasBrandResponse={hasBrandResponse}
             status={status}
             onReactClick={() => {}}
-            onCommentClick={() => {
-              setShowComments((prev) => !prev);
-              setShowSimilarReports(false);
-            }}
-            onToggleSimilarReports={() => {
-              setShowSimilarReports((prev) => !prev);
-              setShowComments(false);
-            }}
+            onCommentClick={handleToggleComments}
+            onToggleSimilarReports={handleToggleSimilarReports}
           />
 
           {showComments && (
@@ -362,9 +411,7 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
                   {visibleDescriptionsCount < descriptions.length - 1 ? (
                     <button
                       className="see-more-descriptions"
-                      onClick={() =>
-                        setVisibleDescriptionsCount((prev) => prev + 2)
-                      }
+                      onClick={handleShowMoreSimilar}
                     >
                       Voir plus
                     </button>
@@ -372,7 +419,7 @@ const FlatSubcategoryBlock: React.FC<Props> = ({
                     <>
                       <button
                         className="see-more-descriptions"
-                        onClick={() => setVisibleDescriptionsCount(2)}
+                        onClick={handleShowLessSimilar}
                       >
                         Voir moins
                       </button>

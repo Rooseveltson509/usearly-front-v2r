@@ -3,6 +3,7 @@ import HomeGroupedReportsList from "../home-grouped-reports-list/HomeGroupedRepo
 import FilterIllustration from "../home-illustration/FilterIllustration";
 import type { FeedbackType } from "@src/components/user-profile/FeedbackTabs";
 import SearchBar from "../components/searchBar/SearchBar";
+import EndOfList from "./EndOfList";
 
 interface Props {
   activeFilter: string;
@@ -76,13 +77,7 @@ const ReportTab: React.FC<Props> = ({
           searchTerm={searchTerm}
           onSearchTermChange={handleSearchTermChange}
         />
-
-        <div className="end-of-list">
-          <p className="end-text">Fin de la liste 🎉</p>
-          <p>
-            <u>Remonter la liste</u>
-          </p>
-        </div>
+        {displayedCount > 0 && <EndOfList />}
       </div>
       <aside className="right-panel">
         <SearchBar
