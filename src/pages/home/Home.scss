@@ -90,6 +90,13 @@
   .active-filters {
     margin-bottom: 1rem;
   }
+  @media screen and (max-width: 992px) {
+    margin-top: 50px !important;
+    .feedback-list-wrapper {
+      margin-top: -60px;
+      max-width: none;
+    }
+  }
 }
 
 /* ==== Signalements ==== */
@@ -170,7 +177,7 @@
   .feedback-list-wrapper {
     margin-top: -90px;
     .home-grouped-reports-list {
-      margin-top: 15px;
+      margin-top: 30px;
     }
   }
 }
@@ -180,7 +187,7 @@
   .feedback-list-wrapper {
     margin-top: -90px;
     .home-grouped-reports-list {
-      margin-top: 15px;
+      margin-top: 30px;
     }
   }
 }
@@ -197,6 +204,12 @@
     .feedback-list-wrapper {
       margin-top: -104px;
     }
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .banner-filtered {
+    margin-top: 65px;
   }
 }
 
@@ -468,6 +481,13 @@
       }
     }
   }
+  .banner-filtered {
+    .feedback-list-wrapper {
+      .home-grouped-reports-list {
+        margin-top: 25px;
+      }
+    }
+  }
 }
 
 @media screen and (max-width: 550px) {
@@ -485,6 +505,13 @@
       flex: none !important;
       margin-left: unset !important;
       justify-content: flex-start !important;
+    }
+  }
+  .banner-filtered {
+    .feedback-list-wrapper {
+      .home-grouped-reports-list {
+        margin-top: 70px;
+      }
     }
   }
 }
