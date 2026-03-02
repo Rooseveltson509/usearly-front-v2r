@@ -528,7 +528,7 @@
   justify-content: center;
   flex-direction: column-reverse;
   align-items: stretch;
-  height: $select-height;
+  height: auto;
   cursor: pointer;
 
   &.is-loading {

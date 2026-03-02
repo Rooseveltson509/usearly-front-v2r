@@ -529,6 +529,7 @@
     .filters__row {
       display: flex;
       overflow-x: auto;
+      overflow-y: hidden;
       gap: var(--gap);
       padding: 2px; /* pour montrer l’ombre au bord */
       scroll-snap-type: x mandatory;
