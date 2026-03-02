@@ -7,6 +7,7 @@ import Avatar from "@src/components/shared/Avatar";
 import { useBrandLogos } from "@src/hooks/useBrandLogos";
 import { FALLBACK_BRAND_PLACEHOLDER } from "@src/utils/brandLogos";
 import TabLayout from "./TabLayout";
+import EndOfList from "./EndOfList";
 
 interface Props {
   activeFilter: string;
@@ -196,14 +197,7 @@ const SuggestionTabEnhanced: React.FC<Props> = ({
               renderCard={() => <></>}
             />
 
-            {!isLoading && suggestionsForDisplay.length > 0 && (
-              <div className="end-of-list">
-                <p className="end-text">Fin de la liste 🎉</p>
-                <p>
-                  <u>Remonter la liste</u>
-                </p>
-              </div>
-            )}
+            {!isLoading && suggestionsForDisplay.length > 0 && <EndOfList />}
           </>
         )
       }

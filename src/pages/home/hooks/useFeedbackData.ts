@@ -49,9 +49,9 @@ export function useFeedbackData(
 
   const isFetchingRef = useRef(false);
 
-  const prevTab = useRef<FeedbackType>(activeTab);
-  const prevBrand = useRef(selectedBrand);
-  const prevFilter = useRef(activeFilter);
+  const prevTab = useRef<FeedbackType | null>(null);
+  const prevBrand = useRef<string | null>(null);
+  const prevFilter = useRef<string | null>(null);
 
   /**
    * 📥 Fonction de récupération de page
@@ -139,8 +139,10 @@ export function useFeedbackData(
    * 🧭 Gestion du reset intelligent
    */
   useEffect(() => {
-    const tabChanged = prevTab.current !== activeTab;
+    const isFirstLoad = prevTab.current === null;
+    const tabChanged = isFirstLoad || prevTab.current !== activeTab;
     const filterChanged =
+      isFirstLoad ||
       prevFilter.current !== activeFilter ||
       prevBrand.current !== selectedBrand;
 

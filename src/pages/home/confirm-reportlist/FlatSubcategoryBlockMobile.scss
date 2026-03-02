@@ -1,0 +1,226 @@
+.flat-subcategory-mobile {
+  width: min(100%, calc(100vw - 24px));
+  max-width: calc(100vw - 24px);
+  box-sizing: border-box;
+  margin-inline: auto;
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.flat-subcategory-mobile__header {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: left;
+  cursor: pointer;
+}
+
+.flat-subcategory-mobile__left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex: 1;
+}
+
+.flat-subcategory-mobile__icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.flat-subcategory-mobile__title-wrap {
+  min-width: 0;
+
+  h4 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.flat-subcategory-mobile__date {
+  display: inline-block;
+  margin-top: 2px;
+  font-size: 12px;
+  color: #666;
+}
+
+.flat-subcategory-mobile__right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.flat-subcategory-mobile__count {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: #111;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 0 6px;
+}
+
+.flat-subcategory-mobile__content {
+  padding: 0 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.flat-subcategory-mobile__meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  .flat-subcategory-mobile__avatar-container {
+    position: relative;
+    display: flex;
+  }
+  .user-brand-line {
+    font-size: 13px;
+  }
+}
+
+.flat-subcategory-mobile__avatar {
+  width: 24px;
+  height: 24px;
+}
+
+.flat-subcategory-mobile__description {
+  background: #f6f6f6;
+  border-radius: 10px;
+  padding: 10px;
+
+  p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.45;
+    color: #1a1a1a;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+}
+
+.flat-subcategory-mobile__toggle {
+  margin-top: 8px;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font-size: 12px;
+  font-weight: 700;
+  color: #111;
+  cursor: pointer;
+}
+
+.flat-subcategory-mobile__capture-wrap {
+  margin-top: 8px;
+}
+
+.flat-subcategory-mobile__capture {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #e3e3e3;
+  cursor: zoom-in;
+}
+
+.flat-subcategory-mobile__lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.flat-subcategory-mobile__lightbox-content {
+  position: relative;
+  width: min(96vw, 520px);
+  max-height: 90vh;
+  background: #fff;
+  border-radius: 12px;
+  padding: 10px;
+
+  img {
+    width: 100%;
+    max-height: calc(90vh - 24px);
+    object-fit: contain;
+    border-radius: 8px;
+  }
+}
+
+.flat-subcategory-mobile__others {
+  background: #fafafa;
+  border-radius: 10px;
+  padding: 8px;
+}
+
+.flat-subcategory-mobile__item {
+  background: #fff;
+  border: 1px solid #ededed;
+  border-radius: 10px;
+  padding: 8px;
+  margin-bottom: 8px;
+}
+
+.flat-subcategory-mobile__item-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.flat-subcategory-mobile__item-avatar {
+  width: 22px;
+  height: 22px;
+}
+
+.flat-subcategory-mobile__item-pseudo {
+  font-size: 12px;
+  font-weight: 700;
+  color: #111;
+}
+
+.flat-subcategory-mobile__item-time {
+  font-size: 11px;
+  color: #777;
+}
+
+.flat-subcategory-mobile__item-text {
+  margin: 0 0 6px;
+  font-size: 13px;
+  color: #222;
+  line-height: 1.4;
+}
+
+.flat-subcategory-mobile__others-actions {
+  display: flex;
+
+  button {
+    border: 0;
+    background: transparent;
+    font-size: 12px;
+    font-weight: 700;
+    color: #333;
+    cursor: pointer;
+    padding: 0;
+  }
+}

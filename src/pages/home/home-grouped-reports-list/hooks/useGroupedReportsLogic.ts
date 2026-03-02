@@ -77,6 +77,11 @@ export function useGroupedReportsLogic(
   const [totalCount, setTotalCount] = useState(totalityCount);
   const prevFilterRef = useRef<FilterType | null>(null);
 
+  useEffect(() => {
+    if (selectedBrand) return;
+    setTotalCount(totalityCount);
+  }, [totalityCount, selectedBrand]);
+
   // ===============================
   // HOOKS BRUTS
   // ===============================

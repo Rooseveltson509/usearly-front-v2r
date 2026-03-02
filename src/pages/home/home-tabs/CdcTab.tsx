@@ -8,6 +8,7 @@ import Avatar from "@src/components/shared/Avatar";
 import { useBrandLogos } from "@src/hooks/useBrandLogos";
 import { FALLBACK_BRAND_PLACEHOLDER } from "@src/utils/brandLogos";
 import "./CdcTab.scss";
+import EndOfList from "./EndOfList";
 
 interface Props {
   activeFilter: string;
@@ -262,12 +263,7 @@ const CdcTab: React.FC<Props> = ({
           )}
 
           {!hasMore && !isLoading && coupDeCoeursForDisplay.length > 0 && (
-            <div className="end-of-list">
-              <p className="end-text">Fin de la liste 🎉</p>
-              <p>
-                <u>Remonter la liste</u>
-              </p>
-            </div>
+            <EndOfList />
           )}
         </div>
       </div>
