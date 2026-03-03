@@ -10,6 +10,12 @@ export interface BrandWithSubCategories {
   subCategories: string[];
 }
 
+export interface GlobalFeedbackStats {
+  totalReports: number;
+  totalCoupsDeCoeur: number;
+  totalSuggestions: number;
+}
+
 export interface ProfileChronoReport {
   reportingId: string;
   marque: string;

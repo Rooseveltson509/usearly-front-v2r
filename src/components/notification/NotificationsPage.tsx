@@ -213,7 +213,7 @@ const NotificationsPage: React.FC = () => {
 
   return (
     <>
-      <PurpleBanner navOn={false} />
+      <PurpleBanner />
       <div className="notifications-layout">
         {/* 🧑‍💼 Carte utilisateur à gauche */}
         <aside className="notifications-sidebar">

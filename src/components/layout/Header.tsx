@@ -241,7 +241,7 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
               className="link"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Feedbacks
+              Feel d'actu
             </NavLink>
           )}
 
@@ -251,7 +251,7 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
               className="link"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Mon profil
+              Mes contributions
             </NavLink>
           )}
 
@@ -260,7 +260,7 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
             className="link"
             onClick={() => setMobileMenuOpen(false)}
           >
-            A propos
+            Notre mission
           </NavLink>
 
           {/* ================= MOBILE ACCOUNT SECTION ================= */}

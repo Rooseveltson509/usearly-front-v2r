@@ -1,4 +1,3 @@
-import "./UserProfileBanner.scss";
 import { useAuth } from "@src/services/AuthContext";
 import { useUserStatsSummary } from "@src/hooks/useUserStatsSummary";
 import Avatar from "@src/components/shared/Avatar";
@@ -8,6 +7,14 @@ import reportYellowIcon from "/assets/icons/reportYellowIcon.svg";
 import likeRedIcon from "/assets/icons/heart-header.svg";
 import suggestGreenIcon from "/assets/icons/suggest-header.svg";
 import badge from "/assets/icons/Little-badge.svg";
+import chatIcon from "/assets/images/chat-top-bar.svg";
+import {
+  LogoBig,
+  LogoMedium,
+  LogoSmall,
+} from "@src/components/shared/DecorativeLogos";
+import { useCountUp } from "@src/components/profile/banner/user-emotion/useCountUp";
+import "./UserProfileBanner.scss";
 
 type Props = {
   activeTab: FeedbackType;
@@ -17,11 +24,16 @@ type Props = {
 export default function UserProfileBanner({ activeTab, onTabChange }: Props) {
   const { userProfile } = useAuth();
   const { stats, loading } = useUserStatsSummary();
+  const reports = useCountUp(stats?.totalReports ?? 0, 1400);
+  const hearts = useCountUp(stats?.totalCoupsDeCoeur ?? 0, 1400);
+  const suggestions = useCountUp(stats?.totalSuggestions ?? 0, 1400);
 
   if (!userProfile) return null;
 
   return (
     <div className="user-profile-banner">
+      {/* LEFT floating mascot */}
+      <img src={chatIcon} alt="chat mascot" className="user-chat-decor" />
       {/* TOP LINE */}
       <div className="banner-container">
         <div className="banner-main">
@@ -43,39 +55,42 @@ export default function UserProfileBanner({ activeTab, onTabChange }: Props) {
           </div>
 
           {/* CENTER — stats */}
-          <div className="stats-inline">
-            <button
-              className={`stat ${activeTab === "report" ? "active" : ""}`}
-              onClick={() => onTabChange("report")}
-            >
-              <div className="stat-value">
-                {loading ? "…" : (stats?.totalReports ?? 0)}
-                <img src={reportYellowIcon} alt="Signalements" />
-              </div>
-              <span className="label">Signalements</span>
-            </button>
+          <div className="stats-block">
+            <h2 className="user-impact-title">Mon impact user :</h2>
+            <div className="stats-inline">
+              <button
+                className={`stat ${activeTab === "report" ? "active" : ""}`}
+                onClick={() => onTabChange("report")}
+              >
+                <div className="stat-value">
+                  {reports}
+                  <img src={reportYellowIcon} alt="Signalements" />
+                </div>
+                <span className="label">Signalements</span>
+              </button>
 
-            <button
-              className={`stat ${activeTab === "coupdecoeur" ? "active" : ""}`}
-              onClick={() => onTabChange("coupdecoeur")}
-            >
-              <div className="stat-value">
-                {loading ? "…" : (stats?.totalCoupsDeCoeur ?? 0)}
-                <img src={likeRedIcon} alt="Coups de cœur" />
-              </div>
-              <span className="label">Coups de cœur</span>
-            </button>
+              <button
+                className={`stat ${activeTab === "coupdecoeur" ? "active" : ""}`}
+                onClick={() => onTabChange("coupdecoeur")}
+              >
+                <div className="stat-value">
+                  {hearts}
+                  <img src={likeRedIcon} alt="Coups de cœur" />
+                </div>
+                <span className="label">Coups de cœur</span>
+              </button>
 
-            <button
-              className={`stat ${activeTab === "suggestion" ? "active" : ""}`}
-              onClick={() => onTabChange("suggestion")}
-            >
-              <div className="stat-value">
-                {loading ? "…" : (stats?.totalSuggestions ?? 0)}
-                <img src={suggestGreenIcon} alt="Suggestions" />
-              </div>
-              <span className="label">Suggestions</span>
-            </button>
+              <button
+                className={`stat ${activeTab === "suggestion" ? "active" : ""}`}
+                onClick={() => onTabChange("suggestion")}
+              >
+                <div className="stat-value">
+                  {suggestions}
+                  <img src={suggestGreenIcon} alt="Suggestions" />
+                </div>
+                <span className="label">Suggestions</span>
+              </button>
+            </div>
           </div>
 
           {/* RIGHT — power */}
@@ -88,6 +103,13 @@ export default function UserProfileBanner({ activeTab, onTabChange }: Props) {
               </div>
             </span>
           </div>
+        </div>
+      </div>
+      <div className="right">
+        <div className="decorative-logos">
+          <LogoBig />
+          <LogoMedium />
+          <LogoSmall />
         </div>
       </div>
     </div>

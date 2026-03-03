@@ -26,9 +26,10 @@ export default function UserLoveBrandsPanel({ brands }: Props) {
             <Avatar
               avatar={brand.logo}
               pseudo={brand.name}
+              siteUrl={brand.domain}
               type="brand"
               sizeHW={32}
-              preferBrandLogo={false}
+              preferBrandLogo
             />
 
             {/* TOOLTIP */}

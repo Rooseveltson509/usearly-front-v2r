@@ -206,7 +206,7 @@ const FeedbackRight: React.FC<Props> = ({
         </div>
 
         <div className="feedback-body">
-          <h2 className="cdc-post-title">{item.title}</h2>
+          {/* <h2 className="cdc-post-title">{item.title}</h2> */}
 
           <p
             className={`feedback-body-text ${showFullText ? " is-expanded" : ""}`}
