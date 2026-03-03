@@ -22,8 +22,6 @@ const IMAGE_LIST: { src: string; type: SlideType }[] = [
 const CARDS_PER_GROUP = 2;
 const MOBILE_SCROLL_STEPS = Math.ceil(IMAGE_LIST.length / CARDS_PER_GROUP);
 const MOBILE_THEME_SWITCH_PROGRESS = 0.9;
-const DESKTOP_THEME_SWITCH_OFFSET = 0.2;
-const TWO_CARDS_MAX_WIDTH = 600;
 
 const TITLE_TEXT: Record<SlideType, string[]> = {
   cdc: ["Les coups de ❤️", "que vous avez le", "plus aimés !"],
@@ -54,11 +52,18 @@ export default function FavoriteSection() {
   const [maxCardAspect, setMaxCardAspect] = useState<number | null>(null);
   const [ready, setReady] = useState(false);
   const [isColumnLayout, setIsColumnLayout] = useState(false);
-  const [isTwoCardsMobile, setIsTwoCardsMobile] = useState(false);
   const [activeMobileGroup, setActiveMobileGroup] = useState(0);
   const [mobileSelectedCards, setMobileSelectedCards] = useState<number[]>([]);
-  const isDualCardMobileLayout = isColumnLayout && isTwoCardsMobile;
   const [isMobile, setIsMobile] = useState(false);
+  const isDualCardLayout = !isMobile;
+  const isPairSelectionEnabled = isDualCardLayout;
+  const getCardBaseZIndex = (cardIndex: number) => {
+    const groupIndex = Math.floor(cardIndex / CARDS_PER_GROUP);
+    const cardIndexInGroup = (cardIndex % CARDS_PER_GROUP) + 1;
+    const zIndexInGroup = CARDS_PER_GROUP - cardIndexInGroup + 1;
+
+    return groupIndex * CARDS_PER_GROUP + zIndexInGroup;
+  };
 
   useEffect(() => {
     const check = () => {
@@ -70,7 +75,7 @@ export default function FavoriteSection() {
   }, []);
 
   const handleMobileCardClick = (cardIndex: number) => {
-    if (!isDualCardMobileLayout) return;
+    if (!isPairSelectionEnabled) return;
     if (Math.floor(cardIndex / CARDS_PER_GROUP) !== activeMobileGroup) return;
 
     setMobileSelectedCards((prev) => {
@@ -115,7 +120,7 @@ export default function FavoriteSection() {
 
   useEffect(() => {
     setMobileSelectedCards([]);
-  }, [activeMobileGroup, isDualCardMobileLayout]);
+  }, [activeMobileGroup, isPairSelectionEnabled]);
 
   useEffect(() => {
     const containerEl = containerRef.current;
@@ -124,9 +129,6 @@ export default function FavoriteSection() {
     const syncLayoutDirection = () => {
       const direction = window.getComputedStyle(containerEl).flexDirection;
       setIsColumnLayout(direction === "column");
-      setIsTwoCardsMobile(
-        window.matchMedia(`(max-width: ${TWO_CARDS_MAX_WIDTH}px)`).matches,
-      );
     };
 
     syncLayoutDirection();
@@ -162,10 +164,7 @@ export default function FavoriteSection() {
     });
 
     contentEl.style.willChange = "background-color";
-    const isMobileLayout = isDualCardMobileLayout;
-    const scrollEnd = isMobileLayout
-      ? `+=${MOBILE_SCROLL_STEPS * 100}%`
-      : "+=450%";
+    const scrollEnd = `+=${MOBILE_SCROLL_STEPS * 100}%`;
 
     const setMobileGroup = (groupIndex: number, shouldAnimateTitle = false) => {
       const safeIndex = Math.max(
@@ -191,20 +190,18 @@ export default function FavoriteSection() {
         end: scrollEnd,
         scrub: 0.5,
         pin: true,
-        onUpdate: isMobileLayout
-          ? (self) => {
-              const timelinePosition = self.progress * MOBILE_SCROLL_STEPS;
-              const nextStep = Math.min(
-                MOBILE_SCROLL_STEPS - 1,
-                Math.max(
-                  0,
-                  Math.floor(timelinePosition - MOBILE_THEME_SWITCH_PROGRESS),
-                ),
-              );
+        onUpdate: (self) => {
+          const timelinePosition = self.progress * MOBILE_SCROLL_STEPS;
+          const nextStep = Math.min(
+            MOBILE_SCROLL_STEPS - 1,
+            Math.max(
+              0,
+              Math.floor(timelinePosition - MOBILE_THEME_SWITCH_PROGRESS),
+            ),
+          );
 
-              setMobileGroup(nextStep, true);
-            }
-          : undefined,
+          setMobileGroup(nextStep, true);
+        },
       },
     });
 
@@ -217,65 +214,42 @@ export default function FavoriteSection() {
 
     // Initial position
     cardsRef.current.forEach((card, i) => {
-      const isVisibleAtStart = isMobileLayout ? i < CARDS_PER_GROUP : i === 0;
+      const isVisibleAtStart = i < CARDS_PER_GROUP;
       const cardIndexInGroup = (i % CARDS_PER_GROUP) + 1;
       const isFirstCardInGroup = cardIndexInGroup === 1;
 
-      const yOffset = isMobileLayout ? (isFirstCardInGroup ? 50 : -50) : 0;
+      const yOffset = isFirstCardInGroup ? 50 : -50;
       const initialY = isVisibleAtStart ? yOffset : START_BELOW + yOffset;
 
       gsap.set(card, {
         y: initialY,
         x: 0,
-        rotate: isMobileLayout ? (isFirstCardInGroup ? -5 : 5) : 0,
+        rotate: isFirstCardInGroup ? -5 : 0,
         scale: 1,
-        zIndex: i + 1,
+        zIndex: getCardBaseZIndex(i),
       });
     });
 
-    if (isMobileLayout) {
-      tl.to({}, { duration: 1 });
+    tl.to({}, { duration: 1 });
 
-      for (let groupIndex = 1; groupIndex < MOBILE_SCROLL_STEPS; groupIndex++) {
-        const firstCard = cardsRef.current[groupIndex * CARDS_PER_GROUP];
-        const secondCard = cardsRef.current[groupIndex * CARDS_PER_GROUP + 1];
+    for (let groupIndex = 1; groupIndex < MOBILE_SCROLL_STEPS; groupIndex++) {
+      const firstCard = cardsRef.current[groupIndex * CARDS_PER_GROUP];
+      const secondCard = cardsRef.current[groupIndex * CARDS_PER_GROUP + 1];
 
-        if (firstCard) {
-          tl.to(firstCard, { y: 50, duration: 1, ease: "none" });
-        }
-
-        if (secondCard) {
-          tl.to(secondCard, { y: -50, duration: 1, ease: "none" }, "<");
-        }
+      if (firstCard) {
+        tl.to(firstCard, { y: 50, duration: 1, ease: "none" });
       }
-    } else {
-      // Animate card stack
-      cardsRef.current.forEach((card, i) => {
-        if (i > 0) {
-          tl.to(card, { y: 0, duration: 1, ease: "none" });
-        }
 
-        const shouldAnimateTitle = i % CARDS_PER_GROUP === 0 && i > 0;
-
-        // CHANGE TITLE + ANIMATE IT EVERY 2 SLIDES
-        if (shouldAnimateTitle) {
-          tl.add(() => {
-            const mobileGroup = Math.floor(i / CARDS_PER_GROUP);
-            activeMobileGroupRef.current = mobileGroup;
-            setActiveMobileGroup(mobileGroup);
-            setActiveType(IMAGE_LIST[i].type);
-
-            animateTitleLines();
-          }, `-=${DESKTOP_THEME_SWITCH_OFFSET}`);
-        }
-      });
+      if (secondCard) {
+        tl.to(secondCard, { y: -50, duration: 1, ease: "none" }, "<");
+      }
     }
 
     return () => {
       tl.scrollTrigger?.kill();
       tl.kill();
     };
-  }, [ready, isColumnLayout, isDualCardMobileLayout]);
+  }, [ready, isColumnLayout, isMobile]);
 
   // --------------------------------
   // TITLE ANIMATION
@@ -317,7 +291,7 @@ export default function FavoriteSection() {
       >
         <div
           className={`fav-container${isColumnLayout ? " is-column" : ""}${
-            isDualCardMobileLayout ? " is-two-cards-mobile" : ""
+            isDualCardLayout && isColumnLayout ? " is-two-cards-mobile" : ""
           }`}
           ref={containerRef}
         >
@@ -354,13 +328,16 @@ export default function FavoriteSection() {
             >
               {IMAGE_LIST.map((item, i) => {
                 const isActiveMobileCard =
-                  isDualCardMobileLayout &&
+                  isDualCardLayout &&
                   Math.floor(i / CARDS_PER_GROUP) === activeMobileGroup;
-                const isMobileSelected = mobileSelectedCards.includes(i);
+                const isMobileSelected =
+                  isPairSelectionEnabled && mobileSelectedCards.includes(i);
+                const isInteractiveCard =
+                  isPairSelectionEnabled && isActiveMobileCard;
+                const cardIndexInTheme = (i % CARDS_PER_GROUP) + 1;
                 const cardZIndex = isMobileSelected
                   ? IMAGE_LIST.length * 2 + i + 1
-                  : i + 1;
-                const cardIndexInTheme = (i % CARDS_PER_GROUP) + 1;
+                  : getCardBaseZIndex(i);
                 const themeClass = `fav-card--theme-${item.type}`;
                 const themeVariantClass = `fav-card--${item.type}-${cardIndexInTheme}`;
 
@@ -368,7 +345,7 @@ export default function FavoriteSection() {
                   "fav-card",
                   themeClass,
                   themeVariantClass,
-                  isActiveMobileCard ? "is-mobile-active" : "",
+                  isInteractiveCard ? "is-mobile-active" : "",
                   isMobileSelected ? "is-mobile-selected" : "",
                 ]
                   .filter(Boolean)
@@ -384,7 +361,7 @@ export default function FavoriteSection() {
                     loading="lazy"
                     style={{ zIndex: cardZIndex }}
                     onClick={
-                      isDualCardMobileLayout
+                      isPairSelectionEnabled
                         ? () => handleMobileCardClick(i)
                         : undefined
                     }

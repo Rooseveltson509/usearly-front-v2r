@@ -6,6 +6,7 @@ import PurpleBanner from "./components/purpleBanner/PurpleBanner";
 import { useFeedbackData } from "./hooks/useFeedbackData";
 import { useBrandColors } from "./hooks/useBrandColors";
 import { useCategories } from "./hooks/useCategories";
+import { useIsAtBottom } from "@src/hooks/detect-bottom";
 
 import ReportTab from "./home-tabs/ReportTab";
 import CdcTabEnhanced from "./home-tabs/CdcTabEnhanced";
@@ -21,12 +22,6 @@ const isScrollableElement = (element: HTMLElement) => {
     overflowY === "auto" || overflowY === "scroll" || overflowY === "overlay";
   return canScrollY && element.scrollHeight > element.clientHeight + 1;
 };
-
-const isBottomReached = (
-  element: HTMLElement,
-  threshold = BOTTOM_THRESHOLD_PX,
-) =>
-  element.scrollHeight - element.scrollTop - element.clientHeight <= threshold;
 
 const getFeedbackScrollableAncestors = () => {
   if (typeof window === "undefined") return [] as HTMLElement[];
@@ -57,7 +52,10 @@ function Home() {
   const [activeFilter, setActiveFilter] = useState("chrono");
   const [suggestionSearch, setSuggestionSearch] = useState("");
   const [selectedSiteUrl, setSelectedSiteUrl] = useState<string | undefined>();
-  const [showScrollTopButton, setShowScrollTopButton] = useState(false);
+  const isAtBottom = useIsAtBottom({
+    thresholdPx: BOTTOM_THRESHOLD_PX,
+    anchorSelector: FEEDBACK_LIST_WRAPPER_SELECTOR,
+  });
 
   useEffect(() => {
     document.body.classList.add("feedback-route");
@@ -68,39 +66,6 @@ function Home() {
       document.documentElement.classList.remove("feedback-route");
     };
   }, []);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const updateScrollTopButton = () => {
-      const scrollableAncestors = getFeedbackScrollableAncestors();
-      const hasAncestorAtBottom = scrollableAncestors.some((ancestor) =>
-        isBottomReached(ancestor),
-      );
-
-      const pageAtBottom = isBottomReached(
-        document.documentElement,
-        BOTTOM_THRESHOLD_PX,
-      );
-
-      setShowScrollTopButton(hasAncestorAtBottom || pageAtBottom);
-    };
-
-    updateScrollTopButton();
-
-    window.addEventListener("scroll", updateScrollTopButton, { passive: true });
-    window.addEventListener("resize", updateScrollTopButton);
-    document.addEventListener("scroll", updateScrollTopButton, {
-      passive: true,
-      capture: true,
-    });
-
-    return () => {
-      window.removeEventListener("scroll", updateScrollTopButton);
-      window.removeEventListener("resize", updateScrollTopButton);
-      document.removeEventListener("scroll", updateScrollTopButton, true);
-    };
-  }, [activeTab, selectedBrand, selectedCategory, activeFilter]);
 
   const scrollToTop = useCallback(() => {
     if (typeof window === "undefined") return;
@@ -246,15 +211,17 @@ function Home() {
         )}
       </main>
 
-      <button
-        type="button"
-        className={`feedback-scroll-top-fab ${showScrollTopButton ? "is-visible" : ""}`}
-        onClick={scrollToTop}
-        aria-label="Remonter en haut"
-        title="Remonter en haut"
-      >
-        ↑
-      </button>
+      {isAtBottom && (
+        <button
+          type="button"
+          className="feedback-scroll-top-fab is-visible"
+          onClick={scrollToTop}
+          aria-label="Remonter en haut"
+          title="Remonter en haut"
+        >
+          ↑
+        </button>
+      )}
     </div>
   );
 }

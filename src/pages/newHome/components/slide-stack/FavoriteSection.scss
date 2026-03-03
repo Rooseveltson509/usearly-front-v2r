@@ -5,20 +5,17 @@
   width: 100%;
   min-height: 100svh;
   overflow: hidden;
+  box-sizing: border-box;
 
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
 
   margin: 0;
-  padding: 0;
-  padding-top: clamp(24px, 6vw, 90px) !important;
-  padding-bottom: clamp(20px, 4vh, 56px);
-  @media screen and (min-width: 900px) {
-    padding-top: clamp(24px, 4.5vh, 72px) !important;
-  }
+  padding: clamp(20px, 4vh, 56px) 0;
+
   @media screen and (max-width: 900px) {
-    padding-top: clamp(18px, 9vw, 52px) !important;
+    padding: clamp(16px, 6vw, 36px) 0;
   }
 }
 
@@ -46,7 +43,7 @@
     @media screen and (min-width: 900px) {
       // gap: clamp(35px, 4vw, 64px);
       flex-direction: row;
-      align-items: center;
+      align-items: flex-start;
       flex: 1 1 auto;
       // Reserve the right side for the absolute card stack to prevent overlap.
       padding-right: clamp(450px, 45vw, 765px);
@@ -61,7 +58,7 @@
 
       /* ⭐ Centre le bloc verticalement, sans coller le bouton en haut */
       justify-content: flex-start;
-      padding-top: 10px;
+      padding-top: 32px;
 
       .fav-title {
         font-size: clamp(36px, 4vw, 66px);
@@ -106,12 +103,12 @@
       align-items: center;
       flex: 1 1 100%;
       width: 100%;
-      max-width: clamp(500px, 42vw, 705px);
+      max-width: clamp(500px, 48vw, 750px);
       position: absolute;
       pointer-events: none;
       margin-left: auto;
       font-size: 36px;
-      right: clamp(24px, 3.5vw, 60px);
+      right: clamp(24px, 4vw, 60px);
       top: clamp(48px, 17.5%, 120px);
 
       @media screen and (max-width: 1730px) {
@@ -156,6 +153,14 @@
       .fav-card--theme-cdc,
       .fav-card--theme-suggestion {
         border-radius: 25px;
+      }
+
+      .fav-card--report-1 {
+        transform: translate(0px, 100px) rotate(-5deg) !important;
+      }
+
+      .fav-card--report-2 {
+        transform: translate(0px, -115px) !important;
       }
     }
 
@@ -228,6 +233,7 @@
       font-weight: 600;
       cursor: pointer;
       margin-top: 40px;
+      margin-bottom: 20px;
 
       /* ⭐ Optionnel : petit hover propre */
       transition: transform 0.2s ease;

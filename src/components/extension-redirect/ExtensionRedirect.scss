@@ -1,0 +1,52 @@
+@use "@src/styles/base/variables" as *;
+
+.extension-redirect-container {
+  background-color: #939aff;
+  padding: 3rem;
+  padding-top: 3.6rem;
+  padding-bottom: 0;
+  width: 100%;
+  min-height: 760px;
+  border-radius: 36px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  .extension-redirect-text-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    .extension-redirect-text-title {
+      h2 {
+        font-size: 50px;
+        font-weight: 900;
+        font-family: $font-main-text;
+        line-height: 1.1;
+      }
+    }
+    .extension-redirect-text-description {
+      font-family: $font-main-text;
+      p {
+        font-size: 20px;
+        font-weight: 400;
+        margin-top: 1rem;
+        span.extension-redirect-text-description-dispo {
+          font-size: 16px;
+        }
+      }
+    }
+  }
+  .extension-redirect-image-container {
+    margin-top: auto;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    margin-left: 35px;
+    img {
+      width: min(100%, 980px);
+      height: auto;
+    }
+  }
+}

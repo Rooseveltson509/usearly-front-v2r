@@ -60,6 +60,12 @@
       white-space: normal; // 👈 autorise le wrap
       overflow-wrap: anywhere;
     }
+
+    .extension-example-text-pre-title {
+      font-size: 18px;
+      font-weight: 300;
+      font-family: $font-family-4;
+    }
   }
 
   .extension-example-description {

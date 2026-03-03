@@ -6,7 +6,7 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    gap: 24px;
+    gap: 100px;
     // width: 80%;
     width: 90%;
     margin: 0px auto;
@@ -19,38 +19,21 @@
       }
     }
     .usearly-drawing-container {
-      position: relative;
-      width: 100vw;
-      background-color: #000;
-      --usearly-color: #ffffff5e;
-      overflow: hidden;
-
       .usearly-wrap {
-        position: relative;
-        width: 100%;
         margin-top: 7rem !important;
         @media screen and (max-width: 600px) {
           margin-top: 5rem;
         }
         .usearly-svg {
           max-width: 1200px;
-          left: 50%;
-          transform: translateX(-50%);
         }
       }
-      footer {
-        background-color: black;
-        color: white;
-        .footer-container {
-          ul {
-            margin-top: 50px;
-            font-size: 12px;
-            li {
-              a {
-                color: white !important;
-              }
-            }
-          }
+    }
+    footer {
+      .footer-container {
+        ul {
+          margin-top: 50px;
+          font-size: 12px;
         }
       }
     }

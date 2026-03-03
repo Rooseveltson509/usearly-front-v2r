@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import "./ExtensionExampleText.scss";
 import TextPill from "@src/components/text-pill/textPill";
 import type { ExtensionScenario } from "../extensionExample.types";
@@ -30,58 +30,62 @@ const ExtensionExampleText = ({
 
   const targetText = exprimationOptions[valueExprimation];
   const [displayedText, setDisplayedText] = useState(targetText);
-  const [phase, setPhase] = useState<"idle" | "deleting" | "typing">("idle");
-  const typingSpeed = 35;
-  const deletingSpeed = 22;
-  const pauseBeforeTyping = 120;
-  const firstRender = useRef(true);
+  // const [phase, setPhase] = useState<"idle" | "deleting" | "typing">("idle");
+  // const typingSpeed = 35;
+  // const deletingSpeed = 22;
+  // const pauseBeforeTyping = 120;
+  // const firstRender = useRef(true);
 
   useEffect(() => {
     setValueExprimation(exprimationIndexByOption[selected]);
   }, [selected]);
 
-  useEffect(() => {
-    if (firstRender.current) {
-      firstRender.current = false;
-      return;
-    }
-    setPhase("deleting"); // déclenche l'effacement avant de retaper
-  }, [targetText]);
+  // useEffect(() => {
+  //   if (firstRender.current) {
+  //     firstRender.current = false;
+  //     return;
+  //   }
+  //   setPhase("deleting"); // déclenche l'effacement avant de retaper
+  // }, [targetText]);
+
+  // useEffect(() => {
+  //   if (phase === "idle") return;
+
+  //   let timeout: ReturnType<typeof setTimeout> | undefined;
+
+  //   if (phase === "deleting") {
+  //     if (displayedText.length === 0) {
+  //       timeout = setTimeout(() => setPhase("typing"), pauseBeforeTyping);
+  //     } else {
+  //       timeout = setTimeout(() => {
+  //         setDisplayedText((prev) => prev.slice(0, -1));
+  //       }, deletingSpeed);
+  //     }
+  //   }
+
+  //   if (phase === "typing") {
+  //     if (displayedText === targetText) {
+  //       setPhase("idle");
+  //     } else {
+  //       timeout = setTimeout(() => {
+  //         setDisplayedText(targetText.slice(0, displayedText.length + 1));
+  //       }, typingSpeed);
+  //     }
+  //   }
+
+  //   return () => timeout && clearTimeout(timeout);
+  // }, [
+  //   phase,
+  //   displayedText,
+  //   targetText,
+  //   deletingSpeed,
+  //   typingSpeed,
+  //   pauseBeforeTyping,
+  // ]);
 
   useEffect(() => {
-    if (phase === "idle") return;
-
-    let timeout: ReturnType<typeof setTimeout> | undefined;
-
-    if (phase === "deleting") {
-      if (displayedText.length === 0) {
-        timeout = setTimeout(() => setPhase("typing"), pauseBeforeTyping);
-      } else {
-        timeout = setTimeout(() => {
-          setDisplayedText((prev) => prev.slice(0, -1));
-        }, deletingSpeed);
-      }
-    }
-
-    if (phase === "typing") {
-      if (displayedText === targetText) {
-        setPhase("idle");
-      } else {
-        timeout = setTimeout(() => {
-          setDisplayedText(targetText.slice(0, displayedText.length + 1));
-        }, typingSpeed);
-      }
-    }
-
-    return () => timeout && clearTimeout(timeout);
-  }, [
-    phase,
-    displayedText,
-    targetText,
-    deletingSpeed,
-    typingSpeed,
-    pauseBeforeTyping,
-  ]);
+    setDisplayedText("sur tous les sites/apps que vous utilisez");
+  }, []);
 
   // 🎨 Couleurs actives / inactives
   const ACTIVE = { color: "#ffffff", bg: "#4549EF" };
@@ -90,8 +94,11 @@ const ExtensionExampleText = ({
   return (
     <div className="extension-example-text-container">
       <h2 className="extension-example-title">
-        Exprimez-vous au <br /> moment même où <br />
-        vous <span className="text-highlight-usearly">{displayedText}</span>
+        <span className="extension-example-text-pre-title">
+          Notre approche est unique : <br />
+        </span>
+        Exprimez-vous au moment où vous en avez besoin et{" "}
+        <span className="text-highlight-usearly">{displayedText}</span>
       </h2>
 
       <p className="extension-example-description">
