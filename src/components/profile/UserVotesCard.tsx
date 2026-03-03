@@ -3,8 +3,8 @@ import "./UserVotesCard.scss";
 import { getUserVotes } from "@src/services/suggestionService";
 import { useNavigate } from "react-router-dom";
 import { useBrandLogos } from "@src/hooks/useBrandLogos";
-import { FALLBACK_BRAND_PLACEHOLDER } from "@src/utils/brandLogos";
 import suggestIcon from "/assets/icons/suggestSimpleIcon.svg";
+import Avatar from "../shared/Avatar";
 
 interface Suggestion {
   id: string;
@@ -17,16 +17,6 @@ interface Suggestion {
   siteUrl?: string;
   targetVotes?: number;
 }
-
-const getBrandInitials = (brand?: string) =>
-  brand
-    ? brand
-        .trim()
-        .split(/\s+/)
-        .slice(0, 2)
-        .map((part) => part.charAt(0).toUpperCase())
-        .join("")
-    : "";
 
 const UserVotesCard: React.FC = () => {
   const [votes, setVotes] = useState<Suggestion[]>([]);
@@ -165,8 +155,6 @@ const UserVotesCard: React.FC = () => {
         {votes.map((s) => {
           const expiresLabel =
             s.expiresInDays <= 0 ? "J-0" : `J-${s.expiresInDays}`;
-          const logo =
-            (s.marque && logos[s.marque]) || FALLBACK_BRAND_PLACEHOLDER;
           const voteTarget = s.targetVotes ?? 300;
 
           return (
@@ -222,12 +210,17 @@ const UserVotesCard: React.FC = () => {
               </div>
 
               <div className="vote-brand" aria-hidden={!s.marque}>
-                {logo && logo !== FALLBACK_BRAND_PLACEHOLDER ? (
-                  <img src={logo} alt={`Logo ${s.marque}`} />
-                ) : (
-                  <span className="brand-placeholder">
-                    {getBrandInitials(s.marque)}
-                  </span>
+                {s.marque && (
+                  <Avatar
+                    key={`${s.marque}-${s.siteUrl ?? ""}`}
+                    avatar={null}
+                    pseudo={s.marque}
+                    type="brand"
+                    siteUrl={s.siteUrl}
+                    preferBrandLogo
+                    sizeHW={32}
+                    wrapperClassName="vote-brand-avatar"
+                  />
                 )}
               </div>
             </div>

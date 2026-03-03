@@ -174,3 +174,87 @@
     }
   }
 }
+.banner-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 10;
+}
+
+.impact-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 25px;
+}
+
+.stats-inline-global {
+  display: flex;
+  gap: 60px;
+}
+
+.stat {
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  opacity: 0.6;
+  transition: all 0.25s ease;
+
+  .stat-value {
+    font-size: 40px;
+    font-weight: 600;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .label {
+    font-size: 14px;
+    color: #cbb6f7;
+  }
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &.active {
+    opacity: 1;
+
+    .stat-value {
+      transform: scale(1.08);
+    }
+
+    .label {
+      color: white;
+    }
+  }
+}
+.stat-value {
+  transition: transform 0.2s ease;
+}
+
+.stat-value.bump {
+  transform: scale(1.05);
+}
+
+.stat-value {
+  animation: popIn 0.4s ease-out;
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
