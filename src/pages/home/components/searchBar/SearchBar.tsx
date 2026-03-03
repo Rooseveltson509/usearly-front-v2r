@@ -2,6 +2,7 @@
 
 import { Search, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import type { MouseEvent as ReactMouseEvent } from "react";
 
 interface SearchBarProps {
   value: string;
@@ -18,6 +19,14 @@ const SearchBar = ({
   const inputRef = useRef<HTMLInputElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const previousValueRef = useRef(value);
+  const focusRafRef = useRef<number | null>(null);
+
+  const cancelScheduledFocus = () => {
+    if (focusRafRef.current !== null) {
+      cancelAnimationFrame(focusRafRef.current);
+      focusRafRef.current = null;
+    }
+  };
 
   useEffect(() => {
     if (value !== previousValueRef.current) {
@@ -51,25 +60,36 @@ const SearchBar = ({
     };
   }, [isActive]);
 
+  useEffect(() => {
+    return () => {
+      if (focusRafRef.current !== null) {
+        cancelAnimationFrame(focusRafRef.current);
+        focusRafRef.current = null;
+      }
+    };
+  }, []);
+
   const hasValue = Boolean(value);
   const showClearIcon = isActive && hasValue;
 
   const handleIconClick = () => {
-    if (showClearIcon) {
-      onChange("");
-      inputRef.current?.focus();
+    if (isActive) {
+      cancelScheduledFocus();
+      inputRef.current?.blur();
+      setIsActive(false);
       return;
     }
 
-    setIsActive((previous) => {
-      const nextState = !previous;
-      if (!previous) {
-        requestAnimationFrame(() => {
-          inputRef.current?.focus();
-        });
-      }
-      return nextState;
+    setIsActive(true);
+    focusRafRef.current = requestAnimationFrame(() => {
+      inputRef.current?.focus();
+      focusRafRef.current = null;
     });
+  };
+
+  const handleIconMouseDown = (event: ReactMouseEvent<HTMLSpanElement>) => {
+    event.preventDefault();
+    handleIconClick();
   };
 
   return (
@@ -79,7 +99,7 @@ const SearchBar = ({
     >
       <span
         className={`icon ${isActive ? "active" : ""}`}
-        onClick={handleIconClick}
+        onMouseDown={handleIconMouseDown}
       >
         {showClearIcon ? <X size={16} /> : <Search size={16} />}
       </span>

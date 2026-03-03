@@ -9,6 +9,7 @@ import Buttons from "@src/components/buttons/Buttons";
 
 const HEADER_HIDE_SCROLL_Y = 30;
 const HEADER_SHOW_TOP_SCROLL_Y = 2;
+const FEEDBACK_LIST_WRAPPER_SELECTOR = ".feedback-list-wrapper";
 const getGlobalScrollY = () =>
   Math.max(window.scrollY, document.documentElement.scrollTop, 0);
 
@@ -28,8 +29,8 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
   const prevUnreadCountRef = useRef(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isHeaderHidden, setIsHeaderHidden] = useState(false);
-  const hasCrossedHideThresholdRef = useRef(false);
   const hiddenRef = useRef(false);
+  const lastScrollYRef = useRef(0);
   const tickingRef = useRef(false);
   const rafIdRef = useRef<number | null>(null);
 
@@ -91,28 +92,60 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
   }, []);
 
   useEffect(() => {
+    const isFeedbackRoute = location.pathname.startsWith("/feedback");
     const mainElement = document.querySelector("main");
+
+    const getFeedbackScrollY = () => {
+      const feedbackList = document.querySelector<HTMLElement>(
+        FEEDBACK_LIST_WRAPPER_SELECTOR,
+      );
+
+      if (!feedbackList) {
+        return getGlobalScrollY();
+      }
+
+      // On prend le plus grand scrollTop entre la page et les parents
+      // de la zone feedback pour couvrir tous les cas de conteneurs scrollables.
+      let maxScrollY = getGlobalScrollY();
+      let current: HTMLElement | null = feedbackList;
+
+      while (current) {
+        maxScrollY = Math.max(maxScrollY, current.scrollTop || 0);
+        current = current.parentElement;
+      }
+
+      return maxScrollY;
+    };
+
     const getScrollY = () =>
-      Math.max(getGlobalScrollY(), mainElement?.scrollTop ?? 0);
+      isFeedbackRoute
+        ? getFeedbackScrollY()
+        : Math.max(getGlobalScrollY(), mainElement?.scrollTop ?? 0);
 
     const updateHeaderVisibility = () => {
       const currentScrollY = getScrollY();
+      const wasHidden = hiddenRef.current;
       const isAtTop = currentScrollY <= HEADER_SHOW_TOP_SCROLL_Y;
+      const isScrollingDown = currentScrollY > lastScrollYRef.current;
+      const hasPassedHideThreshold = currentScrollY > HEADER_HIDE_SCROLL_Y;
 
-      if (isAtTop) {
-        hasCrossedHideThresholdRef.current = false;
-      } else if (currentScrollY > HEADER_HIDE_SCROLL_Y) {
-        hasCrossedHideThresholdRef.current = true;
+      let nextHiddenState = wasHidden;
+
+      if (isFeedbackRoute) {
+        // Sur /feedback: visible uniquement en haut.
+        nextHiddenState = !(mobileMenuOpen || isAtTop);
+      } else if (mobileMenuOpen || isAtTop) {
+        nextHiddenState = false;
+      } else if (!wasHidden && isScrollingDown && hasPassedHideThreshold) {
+        nextHiddenState = true;
       }
 
-      const nextHiddenState =
-        !mobileMenuOpen && hasCrossedHideThresholdRef.current;
-
-      if (nextHiddenState !== hiddenRef.current) {
+      if (nextHiddenState !== wasHidden) {
         hiddenRef.current = nextHiddenState;
         setIsHeaderHidden(nextHiddenState);
       }
 
+      lastScrollYRef.current = currentScrollY;
       tickingRef.current = false;
       rafIdRef.current = null;
     };
@@ -126,18 +159,35 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
       rafIdRef.current = window.requestAnimationFrame(updateHeaderVisibility);
     };
 
-    hasCrossedHideThresholdRef.current = false;
     hiddenRef.current = false;
+    lastScrollYRef.current = getScrollY();
+    setIsHeaderHidden(false);
 
-    window.addEventListener("scroll", onScroll, { passive: true });
-    mainElement?.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    if (isFeedbackRoute) {
+      // capture=true pour capter les scroll des sous-conteneurs.
+      document.addEventListener("scroll", onScroll, {
+        passive: true,
+        capture: true,
+      });
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("resize", onScroll);
+    } else {
+      window.addEventListener("scroll", onScroll, { passive: true });
+      mainElement?.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("resize", onScroll);
+    }
     onScroll();
 
     return () => {
-      window.removeEventListener("scroll", onScroll);
-      mainElement?.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      if (isFeedbackRoute) {
+        document.removeEventListener("scroll", onScroll, true);
+        window.removeEventListener("scroll", onScroll);
+        window.removeEventListener("resize", onScroll);
+      } else {
+        window.removeEventListener("scroll", onScroll);
+        mainElement?.removeEventListener("scroll", onScroll);
+        window.removeEventListener("resize", onScroll);
+      }
 
       if (rafIdRef.current !== null) {
         window.cancelAnimationFrame(rafIdRef.current);

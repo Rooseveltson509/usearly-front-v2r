@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import "./Home.scss";
 import { type FeedbackType } from "@src/components/user-profile/FeedbackTabs";
 import UserStatsCard from "@src/components/user-profile/UserStatsCard";
@@ -11,6 +11,44 @@ import ReportTab from "./home-tabs/ReportTab";
 import CdcTabEnhanced from "./home-tabs/CdcTabEnhanced";
 import SuggestionTabEnhanced from "./home-tabs/SuggestionTabEnhanced";
 
+const FEEDBACK_LIST_WRAPPER_SELECTOR = ".feedback-list-wrapper";
+const BOTTOM_THRESHOLD_PX = 12;
+
+const isScrollableElement = (element: HTMLElement) => {
+  const styles = window.getComputedStyle(element);
+  const overflowY = styles.overflowY;
+  const canScrollY =
+    overflowY === "auto" || overflowY === "scroll" || overflowY === "overlay";
+  return canScrollY && element.scrollHeight > element.clientHeight + 1;
+};
+
+const isBottomReached = (
+  element: HTMLElement,
+  threshold = BOTTOM_THRESHOLD_PX,
+) =>
+  element.scrollHeight - element.scrollTop - element.clientHeight <= threshold;
+
+const getFeedbackScrollableAncestors = () => {
+  if (typeof window === "undefined") return [] as HTMLElement[];
+
+  const feedbackList = document.querySelector<HTMLElement>(
+    FEEDBACK_LIST_WRAPPER_SELECTOR,
+  );
+  if (!feedbackList) return [] as HTMLElement[];
+
+  const ancestors: HTMLElement[] = [];
+  let current: HTMLElement | null = feedbackList;
+
+  while (current) {
+    if (isScrollableElement(current)) {
+      ancestors.push(current);
+    }
+    current = current.parentElement;
+  }
+
+  return ancestors;
+};
+
 function Home() {
   const [activeTab, setActiveTab] = useState<FeedbackType>("report");
   const [selectedBrand, setSelectedBrand] = useState("");
@@ -19,6 +57,62 @@ function Home() {
   const [activeFilter, setActiveFilter] = useState("chrono");
   const [suggestionSearch, setSuggestionSearch] = useState("");
   const [selectedSiteUrl, setSelectedSiteUrl] = useState<string | undefined>();
+  const [showScrollTopButton, setShowScrollTopButton] = useState(false);
+
+  useEffect(() => {
+    document.body.classList.add("feedback-route");
+    document.documentElement.classList.add("feedback-route");
+
+    return () => {
+      document.body.classList.remove("feedback-route");
+      document.documentElement.classList.remove("feedback-route");
+    };
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const updateScrollTopButton = () => {
+      const scrollableAncestors = getFeedbackScrollableAncestors();
+      const hasAncestorAtBottom = scrollableAncestors.some((ancestor) =>
+        isBottomReached(ancestor),
+      );
+
+      const pageAtBottom = isBottomReached(
+        document.documentElement,
+        BOTTOM_THRESHOLD_PX,
+      );
+
+      setShowScrollTopButton(hasAncestorAtBottom || pageAtBottom);
+    };
+
+    updateScrollTopButton();
+
+    window.addEventListener("scroll", updateScrollTopButton, { passive: true });
+    window.addEventListener("resize", updateScrollTopButton);
+    document.addEventListener("scroll", updateScrollTopButton, {
+      passive: true,
+      capture: true,
+    });
+
+    return () => {
+      window.removeEventListener("scroll", updateScrollTopButton);
+      window.removeEventListener("resize", updateScrollTopButton);
+      document.removeEventListener("scroll", updateScrollTopButton, true);
+    };
+  }, [activeTab, selectedBrand, selectedCategory, activeFilter]);
+
+  const scrollToTop = useCallback(() => {
+    if (typeof window === "undefined") return;
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    document.documentElement.scrollTo({ top: 0, behavior: "smooth" });
+
+    const scrollableAncestors = getFeedbackScrollableAncestors();
+    scrollableAncestors.forEach((ancestor) => {
+      ancestor.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }, []);
 
   // ✅ Gestion de la marque
   const handleSetBrand = useCallback((brand: string, siteUrl?: string) => {
@@ -151,6 +245,16 @@ function Home() {
           />
         )}
       </main>
+
+      <button
+        type="button"
+        className={`feedback-scroll-top-fab ${showScrollTopButton ? "is-visible" : ""}`}
+        onClick={scrollToTop}
+        aria-label="Remonter en haut"
+        title="Remonter en haut"
+      >
+        ↑
+      </button>
     </div>
   );
 }

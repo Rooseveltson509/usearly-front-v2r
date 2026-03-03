@@ -28,11 +28,12 @@
   }
 
   .icon.active {
-    height: 48px;
-    width: 48px;
+    height: 44px;
+    width: 44px;
     border-radius: 0 999px 999px 0;
     border: 1px solid $dark;
     border-left: none;
+    margin-left: -1px;
   }
 
   .input {
