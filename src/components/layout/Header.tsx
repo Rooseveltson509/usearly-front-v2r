@@ -9,9 +9,13 @@ import Buttons from "@src/components/buttons/Buttons";
 
 const HEADER_HIDE_SCROLL_Y = 30;
 const HEADER_SHOW_TOP_SCROLL_Y = 2;
-const FEEDBACK_LIST_WRAPPER_SELECTOR = ".feedback-list-wrapper";
 const getGlobalScrollY = () =>
-  Math.max(window.scrollY, document.documentElement.scrollTop, 0);
+  Math.max(
+    window.scrollY,
+    document.documentElement.scrollTop,
+    document.body.scrollTop,
+    0,
+  );
 
 interface HeaderProps {
   heroMode?: boolean;
@@ -31,6 +35,7 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
   const [isHeaderHidden, setIsHeaderHidden] = useState(false);
   const hiddenRef = useRef(false);
   const lastScrollYRef = useRef(0);
+  const activeScrollYRef = useRef(0);
   const tickingRef = useRef(false);
   const rafIdRef = useRef<number | null>(null);
 
@@ -94,36 +99,36 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
   useEffect(() => {
     const isFeedbackRoute = location.pathname.startsWith("/feedback");
     const mainElement = document.querySelector("main");
+    const isScrollableElement = (element: HTMLElement) => {
+      const styles = window.getComputedStyle(element);
+      const overflowY = styles.overflowY;
+      const canScrollY =
+        overflowY === "auto" ||
+        overflowY === "scroll" ||
+        overflowY === "overlay";
 
-    const getFeedbackScrollY = () => {
-      const feedbackList = document.querySelector<HTMLElement>(
-        FEEDBACK_LIST_WRAPPER_SELECTOR,
-      );
-
-      if (!feedbackList) {
-        return getGlobalScrollY();
+      return canScrollY && element.scrollHeight > element.clientHeight + 1;
+    };
+    const getBaseScrollY = () =>
+      Math.max(getGlobalScrollY(), mainElement?.scrollTop ?? 0);
+    const getScrollYFromTarget = (target: HTMLElement | null) => {
+      if (!target || !target.closest("main")) {
+        return getBaseScrollY();
       }
 
-      // On prend le plus grand scrollTop entre la page et les parents
-      // de la zone feedback pour couvrir tous les cas de conteneurs scrollables.
-      let maxScrollY = getGlobalScrollY();
-      let current: HTMLElement | null = feedbackList;
-
+      let current: HTMLElement | null = target;
       while (current) {
-        maxScrollY = Math.max(maxScrollY, current.scrollTop || 0);
+        if (isScrollableElement(current)) {
+          return Math.max(getBaseScrollY(), current.scrollTop || 0);
+        }
         current = current.parentElement;
       }
 
-      return maxScrollY;
+      return getBaseScrollY();
     };
 
-    const getScrollY = () =>
-      isFeedbackRoute
-        ? getFeedbackScrollY()
-        : Math.max(getGlobalScrollY(), mainElement?.scrollTop ?? 0);
-
     const updateHeaderVisibility = () => {
-      const currentScrollY = getScrollY();
+      const currentScrollY = activeScrollYRef.current;
       const wasHidden = hiddenRef.current;
       const isAtTop = currentScrollY <= HEADER_SHOW_TOP_SCROLL_Y;
       const isScrollingDown = currentScrollY > lastScrollYRef.current;
@@ -131,10 +136,7 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
 
       let nextHiddenState = wasHidden;
 
-      if (isFeedbackRoute) {
-        // Sur /feedback: visible uniquement en haut.
-        nextHiddenState = !(mobileMenuOpen || isAtTop);
-      } else if (mobileMenuOpen || isAtTop) {
+      if (mobileMenuOpen || isAtTop) {
         nextHiddenState = false;
       } else if (!wasHidden && isScrollingDown && hasPassedHideThreshold) {
         nextHiddenState = true;
@@ -158,35 +160,46 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
       tickingRef.current = true;
       rafIdRef.current = window.requestAnimationFrame(updateHeaderVisibility);
     };
+    const onWindowScroll = () => {
+      activeScrollYRef.current = getBaseScrollY();
+      onScroll();
+    };
+    const onCapturedScroll = (event: Event) => {
+      const target = event.target instanceof HTMLElement ? event.target : null;
+      activeScrollYRef.current = getScrollYFromTarget(target);
+      onScroll();
+    };
 
     hiddenRef.current = false;
-    lastScrollYRef.current = getScrollY();
+    activeScrollYRef.current = getBaseScrollY();
+    lastScrollYRef.current = activeScrollYRef.current;
     setIsHeaderHidden(false);
 
     if (isFeedbackRoute) {
-      // capture=true pour capter les scroll des sous-conteneurs.
-      document.addEventListener("scroll", onScroll, {
+      document.addEventListener("scroll", onCapturedScroll, {
         passive: true,
         capture: true,
       });
-      window.addEventListener("scroll", onScroll, { passive: true });
-      window.addEventListener("resize", onScroll);
+      window.addEventListener("scroll", onWindowScroll, { passive: true });
+      window.addEventListener("resize", onWindowScroll);
     } else {
-      window.addEventListener("scroll", onScroll, { passive: true });
-      mainElement?.addEventListener("scroll", onScroll, { passive: true });
-      window.addEventListener("resize", onScroll);
+      window.addEventListener("scroll", onWindowScroll, { passive: true });
+      mainElement?.addEventListener("scroll", onWindowScroll, {
+        passive: true,
+      });
+      window.addEventListener("resize", onWindowScroll);
     }
     onScroll();
 
     return () => {
       if (isFeedbackRoute) {
-        document.removeEventListener("scroll", onScroll, true);
-        window.removeEventListener("scroll", onScroll);
-        window.removeEventListener("resize", onScroll);
+        document.removeEventListener("scroll", onCapturedScroll, true);
+        window.removeEventListener("scroll", onWindowScroll);
+        window.removeEventListener("resize", onWindowScroll);
       } else {
-        window.removeEventListener("scroll", onScroll);
-        mainElement?.removeEventListener("scroll", onScroll);
-        window.removeEventListener("resize", onScroll);
+        window.removeEventListener("scroll", onWindowScroll);
+        mainElement?.removeEventListener("scroll", onWindowScroll);
+        window.removeEventListener("resize", onWindowScroll);
       }
 
       if (rafIdRef.current !== null) {
@@ -228,7 +241,7 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
         <nav className={`nav-links ${mobileMenuOpen ? "mobile-open" : ""}`}>
           {/* ======= NAV LINKS ======= */}
           <NavLink
-            to="/home"
+            to="/homeAlternate"
             className="link"
             onClick={() => setMobileMenuOpen(false)}
           >
