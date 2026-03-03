@@ -190,7 +190,12 @@ const Avatar: React.FC<AvatarProps> = ({
     <div className={`avatar-wrapper-custom ${wrapperClassName}`}>
       {shouldShowImage ? (
         <img
-          style={{ width: sizeHW, height: sizeHW }}
+          style={{
+            width: sizeHW,
+            minWidth: sizeHW,
+            height: sizeHW,
+            minHeight: sizeHW,
+          }}
           src={fullUrl || ""}
           alt={pseudo || "Avatar"}
           onError={() => setImgError(true)}
@@ -202,7 +207,12 @@ const Avatar: React.FC<AvatarProps> = ({
         />
       ) : (
         <div
-          style={{ width: sizeHW, height: sizeHW }}
+          style={{
+            width: sizeHW,
+            minWidth: sizeHW,
+            height: sizeHW,
+            minHeight: sizeHW,
+          }}
           className={`avatar-fallback-custom ${colorClass} ${className} ${
             type === "brand" ? "brand-fallback" : ""
           }`}

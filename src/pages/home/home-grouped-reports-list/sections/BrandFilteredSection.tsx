@@ -1,6 +1,5 @@
 import React from "react";
 import SqueletonAnime from "@src/components/loader/SqueletonAnime";
-import Avatar from "@src/components/shared/Avatar";
 import { capitalizeFirstLetter } from "@src/utils/stringUtils";
 import FlatSubcategoryBlock from "../../confirm-reportlist/FlatSubcategoryBlock";
 import { getMostAdvancedStatus } from "@src/utils/ticketStatus";
@@ -86,7 +85,7 @@ function groupReportsAsTickets(reports: any[]) {
 const BrandFilteredSection: React.FC<BrandFilteredSectionProps> = ({
   selectedBrand,
   selectedCategory,
-  selectedSiteUrl,
+  // selectedSiteUrl,
   filteredByCategory,
   loadingFiltered,
   reportsToDisplay,
@@ -124,7 +123,7 @@ const BrandFilteredSection: React.FC<BrandFilteredSectionProps> = ({
       {selectedBrand && (
         <div className="selected-brand-summary">
           <div className="selected-brand-summary__brand">
-            <div className="selected-brand-summary__logo">
+            {/* <div className="selected-brand-summary__logo">
               <Avatar
                 avatar={null}
                 pseudo={selectedBrand}
@@ -132,7 +131,7 @@ const BrandFilteredSection: React.FC<BrandFilteredSectionProps> = ({
                 siteUrl={selectedSiteUrl}
                 preferBrandLogo={true}
               />
-            </div>
+            </div> */}
 
             <div className="selected-brand-summary__info-container">
               {selectedCategory ? (

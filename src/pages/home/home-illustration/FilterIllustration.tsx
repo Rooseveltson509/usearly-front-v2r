@@ -192,6 +192,7 @@ const FilterIllustration = ({
             pseudo={selectedBrand}
             type="brand"
             siteUrl={siteUrl}
+            sizeHW={100}
             preferBrandLogo
           />
         </div>
