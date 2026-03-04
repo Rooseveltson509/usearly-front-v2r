@@ -36,6 +36,34 @@
         }
       }
     }
+    .extension-redirect-text-button {
+      margin-top: 5px;
+      a {
+        text-decoration: none;
+        .extension-redirect-button {
+          display: flex;
+          background-color: #fff;
+          gap: 10px;
+          padding: 7.5px 20px;
+          align-items: center;
+          border-radius: 8px;
+          img {
+            --heightWidth-img: 30px;
+            min-height: var(--heightWidth-img);
+            min-width: var(--heightWidth-img);
+            width: var(--heightWidth-img);
+            height: var(--heightWidth-img);
+            max-height: var(--heightWidth-img);
+            max-width: var(--heightWidth-img);
+          }
+          .extension-redirect-button-text {
+            color: #007bff;
+            font-weight: bold;
+            font-size: 18px;
+          }
+        }
+      }
+    }
   }
   .extension-redirect-image-container {
     margin-top: auto;

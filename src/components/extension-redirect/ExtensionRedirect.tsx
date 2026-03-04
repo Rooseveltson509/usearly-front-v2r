@@ -1,6 +1,5 @@
 import React from "react";
 import "./ExtensionRedirect.scss";
-import chromeExtensionButton from "/assets/images/chromeExtensionButton.svg";
 import chromeExtensionImg from "/assets/images/chromeExtensionImg.svg";
 
 const ExtensionRedirect = () => {
@@ -24,9 +23,14 @@ const ExtensionRedirect = () => {
             href="https://chromewebstore.google.com/detail/geclfkocbehpdojggpaeeofgdiiajcii?utm_source=item-share-cb"
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: "#007bff", textDecoration: "underline" }}
           >
-            <img src={chromeExtensionButton} alt="" />
+            <button className="extension-redirect-button">
+              <img
+                src="https://www.google.com/chrome/static/images/chrome-logo.svg"
+                alt=""
+              />
+              <p className="extension-redirect-button-text">Chrome Extension</p>
+            </button>
           </a>
         </div>
       </div>

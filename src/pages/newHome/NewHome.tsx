@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import "./NewHome.scss";
 /* import SuggestCard from "./card/SuggestCard"; */
 import BrandCard from "./card/BrandCard";
@@ -10,8 +10,18 @@ import HeroSection from "./components/heroSection/HeroSection";
 import ScrollInlineImages from "./components/scroll-text/ScrollInlineImages";
 import FavoriteSection from "./components/slide-stack/FavoriteSection";
 import InfiniteCarouselBanner from "./components/infiniteCarouselBanner/InfiniteCarouselBanner";
+import { useIsAtBottom } from "@src/hooks/detect-bottom";
+
+const BOTTOM_THRESHOLD_PX = 12;
 
 const NewHome: React.FC = () => {
+  const isAtBottom = useIsAtBottom(BOTTOM_THRESHOLD_PX);
+  const scrollToTop = useCallback(() => {
+    if (typeof window === "undefined") return;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    document.documentElement.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
   return (
     <div className="new-home-page">
       <HeroSection />
@@ -62,6 +72,18 @@ const NewHome: React.FC = () => {
 
         <Footer />
       </div>
+
+      {isAtBottom && (
+        <button
+          type="button"
+          className="feedback-scroll-top-fab is-visible"
+          onClick={scrollToTop}
+          aria-label="Remonter en haut"
+          title="Remonter en haut"
+        >
+          ↑
+        </button>
+      )}
     </div>
   );
 };
