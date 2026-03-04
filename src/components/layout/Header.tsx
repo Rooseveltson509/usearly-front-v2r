@@ -264,7 +264,7 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
               className="link"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Mes contributions
+              Mes feedbacks
             </NavLink>
           )}
 

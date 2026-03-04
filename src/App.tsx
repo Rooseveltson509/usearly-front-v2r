@@ -22,6 +22,7 @@ import NotificationsPage from "./components/notification/NotificationsPage";
 import UsearlyDraw from "./components/background/Usearly";
 import AboutPage from "./pages/about/AboutPage";
 import AboutClassicPage from "./pages/aboutClassic/AboutClassicPage";
+import AboutClassicPageAlternate from "./pages/aboutClassic/AboutClassicPageAlternate";
 import NotFoundPage from "./pages/not-found/NotFoundPage";
 import AdminBrandsPage from "./pages/admin/brands/AdminBrandsPage";
 import DashboardUser from "./pages/admin/dashboardUser/users/DashboardUser";
@@ -143,6 +144,10 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             {/* about */}
             <Route path="/about" element={<AboutClassicPage />} />
+            <Route
+              path="/aboutAlternate"
+              element={<AboutClassicPageAlternate />}
+            />
             <Route path="/about-legacy" element={<AboutPage />} />
             <Route
               path="/confirm"

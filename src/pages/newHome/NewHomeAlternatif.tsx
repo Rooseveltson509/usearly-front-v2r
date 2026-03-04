@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useCallback, useRef } from "react";
 import "./NewHomeAlternatif.scss";
 /* import SuggestCard from "./card/SuggestCard"; */
 import BrandCard from "./card/BrandCard";
@@ -14,13 +14,22 @@ import InfiniteCarouselBanner from "./components/infiniteCarouselBanner/Infinite
 // import useScrollPhrase from "./hooks/useScrollPhrase";
 import useScrollPhrase from "@src/pages/aboutClassic/hooks/useScrollPhrase";
 import ExtensionRedirect from "@src/components/extension-redirect/ExtensionRedirect";
+import { useIsAtBottom } from "@src/hooks/detect-bottom";
 
 const PHRASES = ["des sondages", "des chatbots", "le silence"];
 const SCROLL_STEP = 0.05;
+const BOTTOM_THRESHOLD_PX = 12;
 
 const NewHome: React.FC = () => {
   const sectionRef = useRef<HTMLDivElement>(null!);
   const phraseIndex = useScrollPhrase(sectionRef, PHRASES.length, SCROLL_STEP);
+  const isAtBottom = useIsAtBottom(BOTTOM_THRESHOLD_PX);
+  const scrollToTop = useCallback(() => {
+    if (typeof window === "undefined") return;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    document.documentElement.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
   return (
     <div className="new-home-page">
       <Hero />
@@ -68,6 +77,18 @@ const NewHome: React.FC = () => {
           <Footer />
         </div>
       </div>
+
+      {isAtBottom && (
+        <button
+          type="button"
+          className="feedback-scroll-top-fab is-visible"
+          onClick={scrollToTop}
+          aria-label="Remonter en haut"
+          title="Remonter en haut"
+        >
+          ↑
+        </button>
+      )}
     </div>
   );
 };

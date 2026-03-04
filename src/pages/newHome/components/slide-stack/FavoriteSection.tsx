@@ -21,7 +21,7 @@ const IMAGE_LIST: { src: string; type: SlideType }[] = [
 
 const CARDS_PER_GROUP = 2;
 const MOBILE_SCROLL_STEPS = Math.ceil(IMAGE_LIST.length / CARDS_PER_GROUP);
-const MOBILE_THEME_SWITCH_PROGRESS = 0.9;
+const MOBILE_THEME_SWITCH_PROGRESS = 0.7;
 
 const TITLE_TEXT: Record<SlideType, string[]> = {
   cdc: ["Les coups de ❤️", "que vous avez le", "plus aimés !"],
@@ -47,6 +47,8 @@ export default function FavoriteSection() {
   const cardsRef = useRef<HTMLImageElement[]>([]);
   const titleLinesRef = useRef<HTMLSpanElement[]>([]);
   const activeMobileGroupRef = useRef(0);
+  const hasIntroAnimatedRef = useRef(false);
+  const activeCardsTweenRef = useRef<gsap.core.Tween | null>(null);
 
   const [activeType, setActiveType] = useState<SlideType>(IMAGE_LIST[0].type);
   const [maxCardAspect, setMaxCardAspect] = useState<number | null>(null);
@@ -63,6 +65,34 @@ export default function FavoriteSection() {
     const zIndexInGroup = CARDS_PER_GROUP - cardIndexInGroup + 1;
 
     return groupIndex * CARDS_PER_GROUP + zIndexInGroup;
+  };
+
+  const animateActiveCards = (groupIndex: number) => {
+    const groupStart = groupIndex * CARDS_PER_GROUP;
+    const cards = cardsRef.current
+      .slice(groupStart, groupStart + CARDS_PER_GROUP)
+      .filter(Boolean);
+
+    if (!cards.length) return;
+
+    activeCardsTweenRef.current?.kill();
+    activeCardsTweenRef.current = gsap.fromTo(
+      cards,
+      {
+        x: (index: number) => (index === 0 ? -14 : 14),
+        scale: 0.985,
+        rotate: (index: number) => (index === 0 ? -6.5 : 1.2),
+      },
+      {
+        x: 0,
+        scale: 1,
+        rotate: (index: number) => (index === 0 ? -5 : 0),
+        duration: 4,
+        ease: "power2.out",
+        stagger: 1,
+        overwrite: "auto",
+      },
+    );
   };
 
   useEffect(() => {
@@ -177,6 +207,7 @@ export default function FavoriteSection() {
       activeMobileGroupRef.current = safeIndex;
       setActiveMobileGroup(safeIndex);
       setActiveType(IMAGE_LIST[safeIndex * CARDS_PER_GROUP].type);
+      animateActiveCards(safeIndex);
 
       if (shouldAnimateTitle) {
         animateTitleLines();
@@ -207,6 +238,7 @@ export default function FavoriteSection() {
 
     const cardsContainerHeight = cardsContainerRef.current?.offsetHeight ?? 0;
     const START_BELOW = Math.max(window.innerHeight, cardsContainerHeight + 80);
+    let introTween: gsap.core.Tween | null = null;
 
     activeMobileGroupRef.current = 0;
     setActiveMobileGroup(0);
@@ -230,6 +262,33 @@ export default function FavoriteSection() {
       });
     });
 
+    if (!hasIntroAnimatedRef.current) {
+      const initialCards = cardsRef.current.slice(0, CARDS_PER_GROUP);
+
+      if (initialCards.length) {
+        hasIntroAnimatedRef.current = true;
+        introTween = gsap.fromTo(
+          initialCards,
+          {
+            opacity: 0,
+            scale: 0.97,
+            x: (index: number) => (index === 0 ? -18 : 18),
+            y: (index: number) => (index === 0 ? 72 : -72),
+          },
+          {
+            opacity: 1,
+            scale: 1,
+            x: 0,
+            y: (index: number) => (index === 0 ? 50 : -50),
+            duration: 0.75,
+            ease: "power3.out",
+            stagger: 0.08,
+            overwrite: "auto",
+          },
+        );
+      }
+    }
+
     tl.to({}, { duration: 1 });
 
     for (let groupIndex = 1; groupIndex < MOBILE_SCROLL_STEPS; groupIndex++) {
@@ -246,6 +305,8 @@ export default function FavoriteSection() {
     }
 
     return () => {
+      introTween?.kill();
+      activeCardsTweenRef.current?.kill();
       tl.scrollTrigger?.kill();
       tl.kill();
     };

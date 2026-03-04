@@ -18,13 +18,14 @@ const CARDS: CardContent[] = [
     content: (
       <>
         <span className="about-classic__card-description">
-          Usearly est né d’une frustration largement partagée{" "}
+          Usearly répond à une frustration très largement partagée{" "}
         </span>
         <span className="about-classic__card-description--highlight">
-          Signaler un problème ou un irritant reste souvent un parcours du
-          combattant. Entre les formulaires interminables et l’incertitude
-          d’être entendu, l’utilisateur se retrouve seul, sans comprendre ce qui
-          se passe et sans solution.
+          On ne peut pas signaler un bug ou un irritant sur un site internet ou
+          une application mobile, au moment où on le rencontre. On ne peut pas
+          suggérer une idée d'amélioration qu'on a vue ailleurs et qui
+          améliorerait notre utilisation. On doit intérioriser nos émotions. Ce
+          qui crée une distance avec les marques.
         </span>
       </>
     ),
@@ -35,14 +36,14 @@ const CARDS: CardContent[] = [
     content: (
       <>
         <span className="about-classic__card-description">
-          Notre mission est simple : permettre à chaque utilisateur d’être
-          véritablement entendu{" "}
+          Notre mission : permettre aux utilisateurs de s'exprimer partout et
+          sur tout.{" "}
         </span>{" "}
-        Avec Usearly, nous voulons renverser cette tendance pour que vous
-        puissiez signaler un problème ou proposer une idée en toute simplicité.
-        Grâce à la communauté vous obtenez des réponses et des solutions en
-        temps réel et influencez directement l’évolution des sites et
-        applications que vous utilisez au quotidien.
+        Avec Usearly, nous proposons une alternative aux sondages réducteurs,
+        aux avis Google et à l'ultime recours des réseaux sociaux pour se faire
+        entendre. Signalez un problème ou proposez une idée en toute simplicité.
+        Et grâce à la communauté Usearly vous obtenez du soutien et des
+        solutions à vos blocages en temps réel.
       </>
     ),
   },

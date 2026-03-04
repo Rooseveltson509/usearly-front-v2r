@@ -5,7 +5,7 @@ import sparklesIcon from "/assets/icons/suggest-icon.svg";
 
 const ITEMS = [
   { icon: reportIcon, label: "Signalements" },
-  { icon: heartIcon, label: "coup de coeur" },
+  { icon: heartIcon, label: "coups de coeur" },
   { icon: sparklesIcon, label: "Suggestions" },
 ];
 
@@ -13,7 +13,7 @@ const InfiniteCarouselBanner = () => {
   return (
     <div
       className="infinite-carousel-banner"
-      aria-label="Signalements, coup de coeur, Suggestions"
+      aria-label="Signalements, coups de coeur, Suggestions"
     >
       <div className="marquee" role="presentation">
         <div className="marquee__track">
