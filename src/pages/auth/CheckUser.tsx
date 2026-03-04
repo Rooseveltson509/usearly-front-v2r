@@ -40,7 +40,7 @@ function CheckUser() {
   return (
     <div className="check-user-container">
       <div className="check-user-form">
-        <h2>Saisi une adresse E-mail pour nous rejoindre ou te connecter</h2>
+        <h2>Saisis ton adresse e-mail pour nous rejoindre ou te connecter.</h2>
 
         <div>
           <InputText
