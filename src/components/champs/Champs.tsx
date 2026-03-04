@@ -439,7 +439,7 @@ export default function SelectFilter<V extends string = string>({
   };
 
   const popupStyle: React.CSSProperties = {
-    marginTop: offset ? `${offset}px` : "60px",
+    marginTop: offset ? `${offset}px` : "45px",
     ...(shouldApplyPopupMinWidth && cssMinW ? { minWidth: cssMinW } : {}),
   };
 
