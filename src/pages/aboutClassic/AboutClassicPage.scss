@@ -3,14 +3,14 @@
 .page-about-classic {
   div {
     .header {
-      background: rgb(255 255 255 / 50%);
+      background: white;
       backdrop-filter: blur(4px);
     }
   }
 }
-.main--about-classic {
-  padding-top: 0 !important;
-}
+// .main--about-classic {
+//   padding-top: 0 !important;
+// }
 
 .about-classic {
   --about-ink: #131313;
@@ -71,7 +71,7 @@
 
 .about-classic__hero {
   position: relative;
-  height: 100vh;
+  height: 94vh;
   margin-top: calc(var(--hero-offset) * -1);
   padding: clamp(90px, 12vh, 160px) 0vw clamp(60px, 10vh, 120px);
   display: flex;

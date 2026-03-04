@@ -12,6 +12,8 @@ export default function UserEmotionSummaryPanel({ data, loading }: Props) {
 
   const { reactionsCount, brandsCount, emotions } = data;
   const [main, ...others] = emotions;
+  const diagonalAngles = ["-45deg", "135deg", "-135deg", "45deg"];
+  const useDiagonalOrbit = others.length <= diagonalAngles.length;
 
   return (
     <div className="emotion-summary-card">
@@ -38,17 +40,22 @@ export default function UserEmotionSummaryPanel({ data, loading }: Props) {
         <div className="emoji-orbit">
           {others.map((e, index) => {
             const meta = EMOJI_META[e.emoji];
+            const orbitStyle = useDiagonalOrbit
+              ? ({
+                  "--angle": diagonalAngles[index],
+                } as React.CSSProperties)
+              : ({
+                  "--i": index,
+                  "--total": others.length,
+                } as React.CSSProperties);
 
             return (
               <div
                 key={e.emoji}
-                className="emoji-item emoji-orbit-item"
-                style={
-                  {
-                    "--i": index,
-                    "--total": others.length,
-                  } as React.CSSProperties
-                }
+                className={`emoji-item emoji-orbit-item${
+                  useDiagonalOrbit ? " emoji-orbit-item--diagonal" : ""
+                }`}
+                style={orbitStyle}
               >
                 <span className="emoji-static">{e.emoji}</span>
 

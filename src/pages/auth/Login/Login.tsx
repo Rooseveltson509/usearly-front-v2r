@@ -108,7 +108,7 @@ const Login = () => {
           <>
             <InputText
               id="loginInput"
-              label="Email*"
+              label="e-mail*"
               type="text"
               value={loginInput}
               onChange={(e) => setLoginInput(e.target.value)}

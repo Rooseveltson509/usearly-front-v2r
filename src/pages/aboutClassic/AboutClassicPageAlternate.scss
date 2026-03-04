@@ -3,13 +3,13 @@
 .page-about-classic {
   div {
     .header {
-      background: rgb(255 255 255 / 50%);
-      backdrop-filter: blur(4px);
+      background: #fff;
+      // backdrop-filter: blur(4px);
+    }
+    .main--about-classic {
+      padding-top: 10px;
     }
   }
-}
-.main--about-classic {
-  padding-top: 0 !important;
 }
 
 .about-classic {
