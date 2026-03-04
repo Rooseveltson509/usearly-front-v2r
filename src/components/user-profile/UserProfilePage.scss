@@ -195,6 +195,12 @@
   }
   .right-panel {
     align-items: flex-start;
+    .suggestion-img-side-container {
+      margin-top: 10px;
+    }
+    @media screen and (max-width: 992px) {
+      display: none;
+    }
   }
   .profile-filters-container {
     .profile-filters {

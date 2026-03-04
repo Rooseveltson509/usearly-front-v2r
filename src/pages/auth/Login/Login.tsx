@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import { loginUser } from "@src/services/apiService";
 import { showToast } from "@src/utils/toastUtils";
 import { useAuth } from "@src/services/AuthContext";
@@ -12,6 +12,7 @@ const Login = () => {
   const { login } = useAuth();
   const location = useLocation();
   const { handleAuthRedirect } = useHandleAuthRedirect();
+  const navigate = useNavigate();
 
   const initialEmail = (location.state as any)?.email ?? "";
   const [loginInput, setLoginInput] = useState(initialEmail);
@@ -95,9 +96,9 @@ const Login = () => {
         </>
       ) : (
         <>
-          <h2>Quel est ton mot de passe ?</h2>
           <p className="login-subtitle login-mdp-subtitle">
-            {loginInput} <span onClick={continueButton}>Modifier</span>
+            {loginInput}{" "}
+            <span onClick={() => navigate("/lookup")}>Modifier</span>
           </p>
         </>
       )}

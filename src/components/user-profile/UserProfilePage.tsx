@@ -3,11 +3,12 @@ import { type FeedbackType } from "./FeedbackTabs";
 import "./UserProfilePage.scss";
 import UserGroupedReportsList from "../profile/UserGroupedReportsList";
 import UserFeedbackView from "../profile/UserFeedbackView";
-import UserVotesCard from "../profile/UserVotesCard";
+// import UserVotesCard from "../profile/UserVotesCard";
 import UserEmotionSummaryPanel from "../profile/banner/user-emotion/UserEmotionSummaryPanel";
 import { useUserEmotionSummary } from "../profile/hook/userEmotionService";
 import UserProfileBanner from "./banner/UserProfileBanner";
 import UserLoveBrandsPanel from "../profile/banner/user-emotion/UserLoveBrandsPanel";
+import Abracadabra from "/assets/images/profil/Abracadabra.svg";
 
 const PROFILE_TITLES: Record<
   FeedbackType,
@@ -56,7 +57,16 @@ const UserProfilePage: React.FC = () => {
           </div>
 
           <aside className="right-panel">
-            {activeTab === "suggestion" && <UserVotesCard />}
+            {activeTab === "suggestion" && (
+              // <UserVotesCard />
+              <div className="suggestion-img-side-container">
+                <img
+                  className="suggestion-img-side-img"
+                  src={Abracadabra}
+                  alt="image abracadabra"
+                />
+              </div>
+            )}
 
             {(activeTab === "report" || activeTab === "coupdecoeur") && (
               <>

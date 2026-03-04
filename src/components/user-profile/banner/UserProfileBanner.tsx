@@ -15,6 +15,7 @@ import chatIcon from "/assets/images/chat-top-bar.svg";
 // } from "@src/components/shared/DecorativeLogos";
 import { useCountUp } from "@src/components/profile/banner/user-emotion/useCountUp";
 import "./UserProfileBanner.scss";
+import UScoreIcon from "/assets/U-score-icon.svg";
 
 type Props = {
   activeTab: FeedbackType;
@@ -97,7 +98,12 @@ export default function UserProfileBanner({ activeTab, onTabChange }: Props) {
           <div className="power">
             <span className="label">Usear Power</span>
             <span className="value">
-              {loading ? "…" : stats?.usearPower}
+              <div className="value-with-icon-container">
+                {loading ? "…" : stats?.usearPower}
+                <span className="icon-container">
+                  <img src={UScoreIcon} alt="" />
+                </span>
+              </div>
               <div className="right-badge">
                 <img src={badge} alt="badge" className="logo logo-badge" />
               </div>
