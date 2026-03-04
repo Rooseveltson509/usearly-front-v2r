@@ -8,11 +8,11 @@ import likeRedIcon from "/assets/icons/heart-header.svg";
 import suggestGreenIcon from "/assets/icons/suggest-header.svg";
 import badge from "/assets/icons/Little-badge.svg";
 import chatIcon from "/assets/images/chat-top-bar.svg";
-import {
-  LogoBig,
-  LogoMedium,
-  LogoSmall,
-} from "@src/components/shared/DecorativeLogos";
+// import {
+//   LogoBig,
+//   LogoMedium,
+//   LogoSmall,
+// } from "@src/components/shared/DecorativeLogos";
 import { useCountUp } from "@src/components/profile/banner/user-emotion/useCountUp";
 import "./UserProfileBanner.scss";
 
@@ -105,13 +105,13 @@ export default function UserProfileBanner({ activeTab, onTabChange }: Props) {
           </div>
         </div>
       </div>
-      <div className="right">
+      {/* <div className="right">
         <div className="decorative-logos">
           <LogoBig />
           <LogoMedium />
           <LogoSmall />
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
