@@ -113,7 +113,8 @@ const Register = () => {
             required: "Le pseudo est obligatoire",
             pattern: {
               value: /^[a-zA-Z0-9]{3,50}$/,
-              message: "Pseudo invalide (3–50 caractères, lettres/chiffres).",
+              message:
+                "Pseudo invalide (entre 3 et 50 caractères, lettres/chiffres).",
             },
           })}
           id="pseudo"

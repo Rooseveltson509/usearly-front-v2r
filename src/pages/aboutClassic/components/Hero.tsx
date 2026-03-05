@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 const HERO_VIDEO_SRC =
-  "https://lbcefcnvssyhlpsr.public.blob.vercel-storage.com/Apropos.mp4";
+  "https://lbcefcnvssyhlpsr.public.blob.vercel-storage.com/video-karine.mp4";
 const SCROLL_HINT_TEXT = "Faites défiler pour découvrir la suite";
 
 const Hero = () => {
