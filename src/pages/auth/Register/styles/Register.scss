@@ -36,7 +36,8 @@
 
   p {
     text-align: left;
-    margin-bottom: 2.5rem;
+    margin-top: 0rem;
+    margin-bottom: 0.5rem;
     .modifyLink {
       color: #585858;
       text-decoration: underline;
@@ -48,6 +49,9 @@
       text-underline-offset: auto;
       text-underline-position: from-font;
       cursor: pointer;
+    }
+    &.error-message {
+      margin-top: -12.5px;
     }
   }
 

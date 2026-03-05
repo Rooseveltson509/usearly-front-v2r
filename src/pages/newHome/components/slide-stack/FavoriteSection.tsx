@@ -87,9 +87,9 @@ export default function FavoriteSection() {
         x: 0,
         scale: 1,
         rotate: (index: number) => (index === 0 ? -5 : 0),
-        duration: 4,
+        duration: 2,
         ease: "power2.out",
-        stagger: 1,
+        stagger: 0,
         overwrite: "auto",
       },
     );
@@ -296,11 +296,11 @@ export default function FavoriteSection() {
       const secondCard = cardsRef.current[groupIndex * CARDS_PER_GROUP + 1];
 
       if (firstCard) {
-        tl.to(firstCard, { y: 50, duration: 1, ease: "none" });
+        tl.to(firstCard, { y: 50, duration: 0.5, ease: "none" });
       }
 
       if (secondCard) {
-        tl.to(secondCard, { y: -50, duration: 1, ease: "none" }, "<");
+        tl.to(secondCard, { y: -50, duration: 0.5, ease: "none" }, "<");
       }
     }
 
