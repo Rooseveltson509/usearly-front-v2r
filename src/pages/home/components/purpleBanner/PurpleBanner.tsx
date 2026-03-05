@@ -46,7 +46,11 @@ export default function PurpleBanner({
           >
             <div className="stat-value">
               {loading ? "…" : reports}
-              <img src={reportYellowIcon} alt="Signalements" />
+              <img
+                src={reportYellowIcon}
+                alt="Signalements"
+                className={`stat-icon ${activeTab === "report" ? "pulse" : ""}`}
+              />
             </div>
             <span className="label">Signalements</span>
           </button>
@@ -57,7 +61,11 @@ export default function PurpleBanner({
           >
             <div className="stat-value">
               {loading ? "…" : hearts}
-              <img src={likeRedIcon} alt="Coups de cœur" />
+              <img
+                src={likeRedIcon}
+                alt="Coups de cœur"
+                className={`stat-icon ${activeTab === "coupdecoeur" ? "pulse" : ""}`}
+              />
             </div>
             <span className="label">Coups de cœur</span>
           </button>
@@ -68,7 +76,11 @@ export default function PurpleBanner({
           >
             <div className="stat-value">
               {loading ? "…" : suggestions}
-              <img src={suggestGreenIcon} alt="Suggestions" />
+              <img
+                src={suggestGreenIcon}
+                alt="Suggestions"
+                className={`stat-icon ${activeTab === "suggestion" ? "pulse" : ""}`}
+              />
             </div>
             <span className="label">Suggestions</span>
           </button>
