@@ -7,11 +7,11 @@ const ExtensionRedirect = () => {
     <div className="extension-redirect-container">
       <div className="extension-redirect-text-container">
         <div className="extension-redirect-text-title">
-          <h2>Extension de navigateur Usearly</h2>
+          <h2>Installer l'extension Usearly</h2>
         </div>
         <div className="extension-redirect-text-description">
           <p>
-            Contribuez à améliorer vos sites et applications préférées à partir
+            Contribuez à améliorer vos sites et applications préférés à partir
             de votre navigateur Web <br />
             <span className="extension-redirect-text-description-dispo">
               Disponible sur :

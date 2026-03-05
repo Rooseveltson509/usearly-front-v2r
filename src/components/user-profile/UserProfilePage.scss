@@ -49,7 +49,7 @@
 }
 
 .profile-main-wrapper.banner-coupdecoeur::before {
-  background: #efe0ff;
+  background: #ffe9e9;
 }
 
 // ===== Bandeau violet haut =====
@@ -328,5 +328,5 @@
   margin-top: 50px; // ou 24px selon ton rythme
   gap: 30px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
 }
