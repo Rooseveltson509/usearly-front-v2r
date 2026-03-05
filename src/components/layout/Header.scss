@@ -392,8 +392,7 @@
 
 /* Style HERO pour la Home */
 .header.hero-mode {
-  background: transparent;
-  padding-bottom: 4px;
+  background: white;
   .header-container {
     .nav-links {
       .link::after {
@@ -481,7 +480,7 @@
 
 .header.hero-mode {
   position: absolute;
-  background: transparent;
+  background: white;
   box-shadow: none;
   color: #fff; // si besoin
   z-index: 20;

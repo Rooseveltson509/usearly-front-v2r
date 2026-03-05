@@ -22,7 +22,7 @@ const AboutClassicPage = () => {
 
   return (
     <section className="about-classic">
-      <Hero />
+      <Hero page={"about"} />
       <SplitSection sectionRef={sectionRef} />
       <MarqueeBanner />
       <ManifestoSection />

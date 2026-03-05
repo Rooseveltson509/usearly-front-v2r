@@ -32,7 +32,7 @@ const NewHome: React.FC = () => {
 
   return (
     <div className="new-home-page">
-      <Hero />
+      <Hero page={"landing"} />
       <TitleSection phrase={PHRASES[phraseIndex]} />
 
       {/* --- SECTION NORMALE --- */}

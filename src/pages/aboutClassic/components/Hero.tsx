@@ -4,7 +4,11 @@ import { useEffect, useState } from "react";
   "https://lbcefcnvssyhlpsr.public.blob.vercel-storage.com/video-karine.mp4"; */
 const SCROLL_HINT_TEXT = "Faites défiler pour découvrir la suite";
 
-const Hero = () => {
+type Props = {
+  page: "landing" | "about";
+};
+
+const Hero = ({ page }: Props) => {
   const [showScrollHint, setShowScrollHint] = useState(true);
   const [typedText, setTypedText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
@@ -81,22 +85,26 @@ const Hero = () => {
       >
         <source src={HERO_VIDEO_SRC} type="video/mp4" />
       </video> */}
-      <iframe
-        className="about-classic__hero-video"
-        src="https://www.youtube.com/embed/QmFQRhUOns4?autoplay=1&mute=1&loop=1&playlist=QmFQRhUOns4&controls=0&modestbranding=1&playsinline=1"
-        title="Usearly video"
-        frameBorder="0"
-        allow="autoplay; encrypted-media"
-        allowFullScreen
-      />
-      {/*       <iframe
-        className="about-classic__hero-video"
-        src="https://www.youtube.com/embed/FkAnIL1l4wo?autoplay=1&mute=1&loop=1&playlist=FkAnIL1l4wo&controls=0&modestbranding=1"
-        title="Usearly video"
-        frameBorder="0"
-        allow="autoplay; encrypted-media"
-        allowFullScreen
-      /> */}
+      {page === "landing" && (
+        <iframe
+          className="about-classic__hero-video"
+          src="https://www.youtube.com/embed/QmFQRhUOns4?autoplay=1&mute=1&loop=1&playlist=QmFQRhUOns4&controls=0&modestbranding=1&playsinline=1"
+          title="Usearly video"
+          frameBorder="0"
+          allow="autoplay; encrypted-media"
+          allowFullScreen
+        />
+      )}
+      {page === "about" && (
+        <iframe
+          className="about-classic__hero-video"
+          src="https://www.youtube.com/embed/FkAnIL1l4wo?autoplay=1&mute=1&loop=1&playlist=FkAnIL1l4wo&controls=0&modestbranding=1"
+          title="Usearly video"
+          frameBorder="0"
+          allow="autoplay; encrypted-media"
+          allowFullScreen
+        />
+      )}
       {/* https://www.youtube.com/embed/FkAnIL1l4wo?autoplay=1&mute=1&loop=1&playlist=FkAnIL1l4wo&controls=0&modestbranding=1 */}
       {/* https://youtu.be/QmFQRhUOns4?si=5pp_-APa5idTS_Is */}
       {/* <div className="about-classic__hero-content">

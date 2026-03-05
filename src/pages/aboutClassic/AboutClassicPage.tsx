@@ -28,7 +28,7 @@ const AboutClassicPage = () => {
 
   return (
     <section className="about-classic">
-      <Hero />
+      <Hero page={"about"} />
       <TitleSection phrase={PHRASES[phraseIndex]} />
       <SplitSection sectionRef={sectionRef} />
       <MarqueeBanner />
