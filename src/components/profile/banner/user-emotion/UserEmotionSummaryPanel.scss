@@ -127,6 +127,11 @@
   font-size: 2.4rem;
 }
 
+.emoji-orbit-item--diagonal {
+  transform: rotate(var(--angle)) translateY(calc(-1 * var(--radius)))
+    rotate(calc(-1 * var(--angle)));
+}
+
 /* tailles progressives */
 .emoji-orbit-item:nth-child(1) {
   font-size: 2.8rem;

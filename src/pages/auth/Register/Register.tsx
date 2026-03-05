@@ -131,7 +131,7 @@ const Register = () => {
             registration={register("email", { required: true })}
             id="email"
             type="email"
-            label="Email*"
+            label="e-mail*"
             defaultValue={email}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setEmail(e.target.value)

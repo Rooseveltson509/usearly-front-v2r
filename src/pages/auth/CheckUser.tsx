@@ -46,7 +46,7 @@ function CheckUser() {
           <InputText
             ref={emailRef}
             id="email"
-            label="Email*"
+            label="e-mail*"
             type="email"
             required
           />

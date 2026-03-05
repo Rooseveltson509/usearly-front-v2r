@@ -69,7 +69,7 @@ const UserStatsCard = ({ dashboard = false }: UserStatsCardProps) => {
           <span className="label">Usear Power</span>
           <span className="value gap-4">
             <div className="flex items-center gap-1">
-              {loading ? "..." : stats?.usearPower}{" "}
+              {loading ? "..." : (stats?.usearPower ?? 0)}{" "}
               <img className="score-icon" src={Uicon} alt="scoreIcon" />
             </div>
           </span>

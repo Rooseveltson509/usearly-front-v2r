@@ -143,11 +143,8 @@ function App() {
             <Route path="/terms" element={<Terms />} />
             <Route path="/contact" element={<Contact />} />
             {/* about */}
-            <Route path="/about" element={<AboutClassicPage />} />
-            <Route
-              path="/aboutAlternate"
-              element={<AboutClassicPageAlternate />}
-            />
+            <Route path="/about" element={<AboutClassicPageAlternate />} />
+            <Route path="/aboutAlternate" element={<AboutClassicPage />} />
             <Route path="/about-legacy" element={<AboutPage />} />
             <Route
               path="/confirm"

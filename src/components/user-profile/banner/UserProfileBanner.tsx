@@ -99,7 +99,7 @@ export default function UserProfileBanner({ activeTab, onTabChange }: Props) {
             <span className="label">Usear Power</span>
             <span className="value">
               <div className="value-with-icon-container">
-                {loading ? "…" : stats?.usearPower}
+                {loading ? "..." : (stats?.usearPower ?? 0)}{" "}
                 <span className="icon-container">
                   <img src={UScoreIcon} alt="" />
                 </span>
