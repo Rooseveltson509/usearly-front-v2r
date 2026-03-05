@@ -240,13 +240,13 @@ const Header: React.FC<HeaderProps> = ({ heroMode = false, children }) => {
         {/* ================= NAVIGATION / DRAWER ================= */}
         <nav className={`nav-links ${mobileMenuOpen ? "mobile-open" : ""}`}>
           {/* ======= NAV LINKS ======= */}
-          <NavLink
+          {/* <NavLink
             to="/homeAlternate"
             className="link"
             onClick={() => setMobileMenuOpen(false)}
           >
             Accueil
-          </NavLink>
+          </NavLink> */}
 
           {isAuthenticated && (
             <NavLink
