@@ -11,7 +11,6 @@ import { Home } from "./pages/home";
 import RequestResetPassword from "./pages/forgot-and-reset-pwd/RequestResetPassword";
 import ResetPassword from "./pages/forgot-and-reset-pwd/ResetPassword";
 import NavigateToHome from "./pages/NavigateToHome";
-import NewHome from "./pages/newHome/NewHome";
 import NewHomeAlternate from "./pages/newHome/NewHomeAlternatif";
 import CheckUser from "./pages/auth/CheckUser";
 import SuggestionDetail from "./components/suggestion-detail/SuggestionDetail";
@@ -222,8 +221,7 @@ function App() {
                 </GuestRoute>
               }
             />
-            <Route path="/home" element={<NewHome />} />
-            <Route path="/homeAlternate" element={<NewHomeAlternate />} />
+            <Route path="/home" element={<NewHomeAlternate />} />
             <Route
               path="/feedback"
               element={

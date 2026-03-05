@@ -11,8 +11,15 @@
 
   .love-brands-list {
     display: flex;
+    width: 100%;
     align-items: center;
     gap: 10px;
+    overflow: auto;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
 
   .love-brand-item {
