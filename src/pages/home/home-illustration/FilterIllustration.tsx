@@ -9,8 +9,8 @@ import recentReportImg from "/assets/img-banner/banner-report-recent.png";
 import likedImg from "/assets/img-banner/banner-cdc-pop.png";
 import recentCdcImg from "/assets/img-banner/banner-cdc-recent.png";
 import commentedImg from "/assets/img-banner/banner-cdc-liked.png";
-import discussedImg from "/assets/img-banner/banner-suggest-liked.png";
-import recentSuggestionImg from "/assets/img-banner/banner-suggest-open-vote.png";
+import discussedImg from "/assets/img-banner/banner-suggestion-top-idea.png";
+import recentSuggestionImg from "/assets/img-banner/banner-suggestion-reves.png";
 import likedSuggestionImg from "/assets/img-banner/banner-suggestion-adopt.png";
 
 // ✅ public/assets/brandSolo/*.png

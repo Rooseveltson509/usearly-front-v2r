@@ -402,7 +402,7 @@ body.feedback-route .home-grouped-reports-list {
   position: relative;
   height: 275px;
 
-  background-color: var(--suggestion-bg, #f1e9ff); // couleur dynamique
+  background-color: var(--suggestion-bg, #d5f4d7); // couleur dynamique
   border: 1px solid var(--suggestion-border, transparent);
 
   .right-panel {
@@ -478,13 +478,13 @@ body.feedback-route .home-grouped-reports-list {
   }
 
   &.banner-discussed {
-    background-color: var(--suggestion-bg, #f1e9ff);
+    background-color: var(--suggestion-bg, #d5f4d7);
   }
   &.banner-recent {
-    background-color: var(--suggestion-bg, #f1e9ff);
+    background-color: var(--suggestion-bg, #d5f4d7);
   }
   &.banner-liked {
-    background-color: var(--suggestion-bg, #f1e9ff);
+    background-color: var(--suggestion-bg, #d5f4d7);
   }
 }
 .left-panel {
