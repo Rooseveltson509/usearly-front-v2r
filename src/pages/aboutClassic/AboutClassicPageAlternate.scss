@@ -75,6 +75,18 @@
   padding: 0 !important;
 }
 
+.page-about-classic {
+  #root {
+    main {
+      .about-classic {
+        .about-classic__hero {
+          height: 100vh;
+        }
+      }
+    }
+  }
+}
+
 .about-classic__hero {
   position: relative;
   height: 95vh;
