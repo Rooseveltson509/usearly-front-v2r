@@ -65,7 +65,11 @@ export default function UserProfileBanner({ activeTab, onTabChange }: Props) {
               >
                 <div className="stat-value">
                   {reports}
-                  <img src={reportYellowIcon} alt="Signalements" />
+                  <img
+                    src={reportYellowIcon}
+                    alt="Signalements"
+                    className={`stat-icon ${activeTab === "report" ? "pulse" : ""}`}
+                  />
                 </div>
                 <span className="label">Signalements</span>
               </button>
@@ -76,7 +80,11 @@ export default function UserProfileBanner({ activeTab, onTabChange }: Props) {
               >
                 <div className="stat-value">
                   {hearts}
-                  <img src={likeRedIcon} alt="Coups de cœur" />
+                  <img
+                    src={likeRedIcon}
+                    alt="Coups de cœur"
+                    className={`stat-icon ${activeTab === "coupdecoeur" ? "pulse" : ""}`}
+                  />
                 </div>
                 <span className="label">Coups de cœur</span>
               </button>
@@ -87,7 +95,11 @@ export default function UserProfileBanner({ activeTab, onTabChange }: Props) {
               >
                 <div className="stat-value">
                   {suggestions}
-                  <img src={suggestGreenIcon} alt="Suggestions" />
+                  <img
+                    src={suggestGreenIcon}
+                    alt="Suggestions"
+                    className={`stat-icon ${activeTab === "suggestion" ? "pulse" : ""}`}
+                  />
                 </div>
                 <span className="label">Suggestions</span>
               </button>
