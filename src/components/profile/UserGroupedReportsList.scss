@@ -180,7 +180,8 @@
   .controls {
     display: flex;
     align-items: center;
-    gap: 12px;
+    column-gap: 12px;
+    row-gap: 0px;
     flex-wrap: wrap;
     .view-mode-select {
       display: inline-flex;
@@ -245,6 +246,9 @@
   .date-card {
     width: 150px; /* largeur fixe pour l'alignement en colonne */
     text-align: left;
+    @media screen and (max-width: 600px) {
+      width: auto;
+    }
   }
   .brand-header {
     display: flex;
