@@ -14,6 +14,14 @@ import SuggestionTabEnhanced from "./home-tabs/SuggestionTabEnhanced";
 
 const FEEDBACK_LIST_WRAPPER_SELECTOR = ".feedback-list-wrapper";
 const BOTTOM_THRESHOLD_PX = 12;
+const getDefaultFilters = () => ({
+  selectedBrand: "",
+  selectedCategory: "",
+  selectedMainCategory: "",
+  activeFilter: "chrono",
+  suggestionSearch: "",
+  selectedSiteUrl: undefined as string | undefined,
+});
 
 const isScrollableElement = (element: HTMLElement) => {
   const styles = window.getComputedStyle(element);
@@ -66,6 +74,22 @@ function Home() {
       document.documentElement.classList.remove("feedback-route");
     };
   }, []);
+
+  const handleTabChange = useCallback(
+    (nextTab: FeedbackType) => {
+      if (nextTab === activeTab) return;
+
+      const defaults = getDefaultFilters();
+      setSelectedBrand(defaults.selectedBrand);
+      setSelectedCategory(defaults.selectedCategory);
+      setSelectedMainCategory(defaults.selectedMainCategory);
+      setActiveFilter(defaults.activeFilter);
+      setSuggestionSearch(defaults.suggestionSearch);
+      setSelectedSiteUrl(defaults.selectedSiteUrl);
+      setActiveTab(nextTab);
+    },
+    [activeTab],
+  );
 
   const scrollToTop = useCallback(() => {
     if (typeof window === "undefined") return;
@@ -143,7 +167,7 @@ function Home() {
 
   return (
     <div className="home-page">
-      <PurpleBanner activeTab={activeTab} onTabChange={setActiveTab} />
+      <PurpleBanner activeTab={activeTab} onTabChange={handleTabChange} />
 
       <main className="user-main-content">
         <aside className="left-panel">
