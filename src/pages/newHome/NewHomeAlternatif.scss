@@ -19,6 +19,12 @@
       }
     }
     .usearly-drawing-container {
+      position: relative;
+      width: 100vw;
+      background-color: #000;
+      --usearly-color: #ffffff4e;
+      overflow: hidden;
+
       .usearly-wrap {
         margin-top: 14rem !important;
         margin-bottom: 14rem !important;
@@ -31,10 +37,17 @@
       }
     }
     footer {
+      background-color: black;
+      color: #ffffff5e;
       .footer-container {
         ul {
           margin-top: 50px;
           font-size: 12px;
+          li {
+            a {
+              color: #ffffff5e !important;
+            }
+          }
         }
       }
     }
