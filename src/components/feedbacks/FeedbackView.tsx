@@ -19,6 +19,8 @@ import {
 } from "@src/utils/feedbackListUtils";
 import type { FeedbackType } from "../user-profile/FeedbackTabs";
 import InteractiveFeedbackCard from "../InteractiveFeedbackCard/InteractiveFeedbackCard";
+import FeedbackCardMobile from "./FeedbackCardMobile";
+import { useIsMobile } from "@src/hooks/use-mobile";
 import "./FeedbackView.scss";
 
 interface Props {
@@ -51,6 +53,7 @@ const FeedbackView = ({
   selectedCategory,
   renderCard,
 }: Props) => {
+  const isMobile = useIsMobile();
   const [openId, setOpenId] = useState<string | null>(null);
 
   const { data, loading, error, isInitialLoading } = currentState;
@@ -212,6 +215,17 @@ const FeedbackView = ({
           siteUrl,
           marque: item.marque?.trim() ?? "",
         };
+
+        if (isMobile) {
+          return (
+            <FeedbackCardMobile
+              key={item.id || `feedback-${index}`}
+              item={safeItem}
+              isOpen={openId === item.id}
+              onToggle={(id) => setOpenId((prev) => (prev === id ? null : id))}
+            />
+          );
+        }
 
         return (
           <InteractiveFeedbackCard
