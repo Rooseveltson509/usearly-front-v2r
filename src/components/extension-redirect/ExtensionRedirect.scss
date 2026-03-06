@@ -1,4 +1,4 @@
-@use "@src/styles/base/variables" as *;
+@use "../../styles/base/variables" as *;
 
 .extension-redirect-container {
   background-color: #939aff;
@@ -77,4 +77,40 @@
       height: auto;
     }
   }
+}
+
+.extension-redirect-text-button {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.chrome-store-link {
+  display: inline-block;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.chrome-store-link:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
+}
+
+.chrome-store-badge {
+  height: 64px;
+  display: block;
+}
+
+.extension-available {
+  display: block;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  font-weight: 500;
+  opacity: 0.85;
+}
+.extension-trust {
+  margin-top: 14px;
+  font-size: 14px;
+  opacity: 0.8;
 }

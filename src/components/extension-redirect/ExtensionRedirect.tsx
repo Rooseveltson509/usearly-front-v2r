@@ -1,6 +1,6 @@
-import React from "react";
 import "./ExtensionRedirect.scss";
 import chromeExtensionImg from "/assets/images/chromeExtensionImg.svg";
+import googleBadge from "/assets/badge-google.png";
 
 const ExtensionRedirect = () => {
   return (
@@ -13,24 +13,23 @@ const ExtensionRedirect = () => {
           <p>
             Contribuez à améliorer vos sites et applications préférés à partir
             de votre navigateur Web <br />
-            <span className="extension-redirect-text-description-dispo">
-              Disponible sur :
+            <span className="extension-available">
+              Disponible sur le Chrome Web Store
             </span>
           </p>
         </div>
         <div className="extension-redirect-text-button">
           <a
-            href="https://chromewebstore.google.com/detail/geclfkocbehpdojggpaeeofgdiiajcii?utm_source=item-share-cb"
+            href="https://chromewebstore.google.com/detail/geclfkocbehpdojggpaeeofgdiiajcii"
             target="_blank"
             rel="noopener noreferrer"
+            className="chrome-store-link"
           >
-            <button className="extension-redirect-button">
-              <img
-                src="https://www.google.com/chrome/static/images/chrome-logo.svg"
-                alt=""
-              />
-              <p className="extension-redirect-button-text">Chrome Extension</p>
-            </button>
+            <img
+              src={googleBadge}
+              alt="Disponible sur le Chrome Web Store"
+              className="chrome-store-badge"
+            />
           </a>
         </div>
       </div>
