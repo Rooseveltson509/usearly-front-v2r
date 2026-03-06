@@ -350,9 +350,13 @@
   justify-content: center;
   align-items: center;
   padding: 16px;
-  min-height: 180px; // plancher visuel
+  width: 250px;
+  min-width: 250px;
+  max-width: 250px;
+  min-height: 299px;
   border-radius: 12px 0 0 12px;
   height: 299px;
+  max-height: 299px;
   transition:
     height 0.35s ease,
     padding-bottom 0.35s ease;
@@ -365,7 +369,12 @@
 .feedback-type.is-expanded {
   padding-bottom: 16px;
   .feedback-left {
-    height: 100%;
+    width: 250px;
+    min-width: 250px;
+    max-width: 250px;
+    height: 299px;
+    min-height: 299px;
+    max-height: 299px;
   }
 }
 
